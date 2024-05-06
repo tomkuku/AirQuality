@@ -1,0 +1,101 @@
+excluded:
+  - AirQuality/*
+
+opt_in_rules:
+  - all
+
+disabled_rules:
+  - anonymous_argument_in_multiline_closure
+  - anyobject_protocol # It's deprecated and will be removed in a future release.
+  - conditional_returns_on_newline
+  - cyclomatic_complexity
+  - discouraged_none_name
+  - discouraged_optional_boolean
+  - discouraged_optional_collection
+  - explicit_acl
+  - explicit_enum_raw_value
+  - explicit_top_level_acl
+  - explicit_type_interface
+  - extension_access_modifier
+  - file_header
+  - file_length
+  - file_name
+  - file_types_order
+  - force_unwrapping
+  - function_body_length
+  - function_default_parameter_at_end
+  - ibinspectable_in_extension
+  - implicitly_unwrapped_optional
+  - inert_defer # It's deprecated and will be removed in a future release.
+  - legacy_multiple
+  - legacy_objc_type
+  - local_doc_comment
+  - missing_docs
+  - no_extension_access_modifier
+  - no_grouping_extension
+  - no_magic_numbers
+  - nslocalizedstring_key
+  - prefer_nimble
+  - prefixed_toplevel_constant
+  - private_subject
+  - reduce_into
+  - required_deinit
+  - sorted_enum_cases
+  - strict_fileprivate
+  - superfluous_else
+  - switch_case_on_newline
+  - trailing_closure
+  - type_body_length
+  - unavailable_function
+  - unused_capture_list # It's deprecated and will be removed in a future release.
+  - vertical_whitespace_between_cases
+  - vertical_whitespace_opening_braces
+  - void_return
+  - weak_delegate
+  - trailing_whitespace
+
+attributes:
+  always_on_line_above:
+    - "@MainActor"
+
+line_length:
+  warning: 200
+  error: 600
+
+type_name:
+  min_length: 3 
+  max_length:
+    warning: 75
+    error: 100
+
+identifier_name:
+  min_length: 2
+  max_length: 70
+  allowed_symbols: ["_"]
+  excluded:
+    ["x", "y", "i"]
+
+large_tuple:
+  warning: 4
+  error: 5
+
+modifier_order:
+  preferred_modifier_order:
+    [acl, final, override, setterACL, dynamic, mutators, lazy, required, convenience, typeMethods, owned]
+
+multiline_arguments:
+  only_enforce_after_first_closure_on_first_line: true
+
+void_function_in_ternary:
+  severity: error
+
+blanket_disable_command:
+  severity: error
+
+superfluous_disable_command:
+  severity: error
+
+nesting:
+  type_level: 5
+
+reporter: "xcode"
