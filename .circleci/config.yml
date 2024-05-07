@@ -11,12 +11,7 @@ jobs:
       - run:
           name: Run tests
           command: |
-          xcodebuild \
-	        clean test \
-	        -project $(PROJECT) \
-	        -scheme $(SCHEME) \
-	        -destination platform=$(PLATFORM),name=$(DEVICE),OS=$(IOS_VERSION) \
-	        CODE_SIGNING_ALLOWED=$(CODE_SIGNING_ALLOWED) \
+            make -f ../.ci-cd/build_and_test.mk
 
 workflows:
   test:
