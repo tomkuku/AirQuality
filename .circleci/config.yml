@@ -1,0 +1,27 @@
+# See: https://circleci.com/docs/configuration-reference
+
+version: 2.1
+
+jobs:
+  test:
+    macos:
+      xcode: 15.0.0
+    steps:
+      - checkout
+      - run:
+          name: Install xcbeautify
+          command: |
+            brew install xcbeautify
+      - run:
+          name: Install SwiftLint
+          command: |
+            brew install swiftlint
+      - run:
+          name: Run tests
+          command: |
+            make -f .ci-cd/build_and_test.mk
+
+workflows:
+  test:
+    jobs:
+      - test
