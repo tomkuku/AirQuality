@@ -16,6 +16,18 @@ struct ContentView: View {
             Text("Hello, world!")
         }
         .padding()
+        .onAppear {
+//            let useCase = GetStationsUseCase()
+            
+            Task {
+//                do {
+//                    let stations = try await useCase.getAllStations()
+//                    print(stations)
+//                } catch {
+//                    print(error.localizedDescription)
+//                }
+            }
+        }
     }
 }
 

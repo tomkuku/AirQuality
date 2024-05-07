@@ -14,4 +14,17 @@ struct AirQualityApp: App {
             ContentView()
         }
     }
+    
+    init() {
+//        DependenciesContainerManager.container = DependenciesContainer()
+//        
+//        Task {
+//            do {
+//                let stations = try await GetStationsUseCase().getAllStations()
+//                print(stations)
+//            } catch {
+//                fatalError(error.localizedDescription)
+//            }
+//        }
+    }
 }
