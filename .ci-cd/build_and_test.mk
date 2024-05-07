@@ -11,9 +11,10 @@ PLATFORM = 'iOS Simulator'
 DEVICE = 'iPhone 15 Pro'
 IOS_VERSION = 17.0.1
 CODE_SIGNING_ALLOWED = NO
+DANGER_XCRESULT = tests_results.xcresult
 
 # - Targets
-all: prepare_environemnt build_and_test
+all: prepare_environemnt run_danger
 
 prepare_environemnt:
 	@echo "ℹ️ Reseting simulators"
@@ -34,3 +35,10 @@ build_and_test:
 	-project $(PROJECT) \
 	-scheme $(SCHEME) \
 	-destination platform=$(PLATFORM),name=$(DEVICE),OS=$(IOS_VERSION)
+
+run_danger:
+	@echo "ℹ️ Running danger"
+	@# Copy the newest .xcresult into home dir for danger-xcode_summary
+	# @cp -r ~/Library/Developer/Xcode/DerivedData/$(PROJECT_NAME)*/Logs/Test/*.xcresult $(DANGER_XCRESULT)
+	@bundle install
+	@bundle exec danger
