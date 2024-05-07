@@ -11,7 +11,7 @@ jobs:
       - run:
           name: Run tests
           command: |
-          set -euo pipefail && xcodebuild \
+          xcodebuild \
 	        clean test \
 	        -project $(PROJECT) \
 	        -scheme $(SCHEME) \
