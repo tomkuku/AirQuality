@@ -1,0 +1,24 @@
+# See: https://circleci.com/docs/configuration-reference
+
+version: 2.1
+
+jobs:
+  test:
+    macos:
+      xcode: 14.2.0
+    steps:
+      - checkout
+      - run:
+          name: Run tests
+          command: |
+          set -euo pipefail && xcodebuild \
+	        clean test \
+	        -project $(PROJECT) \
+	        -scheme $(SCHEME) \
+	        -destination platform=$(PLATFORM),name=$(DEVICE),OS=$(IOS_VERSION) \
+	        CODE_SIGNING_ALLOWED=$(CODE_SIGNING_ALLOWED) \
+
+workflows:
+  test:
+    jobs:
+      - test
