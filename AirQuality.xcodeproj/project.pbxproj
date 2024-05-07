@@ -7,13 +7,31 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		722CC6E82BEA17F100A978C7 /* StationsNetworkMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6D92BEA17F100A978C7 /* StationsNetworkMapper.swift */; };
+		722CC6E92BEA17F100A978C7 /* StationNetworkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6DB2BEA17F100A978C7 /* StationNetworkModel.swift */; };
+		722CC6EA2BEA17F100A978C7 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6DD2BEA17F100A978C7 /* Endpoint.swift */; };
+		722CC6EB2BEA17F100A978C7 /* GetStationsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6DE2BEA17F100A978C7 /* GetStationsUseCase.swift */; };
+		722CC6EC2BEA17F100A978C7 /* GIOSApiRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6DF2BEA17F100A978C7 /* GIOSApiRepository.swift */; };
+		722CC6ED2BEA17F100A978C7 /* GIOSApiResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6E02BEA17F100A978C7 /* GIOSApiResponse.swift */; };
+		722CC6EE2BEA17F100A978C7 /* HTTPDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6E12BEA17F100A978C7 /* HTTPDataSource.swift */; };
+		722CC6EF2BEA17F100A978C7 /* HTTPRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6E22BEA17F100A978C7 /* HTTPRequest.swift */; };
+		722CC6F02BEA17F100A978C7 /* Station.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6E42BEA17F100A978C7 /* Station.swift */; };
+		722CC6F12BEA17F100A978C7 /* DependenciesContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6E62BEA17F100A978C7 /* DependenciesContainer.swift */; };
+		722CC6F42BEA180E00A978C7 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 722CC6F32BEA180E00A978C7 /* Alamofire */; };
+		722CC6F62BEA180E00A978C7 /* AlamofireDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 722CC6F52BEA180E00A978C7 /* AlamofireDynamic */; };
+		722CC7012BEA182B00A978C7 /* EmptyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6F72BEA182B00A978C7 /* EmptyError.swift */; };
+		722CC7022BEA182B00A978C7 /* AirQualityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6F82BEA182B00A978C7 /* AirQualityTests.swift */; };
+		722CC7032BEA182B00A978C7 /* GIOSApiRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6F92BEA182B00A978C7 /* GIOSApiRepositoryTests.swift */; };
+		722CC7042BEA182B00A978C7 /* HTTPDataStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6FA2BEA182B00A978C7 /* HTTPDataStoreTests.swift */; };
+		722CC7052BEA182B00A978C7 /* EndpointFake.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6FC2BEA182B00A978C7 /* EndpointFake.swift */; };
+		722CC7062BEA182B00A978C7 /* ErrorDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6FD2BEA182B00A978C7 /* ErrorDummy.swift */; };
+		722CC7072BEA182B00A978C7 /* HTTPDataSourceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6FE2BEA182B00A978C7 /* HTTPDataSourceMock.swift */; };
 		72D8F9082BD8764500F26FB1 /* AirQualityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72D8F9072BD8764500F26FB1 /* AirQualityApp.swift */; };
 		72D8F90A2BD8764500F26FB1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72D8F9092BD8764500F26FB1 /* ContentView.swift */; };
 		72D8F90C2BD8764600F26FB1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 72D8F90B2BD8764600F26FB1 /* Assets.xcassets */; };
 		72D8F90F2BD8764600F26FB1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 72D8F90E2BD8764600F26FB1 /* Preview Assets.xcassets */; };
 		72F4FF1C2BE8D0A6005A90EC /* Development.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 72F4FF1B2BE8D0A6005A90EC /* Development.xcconfig */; };
 		72F4FF1E2BE8D140005A90EC /* Production.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 72F4FF1D2BE8D140005A90EC /* Production.xcconfig */; };
-		72F4FF2B2BE8EE99005A90EC /* AirQualityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F4FF2A2BE8EE99005A90EC /* AirQualityTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,6 +45,23 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		722CC6D92BEA17F100A978C7 /* StationsNetworkMapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationsNetworkMapper.swift; sourceTree = "<group>"; };
+		722CC6DB2BEA17F100A978C7 /* StationNetworkModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationNetworkModel.swift; sourceTree = "<group>"; };
+		722CC6DD2BEA17F100A978C7 /* Endpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
+		722CC6DE2BEA17F100A978C7 /* GetStationsUseCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetStationsUseCase.swift; sourceTree = "<group>"; };
+		722CC6DF2BEA17F100A978C7 /* GIOSApiRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GIOSApiRepository.swift; sourceTree = "<group>"; };
+		722CC6E02BEA17F100A978C7 /* GIOSApiResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GIOSApiResponse.swift; sourceTree = "<group>"; };
+		722CC6E12BEA17F100A978C7 /* HTTPDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPDataSource.swift; sourceTree = "<group>"; };
+		722CC6E22BEA17F100A978C7 /* HTTPRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPRequest.swift; sourceTree = "<group>"; };
+		722CC6E42BEA17F100A978C7 /* Station.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Station.swift; sourceTree = "<group>"; };
+		722CC6E62BEA17F100A978C7 /* DependenciesContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DependenciesContainer.swift; sourceTree = "<group>"; };
+		722CC6F72BEA182B00A978C7 /* EmptyError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmptyError.swift; sourceTree = "<group>"; };
+		722CC6F82BEA182B00A978C7 /* AirQualityTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirQualityTests.swift; sourceTree = "<group>"; };
+		722CC6F92BEA182B00A978C7 /* GIOSApiRepositoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GIOSApiRepositoryTests.swift; sourceTree = "<group>"; };
+		722CC6FA2BEA182B00A978C7 /* HTTPDataStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPDataStoreTests.swift; sourceTree = "<group>"; };
+		722CC6FC2BEA182B00A978C7 /* EndpointFake.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndpointFake.swift; sourceTree = "<group>"; };
+		722CC6FD2BEA182B00A978C7 /* ErrorDummy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorDummy.swift; sourceTree = "<group>"; };
+		722CC6FE2BEA182B00A978C7 /* HTTPDataSourceMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPDataSourceMock.swift; sourceTree = "<group>"; };
 		72D8F9042BD8764500F26FB1 /* AirQuality.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AirQuality.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		72D8F9072BD8764500F26FB1 /* AirQualityApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirQualityApp.swift; sourceTree = "<group>"; };
 		72D8F9092BD8764500F26FB1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -35,7 +70,6 @@
 		72F4FF1B2BE8D0A6005A90EC /* Development.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Development.xcconfig; sourceTree = "<group>"; };
 		72F4FF1D2BE8D140005A90EC /* Production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Production.xcconfig; sourceTree = "<group>"; };
 		72F4FF282BE8EE99005A90EC /* AirQualityTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AirQualityTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		72F4FF2A2BE8EE99005A90EC /* AirQualityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirQualityTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +77,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				722CC6F42BEA180E00A978C7 /* Alamofire in Frameworks */,
+				722CC6F62BEA180E00A978C7 /* AlamofireDynamic in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,6 +92,73 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		722CC6DA2BEA17F100A978C7 /* Mappers */ = {
+			isa = PBXGroup;
+			children = (
+				722CC6D92BEA17F100A978C7 /* StationsNetworkMapper.swift */,
+			);
+			path = Mappers;
+			sourceTree = "<group>";
+		};
+		722CC6DC2BEA17F100A978C7 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				722CC6DB2BEA17F100A978C7 /* StationNetworkModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		722CC6E32BEA17F100A978C7 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				722CC6DA2BEA17F100A978C7 /* Mappers */,
+				722CC6DC2BEA17F100A978C7 /* Models */,
+				722CC6DD2BEA17F100A978C7 /* Endpoint.swift */,
+				722CC6DE2BEA17F100A978C7 /* GetStationsUseCase.swift */,
+				722CC6DF2BEA17F100A978C7 /* GIOSApiRepository.swift */,
+				722CC6E02BEA17F100A978C7 /* GIOSApiResponse.swift */,
+				722CC6E12BEA17F100A978C7 /* HTTPDataSource.swift */,
+				722CC6E22BEA17F100A978C7 /* HTTPRequest.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		722CC6E52BEA17F100A978C7 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				722CC6E42BEA17F100A978C7 /* Station.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		722CC6E72BEA17F100A978C7 /* Utilites */ = {
+			isa = PBXGroup;
+			children = (
+				722CC6E62BEA17F100A978C7 /* DependenciesContainer.swift */,
+			);
+			path = Utilites;
+			sourceTree = "<group>";
+		};
+		722CC6FB2BEA182B00A978C7 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				722CC6F82BEA182B00A978C7 /* AirQualityTests.swift */,
+				722CC6F92BEA182B00A978C7 /* GIOSApiRepositoryTests.swift */,
+				722CC6FA2BEA182B00A978C7 /* HTTPDataStoreTests.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		722CC6FF2BEA182B00A978C7 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				722CC6FC2BEA182B00A978C7 /* EndpointFake.swift */,
+				722CC6FD2BEA182B00A978C7 /* ErrorDummy.swift */,
+				722CC6FE2BEA182B00A978C7 /* HTTPDataSourceMock.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		72D8F8FB2BD8764500F26FB1 = {
 			isa = PBXGroup;
 			children = (
@@ -77,6 +180,9 @@
 		72D8F9062BD8764500F26FB1 /* AirQuality */ = {
 			isa = PBXGroup;
 			children = (
+				722CC6E52BEA17F100A978C7 /* Models */,
+				722CC6E32BEA17F100A978C7 /* Networking */,
+				722CC6E72BEA17F100A978C7 /* Utilites */,
 				72D8F9072BD8764500F26FB1 /* AirQualityApp.swift */,
 				72D8F9092BD8764500F26FB1 /* ContentView.swift */,
 				72D8F90B2BD8764600F26FB1 /* Assets.xcassets */,
@@ -106,7 +212,9 @@
 		72F4FF292BE8EE99005A90EC /* AirQualityTests */ = {
 			isa = PBXGroup;
 			children = (
-				72F4FF2A2BE8EE99005A90EC /* AirQualityTests.swift */,
+				722CC6F72BEA182B00A978C7 /* EmptyError.swift */,
+				722CC6FF2BEA182B00A978C7 /* Helpers */,
+				722CC6FB2BEA182B00A978C7 /* Networking */,
 			);
 			path = AirQualityTests;
 			sourceTree = "<group>";
@@ -128,6 +236,10 @@
 			dependencies = (
 			);
 			name = AirQuality;
+			packageProductDependencies = (
+				722CC6F32BEA180E00A978C7 /* Alamofire */,
+				722CC6F52BEA180E00A978C7 /* AlamofireDynamic */,
+			);
 			productName = AirQuality;
 			productReference = 72D8F9042BD8764500F26FB1 /* AirQuality.app */;
 			productType = "com.apple.product-type.application";
@@ -178,6 +290,9 @@
 				Base,
 			);
 			mainGroup = 72D8F8FB2BD8764500F26FB1;
+			packageReferences = (
+				722CC6F22BEA180E00A978C7 /* XCRemoteSwiftPackageReference "Alamofire" */,
+			);
 			productRefGroup = 72D8F9052BD8764500F26FB1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -236,7 +351,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				72D8F90A2BD8764500F26FB1 /* ContentView.swift in Sources */,
+				722CC6E92BEA17F100A978C7 /* StationNetworkModel.swift in Sources */,
 				72D8F9082BD8764500F26FB1 /* AirQualityApp.swift in Sources */,
+				722CC6ED2BEA17F100A978C7 /* GIOSApiResponse.swift in Sources */,
+				722CC6F12BEA17F100A978C7 /* DependenciesContainer.swift in Sources */,
+				722CC6E82BEA17F100A978C7 /* StationsNetworkMapper.swift in Sources */,
+				722CC6EA2BEA17F100A978C7 /* Endpoint.swift in Sources */,
+				722CC6EB2BEA17F100A978C7 /* GetStationsUseCase.swift in Sources */,
+				722CC6EF2BEA17F100A978C7 /* HTTPRequest.swift in Sources */,
+				722CC6F02BEA17F100A978C7 /* Station.swift in Sources */,
+				722CC6EE2BEA17F100A978C7 /* HTTPDataSource.swift in Sources */,
+				722CC6EC2BEA17F100A978C7 /* GIOSApiRepository.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,7 +369,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				72F4FF2B2BE8EE99005A90EC /* AirQualityTests.swift in Sources */,
+				722CC7072BEA182B00A978C7 /* HTTPDataSourceMock.swift in Sources */,
+				722CC7012BEA182B00A978C7 /* EmptyError.swift in Sources */,
+				722CC7062BEA182B00A978C7 /* ErrorDummy.swift in Sources */,
+				722CC7032BEA182B00A978C7 /* GIOSApiRepositoryTests.swift in Sources */,
+				722CC7022BEA182B00A978C7 /* AirQualityTests.swift in Sources */,
+				722CC7042BEA182B00A978C7 /* HTTPDataStoreTests.swift in Sources */,
+				722CC7052BEA182B00A978C7 /* EndpointFake.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1158,6 +1289,30 @@
 			defaultConfigurationName = "Production-Debug";
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		722CC6F22BEA180E00A978C7 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.9.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		722CC6F32BEA180E00A978C7 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 722CC6F22BEA180E00A978C7 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		722CC6F52BEA180E00A978C7 /* AlamofireDynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 722CC6F22BEA180E00A978C7 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = AlamofireDynamic;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 72D8F8FC2BD8764500F26FB1 /* Project object */;
 }
