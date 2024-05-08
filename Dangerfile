@@ -6,7 +6,7 @@ xcode_summary.inline_mode = true
 #   result.message.include? 'warning'
 # }
 
-xcode_summary.report 'tests_results.xcresult'
+xcode_summary.report 'danger.xcresult'
 
 # Check was any "print" left in code
 ios_logs.check
