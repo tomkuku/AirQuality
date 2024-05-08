@@ -17,8 +17,6 @@
 		722CC6EF2BEA17F100A978C7 /* HTTPRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6E22BEA17F100A978C7 /* HTTPRequest.swift */; };
 		722CC6F02BEA17F100A978C7 /* Station.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6E42BEA17F100A978C7 /* Station.swift */; };
 		722CC6F12BEA17F100A978C7 /* DependenciesContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6E62BEA17F100A978C7 /* DependenciesContainer.swift */; };
-		722CC6F42BEA180E00A978C7 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 722CC6F32BEA180E00A978C7 /* Alamofire */; };
-		722CC6F62BEA180E00A978C7 /* AlamofireDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 722CC6F52BEA180E00A978C7 /* AlamofireDynamic */; };
 		722CC7012BEA182B00A978C7 /* EmptyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6F72BEA182B00A978C7 /* EmptyError.swift */; };
 		722CC7022BEA182B00A978C7 /* AirQualityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6F82BEA182B00A978C7 /* AirQualityTests.swift */; };
 		722CC7032BEA182B00A978C7 /* GIOSApiRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6F92BEA182B00A978C7 /* GIOSApiRepositoryTests.swift */; };
@@ -26,6 +24,7 @@
 		722CC7052BEA182B00A978C7 /* EndpointFake.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6FC2BEA182B00A978C7 /* EndpointFake.swift */; };
 		722CC7062BEA182B00A978C7 /* ErrorDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6FD2BEA182B00A978C7 /* ErrorDummy.swift */; };
 		722CC7072BEA182B00A978C7 /* HTTPDataSourceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6FE2BEA182B00A978C7 /* HTTPDataSourceMock.swift */; };
+		726140D92BEB88FD0027961C /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 726140D82BEB88FD0027961C /* Alamofire */; };
 		72D8F9082BD8764500F26FB1 /* AirQualityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72D8F9072BD8764500F26FB1 /* AirQualityApp.swift */; };
 		72D8F90A2BD8764500F26FB1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72D8F9092BD8764500F26FB1 /* ContentView.swift */; };
 		72D8F90C2BD8764600F26FB1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 72D8F90B2BD8764600F26FB1 /* Assets.xcassets */; };
@@ -78,8 +77,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				722CC6F42BEA180E00A978C7 /* Alamofire in Frameworks */,
-				722CC6F62BEA180E00A978C7 /* AlamofireDynamic in Frameworks */,
+				726140D92BEB88FD0027961C /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,8 +237,7 @@
 			);
 			name = AirQuality;
 			packageProductDependencies = (
-				722CC6F32BEA180E00A978C7 /* Alamofire */,
-				722CC6F52BEA180E00A978C7 /* AlamofireDynamic */,
+				726140D82BEB88FD0027961C /* Alamofire */,
 			);
 			productName = AirQuality;
 			productReference = 72D8F9042BD8764500F26FB1 /* AirQuality.app */;
@@ -293,7 +290,7 @@
 			);
 			mainGroup = 72D8F8FB2BD8764500F26FB1;
 			packageReferences = (
-				722CC6F22BEA180E00A978C7 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				726140D72BEB88FD0027961C /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = 72D8F9052BD8764500F26FB1 /* Products */;
 			projectDirPath = "";
@@ -1294,7 +1291,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		722CC6F22BEA180E00A978C7 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+		726140D72BEB88FD0027961C /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
 			requirement = {
@@ -1305,15 +1302,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		722CC6F32BEA180E00A978C7 /* Alamofire */ = {
+		726140D82BEB88FD0027961C /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 722CC6F22BEA180E00A978C7 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			package = 726140D72BEB88FD0027961C /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
-		};
-		722CC6F52BEA180E00A978C7 /* AlamofireDynamic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 722CC6F22BEA180E00A978C7 /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = AlamofireDynamic;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
