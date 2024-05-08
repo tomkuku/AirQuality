@@ -10,7 +10,6 @@ SCHEME = Development
 PLATFORM = 'iOS Simulator'
 DEVICE = 'iPhone 15 Pro'
 IOS_VERSION = 17.0.1
-CODE_SIGNING_ALLOWED = NO
 DANGER_XCRESULT = tests_results.xcresult
 
 # - Targets

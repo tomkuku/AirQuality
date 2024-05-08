@@ -1,3 +1,5 @@
+warn("Big pull request") if git.lines_of_code > 2
+
 # Xcode summary
 xcode_summary.inline_mode = true
 
@@ -10,5 +12,3 @@ xcode_summary.report 'tests_results.xcresult'
 
 # Check was any "print" left in code
 ios_logs.check
-
-warn("Big pull request") if git.lines_of_code > 2
