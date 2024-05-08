@@ -30,7 +30,8 @@ build_and_test:
 	clean test \
 	-project $(PROJECT) \
 	-scheme $(SCHEME) \
-	-destination platform=$(PLATFORM),name=$(DEVICE),OS=$(IOS_VERSION)
+	-destination platform=$(PLATFORM),name=$(DEVICE),OS=$(IOS_VERSION) \
+	| xcbeautify --renderer github-actions
 
 run_danger:
 	@echo "ℹ️ Running danger"

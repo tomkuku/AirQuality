@@ -22,3 +22,5 @@ jobs:
       if: github.event_name == 'pull_request'
       run: |
         make -f .ci-cd/build_and_test.mk -b run_danger
+      env:
+        DANGER_GITHUB_API_TOKEN: ${{ secrets.DANGER_GITHUB_API_TOKEN }}

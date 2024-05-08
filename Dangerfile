@@ -1,5 +1,3 @@
-warn("Big pull request") if git.lines_of_code > 2
-
 # Xcode summary
 xcode_summary.inline_mode = true
 
