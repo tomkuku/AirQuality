@@ -11,10 +11,10 @@ jobs:
     - uses: actions/checkout@v1
     - name: Install xcbeautify
       run: |
-        brew install xcbeautify
+        ./scripts/installBrewDependencyIfNeeded.sh "xcbeautify"
     - name: Install SwiftLint
       run: |
-        brew install swiftlint
+        ./scripts/installBrewDependencyIfNeeded.sh "swiftlint"
     - name: Build and Test
       run: |
         make -f .ci-cd/build_and_test.mk
@@ -22,5 +22,3 @@ jobs:
       if: github.event_name == 'pull_request'
       run: |
         make -f .ci-cd/build_and_test.mk -b run_danger
-      env:
-        DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
