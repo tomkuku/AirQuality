@@ -13,15 +13,12 @@ IOS_VERSION = 17.0.1
 DANGER_XCRESULT = tests_results.xcresult
 
 # - Targets
-all: prepare_environemnt run_danger
+all: prepare_environemnt build_and_test
 
 prepare_environemnt:
 	@echo "ℹ️ Reseting simulators"
 	@# Shutdown all devices and boot again to be sure that right simulator is booted
 	@xcrun simctl shutdown all
-	@xcrun simctl boot $(DEVICE)
-	@# Uninstall app and erase simulator to avoid error while tests
-	@xcrun simctl shutdown $(DEVICE)
 	@xcrun simctl erase $(DEVICE)
 	@echo "ℹ️ Removing DerivedData" 
 	@rm -rf ~/Library/Developer/Xcode/DerivedData

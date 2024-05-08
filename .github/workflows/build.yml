@@ -1,0 +1,26 @@
+name: Build and Test
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:  
+  build-and-test:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install xcbeautify
+      run: |
+        brew install xcbeautify
+    - name: Install SwiftLint
+      run: |
+        brew install swiftlint
+    - name: Build and Test
+      run: |
+        make -f .ci-cd/build_and_test.mk
+    - name: Run Danger
+      if: github.event_name == 'pull_request'
+      run: |
+        make -f .ci-cd/build_and_test.mk -b run_danger
+      env:
+        DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
