@@ -11,7 +11,7 @@ protocol HasGIOSApiRepository {
     var giosApiRepository: GIOSApiRepositoryProtocol { get }
 }
 
-protocol GIOSApiRepositoryProtocol {
+protocol GIOSApiRepositoryProtocol: Sendable {
     func fetch<T>(
         mapperType: T.Type,
         endpoint: HTTPRequest,

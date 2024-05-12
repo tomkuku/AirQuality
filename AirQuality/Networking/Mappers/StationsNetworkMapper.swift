@@ -14,7 +14,7 @@ public struct StationsNetworkMapper: MapperProtocol {
         try input.map {
             guard let latitude = Double($0.latitude), let longitude = Double($0.longitude) else {
                 throw NSError(domain: "GetStationsResponseMapper", code: -1, userInfo: [
-                    NSLocalizedDescriptionKey:  "Converting station latitude: \($0.latitude) or longitude: \($0.longitude) failed!"
+                    NSLocalizedDescriptionKey: "Converting station latitude: \($0.latitude) or longitude: \($0.longitude) failed!"
                 ])
             }
             

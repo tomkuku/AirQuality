@@ -9,22 +9,22 @@ import SwiftUI
 
 @main
 struct AirQualityApp: App {
+    
+    @StateObject private var appCoordinator = AppCoordinator(navigationPath: .constant(NavigationPath()))
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationStack(path: $appCoordinator.navigationPath) {
+                appCoordinator.getView(for: .stationsList)
+                    .navigationDestination(for: AppFlow.self) { appFlow in
+                        appCoordinator.getView(for: appFlow)
+                    }
+                    .environmentObject(appCoordinator)
+            }
         }
     }
     
     init() {
-//        DependenciesContainerManager.container = DependenciesContainer()
-//        
-//        Task {
-//            do {
-//                let stations = try await GetStationsUseCase().getAllStations()
-//                print(stations)
-//            } catch {
-//                fatalError(error.localizedDescription)
-//            }
-//        }
+        DependenciesContainerManager.container = DependenciesContainer()
     }
 }

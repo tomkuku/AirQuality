@@ -1,18 +1,12 @@
 //
-//  Endpoint.swift
+//  Stations.swift
+//  AirQuality
 //
-//
-//  Created by Tomasz Kukułka on 26/04/2024.
+//  Created by Tomasz Kukułka on 10/05/2024.
 //
 
 import Foundation
-import Alamofire
-
-enum Endpoint {
-    enum Stations {
-        case get
-    }
-}
+import struct Alamofire.HTTPMethod
 
 extension Endpoint.Stations: HTTPRequest {
     var baseURL: String {

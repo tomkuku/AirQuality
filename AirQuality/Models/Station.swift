@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Station {
+struct Station: Hashable, Sendable, Identifiable {
     let id: Int
     let name: String
     let latitude: Double // φ
@@ -15,5 +15,5 @@ public struct Station {
     let cityName: String
     let commune: String
     let province: String
-    let street: String
+    let street: String?
 }

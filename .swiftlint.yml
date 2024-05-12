@@ -50,6 +50,7 @@ disabled_rules:
   - strong_iboutlet
   - superfluous_else
   - switch_case_on_newline
+  - todo
   - toggle_bool
   - trailing_closure
   - unavailable_function
@@ -66,8 +67,7 @@ attributes:
     - "@discardableResult"
   always_on_same_line:
     - "@objc"
-    - "@IBAction"
-    - "@IBOutlet"
+    - "@Injected"
 
 line_length:
   warning: 200
