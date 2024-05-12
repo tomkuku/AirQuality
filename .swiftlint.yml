@@ -53,6 +53,7 @@ disabled_rules:
   - todo
   - toggle_bool
   - trailing_closure
+  - type_contents_order
   - unavailable_function
   - unused_capture_list # It's deprecated and will be removed in a future release.
   - vertical_whitespace_between_cases

@@ -51,12 +51,3 @@ final class GIOSApiRepository: GIOSApiRepositoryProtocol {
         }
     }
 }
-
-protocol MapperProtocol {
-    associatedtype NetworkModel: Decodable
-    associatedtype DomainModel
-    
-    init()
-    
-    func map(_ input: NetworkModel) throws -> DomainModel
-}

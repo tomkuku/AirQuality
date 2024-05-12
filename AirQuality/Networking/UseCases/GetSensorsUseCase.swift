@@ -20,7 +20,7 @@ final class GetSensorsUseCase: GetSensorsUseCaseProtocol {
     func getSensors(for stationId: Int) async throws -> [Sensor] {
         try await giosApiRepository.fetch(
             mapperType: SensorsNetworkMapper.self,
-            endpoint: Endpoint.Sensors.get(1),
+            endpoint: Endpoint.Sensors.get(stationId),
             contentContainerName: "Lista stanowisk pomiarowych dla podanej stacji"
         )
     }

@@ -16,20 +16,24 @@ struct SelectedStationView: View {
                     ForEach(viewModel.sensors) { sensor in
                         HStack {
                             VStack(alignment: .leading, spacing: 8) {
-                                Text(sensor.name)
-                                
                                 Text(sensor.formula)
+                                    .font(.system(size: 16, weight: .semibold))
+                                
+                                Text(sensor.name)
+                                    .font(.system(size: 14, weight: .regular))
+                                    .foregroundStyle(Color.black.opacity(0.7))
                             }
                             .padding(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
                             
-                            Rectangle()
-                                .foregroundStyle(.clear)
+                            Spacer()
                         }
+                        .background(Color.white)
                         .cornerRadius(10)
                     }
                 }
                 .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
             }
+            .background(Color.gray.opacity(0.6))
             .task {
                 await viewModel.fetchSensorsForStation()
             }
@@ -42,38 +46,8 @@ struct SelectedStationView: View {
 }
 
 #Preview {
-    let station = Station(id: 11,
-                          name: "",
-                          latitude: 1,
-                          longitude: 1,
-                          cityName: "Kraków",
-                          commune: "Kraków",
-                          province: "Małopolska",
-                          street: "al. Krasińskiego 1")
-    
-    struct GetSensorsUseCasePreviewMock: GetSensorsUseCaseProtocol {
-        func getSensors(for stationId: Int) async throws -> [Sensor] {
-            [
-                Sensor(
-                    id: 11,
-                    name: "Pył zawieszony PM10",
-                    formula: "PM10",
-                    code: "PM10"
-                ),
-                Sensor(
-                    id: 12,
-                    name: "Benzen",
-                    formula: "C6H6",
-                    code: "C6H6"
-                )
-            ]
-        }
+    NavigationStack {
+        SelectedStationView(viewModel: .previewDummy)
+            .navigationBarTitleDisplayMode(.inline)
     }
-    
-    let viewModel = SelectedStationViewModel(
-        station: station,
-        getSensorsUseCase: GetSensorsUseCasePreviewMock()
-    )
-    
-    return SelectedStationView(viewModel: viewModel)
 }

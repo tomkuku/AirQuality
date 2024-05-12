@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Sensor: Sendable, Identifiable {
+struct Sensor: Sendable, Identifiable, Equatable {
     let id: Int
     let name: String
     let formula: String

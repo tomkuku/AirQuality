@@ -31,11 +31,12 @@ struct StationsListView: View {
                     .cornerRadius(10)
                     .accessibility(addTraits: [.isButton])
                     .gesture(TapGesture().onEnded {
-                        // TODO
+                        coordinator.goToStationsList()
                     })
                 }
             }
             .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+            .navigationTitle("Lista Stacji")
         }
         .task {
             await viewModel.fetchStations()
@@ -48,5 +49,8 @@ struct StationsListView: View {
 }
 
 #Preview {
-    StationsListView(viewModel: StationsListViewPreviewMock.viewModel)
+    NavigationStack {
+        StationsListView(viewModel: .previewDummy)
+            .navigationBarTitleDisplayMode(.inline)
+    }
 }
