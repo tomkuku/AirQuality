@@ -12,7 +12,7 @@ protocol GetStationsUseCaseProtocol: Sendable {
     func getAllStations() async throws -> [Station]
 }
 
-final class GetStationsUseCase: GetStationsUseCaseProtocol {
+final class GetStationsUseCase: GetStationsUseCaseProtocol, @unchecked Sendable {
     @Injected(\.giosApiRepository) private var giosApiRepository
     
     init() { }

@@ -50,6 +50,7 @@ disabled_rules:
   - strong_iboutlet
   - superfluous_else
   - switch_case_on_newline
+  - todo
   - toggle_bool
   - trailing_closure
   - unavailable_function

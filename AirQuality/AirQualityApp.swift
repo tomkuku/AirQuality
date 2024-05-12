@@ -28,19 +28,3 @@ struct AirQualityApp: App {
         DependenciesContainerManager.container = DependenciesContainer()
     }
 }
-
-//struct CoordinatorView<T: View>: View {
-//    
-//    @StateObject private var coordinator: DashboardCoordinator
-//    
-//    private let contentView: T
-//    
-//    var body: some View {
-//        contentView
-//    }
-//    
-//    init(coordinator: DashboardCoordinator, contentView: () -> T) {
-//        self._coordinator = StateObject(wrappedValue: coordinator)
-//        self.contentView = contentView()
-//    }
-//}
