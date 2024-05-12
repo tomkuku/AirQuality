@@ -13,16 +13,16 @@ struct Injected<T>: @unchecked Sendable {
         DependenciesContainerManager.container[keyPath: keyPath]
     }
     
-    private let keyPath: KeyPath<DependenciesContainer, T>
+    private let keyPath: KeyPath<AllDependencies, T>
     
-    init(_ keyPath: KeyPath<DependenciesContainer, T>) {
+    init(_ keyPath: KeyPath<AllDependencies, T>) {
         self.keyPath = keyPath
     }
 }
 
 enum DependenciesContainerManager: Sendable {
     // https://github.com/apple/swift-evolution/blob/main/proposals/0412-strict-concurrency-for-global-variables.md
-    nonisolated(unsafe) static var container: DependenciesContainer! // swiftlint:disable:this implicitly_unwrapped_optional
+    nonisolated(unsafe) static var container: AllDependencies! // swiftlint:disable:this implicitly_unwrapped_optional
 }
 
 typealias AllDependencies =

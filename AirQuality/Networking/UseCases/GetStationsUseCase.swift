@@ -15,7 +15,7 @@ protocol GetStationsUseCaseProtocol: Sendable {
 final class GetStationsUseCase: GetStationsUseCaseProtocol, @unchecked Sendable {
     @Injected(\.giosApiRepository) private var giosApiRepository
     
-    init() { }
+    init() {}
     
     func getAllStations() async throws -> [Station] {
         try await giosApiRepository.fetch(
