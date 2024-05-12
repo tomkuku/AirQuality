@@ -11,7 +11,7 @@ import Alamofire
 
 @testable import AirQuality
 
-final class HTTPDataStoreTests: XCTestCase {
+final class HTTPDataStoreTests: BaseTestCase {
     
     private var sut: HTTPDataSource!
     
@@ -24,12 +24,6 @@ final class HTTPDataStoreTests: XCTestCase {
         let session = Session(configuration: configuration)
         
         sut = HTTPDataSource(session: session)
-    }
-    
-    override func tearDown() {
-        sut = nil
-        
-        super.tearDown()
     }
     
     func testRequestDataWhenResponseIsSuccess() async throws {

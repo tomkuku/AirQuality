@@ -24,7 +24,7 @@ final class GIOSApiRepositorySpy: GIOSApiRepositoryProtocol, @unchecked Sendable
     
     private(set) var events: [Event] = []
     
-    var fetchResult: Result<Any, Error> = .failure(ErrorDummy())
+    var fetchResult: Result<Any, Error>!
     
     func fetch<T, R>(
         mapperType: T.Type,
@@ -39,6 +39,8 @@ final class GIOSApiRepositorySpy: GIOSApiRepositoryProtocol, @unchecked Sendable
                 continuation.resume(returning: domainModel as! T.DomainModel) // swiftlint:disable:this force_cast
             case .failure(let error):
                 continuation.resume(throwing: error)
+            case .none:
+                break
             }
         }
     }

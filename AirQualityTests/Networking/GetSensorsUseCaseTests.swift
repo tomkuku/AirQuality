@@ -1,5 +1,5 @@
 //
-//  GetStationsUseCase.swift
+//  GetSensorsUseCaseTests.swift
 //  AirQualityTests
 //
 //  Created by Tomasz Kukułka on 12/05/2024.
@@ -9,9 +9,9 @@ import XCTest
 
 @testable import AirQuality
 
-final class GetStationsUseCaseTests: BaseTestCase {
+final class GetSensorsUseCaseTests: BaseTestCase {
     
-    private var sut: GetStationsUseCase!
+    private var sut: GetSensorsUseCase!
     
     private var giosApiRepositorySpy: GIOSApiRepositorySpy!
     
@@ -20,24 +20,26 @@ final class GetStationsUseCaseTests: BaseTestCase {
         
         giosApiRepositorySpy = GIOSApiRepositorySpy()
         
-        sut = GetStationsUseCase()
+        sut = GetSensorsUseCase()
         
         dependenciesContainerDummy[\.giosApiRepository] = giosApiRepositorySpy
     }
     
-    func testGetStationsWhenSuccess() async throws {
+    func testGetSensorsWhenSuccess() async throws {
         // Given
-        let station1 = Station.dummy(id: 1)
-        let station2 = Station.dummy(id: 2)
+        let sensor1 = Sensor.dummy(id: 1)
+        let sensor2 = Sensor.dummy(id: 2)
         
-        giosApiRepositorySpy.fetchResult = .success([station1, station2])
+        giosApiRepositorySpy.fetchResult = .success([sensor1, sensor2])
+        
+        let id = 123
         
         // When
-        let stations = try await sut.getAllStations()
+        let sensors = try await sut.getSensors(for: id)
         
-        let expectedRequest = try Endpoint.Stations.get.asURLRequest()
-        let expectedDomainModelName = String(describing: [Station].self)
-        let expectedBodyContentDirName = "Lista stacji pomiarowych"
+        let expectedRequest = try Endpoint.Sensors.get(id).asURLRequest()
+        let expectedDomainModelName = String(describing: [Sensor].self)
+        let expectedBodyContentDirName = "Lista stanowisk pomiarowych dla podanej stacji"
         
         // Then
         XCTAssertEqual(giosApiRepositorySpy.events, [
@@ -47,21 +49,24 @@ final class GetStationsUseCaseTests: BaseTestCase {
                 expectedBodyContentDirName
             )
         ])
-        XCTAssertEqual(stations, [station1, station2])
+        
+        XCTAssertEqual(sensors, [sensor1, sensor2])
     }
     
-    func testGetStationsWhenFailure() async throws {
+    func testGetSensorsWhenFailure() async throws {
         // Given
         giosApiRepositorySpy.fetchResult = .failure(ErrorDummy())
         
-        let expectedRequest = try Endpoint.Stations.get.asURLRequest()
-        let expectedDomainModelName = String(describing: [Station].self)
-        let expectedBodyContentDirName = "Lista stacji pomiarowych"
+        let id = 123
+        
+        let expectedRequest = try Endpoint.Sensors.get(id).asURLRequest()
+        let expectedDomainModelName = String(describing: [Sensor].self)
+        let expectedBodyContentDirName = "Lista stanowisk pomiarowych dla podanej stacji"
         
         // When
         do {
-            _ = try await sut.getAllStations()
-            XCTFail("getAllStations should have thrown!")
+            _ = try await sut.getSensors(for: id)
+            XCTFail("getSensors should have thrown!")
         } catch {
             XCTAssertTrue(error is ErrorDummy)
         }

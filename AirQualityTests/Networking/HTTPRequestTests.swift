@@ -10,7 +10,7 @@ import Alamofire
 
 @testable import AirQuality
 
-final class HTTPRequestTests: XCTestCase {
+final class HTTPRequestTests: BaseTestCase {
 
     func testCreateUrl() throws {
         // Given

@@ -10,7 +10,7 @@ import XCTest
 
 @testable import AirQuality
 
-final class GIOSApiRepositoryTest: XCTestCase {
+final class GIOSApiRepositoryTest: BaseTestCase {
     
     private var httpDataSourceMock: HTTPDataSourceMock!
     private var sut: GIOSApiRepository!
@@ -23,14 +23,6 @@ final class GIOSApiRepositoryTest: XCTestCase {
         sut = GIOSApiRepository(httpDataSource: httpDataSourceMock)
         
         MapperSpy.events.removeAll()
-    }
-    
-    override func tearDown() {
-        super.tearDown()
-        
-        sut = nil
-        
-        httpDataSourceMock = nil
     }
     
     func testFetchWhenSuccess() async throws {
@@ -129,10 +121,10 @@ final class GIOSApiRepositoryTest: XCTestCase {
             case map
         }
         
-        static var events: [Event] = []
+        nonisolated(unsafe) static var events: [Event] = []
         
-        static var mapResult: Result<[DomainModelFake], Error> = .failure(ErrorDummy())
-        static var inputs: [NetworkModelFake]?
+        nonisolated(unsafe) static var mapResult: Result<[DomainModelFake], Error> = .failure(ErrorDummy())
+        nonisolated(unsafe) static var inputs: [NetworkModelFake]?
         
         func map(_ input: [NetworkModelFake]) throws -> [DomainModelFake] {
             Self.events.append(.map)
