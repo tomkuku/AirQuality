@@ -87,6 +87,7 @@ final class HTTPDataStoreTests: XCTestCase {
         }
     }
     
+    // "API-ERR-100003" // 429
     func testRequestDataWhenResponseIsFailure() async {
         // Given
         URLProtocolMock.result = .failure(ErrorDummy())

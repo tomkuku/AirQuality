@@ -8,11 +8,11 @@
 import Foundation
 import Alamofire
 
-protocol HTTPDataSourceProtocol {
+protocol HTTPDataSourceProtocol: Sendable {
     func requestData<T>(_ urlRequest: T) async throws -> Data where T: URLRequestConvertible
 }
 
-public final class HTTPDataSource: HTTPDataSourceProtocol {
+public final class HTTPDataSource: HTTPDataSourceProtocol, @unchecked Sendable {
     private let session: Session
     private let queue = DispatchQueue(label: "com.http.data.source")
     

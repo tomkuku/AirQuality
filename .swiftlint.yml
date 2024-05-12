@@ -66,8 +66,7 @@ attributes:
     - "@discardableResult"
   always_on_same_line:
     - "@objc"
-    - "@IBAction"
-    - "@IBOutlet"
+    - "@Injected"
 
 line_length:
   warning: 200

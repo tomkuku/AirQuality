@@ -8,7 +8,7 @@
 import Foundation
 
 @propertyWrapper
-struct Injected<T> {
+struct Injected<T>: @unchecked Sendable {
     var wrappedValue: T {
         DependenciesContainerManager.container[keyPath: keyPath]
     }
@@ -20,19 +20,19 @@ struct Injected<T> {
     }
 }
 
-final class DependenciesContainerManager {
-    static var container: DependenciesContainer!
+enum DependenciesContainerManager: Sendable {
+    // https://github.com/apple/swift-evolution/blob/main/proposals/0412-strict-concurrency-for-global-variables.md
+    nonisolated(unsafe) static var container: DependenciesContainer! // swiftlint:disable:this implicitly_unwrapped_optional
 }
 
 typealias AllDependencies =
 HasGIOSApiRepository
 
 struct DependenciesContainer: AllDependencies {
-    var httpDataSource: HTTPDataSourceProtocol
-    var giosApiRepository: GIOSApiRepositoryProtocol
+    let giosApiRepository: GIOSApiRepositoryProtocol
     
     init() {
-        self.httpDataSource = HTTPDataSource()
+        let httpDataSource = HTTPDataSource()
         self.giosApiRepository = GIOSApiRepository(httpDataSource: httpDataSource)
     }
 }
