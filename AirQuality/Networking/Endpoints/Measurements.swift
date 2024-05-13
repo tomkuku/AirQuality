@@ -1,14 +1,14 @@
 //
-//  Sensors.swift
+//  Measurements.swift
 //  AirQuality
 //
-//  Created by Tomasz Kukułka on 10/05/2024.
+//  Created by Tomasz Kukułka on 13/05/2024.
 //
 
 import Foundation
 import struct Alamofire.HTTPMethod
 
-extension Endpoint.Sensors: HTTPRequest {
+extension Endpoint.Measurements: HTTPRequest {
     var baseURL: String {
         switch self {
         case .get:
@@ -19,7 +19,7 @@ extension Endpoint.Sensors: HTTPRequest {
     var path: String {
         switch self {
         case .get(let id):
-            "/pjp-api/v1/rest/station/sensors/" + "\(id)"
+            "/pjp-api/v1/rest/data/getData/" + "\(id)"
         }
     }
     

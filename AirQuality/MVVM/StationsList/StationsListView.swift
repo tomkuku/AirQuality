@@ -31,7 +31,7 @@ struct StationsListView: View {
                     .cornerRadius(10)
                     .accessibility(addTraits: [.isButton])
                     .gesture(TapGesture().onEnded {
-                        coordinator.goToStationsList()
+                        coordinator.gotSelectedStation(station)
                     })
                 }
             }

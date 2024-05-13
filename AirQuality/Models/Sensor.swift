@@ -12,4 +12,5 @@ struct Sensor: Sendable, Identifiable, Equatable {
     let name: String
     let formula: String
     let code: String
+    var measurements: [AirQuality.Measurement] = []
 }

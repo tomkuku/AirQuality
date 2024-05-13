@@ -26,6 +26,15 @@ struct SelectedStationView: View {
                             .padding(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
                             
                             Spacer()
+                            
+                            VStack(alignment: .trailing, spacing: 8) {
+                                Text("\(sensor.measurements.last?.value ?? 0.0)")
+                                    .font(.system(size: 16, weight: .semibold))
+                                
+//                                Text(sensor.measurements.last?.date ?? "none")
+//                                    .font(.system(size: 14, weight: .regular))
+//                                    .foregroundStyle(Color.black.opacity(0.7))
+                            }
                         }
                         .background(Color.white)
                         .cornerRadius(10)
@@ -35,9 +44,11 @@ struct SelectedStationView: View {
             }
             .background(Color.gray.opacity(0.6))
             .task {
+                Logger.info("Start")
                 await viewModel.fetchSensorsForStation()
             }
             .navigationTitle(viewModel.fomattedStationAddress)
+            .navigationBarTitleDisplayMode(.inline)
     }
     
     init(viewModel: SelectedStationViewModel) {

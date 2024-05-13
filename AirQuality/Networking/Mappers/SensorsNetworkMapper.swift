@@ -7,9 +7,7 @@
 
 import Foundation
 
-public struct SensorsNetworkMapper: MapperProtocol {
-    public init() { }
-    
+struct SensorsNetworkMapper: MapperProtocol {
     func map(_ input: [SensorNetworkModel]) throws -> [Sensor] {
         input.map {
             Sensor(

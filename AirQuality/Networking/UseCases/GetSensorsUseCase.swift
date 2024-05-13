@@ -15,8 +15,6 @@ protocol GetSensorsUseCaseProtocol {
 final class GetSensorsUseCase: GetSensorsUseCaseProtocol {
     @Injected(\.giosApiRepository) private var giosApiRepository
     
-    init() { }
-    
     func getSensors(for stationId: Int) async throws -> [Sensor] {
         try await giosApiRepository.fetch(
             mapperType: SensorsNetworkMapper.self,
