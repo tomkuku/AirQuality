@@ -10,9 +10,11 @@ import XCTest
 @testable import AirQuality
 
 class BaseTestCase: XCTestCase {
-    var dependenciesContainerDummy: DependenciesContainerDummy! // swiftlint:disable:this test_case_accessibility
-    
-    private var appDependencies: DependenciesContainerProtocol!
+    // swiftlint:disable test_case_accessibility
+    var dependenciesContainerDummy: DependenciesContainerDummy!
+    var expectation: XCTestExpectation!
+    var appDependencies: DependenciesContainerProtocol!
+    // swiftlint:enable test_case_accessibility
     
     override func setUp() {
         super.setUp()
@@ -22,6 +24,8 @@ class BaseTestCase: XCTestCase {
         dependenciesContainerDummy = DependenciesContainerDummy()
         
         DependenciesContainerManager.container = dependenciesContainerDummy
+        
+        expectation = XCTestExpectation(description: String(describing: Self.self))
     }
     
     override func tearDown() {

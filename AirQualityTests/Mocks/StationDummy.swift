@@ -18,7 +18,7 @@ extension Station {
         cityName: String = "Kraków",
         commune: String = "Kraków",
         province: String = "Małopolskie",
-        street: String = "al Krasińskiego 1"
+        street: String? = "al Krasińskiego 1"
     ) -> Self {
         Self(
             id: id,

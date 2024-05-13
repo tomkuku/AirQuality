@@ -8,7 +8,6 @@
 import Foundation
 import Alamofire
 
-@MainActor
 final class SelectedStationViewModel: ObservableObject {
     
     let station: Station
@@ -81,7 +80,7 @@ final class SelectedStationViewModel: ObservableObject {
     }
     
     private func formatSensorsMeasuremnts(sensors: [Sensor]) {
-        self.sensors = sensors.map { sensor in
+        let formattedSensors = sensors.map { sensor in
             var formattedMeasurementDate: String?
             var formattedMeasurementValue: String?
             
@@ -105,6 +104,8 @@ final class SelectedStationViewModel: ObservableObject {
                 lastMeasurementDate: formattedMeasurementDate ?? ""
             )
         }
+        
+        self.sensors = formattedSensors
     }
     
     private func fetchMeasurementsForSensor(sensor: Sensor) async throws -> Sensor {

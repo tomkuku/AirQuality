@@ -64,6 +64,10 @@
 		72F4FF1E2BE8D140005A90EC /* Production.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 72F4FF1D2BE8D140005A90EC /* Production.xcconfig */; };
 		72FB16AD2BF1FDFB007FED02 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FB16AC2BF1FDFB007FED02 /* Logger.swift */; };
 		72FB16AF2BF20AC8007FED02 /* SelectedStationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FB16AE2BF20AC8007FED02 /* SelectedStationModel.swift */; };
+		72FB16B12BF2295C007FED02 /* SelectedStationViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FB16B02BF2295C007FED02 /* SelectedStationViewModelTests.swift */; };
+		72FB16B52BF22B20007FED02 /* GetSensorsUseCaseSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FB16B42BF22B20007FED02 /* GetSensorsUseCaseSpy.swift */; };
+		72FB16B72BF22C09007FED02 /* GetSensorMeasurementsUseCaseSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FB16B62BF22C09007FED02 /* GetSensorMeasurementsUseCaseSpy.swift */; };
+		72FB16B92BF22D1D007FED02 /* MeasurementDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FB16B82BF22D1D007FED02 /* MeasurementDummy.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -136,6 +140,10 @@
 		72F4FF282BE8EE99005A90EC /* AirQualityTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AirQualityTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		72FB16AC2BF1FDFB007FED02 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		72FB16AE2BF20AC8007FED02 /* SelectedStationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedStationModel.swift; sourceTree = "<group>"; };
+		72FB16B02BF2295C007FED02 /* SelectedStationViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedStationViewModelTests.swift; sourceTree = "<group>"; };
+		72FB16B42BF22B20007FED02 /* GetSensorsUseCaseSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetSensorsUseCaseSpy.swift; sourceTree = "<group>"; };
+		72FB16B62BF22C09007FED02 /* GetSensorMeasurementsUseCaseSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetSensorMeasurementsUseCaseSpy.swift; sourceTree = "<group>"; };
+		72FB16B82BF22D1D007FED02 /* MeasurementDummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementDummy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -211,16 +219,14 @@
 			path = Utilites;
 			sourceTree = "<group>";
 		};
-		722CC6FB2BEA182B00A978C7 /* Networking */ = {
+		722CC6FB2BEA182B00A978C7 /* DataSourceLayer */ = {
 			isa = PBXGroup;
 			children = (
 				722CC6F82BEA182B00A978C7 /* HTTPRequestTests.swift */,
 				722CC6F92BEA182B00A978C7 /* GIOSApiRepositoryTests.swift */,
 				722CC6FA2BEA182B00A978C7 /* HTTPDataStoreTests.swift */,
-				72E81FD62BF11A6A00218BEA /* GetStationsUseCaseTests.swift */,
-				72E81FDF2BF1268B00218BEA /* GetSensorsUseCaseTests.swift */,
 			);
-			path = Networking;
+			path = DataSourceLayer;
 			sourceTree = "<group>";
 		};
 		722CC6FF2BEA182B00A978C7 /* Helpers */ = {
@@ -366,7 +372,10 @@
 				72E81FD82BF11AB300218BEA /* GIOSApiRepositorySpy.swift */,
 				72E81FDC2BF11D2400218BEA /* StationDummy.swift */,
 				72E81FE12BF127BD00218BEA /* SensorDummy.swift */,
+				72FB16B82BF22D1D007FED02 /* MeasurementDummy.swift */,
 				72E81FF62BF16C2A00218BEA /* DependenciesContainerDummy.swift */,
+				72FB16B42BF22B20007FED02 /* GetSensorsUseCaseSpy.swift */,
+				72FB16B62BF22C09007FED02 /* GetSensorMeasurementsUseCaseSpy.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -393,9 +402,28 @@
 			children = (
 				722CC6FF2BEA182B00A978C7 /* Helpers */,
 				72E81FEE2BF162C400218BEA /* Mocks */,
-				722CC6FB2BEA182B00A978C7 /* Networking */,
+				72FB16B32BF22A3C007FED02 /* DomainLayer */,
+				722CC6FB2BEA182B00A978C7 /* DataSourceLayer */,
+				72FB16B22BF22A2B007FED02 /* PresentationLayer */,
 			);
 			path = AirQualityTests;
+			sourceTree = "<group>";
+		};
+		72FB16B22BF22A2B007FED02 /* PresentationLayer */ = {
+			isa = PBXGroup;
+			children = (
+				72FB16B02BF2295C007FED02 /* SelectedStationViewModelTests.swift */,
+			);
+			path = PresentationLayer;
+			sourceTree = "<group>";
+		};
+		72FB16B32BF22A3C007FED02 /* DomainLayer */ = {
+			isa = PBXGroup;
+			children = (
+				72E81FD62BF11A6A00218BEA /* GetStationsUseCaseTests.swift */,
+				72E81FDF2BF1268B00218BEA /* GetSensorsUseCaseTests.swift */,
+			);
+			path = DomainLayer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -573,6 +601,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				72FB16B12BF2295C007FED02 /* SelectedStationViewModelTests.swift in Sources */,
 				722CC7072BEA182B00A978C7 /* HTTPDataSourceMock.swift in Sources */,
 				72E81FD72BF11A6A00218BEA /* GetStationsUseCaseTests.swift in Sources */,
 				72E81FE22BF127BD00218BEA /* SensorDummy.swift in Sources */,
@@ -582,11 +611,14 @@
 				722CC7032BEA182B00A978C7 /* GIOSApiRepositoryTests.swift in Sources */,
 				722CC7022BEA182B00A978C7 /* HTTPRequestTests.swift in Sources */,
 				72E81FD92BF11AB400218BEA /* GIOSApiRepositorySpy.swift in Sources */,
+				72FB16B52BF22B20007FED02 /* GetSensorsUseCaseSpy.swift in Sources */,
+				72FB16B92BF22D1D007FED02 /* MeasurementDummy.swift in Sources */,
 				72E81FDD2BF11D2400218BEA /* StationDummy.swift in Sources */,
 				722CC7042BEA182B00A978C7 /* HTTPDataStoreTests.swift in Sources */,
 				72E81FEB2BF1627400218BEA /* BaseTestCase.swift in Sources */,
 				722CC7052BEA182B00A978C7 /* EndpointFake.swift in Sources */,
 				72E81FED2BF1629300218BEA /* OptionalProtocol.swift in Sources */,
+				72FB16B72BF22C09007FED02 /* GetSensorMeasurementsUseCaseSpy.swift in Sources */,
 				72E81FF72BF16C2A00218BEA /* DependenciesContainerDummy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
