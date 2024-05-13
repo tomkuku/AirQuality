@@ -16,4 +16,8 @@ enum Endpoint {
     enum Sensors {
         case get(Int)
     }
+    
+    enum Measurements {
+        case get(Int)
+    }
 }

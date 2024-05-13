@@ -21,6 +21,8 @@ disabled_rules:
   - file_length
   - file_name
   - file_types_order
+  - force_cast
+  - force_try
   - force_unwrapping
   - function_body_length
   - function_default_parameter_at_end

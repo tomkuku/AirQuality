@@ -9,6 +9,13 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v1
+    - uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.3'
+    - name: Logs
+      run: |
+        /usr/bin/xcodebuild -version
+        xcrun swift -version
     - name: Install xcbeautify
       run: |
         ./scripts/installBrewDependencyIfNeeded.sh "xcbeautify"

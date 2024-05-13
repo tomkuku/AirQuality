@@ -12,11 +12,11 @@ protocol HasGIOSApiRepository {
 }
 
 protocol GIOSApiRepositoryProtocol: Sendable {
-    func fetch<T>(
+    func fetch<T, R>(
         mapperType: T.Type,
-        endpoint: HTTPRequest,
+        endpoint: R,
         contentContainerName: String
-    ) async throws -> T.DomainModel where T: MapperProtocol
+    ) async throws -> T.DomainModel where T: MapperProtocol, R: HTTPRequest
 }
 
 final class GIOSApiRepository: GIOSApiRepositoryProtocol {
@@ -32,11 +32,11 @@ final class GIOSApiRepository: GIOSApiRepositoryProtocol {
     
     // MARK: Methods
     
-    func fetch<T>(
+    func fetch<T, R>(
         mapperType: T.Type,
-        endpoint: HTTPRequest,
+        endpoint: R,
         contentContainerName: String
-    ) async throws -> T.DomainModel where T: MapperProtocol {
+    ) async throws -> T.DomainModel where T: MapperProtocol, R: HTTPRequest {
         let mapper = T()
         let request = try endpoint.asURLRequest()
         
@@ -50,13 +50,4 @@ final class GIOSApiRepository: GIOSApiRepositoryProtocol {
             throw error
         }
     }
-}
-
-protocol MapperProtocol {
-    associatedtype NetworkModel: Decodable
-    associatedtype DomainModel
-    
-    init()
-    
-    func map(_ input: NetworkModel) throws -> DomainModel
 }

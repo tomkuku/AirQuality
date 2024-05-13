@@ -10,10 +10,6 @@ import Alamofire
 
 @testable import AirQuality
 
-@globalActor actor TestActor: GlobalActor {
-    static let shared = TestActor()
-}
-
 final class HTTPDataSourceMock: HTTPDataSourceProtocol, @unchecked Sendable {
     enum Event {
         case requestData

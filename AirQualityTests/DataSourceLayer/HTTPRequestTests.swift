@@ -1,5 +1,5 @@
 //
-//  AirQualityTests.swift
+//  HTTPRequestTests.swift
 //  AirQualityTests
 //
 //  Created by Tomasz Kukułka on 02/05/2024.
@@ -10,7 +10,7 @@ import Alamofire
 
 @testable import AirQuality
 
-final class AirQualityTests: XCTestCase {
+final class HTTPRequestTests: BaseTestCase {
 
     func testCreateUrl() throws {
         // Given

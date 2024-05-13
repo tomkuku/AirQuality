@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-protocol HTTPRequest: URLRequestConvertible {
+protocol HTTPRequest: URLRequestConvertible, Equatable {
     var baseURL: String { get }
     var path: String { get }
     var method: Alamofire.HTTPMethod { get }

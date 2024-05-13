@@ -8,7 +8,7 @@
 import Foundation
 
 extension Station {
-    static func previewMock(
+    static func previewDummy(
         id: Int = 1,
         name: String = "AlKraKrak",
         latitude: Double = 11,

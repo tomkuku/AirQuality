@@ -11,7 +11,7 @@ import Alamofire
 
 @testable import AirQuality
 
-final class HTTPDataStoreTests: XCTestCase {
+final class HTTPDataStoreTests: BaseTestCase {
     
     private var sut: HTTPDataSource!
     
@@ -21,21 +21,13 @@ final class HTTPDataStoreTests: XCTestCase {
         let configuration = URLSessionConfiguration.default
         configuration.protocolClasses = [URLProtocolMock.self]
         
-        let session = Session(configuration: configuration)
-        
-        sut = HTTPDataSource(session: session)
-    }
-    
-    override func tearDown() {
-        sut = nil
-        
-        super.tearDown()
+        sut = HTTPDataSource(sessionConfiguration: configuration)
     }
     
     func testRequestDataWhenResponseIsSuccess() async throws {
         // Given
         let data = "test".data(using: .utf8)!
-            
+        
         let url = URL(string: "https://www.test.com")!
         
         let response = HTTPURLResponse(
@@ -57,7 +49,7 @@ final class HTTPDataStoreTests: XCTestCase {
     func testRequestDataWhenResponseStatusCodeIsUnacceptable() async throws {
         // Given
         let data = "test".data(using: .utf8)!
-            
+        
         let url = URL(string: "https://www.test.com")!
         
         let response = HTTPURLResponse(
@@ -111,30 +103,30 @@ final class HTTPDataStoreTests: XCTestCase {
             XCTAssertTrue(true)
         }
     }
-}
-
-final class URLProtocolMock: URLProtocol {
-    static var result: Result<(HTTPURLResponse, Data), Error> = .failure(ErrorDummy())
     
-    final override class func canInit(with request: URLRequest) -> Bool {
-        true
-    }
-    
-    final override class func canonicalRequest(for request: URLRequest) -> URLRequest {
-        request
-    }
-    
-    final override func startLoading() {
-        switch Self.result {
-        case .success(let (response, data)):
-            client?.urlProtocol(self, didLoad: data)
-            client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
-        case .failure(let error):
-            client?.urlProtocol(self, didFailWithError: error)
+    private final class URLProtocolMock: URLProtocol, @unchecked Sendable {
+        nonisolated(unsafe) static var result: Result<(HTTPURLResponse, Data), Error> = .failure(ErrorDummy())
+        
+        final override class func canInit(with request: URLRequest) -> Bool {
+            true
         }
         
-        client?.urlProtocolDidFinishLoading(self)
+        final override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+            request
+        }
+        
+        final override func startLoading() {
+            switch Self.result {
+            case .success(let (response, data)):
+                client?.urlProtocol(self, didLoad: data)
+                client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+            case .failure(let error):
+                client?.urlProtocol(self, didFailWithError: error)
+            }
+            
+            client?.urlProtocolDidFinishLoading(self)
+        }
+        
+        final override func stopLoading() { }
     }
-    
-    final override func stopLoading() { }
 }
