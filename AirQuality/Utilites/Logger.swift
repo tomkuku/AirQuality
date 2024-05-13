@@ -7,6 +7,7 @@
 
 import OSLog
 import Foundation
+import Alamofire
 
 enum Logger {
     private nonisolated(unsafe)  static var subsystem = Bundle.main.bundleIdentifier! // swiftlint:disable:this force_unwrapping

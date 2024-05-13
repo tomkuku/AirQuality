@@ -6,17 +6,25 @@
 //
 
 import Foundation
+import Alamofire
 
+@MainActor
 final class SelectedStationViewModel: ObservableObject {
     
     let station: Station
     
-    @Published private(set) var sensors: [Sensor] = []
+    @Published private(set) var sensors: [SelectedStationModel.Sensor] = []
     @Published private(set) var error: Error?
     
     var fomattedStationAddress: String {
-        station.cityName + (station.street ?? "")
+        station.cityName + " " + (station.street ?? "")
     }
+    
+    private let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm"
+        return formatter
+    }()
     
     private let getSensorsUseCase: GetSensorsUseCaseProtocol
     private let getSensorMeasurementsUseCase: GetSensorMeasurementsUseCaseProtocol
@@ -31,15 +39,27 @@ final class SelectedStationViewModel: ObservableObject {
         self.getSensorMeasurementsUseCase = getSensorMeasurementsUseCase
     }
     
-    @MainActor
     func fetchSensorsForStation() async {
         do {
-            let sensors = try await getSensorsUseCase.getSensors(for: station.id)
+            var sensors = try await getSensorsUseCase.getSensors(for: station.id)
             
-            self.sensors = try await withThrowingTaskGroup(of: Sensor?.self) { group in
+            sensors = try await withThrowingTaskGroup(of: Sensor?.self) { group in
                 sensors.forEach { sensor in
                     group.addTask { [weak self] in
-                        try await self?.fetchMeasurementsForSensor(sensor: sensor)
+                        do {
+                            return try await self?.fetchMeasurementsForSensor(sensor: sensor)
+                        } catch {
+                            guard
+                                let afError = error.asAFError,
+                                case .responseValidationFailed(let reason) = afError,
+                                case .unacceptableStatusCode(let code) = reason,
+                                code == 400
+                            else {
+                                throw error
+                            }
+                            
+                            return nil
+                        }
                     }
                 }
                 
@@ -52,9 +72,38 @@ final class SelectedStationViewModel: ObservableObject {
                 
                 return sensorsWithMeasurements
             }
+            
+            formatSensorsMeasuremnts(sensors: sensors)
         } catch {
             Logger.error(error.localizedDescription)
             self.error = error
+        }
+    }
+    
+    private func formatSensorsMeasuremnts(sensors: [Sensor]) {
+        self.sensors = sensors.map { sensor in
+            var formattedMeasurementDate: String?
+            var formattedMeasurementValue: String?
+            
+            if sensor.measurements.isEmpty {
+                formattedMeasurementValue = "No measuremnts"
+            } else {
+                for measurement in sensor.measurements {
+                    let formattedDate = dateFormatter.string(from: measurement.date)
+                    let formattedValue = String(format: "%.2f", measurement.value)
+                    
+                    formattedMeasurementDate = formattedDate
+                    formattedMeasurementValue = formattedValue
+                }
+            }
+            
+            return SelectedStationModel.Sensor(
+                id: sensor.id,
+                name: sensor.name,
+                formula: sensor.formula,
+                lastMeasurementValue: formattedMeasurementValue ?? "",
+                lastMeasurementDate: formattedMeasurementDate ?? ""
+            )
         }
     }
     

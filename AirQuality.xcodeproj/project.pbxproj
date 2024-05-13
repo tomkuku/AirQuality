@@ -63,6 +63,7 @@
 		72F4FF1C2BE8D0A6005A90EC /* Development.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 72F4FF1B2BE8D0A6005A90EC /* Development.xcconfig */; };
 		72F4FF1E2BE8D140005A90EC /* Production.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 72F4FF1D2BE8D140005A90EC /* Production.xcconfig */; };
 		72FB16AD2BF1FDFB007FED02 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FB16AC2BF1FDFB007FED02 /* Logger.swift */; };
+		72FB16AF2BF20AC8007FED02 /* SelectedStationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FB16AE2BF20AC8007FED02 /* SelectedStationModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -134,6 +135,7 @@
 		72F4FF1D2BE8D140005A90EC /* Production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Production.xcconfig; sourceTree = "<group>"; };
 		72F4FF282BE8EE99005A90EC /* AirQualityTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AirQualityTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		72FB16AC2BF1FDFB007FED02 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		72FB16AE2BF20AC8007FED02 /* SelectedStationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedStationModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -339,6 +341,7 @@
 			children = (
 				72E81FCB2BF119F100218BEA /* SelectedStationView.swift */,
 				72E81FCC2BF119F100218BEA /* SelectedStationViewModel.swift */,
+				72FB16AE2BF20AC8007FED02 /* SelectedStationModel.swift */,
 			);
 			path = SelectedStation;
 			sourceTree = "<group>";
@@ -560,6 +563,7 @@
 				72FB16AD2BF1FDFB007FED02 /* Logger.swift in Sources */,
 				72E81FDB2BF11C9200218BEA /* Sensor.swift in Sources */,
 				72E81FFD2BF178CD00218BEA /* GetSensorMeasurementsUseCase.swift in Sources */,
+				72FB16AF2BF20AC8007FED02 /* SelectedStationModel.swift in Sources */,
 				72E81FE72BF1307B00218BEA /* AllDependencies.swift in Sources */,
 				722CC6EC2BEA17F100A978C7 /* GIOSApiRepository.swift in Sources */,
 			);

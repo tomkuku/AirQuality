@@ -12,12 +12,17 @@ protocol HTTPDataSourceProtocol: Sendable {
     func requestData<T>(_ urlRequest: T) async throws -> Data where T: URLRequestConvertible
 }
 
-public final class HTTPDataSource: HTTPDataSourceProtocol, @unchecked Sendable {
+final class HTTPDataSource: HTTPDataSourceProtocol, @unchecked Sendable {
     private let session: Session
     private let queue = DispatchQueue(label: "com.http.data.source")
     
-    public init(session: Session = .default) {
-        self.session = session
+    init(sessionConfiguration: URLSessionConfiguration = .af.default) {
+        self.session = Session(
+            configuration: sessionConfiguration,
+            rootQueue: queue,
+            serializationQueue: queue,
+            eventMonitors: [EventMonitorLogger()]
+        )
     }
     
     func requestData<T>(_ urlRequest: T) async throws -> Data where T: URLRequestConvertible {
@@ -41,5 +46,34 @@ public final class HTTPDataSource: HTTPDataSourceProtocol, @unchecked Sendable {
                     }
                 }
         }
+    }
+}
+
+final class EventMonitorLogger: EventMonitor {
+    func request(_ request: DataRequest, didParseResponse response: DataResponse<Data?, AFError>) {
+        guard
+            let data = response.data,
+            let httpResponse = response.response
+        else {
+            return
+        }
+        
+        let body: String
+        
+        if let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
+           let data = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) {
+            body = String(data: data, encoding: .utf8) ?? "Body is empty"
+        } else {
+            body = "Body is empty"
+        }
+        
+        let message = """
+            Request didParseResponse
+            URL: \(request.convertible)
+            StatusCode: \(httpResponse.statusCode)
+            Body: \n \(body)
+        """
+        
+        Logger.info(message)
     }
 }
