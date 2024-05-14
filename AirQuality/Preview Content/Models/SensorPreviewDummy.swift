@@ -14,11 +14,31 @@ extension Sensor {
         formula: String = "C6H6",
         code: String = "C6H6"
     ) -> Self {
-        Self(
-            id: id,
-            name: name,
-            formula: formula,
-            code: code
+        let paramIndexLevels = Param.IndexLevels(
+            veryGood: 10,
+            good: 20,
+            moderate: 30,
+            sufficient: 40,
+            bad: 50
+        )
+        
+        let param = Param(
+            type: .c6h6,
+            code: "C6H6",
+            quota: 25,
+            indexLevels: paramIndexLevels
+        )
+        
+        let measurements: [Measurement] = [
+            Measurement(date: Date(), value: 12),
+            Measurement(date: Date(), value: 24),
+            Measurement(date: Date(), value: nil)
+        ]
+        
+        return Self(
+            id: 11,
+            param: param,
+            measurements: measurements
         )
     }
 }

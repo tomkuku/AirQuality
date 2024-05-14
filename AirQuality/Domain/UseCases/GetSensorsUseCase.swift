@@ -16,10 +16,6 @@ final class GetSensorsUseCase: GetSensorsUseCaseProtocol {
     @Injected(\.giosApiRepository) private var giosApiRepository
     
     func getSensors(for stationId: Int) async throws -> [Sensor] {
-        try await giosApiRepository.fetch(
-            mapperType: SensorsNetworkMapper.self,
-            endpoint: Endpoint.Sensors.get(stationId),
-            contentContainerName: "Lista stanowisk pomiarowych dla podanej stacji"
-        )
+        try await giosApiRepository.fetchSensors(for: stationId)
     }
 }

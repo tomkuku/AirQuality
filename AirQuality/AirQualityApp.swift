@@ -25,6 +25,10 @@ struct AirQualityApp: App {
     }
     
     init() {
-        DependenciesContainerManager.container = DependenciesContainer()
+        do {
+            DependenciesContainerManager.container = try DependenciesContainer()
+        } catch {
+            fatalError("Could not create DependenciesContainer due to error: \(error.localizedDescription)")
+        }
     }
 }

@@ -74,6 +74,6 @@ final class EventMonitorLogger: EventMonitor {
             Body: \n \(body)
         """
         
-        Logger.info(message)
+//        Logger.info(message)
     }
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MeasurementsNetworkMapper: MapperProtocol {
+struct MeasurementsNetworkMapper: NetworkMapperProtocol {
     private let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"

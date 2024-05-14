@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct StationsNetworkMapper: MapperProtocol {
+struct StationsNetworkMapper: NetworkMapperProtocol {
     func map(_ input: [StationNetworkModel]) throws -> [Station] {
         try input.map {
             guard let latitude = Double($0.latitude), let longitude = Double($0.longitude) else {

@@ -8,10 +8,12 @@
 import Foundation
 
 protocol MapperProtocol {
-    associatedtype NetworkModel: Decodable
+    associatedtype DTOModel
     associatedtype DomainModel
     
     init()
     
-    func map(_ input: NetworkModel) throws -> DomainModel
+    func map(_ input: DTOModel) throws -> DomainModel
 }
+
+protocol NetworkMapperProtocol: MapperProtocol where DTOModel: Decodable { }

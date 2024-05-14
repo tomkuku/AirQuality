@@ -9,5 +9,5 @@ import Foundation
 
 struct Measurement: Equatable {
     let date: Date
-    let value: Double
+    let value: Double?
 }
