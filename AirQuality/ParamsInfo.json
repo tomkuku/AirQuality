@@ -2,6 +2,7 @@
     {
         "id": 3,
         "code": "pm10",
+        "formula": "PM10",
         "quota": 50,
         "indexLevels": {
             "veryGood": 20,
@@ -14,6 +15,7 @@
     {
         "id": 69,
         "code": "pm2.5",
+        "formula": "PM2.5",
         "quota": 25,
         "indexLevels": {
             "veryGood": 12,
@@ -26,6 +28,7 @@
     {
         "id": 16,
         "code": "no2",
+        "formula": "NO2",
         "quota": 200,
         "indexLevels": {
             "veryGood": 40,
@@ -38,6 +41,7 @@
     {
         "id": 8,
         "code": "co",
+        "formula": "CO",
         "quota": 10000,
         "indexLevels": {
             "veryGood": 2000,
@@ -50,6 +54,7 @@
     {
         "id": 10,
         "code": "c6h6",
+        "formula": "C6H6",
         "quota": 5,
         "indexLevels": {
             "veryGood": 5,
@@ -62,6 +67,7 @@
     {
         "id": 5,
         "code": "o3",
+        "formula": "O3",
         "quota": 120,
         "indexLevels": {
             "veryGood": 70,
@@ -74,6 +80,7 @@
     {
         "id": 1,
         "code": "so2",
+        "formula": "SO2",
         "quota": 125,
         "indexLevels": {
             "veryGood": 50,

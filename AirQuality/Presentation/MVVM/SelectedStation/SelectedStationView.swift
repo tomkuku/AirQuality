@@ -15,16 +15,14 @@ struct SelectedStationView: View {
             LazyVStack(alignment: .leading, spacing: 8) {
                 ForEach(viewModel.sensors) { sensor in
                     if let lastMeasurement = sensor.measurements.last {
-                        let precentValueOfLastMeasurement = sensor.precentValueOfLastMeasurement
-                        
                         HStack {
                             VStack(alignment: .leading, spacing: 8) {
-                                Text(sensor.param.code)
-                                    .font(.system(size: 16, weight: .semibold))
+                                Text(sensor.param.formula)
+                                    .font(.system(size: 18, weight: .semibold))
                                 
-                                Text("Nazwa")
+                                Text(sensor.param.name)
                                     .font(.system(size: 14, weight: .regular))
-                                    .foregroundStyle(Color.black.opacity(0.7))
+                                    .foregroundStyle(Color.black)
                                 
                                 Spacer()
                             }
@@ -57,23 +55,18 @@ struct SelectedStationView: View {
     
     @ViewBuilder
     func createSensorRowView(for sensor: Sensor) -> some View {
-        if let measurement = sensor.measurements.last {
-            VStack(alignment: .trailing, spacing: 8) {
-                Text("\(sensor.precentValueOfLastMeasurement)%")
-                    .font(.system(size: 18, weight: .bold))
-                
-                Text("\(String(format: "%.2f", measurement.value ?? 0.0)) µg/m³")
-                    .font(.system(size: 12, weight: .semibold))
-                
-                Text("data")
-                    .font(.system(size: 14, weight: .regular))
-                    .foregroundStyle(Color.black.opacity(0.7))
-            }
-            .padding(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 8))
-        } else {
-            Rectangle()
-                .foregroundStyle(Color.clear)
+        let lastMeasurement = sensor.formattedLastMeasurement
+        VStack(alignment: .trailing, spacing: 8) {
+            Text("\(lastMeasurement.percentageValue)%")
+                .font(.system(size: 18, weight: .bold))
+            
+            Text("\(lastMeasurement.value) µg/m³")
+                .font(.system(size: 12, weight: .semibold))
+            
+            Text(lastMeasurement.date)
+                .font(.system(size: 12, weight: .regular))
         }
+        .padding(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 8))
     }
 }
 

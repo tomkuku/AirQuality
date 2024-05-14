@@ -50,6 +50,7 @@ enum AQI {
 struct Param: Sendable, Equatable {
     let type: ParamType
     let code: String
+    let formula: String
     let quota: Double
     let indexLevels: IndexLevels
     
@@ -70,6 +71,10 @@ struct Param: Sendable, Equatable {
         default:
             fatalError()
         }
+    }
+    
+    var name: String {
+        NSLocalizedString("Param.\(code).name", bundle: .main, comment: "")
     }
 }
 

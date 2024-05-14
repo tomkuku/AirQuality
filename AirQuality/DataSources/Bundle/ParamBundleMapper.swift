@@ -25,6 +25,7 @@ struct ParamBundleMapper: MapperProtocol {
             return Param(
                 type: paramType,
                 code: paramBundleModel.code,
+                formula: paramBundleModel.formula,
                 quota: paramBundleModel.quota,
                 indexLevels: indexLevel
             )

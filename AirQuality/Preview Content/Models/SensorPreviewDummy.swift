@@ -12,7 +12,7 @@ extension Sensor {
         id: Int = 12,
         name: String = "Benzene",
         formula: String = "C6H6",
-        code: String = "C6H6"
+        code: String = "c6h6"
     ) -> Self {
         let paramIndexLevels = Param.IndexLevels(
             veryGood: 10,
@@ -24,7 +24,8 @@ extension Sensor {
         
         let param = Param(
             type: .c6h6,
-            code: "C6H6",
+            code: "c6h6",
+            formula: "C6H6",
             quota: 25,
             indexLevels: paramIndexLevels
         )

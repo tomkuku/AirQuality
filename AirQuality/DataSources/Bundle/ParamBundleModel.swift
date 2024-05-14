@@ -18,6 +18,7 @@ struct ParamBundleModel: Decodable {
     
     let id: Int
     let code: String
+    let formula: String
     let quota: Double
     let indexLevels: IndexLevels
 }

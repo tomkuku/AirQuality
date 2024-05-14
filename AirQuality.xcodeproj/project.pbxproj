@@ -37,6 +37,7 @@
 		72ACEE972BF115C4009A4A93 /* StationsListViewModel+PreviewDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725B51142BF1130800273235 /* StationsListViewModel+PreviewDummy.swift */; };
 		72ACEE982BF115C4009A4A93 /* StationsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725B51092BF0BC6A00273235 /* StationsListView.swift */; };
 		72ACEE9A2BF1162E009A4A93 /* StationPreviewDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72ACEE992BF1162E009A4A93 /* StationPreviewDummy.swift */; };
+		72CE026F2BF41F950088F5F3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 72CE026D2BF41F950088F5F3 /* Localizable.strings */; };
 		72D8F9082BD8764500F26FB1 /* AirQualityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72D8F9072BD8764500F26FB1 /* AirQualityApp.swift */; };
 		72D8F90C2BD8764600F26FB1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 72D8F90B2BD8764600F26FB1 /* Assets.xcassets */; };
 		72D8F90F2BD8764600F26FB1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 72D8F90E2BD8764600F26FB1 /* Preview Assets.xcassets */; };
@@ -118,6 +119,7 @@
 		726140EC2BEE5EEE0027961C /* Sensors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sensors.swift; sourceTree = "<group>"; };
 		72ACEE992BF1162E009A4A93 /* StationPreviewDummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationPreviewDummy.swift; sourceTree = "<group>"; };
 		72C422AB2BEAA3DA0076F8F7 /* Development.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Development.xctestplan; sourceTree = "<group>"; };
+		72CE02702BF41F9B0088F5F3 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		72D8F9042BD8764500F26FB1 /* AirQuality.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AirQuality.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		72D8F9072BD8764500F26FB1 /* AirQualityApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirQualityApp.swift; sourceTree = "<group>"; };
 		72D8F90B2BD8764600F26FB1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -349,6 +351,7 @@
 		72D8F8FB2BD8764500F26FB1 = {
 			isa = PBXGroup;
 			children = (
+				72CE026D2BF41F950088F5F3 /* Localizable.strings */,
 				72C422AB2BEAA3DA0076F8F7 /* Development.xctestplan */,
 				72D8F9062BD8764500F26FB1 /* AirQuality */,
 				72F4FF292BE8EE99005A90EC /* AirQualityTests */,
@@ -539,11 +542,11 @@
 			};
 			buildConfigurationList = 72D8F8FF2BD8764500F26FB1 /* Build configuration list for PBXProject "AirQuality" */;
 			compatibilityVersion = "Xcode 14.0";
-			developmentRegion = en;
+			developmentRegion = pl;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
 				Base,
+				pl,
 			);
 			mainGroup = 72D8F8FB2BD8764500F26FB1;
 			packageReferences = (
@@ -565,6 +568,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				72F4FF1C2BE8D0A6005A90EC /* Development.xcconfig in Resources */,
+				72CE026F2BF41F950088F5F3 /* Localizable.strings in Resources */,
 				72F4FF1E2BE8D140005A90EC /* Production.xcconfig in Resources */,
 				72D8F90F2BD8764600F26FB1 /* Preview Assets.xcassets in Resources */,
 				72D977B02BF3D3D500703046 /* ParamsInfo.json in Resources */,
@@ -688,6 +692,17 @@
 			targetProxy = 72F4FF2C2BE8EE99005A90EC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		72CE026D2BF41F950088F5F3 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				72CE02702BF41F9B0088F5F3 /* pl */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		72CE90102BE8F2C900339EC2 /* Tests */ = {
