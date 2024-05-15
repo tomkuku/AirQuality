@@ -54,8 +54,8 @@ struct Param: Sendable, Equatable {
     let quota: Double
     let indexLevels: IndexLevels
     
-    func getAqi(for value: Double) -> AQI {
-        switch Int(value) {
+    func getAqi(for value: Double?) -> AQI {
+        switch Int(value ?? -1) {
         case 0...indexLevels.veryGood:
             return .good
         case indexLevels.veryGood...indexLevels.good:
@@ -69,7 +69,7 @@ struct Param: Sendable, Equatable {
         case indexLevels.bad...:
             return .hazardus
         default:
-            fatalError()
+            return .undefined
         }
     }
     

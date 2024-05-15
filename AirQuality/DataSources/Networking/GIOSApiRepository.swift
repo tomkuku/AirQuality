@@ -52,7 +52,7 @@ final class GIOSApiRepository: GIOSApiRepositoryProtocol {
         let data = try await httpDataSource.requestData(request)
         
         do {
-            let container = try decoder.decode(GIOSApiResponse.self, from: data)
+            let container = try decoder.decode(GIOSApiV1Response.self, from: data)
             let networkModelObjects: T.DTOModel = try container.getValue(for: contentContainerName)
             return try mapper.map(networkModelObjects)
         } catch {
@@ -66,31 +66,26 @@ final class GIOSApiRepository: GIOSApiRepositoryProtocol {
         
         let data = try await httpDataSource.requestData(request)
         
-        do {
-            let container = try decoder.decode(GIOSApiResponse.self, from: data)
-            let sensorNetworkModels: [SensorNetworkModel] = try container.getValue(for: "Lista stanowisk pomiarowych dla podanej stacji")
-            
-            return try await withThrowingTaskGroup(of: (SensorNetworkModel, Param, [Measurement]).self) { group in
-                sensorNetworkModels.forEach { sensorNetworkModel in
-                    guard let param = self.paramsRepository.getParam(withId: sensorNetworkModel.paramId) else { return }
-                    
-                    group.addTask {
-                        let measurements = try await self.fetchMeasurementsForSensor(id: sensorNetworkModel.id)
-                        return (sensorNetworkModel, param, measurements)
-                    }
+        let sensorNetworkModels = try decoder.decode([SensorNetworkModel].self, from: data)
+        
+        return try await withThrowingTaskGroup(of: (SensorNetworkModel, Param, [Measurement]).self) { group in
+            sensorNetworkModels.forEach { sensorNetworkModel in
+                guard let param = self.paramsRepository.getParam(withId: sensorNetworkModel.param.idParam) else { return }
+                
+                group.addTask {
+                    let measurements = try await self.fetchMeasurementsForSensor(id: sensorNetworkModel.id)
+                    return (sensorNetworkModel, param, measurements)
                 }
-                
-                var sensors = [Sensor]()
-                
-                for try await value in group {
-                    let sensor = try mapper.map(value)
-                    sensors.append(sensor)
-                }
-                
-                return sensors
             }
-        } catch {
-            throw error
+            
+            var sensors = [Sensor]()
+            
+            for try await value in group {
+                let sensor = try mapper.map(value)
+                sensors.append(sensor)
+            }
+            
+            return sensors
         }
     }
     

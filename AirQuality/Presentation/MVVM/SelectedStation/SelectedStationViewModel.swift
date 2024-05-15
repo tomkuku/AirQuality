@@ -10,6 +10,8 @@ import Alamofire
 
 final class SelectedStationViewModel: ObservableObject {
     
+    typealias Model = SelectedStationModel
+    
     // MARK: Properties
     
     @Published private(set) var sensors: [Sensor] = []
@@ -24,6 +26,12 @@ final class SelectedStationViewModel: ObservableObject {
     // MARK: Private properties
     
     private let getSensorsUseCase: GetSensorsUseCaseProtocol
+    
+    private let dateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+        return dateFormatter
+    }()
     
     // MARK: Lifecycle
     
@@ -40,10 +48,37 @@ final class SelectedStationViewModel: ObservableObject {
     @MainActor
     func fetchSensorsForStation() async {
         do {
-            self.sensors = try await getSensorsUseCase.getSensors(for: station.id)
+            let sensors = try await getSensorsUseCase.getSensors(for: station.id)
+            self.sensors = sensors.sorted {
+                $0.precentValueOfLastMeasurement ?? 0 > $1.precentValueOfLastMeasurement ?? 0
+            }
         } catch {
             Logger.error(error.localizedDescription)
             self.error = error
         }
+    }
+    
+    func formatLastMeasurement(for sensor: Sensor) -> Model.LastMeasurement {
+        var measurement: Measurement?
+        var formattedDate = ""
+        var formattedValue = "-"
+        var formattedPercentageValue = "-"
+        
+        if let lastMeasuremnt = sensor.measurements.first {
+            measurement = lastMeasuremnt
+            formattedDate = dateFormatter.string(from: lastMeasuremnt.date)
+            
+            if let value = lastMeasuremnt.value {
+                formattedValue = String(format: "%.2f", value)
+                formattedPercentageValue = "\(Int((value / sensor.param.quota) * 100))"
+            }
+        }
+        
+        return Model.LastMeasurement(
+            measurement: measurement,
+            formattedDate: formattedDate,
+            formattedValue: formattedValue,
+            formattedPercentageValue: formattedPercentageValue
+        )
     }
 }

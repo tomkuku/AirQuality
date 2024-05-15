@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GIOSApiResponse: Decodable {
+struct GIOSApiV1Response: Decodable {
     struct DynamicKey: CodingKey {
         var stringValue: String
         var intValue: Int?

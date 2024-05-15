@@ -19,7 +19,7 @@ extension Endpoint.Sensors: HTTPRequest {
     var path: String {
         switch self {
         case .get(let id):
-            "/pjp-api/v1/rest/station/sensors/" + "\(id)"
+            "/pjp-api/rest/station/sensors/" + "\(id)"
         }
     }
     
