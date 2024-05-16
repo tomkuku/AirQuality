@@ -18,9 +18,8 @@ extension Sensor {
     ) -> Self {
         Self(
             id: id,
-            name: name,
-            formula: formula,
-            code: code
+            param: .dummy(),
+            measurements: [.dummy(), .dummy()]
         )
     }
 }

@@ -18,7 +18,6 @@ final class GetSensorsUseCaseSpy: GetSensorsUseCaseProtocol {
     
     var fetchResult: Result<[Sensor], Error>?
     
-    @TestActor
     func getSensors(for stationId: Int) async throws -> [Sensor] {
         events.append(.getSensors(stationId))
         

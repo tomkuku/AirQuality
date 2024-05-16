@@ -14,7 +14,7 @@ final class SelectedStationViewModel: ObservableObject {
     
     // MARK: Properties
     
-    @Published private(set) var sensors: [Sensor] = []
+    @Published private(set) var sensors: [Model.Sensor] = []
     @Published private(set) var error: Error?
     
     var fomattedStationAddress: String {
@@ -48,20 +48,28 @@ final class SelectedStationViewModel: ObservableObject {
     @MainActor
     func fetchSensorsForStation() async {
         do {
-            let sensors = try await getSensorsUseCase.getSensors(for: station.id)
-            self.sensors = sensors.sorted {
-                $0.precentValueOfLastMeasurement ?? 0 > $1.precentValueOfLastMeasurement ?? 0
-            }
+            self.sensors = try await getSensorsUseCase.getSensors(for: station.id)
+                .map {
+                    Model.Sensor(
+                        id: $0.id,
+                        domainModel: $0,
+                        lastMeasurement: formatLastMeasurement(for: $0)
+                    )
+                }
+                .sorted {
+                    $0.lastMeasurement.percentageValue ?? 0 > $1.lastMeasurement.percentageValue ?? 0
+                }
         } catch {
             Logger.error(error.localizedDescription)
             self.error = error
         }
     }
     
-    func formatLastMeasurement(for sensor: Sensor) -> Model.LastMeasurement {
+    private func formatLastMeasurement(for sensor: Sensor) -> Model.LastMeasurement {
         var measurement: Measurement?
         var formattedDate = ""
         var formattedValue = "-"
+        var percentageValue: Int?
         var formattedPercentageValue = "-"
         
         if let lastMeasuremnt = sensor.measurements.first {
@@ -70,12 +78,17 @@ final class SelectedStationViewModel: ObservableObject {
             
             if let value = lastMeasuremnt.value {
                 formattedValue = String(format: "%.2f", value)
-                formattedPercentageValue = "\(Int((value / sensor.param.quota) * 100))"
+                percentageValue = Int((value / sensor.param.quota) * 100)
+                
+                if let percentageValue {
+                    formattedPercentageValue = "\(percentageValue)"
+                }
             }
         }
         
         return Model.LastMeasurement(
             measurement: measurement,
+            percentageValue: percentageValue,
             formattedDate: formattedDate,
             formattedValue: formattedValue,
             formattedPercentageValue: formattedPercentageValue

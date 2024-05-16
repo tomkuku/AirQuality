@@ -14,26 +14,25 @@ struct SelectedStationView: View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 8) {
                 ForEach(viewModel.sensors) { sensor in
-                    let lastMeasurement = viewModel.formatLastMeasurement(for: sensor)
-                        HStack {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text(sensor.param.formula)
-                                    .font(.system(size: 18, weight: .semibold))
-                                
-                                Text(sensor.param.name)
-                                    .font(.system(size: 14, weight: .regular))
-                                    .foregroundStyle(Color.black)
-                                
-                                Spacer()
-                            }
-                            .padding(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
+                    HStack {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(sensor.domainModel.param.formula)
+                                .font(.system(size: 18, weight: .semibold))
+                            
+                            Text(sensor.domainModel.param.name)
+                                .font(.system(size: 14, weight: .regular))
+                                .foregroundStyle(Color.black)
                             
                             Spacer()
-                            
-                            createLastMeasurementView(for: lastMeasurement)
                         }
-                        .background(sensor.param.getAqi(for: lastMeasurement.measurement?.value).color)
-                        .cornerRadius(10)
+                        .padding(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
+                        
+                        Spacer()
+                        
+                        createLastMeasurementView(for: sensor.lastMeasurement)
+                    }
+                    .background(sensor.domainModel.param.getAqi(for: sensor.lastMeasurement.measurement?.value).color)
+                    .cornerRadius(10)
                 }
             }
             .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))

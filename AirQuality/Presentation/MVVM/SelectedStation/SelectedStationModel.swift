@@ -8,8 +8,16 @@
 import Foundation
 
 enum SelectedStationModel {
-    struct LastMeasurement: Sendable {
+    struct Sensor: Identifiable {
+        let id: Int
+        let domainModel: AirQuality.Sensor
+        let lastMeasurement: LastMeasurement
+    }
+    
+    struct LastMeasurement {
         let measurement: Measurement?
+        
+        let percentageValue: Int?
         
         let formattedDate: String
         let formattedValue: String
