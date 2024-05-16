@@ -39,6 +39,7 @@
 		72ACEE9A2BF1162E009A4A93 /* StationPreviewDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72ACEE992BF1162E009A4A93 /* StationPreviewDummy.swift */; };
 		72CE026F2BF41F950088F5F3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 72CE026D2BF41F950088F5F3 /* Localizable.strings */; };
 		72CE02722BF656470088F5F3 /* ParamDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CE02712BF656470088F5F3 /* ParamDummy.swift */; };
+		72CE02742BF658280088F5F3 /* SensorDetailsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CE02732BF658280088F5F3 /* SensorDetailsContainerView.swift */; };
 		72D8F9082BD8764500F26FB1 /* AirQualityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72D8F9072BD8764500F26FB1 /* AirQualityApp.swift */; };
 		72D8F90C2BD8764600F26FB1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 72D8F90B2BD8764600F26FB1 /* Assets.xcassets */; };
 		72D8F90F2BD8764600F26FB1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 72D8F90E2BD8764600F26FB1 /* Preview Assets.xcassets */; };
@@ -121,6 +122,7 @@
 		72C422AB2BEAA3DA0076F8F7 /* Development.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Development.xctestplan; sourceTree = "<group>"; };
 		72CE02702BF41F9B0088F5F3 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		72CE02712BF656470088F5F3 /* ParamDummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamDummy.swift; sourceTree = "<group>"; };
+		72CE02732BF658280088F5F3 /* SensorDetailsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorDetailsContainerView.swift; sourceTree = "<group>"; };
 		72D8F9042BD8764500F26FB1 /* AirQuality.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AirQuality.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		72D8F9072BD8764500F26FB1 /* AirQualityApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirQualityApp.swift; sourceTree = "<group>"; };
 		72D8F90B2BD8764600F26FB1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -305,6 +307,7 @@
 			isa = PBXGroup;
 			children = (
 				725B510B2BF0BC6A00273235 /* StationsList */,
+				72CE02752BF6582C0088F5F3 /* SensorDetails */,
 				72E81FCD2BF119F100218BEA /* SelectedStation */,
 			);
 			path = MVVM;
@@ -346,6 +349,14 @@
 				72E81FFA2BF172D300218BEA /* SelectedStationViewModel+PreviewDummy.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		72CE02752BF6582C0088F5F3 /* SensorDetails */ = {
+			isa = PBXGroup;
+			children = (
+				72CE02732BF658280088F5F3 /* SensorDetailsContainerView.swift */,
+			);
+			path = SensorDetails;
 			sourceTree = "<group>";
 		};
 		72D8F8FB2BD8764500F26FB1 = {
@@ -617,6 +628,7 @@
 				72E81FF92BF171B400218BEA /* SensorPreviewDummy.swift in Sources */,
 				720FA9E72BF36E4D00E3111A /* BundleDataSource.swift in Sources */,
 				722CC6E92BEA17F100A978C7 /* StationNetworkModel.swift in Sources */,
+				72CE02742BF658280088F5F3 /* SensorDetailsContainerView.swift in Sources */,
 				72ACEE9A2BF1162E009A4A93 /* StationPreviewDummy.swift in Sources */,
 				72E820032BF17A2F00218BEA /* MeasurementNetworkModel.swift in Sources */,
 				72D8F9082BD8764500F26FB1 /* AirQualityApp.swift in Sources */,
