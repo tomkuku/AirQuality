@@ -1,5 +1,5 @@
 //
-//  AnyPublisher+Extension.swift
+//  Publisher+Extension.swift
 //  AirQuality
 //
 //  Created by Tomasz Kukułka on 17/05/2024.
@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-extension AnyPublisher where Failure == Never {
+extension Publisher where Failure == Never {
     func createAsyncStream(_ cancellables: inout Set<AnyCancellable>) -> AsyncStream<Output> {
         AsyncStream { continuation in
             self.sink {
@@ -19,6 +19,18 @@ extension AnyPublisher where Failure == Never {
                 continuation.yield($0)
             }
             .store(in: &cancellables)
+        }
+    }
+}
+
+extension Publisher where Output: Sendable, Failure == Never {
+    func asyncSink(
+        receiveValue: @escaping @Sendable (Self.Output) async -> Void
+    ) -> AnyCancellable {
+        self.sink { output in
+            Task {
+                await receiveValue(output)
+            }
         }
     }
 }

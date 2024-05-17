@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import Combine
+@preconcurrency import Combine
 
 final class AlertViewModel: ObservableObject, @unchecked Sendable {
     
@@ -21,51 +21,44 @@ final class AlertViewModel: ObservableObject, @unchecked Sendable {
     
     private var cancellables = Set<AnyCancellable>()
     
-    init() { 
+    init<T>(
+        _ alertPublisher: T
+    ) where T: Publisher, T.Output == AlertModel, T.Failure == Never {
         observeIsAnyAlertPresented()
-        observeAletNotifications()
+        subscribeAlertPublisher(alertPublisher)
     }
     
     // MARK: Private methods
     
     private func observeIsAnyAlertPresented() {
-        Task { @MainActor [weak self] in
-            guard let self else { return }
-            
-            let stream = self.$isAnyAlertPresented.eraseToAnyPublisher().createAsyncStream(&cancellables)
-            
-            for await value in stream where !value {
+        $isAnyAlertPresented
+            .filter { !$0 }
+            .asyncSink { @MainActor [weak self] value in
+                guard let self else { return }
+                
                 if !alerts.isEmpty {
                     alerts.removeFirst()
                 }
+                
                 checkIsAnyAlertLeftToPresent()
             }
-        }
+            .store(in: &cancellables)
     }
     
-    private func observeAletNotifications() {
-        Task { @MainActor [weak self] in
-            guard let self else { return }
-            
-            for await notification in self.notificationCenter.notifications(named: .alert) {
-                guard
-                    let userInfo = notification.userInfo?[String(describing: AlertModel.self)],
-                    let alert = userInfo as? AlertModel
-                else {
-                    continue
-                }
-                
-                await MainActor.run { [weak self] in
-                    self?.alerts.append(alert)
-                    self?.checkIsAnyAlertLeftToPresent()
-                }
+    private func subscribeAlertPublisher<T>(
+        _ alertPublisher: T
+    ) where T: Publisher, T.Output == AlertModel, T.Failure == Never {
+        alertPublisher
+            .asyncSink { @MainActor [weak self] alert in
+                self?.alerts.append(alert)
+                self?.checkIsAnyAlertLeftToPresent()
             }
-        }
+            .store(in: &cancellables)
     }
     
     @MainActor
     private func checkIsAnyAlertLeftToPresent() {
-        guard let alert = alerts.first else { return }
+        guard !alerts.isEmpty else { return }
         
         isAnyAlertPresented = true
     }

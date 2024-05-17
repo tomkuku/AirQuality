@@ -30,7 +30,8 @@ struct StationsListView: View {
                     .background(Color.gray.opacity(0.2))
                     .cornerRadius(10)
                     .accessibility(addTraits: [.isButton])
-                    .gesture(TapGesture().onEnded {                        coordinator.gotSelectedStation(station)
+                    .gesture(TapGesture().onEnded {
+                        coordinator.gotSelectedStation(station)
                     })
                 }
             }

@@ -13,6 +13,8 @@
 		720FA9EC2BF3709000E3111A /* ParamBundleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 720FA9EB2BF3709000E3111A /* ParamBundleModel.swift */; };
 		720FA9EE2BF373AF00E3111A /* ParamBundleMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 720FA9ED2BF373AF00E3111A /* ParamBundleMapper.swift */; };
 		720FA9F22BF3854200E3111A /* BundleFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 720FA9F12BF3854200E3111A /* BundleFile.swift */; };
+		72112DCF2BF77D6200D38D1B /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72112DCE2BF77D6200D38D1B /* Localizable.swift */; };
+		72112DD22BF7938000D38D1B /* AlertViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72112DD12BF7938000D38D1B /* AlertViewModelTests.swift */; };
 		722CC6E82BEA17F100A978C7 /* StationsNetworkMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6D92BEA17F100A978C7 /* StationsNetworkMapper.swift */; };
 		722CC6E92BEA17F100A978C7 /* StationNetworkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6DB2BEA17F100A978C7 /* StationNetworkModel.swift */; };
 		722CC6EA2BEA17F100A978C7 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6DD2BEA17F100A978C7 /* Endpoint.swift */; };
@@ -34,7 +36,7 @@
 		726140D92BEB88FD0027961C /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 726140D82BEB88FD0027961C /* Alamofire */; };
 		726140E12BEE0B9F0027961C /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 726140E02BEE0B9F0027961C /* AppCoordinator.swift */; };
 		726140EB2BEE5EE70027961C /* Stations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 726140EA2BEE5EE70027961C /* Stations.swift */; };
-		729390012BF758300026B82C /* AnyPublisher+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729390002BF758300026B82C /* AnyPublisher+Extension.swift */; };
+		729390012BF758300026B82C /* Publisher+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729390002BF758300026B82C /* Publisher+Extension.swift */; };
 		729390032BF75D1E0026B82C /* AlertModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729390022BF75D1E0026B82C /* AlertModel.swift */; };
 		72ACEE972BF115C4009A4A93 /* StationsListViewModel+PreviewDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725B51142BF1130800273235 /* StationsListViewModel+PreviewDummy.swift */; };
 		72ACEE982BF115C4009A4A93 /* StationsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725B51092BF0BC6A00273235 /* StationsListView.swift */; };
@@ -101,6 +103,8 @@
 		720FA9EB2BF3709000E3111A /* ParamBundleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamBundleModel.swift; sourceTree = "<group>"; };
 		720FA9ED2BF373AF00E3111A /* ParamBundleMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamBundleMapper.swift; sourceTree = "<group>"; };
 		720FA9F12BF3854200E3111A /* BundleFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleFile.swift; sourceTree = "<group>"; };
+		72112DCE2BF77D6200D38D1B /* Localizable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Localizable.swift; sourceTree = "<group>"; };
+		72112DD12BF7938000D38D1B /* AlertViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewModelTests.swift; sourceTree = "<group>"; };
 		722CC6D92BEA17F100A978C7 /* StationsNetworkMapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationsNetworkMapper.swift; sourceTree = "<group>"; };
 		722CC6DB2BEA17F100A978C7 /* StationNetworkModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationNetworkModel.swift; sourceTree = "<group>"; };
 		722CC6DD2BEA17F100A978C7 /* Endpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
@@ -124,7 +128,7 @@
 		726140E02BEE0B9F0027961C /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		726140EA2BEE5EE70027961C /* Stations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stations.swift; sourceTree = "<group>"; };
 		726140EC2BEE5EEE0027961C /* Sensors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sensors.swift; sourceTree = "<group>"; };
-		729390002BF758300026B82C /* AnyPublisher+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnyPublisher+Extension.swift"; sourceTree = "<group>"; };
+		729390002BF758300026B82C /* Publisher+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+Extension.swift"; sourceTree = "<group>"; };
 		729390022BF75D1E0026B82C /* AlertModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModel.swift; sourceTree = "<group>"; };
 		72ACEE992BF1162E009A4A93 /* StationPreviewDummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationPreviewDummy.swift; sourceTree = "<group>"; };
 		72C422AB2BEAA3DA0076F8F7 /* Development.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Development.xctestplan; sourceTree = "<group>"; };
@@ -230,6 +234,15 @@
 				720FA9F12BF3854200E3111A /* BundleFile.swift */,
 			);
 			path = Bundle;
+			sourceTree = "<group>";
+		};
+		72112DCD2BF77CCA00D38D1B /* Localizable */ = {
+			isa = PBXGroup;
+			children = (
+				72112DCE2BF77D6200D38D1B /* Localizable.swift */,
+				72CE026D2BF41F950088F5F3 /* Localizable.strings */,
+			);
+			path = Localizable;
 			sourceTree = "<group>";
 		};
 		722CC6DA2BEA17F100A978C7 /* Mappers */ = {
@@ -352,7 +365,7 @@
 			isa = PBXGroup;
 			children = (
 				72CE027C2BF74CCD0088F5F3 /* NotificationName+Extension.swift */,
-				729390002BF758300026B82C /* AnyPublisher+Extension.swift */,
+				729390002BF758300026B82C /* Publisher+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -396,7 +409,6 @@
 		72D8F8FB2BD8764500F26FB1 = {
 			isa = PBXGroup;
 			children = (
-				72CE026D2BF41F950088F5F3 /* Localizable.strings */,
 				72C422AB2BEAA3DA0076F8F7 /* Development.xctestplan */,
 				72D8F9062BD8764500F26FB1 /* AirQuality */,
 				72F4FF292BE8EE99005A90EC /* AirQualityTests */,
@@ -419,6 +431,7 @@
 				72D977AF2BF3D3D500703046 /* ParamsInfo.json */,
 				72D8F9072BD8764500F26FB1 /* AirQualityApp.swift */,
 				72D8F90B2BD8764600F26FB1 /* Assets.xcassets */,
+				72112DCD2BF77CCA00D38D1B /* Localizable */,
 				72D8F90D2BD8764600F26FB1 /* Preview Content */,
 				72F4FF1F2BE8D1C6005A90EC /* ConfigurationFiles */,
 				720FA9DD2BF2C49C00E3111A /* Presentation */,
@@ -511,6 +524,7 @@
 			isa = PBXGroup;
 			children = (
 				72FB16B02BF2295C007FED02 /* SelectedStationViewModelTests.swift */,
+				72112DD12BF7938000D38D1B /* AlertViewModelTests.swift */,
 			);
 			path = PresentationLayer;
 			sourceTree = "<group>";
@@ -531,6 +545,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 72D8F9122BD8764600F26FB1 /* Build configuration list for PBXNativeTarget "AirQuality" */;
 			buildPhases = (
+				72112DD02BF77E0300D38D1B /* SwiftGen */,
 				72D8F9022BD8764500F26FB1 /* Resources */,
 				72D8F9002BD8764500F26FB1 /* Sources */,
 				72D8F9012BD8764500F26FB1 /* Frameworks */,
@@ -631,6 +646,25 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		72112DD02BF77E0300D38D1B /* SwiftGen */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftGen;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./.scripts/swiftgen.sh\n";
+		};
 		72F4FF332BE8EFCE005A90EC /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -648,7 +682,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./scripts/swiftlint.sh\n";
+			shellScript = "./.scripts/swiftlint.sh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -662,7 +696,7 @@
 				72E81FF92BF171B400218BEA /* SensorPreviewDummy.swift in Sources */,
 				72CE02792BF6D4C00088F5F3 /* AlertViewModel.swift in Sources */,
 				720FA9E72BF36E4D00E3111A /* BundleDataSource.swift in Sources */,
-				729390012BF758300026B82C /* AnyPublisher+Extension.swift in Sources */,
+				729390012BF758300026B82C /* Publisher+Extension.swift in Sources */,
 				722CC6E92BEA17F100A978C7 /* StationNetworkModel.swift in Sources */,
 				72CE02742BF658280088F5F3 /* SensorDetailsContainerView.swift in Sources */,
 				72ACEE9A2BF1162E009A4A93 /* StationPreviewDummy.swift in Sources */,
@@ -689,6 +723,7 @@
 				72CE02772BF6D4B90088F5F3 /* AlertView.swift in Sources */,
 				72E81FFF2BF1791E00218BEA /* Measurement.swift in Sources */,
 				72E81FD12BF119FD00218BEA /* SensorsNetworkMapper.swift in Sources */,
+				72112DCF2BF77D6200D38D1B /* Localizable.swift in Sources */,
 				72E820052BF17AA400218BEA /* MeasurementsNetworkMapper.swift in Sources */,
 				722CC6F02BEA17F100A978C7 /* Station.swift in Sources */,
 				72E81FCF2BF119F100218BEA /* SelectedStationViewModel.swift in Sources */,
@@ -719,6 +754,7 @@
 				72E81FE22BF127BD00218BEA /* SensorDummy.swift in Sources */,
 				72E81FE02BF1268B00218BEA /* GetSensorsUseCaseTests.swift in Sources */,
 				72CE02722BF656470088F5F3 /* ParamDummy.swift in Sources */,
+				72112DD22BF7938000D38D1B /* AlertViewModelTests.swift in Sources */,
 				722CC7012BEA182B00A978C7 /* EmptyError.swift in Sources */,
 				722CC7062BEA182B00A978C7 /* ErrorDummy.swift in Sources */,
 				722CC7032BEA182B00A978C7 /* GIOSApiRepositoryTests.swift in Sources */,

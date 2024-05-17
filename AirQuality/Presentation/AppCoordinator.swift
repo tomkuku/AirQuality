@@ -24,10 +24,14 @@ enum AppFlow: Hashable, Identifiable {
 
 final class AppCoordinator: ObservableObject {
     
-    @Injected(\.notificationCenter) private var notificationCenter
-    
     @Published var navigationPath: NavigationPath
     @Published var fullScreenCover: AppFlow?
+    
+    private let alertSubject = PassthroughSubject<AlertModel, Never>()
+    
+    var alertPublisher: AnyPublisher<AlertModel, Never> {
+        alertSubject.eraseToAnyPublisher()
+    }
     
     init(navigationPath: Binding<NavigationPath>) {
         self.navigationPath = navigationPath.wrappedValue
@@ -60,8 +64,6 @@ final class AppCoordinator: ObservableObject {
     }
     
     func showAlert(_ alert: AlertModel) {
-        let userInfo = [String(describing: AlertModel.self): alert]
-        
-        notificationCenter.post(name: .alert, object: alert, userInfo: userInfo)
+        alertSubject.send(alert)
     }
 }

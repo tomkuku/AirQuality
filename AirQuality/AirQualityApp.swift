@@ -10,8 +10,8 @@ import SwiftUI
 @main
 struct AirQualityApp: App {
     
-    @StateObject private var appCoordinator = AppCoordinator(navigationPath: .constant(NavigationPath()))
-    @ObservedObject private var alertViewModel = AlertViewModel()
+    @StateObject private var appCoordinator: AppCoordinator
+    @ObservedObject private var alertViewModel: AlertViewModel
     
     var body: some Scene {
         WindowGroup {
@@ -35,6 +35,12 @@ struct AirQualityApp: App {
     }
     
     init() {
+        let appCoordinator = AppCoordinator(navigationPath: .constant(NavigationPath()))
+        let alertViewModel = AlertViewModel(appCoordinator.alertPublisher)
+        
+        self._appCoordinator = StateObject(wrappedValue: appCoordinator)
+        self._alertViewModel = ObservedObject(wrappedValue: alertViewModel)
+        
         do {
             DependenciesContainerManager.container = try DependenciesContainer()
         } catch {

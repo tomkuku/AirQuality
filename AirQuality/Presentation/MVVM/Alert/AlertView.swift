@@ -46,20 +46,31 @@ struct AlertView: View {
         }
     }
     
-    init(viewModel: AlertViewModel = .init()) {
+    init(viewModel: AlertViewModel) {
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
 }
 
+import Combine
+
 #Preview {
-    let viewModel = AlertViewModel()
-    viewModel.alerts.append(AlertModel(title: "Tytul", message: "wiadomosc", buttons: [
-        .init(title: "Przycisk", role: .cancel),
-        .init(title: "Przycisk 2", role: .destructive),
-        .init(title: "Przycisk 3")
-    ], dimissAction: {
-        print("DOne")
-    }))
+    // swiftlint:disable:next private_subject
+    let publisher = PassthroughSubject<AlertModel, Never>()
+    
+    let viewModel = AlertViewModel(publisher)
+    
+    let alert = AlertModel(
+        title: "Title",
+        message: "Message",
+        buttons: [
+            .init(title: "Button 1", role: .cancel),
+            .init(title: "Button 2", role: .destructive),
+            .init(title: "Button 3")
+        ], dimissAction: {
+            print("Dismiss")
+        })
+    
+    publisher.send(alert)
     
     return AlertView(viewModel: viewModel)
 }

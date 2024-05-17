@@ -8,8 +8,8 @@
 import Foundation
 import SwiftUI
 
-struct AlertModel: Sendable {
-    struct Button: Sendable {
+struct AlertModel: Sendable, Equatable {
+    struct Button: Sendable, Equatable {
         let title: String
         let role: ButtonRole?
         let action: (@Sendable () -> ())?
@@ -18,6 +18,11 @@ struct AlertModel: Sendable {
             self.title = title
             self.role = role
             self.action = action
+        }
+        
+        static func == (lhs: Button, rhs: Button) -> Bool {
+            lhs.title == rhs.title &&
+            lhs.role == rhs.role
         }
     }
     
@@ -37,19 +42,25 @@ struct AlertModel: Sendable {
         self.buttons = buttons
         self.dimissAction = dimissAction
     }
+    
+    static func == (lhs: AlertModel, rhs: AlertModel) -> Bool {
+        lhs.title == rhs.title &&
+        lhs.message == rhs.message &&
+        lhs.buttons == rhs.buttons
+    }
 }
 
 extension AlertModel.Button {
     static func ok() -> Self {
-        Self(title: NSLocalizedString("Alert.Button.Ok.title", comment: ""))
+        Self(title: Localizable.Alert.Button.Ok.title)
     }
 }
 
 extension AlertModel {
     static func somethigWentWrong(dismiss: (@Sendable () -> ())? = nil) -> Self {
         Self(
-            title: NSLocalizedString("Alert.SomethingWentWrong.title", comment: ""),
-            message: NSLocalizedString("Alert.SomethingWentWrong.message", comment: ""),
+            title: Localizable.Alert.SomethingWentWrong.title,
+            message: Localizable.Alert.SomethingWentWrong.message,
             buttons: [.ok()],
             dimissAction: dismiss
         )
