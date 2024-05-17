@@ -1,0 +1,6 @@
+strings:
+  inputs: AirQuality/Localizable/pl.lproj/Localizable.strings
+  filter: .+\.strings$
+  outputs:
+    - templatePath: .swiftgen-strings.stencil
+      output: AirQuality/Localizable/Localizable.swift

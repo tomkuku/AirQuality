@@ -74,7 +74,24 @@ struct Param: Sendable, Equatable {
     }
     
     var name: String {
-        NSLocalizedString("Param.\(code).name", bundle: .main, comment: "")
+        typealias Strings = Localizable.Param
+        
+        return switch type {
+        case .c6h6:
+            Strings.C6h6.name
+        case .pm10:
+            Strings.Pm10.name
+        case .pm25:
+            Strings.Pm25.name
+        case .o3:
+            Strings.O3.name
+        case .no2:
+            Strings.No2.name
+        case .so2:
+            Strings.So2.name
+        case .co:
+            Strings.Co.name
+        }
     }
 }
 

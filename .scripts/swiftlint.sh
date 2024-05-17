@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 #
-#  .swiftlint.sh
+#  swiftlint.sh
 #  AirQuality
 #
 #  Created by Tomasz Kukułka on 06/05/2024.

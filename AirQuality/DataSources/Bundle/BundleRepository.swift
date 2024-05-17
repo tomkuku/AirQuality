@@ -15,7 +15,7 @@ protocol ParamsRepositoryProtocol: Sendable {
     func getParam(withId id: Int) -> Param?
 }
 
-final class ParamsRepository: ParamsRepositoryProtocol {
+final class ParamsRepository: ParamsRepositoryProtocol, @unchecked Sendable {
     private let bundleDataSource: BundleDataSourceProtocol
     private let jsonDecoder = JSONDecoder()
     
