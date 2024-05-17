@@ -7,11 +7,9 @@
 
 import Foundation
 import SwiftUI
-@preconcurrency import Combine
+import Combine
 
 final class AlertViewModel: ObservableObject, @unchecked Sendable {
-    
-    @Injected(\.notificationCenter) private var notificationCenter
     
     @MainActor
     @Published var isAnyAlertPresented = false
@@ -33,7 +31,7 @@ final class AlertViewModel: ObservableObject, @unchecked Sendable {
     private func observeIsAnyAlertPresented() {
         $isAnyAlertPresented
             .filter { !$0 }
-            .asyncSink { @MainActor [weak self] value in
+            .asyncSink { @MainActor [weak self] _ in
                 guard let self else { return }
                 
                 if !alerts.isEmpty {

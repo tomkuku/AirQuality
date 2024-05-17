@@ -28,7 +28,7 @@ final class GetSensorsUseCaseSpy: GetSensorsUseCaseProtocol {
             case .failure(let error):
                 continuation.resume(throwing: error)
             case .none:
-                XCTFail("Result should have been set!")
+                fatalError("Result should have been set!")
             }
         }
     }

@@ -60,7 +60,7 @@ final class AppCoordinator: ObservableObject {
     }
     
     func goToSensorDetailsView(for sensor: Sensor) {
-        navigationPath.append(AppFlow.sensorsDetails(sensor))
+        fullScreenCover = .sensorsDetails(sensor)
     }
     
     func showAlert(_ alert: AlertModel) {

@@ -16,7 +16,6 @@ final class AlertViewModelTests: BaseTestCase {
     private var sut: AlertViewModel!
     
     private var alertSubject: PassthroughSubject<AlertModel, Never>!
-    private var alertAsyncPublisher: AsyncPublisher<AnyPublisher<AlertModel, Never>>!
     
     private var cancellables: Set<AnyCancellable>!
     
@@ -24,18 +23,14 @@ final class AlertViewModelTests: BaseTestCase {
         super.setUp()
         
         DependenciesContainerManager.container = appDependencies
-    }
-    
-    override func setUp() async throws {
-        try await super.setUp()
-
+        
         alertSubject = PassthroughSubject<AlertModel, Never>()
         
         sut = AlertViewModel(alertSubject)
         
         cancellables = Set<AnyCancellable>()
     }
-
+    
     @MainActor
     func testIsAnyAlertPresentedWhenAlertOneWasPublished() {
         // Given

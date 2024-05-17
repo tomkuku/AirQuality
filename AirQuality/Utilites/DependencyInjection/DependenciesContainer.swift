@@ -26,7 +26,6 @@ struct DependenciesContainer: AllDependencies, DependenciesContainerProtocol {
     }
     
     let giosApiRepository: GIOSApiRepositoryProtocol
-    var notificationCenter: NotificationCenterProtocol
     
     init() throws {
         let httpDataSource = HTTPDataSource()
@@ -34,6 +33,5 @@ struct DependenciesContainer: AllDependencies, DependenciesContainerProtocol {
         
         let paramsRepository = try ParamsRepository(bundleDataSource: bundleDataSource)
         self.giosApiRepository = GIOSApiRepository(httpDataSource: httpDataSource, paramsRepository: paramsRepository)
-        self.notificationCenter = NotificationCenter.default
     }
 }

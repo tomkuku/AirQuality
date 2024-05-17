@@ -8,5 +8,4 @@
 import Foundation
 
 typealias AllDependencies =
-HasGIOSApiRepository &
-HasNotificationCenter
+HasGIOSApiRepository
