@@ -84,6 +84,7 @@ struct SensorDetailsContainerView: View {
                                     selectedElementId = index
                                 }
                             })
+                            .accessibilityAddTraits(.isButton)
                     }
                 }
             }

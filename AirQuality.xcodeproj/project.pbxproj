@@ -280,6 +280,8 @@
 		722CC6E72BEA17F100A978C7 /* Utilites */ = {
 			isa = PBXGroup;
 			children = (
+				72938FFF2BF7581A0026B82C /* Extensions */,
+				72E81FF52BF168F100218BEA /* Protocols */,
 				72E81FE32BF1305E00218BEA /* DependencyInjection */,
 				72FB16AC2BF1FDFB007FED02 /* Logger.swift */,
 			);
@@ -419,8 +421,6 @@
 				72D8F90B2BD8764600F26FB1 /* Assets.xcassets */,
 				72D8F90D2BD8764600F26FB1 /* Preview Content */,
 				72F4FF1F2BE8D1C6005A90EC /* ConfigurationFiles */,
-				72938FFF2BF7581A0026B82C /* Extensions */,
-				72E81FF52BF168F100218BEA /* Protocols */,
 				720FA9DD2BF2C49C00E3111A /* Presentation */,
 				720FA9DE2BF2C4B400E3111A /* Domain */,
 				720FA9DC2BF2C48E00E3111A /* DataSources */,

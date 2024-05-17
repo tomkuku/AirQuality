@@ -22,6 +22,10 @@ struct AirQualityApp: App {
                     }
                     .environmentObject(appCoordinator)
             }
+            .fullScreenCover(item: $appCoordinator.fullScreenCover) { route in
+                appCoordinator.getView(for: route)
+            }
+            .environmentObject(appCoordinator)
             
             AlertView(viewModel: alertViewModel)
                 .allowsHitTesting(false)

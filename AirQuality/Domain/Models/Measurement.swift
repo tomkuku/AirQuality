@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Measurement: Equatable {
+struct Measurement: Equatable, Hashable {
     let date: Date
     let value: Double?
 }

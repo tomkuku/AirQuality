@@ -8,9 +8,18 @@
 import SwiftUI
 import Combine
 
-enum AppFlow: Hashable {
+enum AppFlow: Hashable, Identifiable {
     case stationsList
     case slectedStation(Station)
+    case sensorsDetails(Sensor)
+    
+    var id: Int {
+        switch self {
+        case .stationsList:     1
+        case .slectedStation:   2
+        case .sensorsDetails:   3
+        }
+    }
 }
 
 final class AppCoordinator: ObservableObject {
@@ -18,6 +27,7 @@ final class AppCoordinator: ObservableObject {
     @Injected(\.notificationCenter) private var notificationCenter
     
     @Published var navigationPath: NavigationPath
+    @Published var fullScreenCover: AppFlow?
     
     init(navigationPath: Binding<NavigationPath>) {
         self.navigationPath = navigationPath.wrappedValue
@@ -32,6 +42,8 @@ final class AppCoordinator: ObservableObject {
         case .slectedStation(let station):
             let viewModel = SelectedStationViewModel(station: station)
             SelectedStationView(viewModel: viewModel)
+        case .sensorsDetails(let sensor):
+            SensorDetailsContainerView()
         }
     }
     
@@ -41,6 +53,10 @@ final class AppCoordinator: ObservableObject {
     
     func gotSelectedStation(_ station: Station) {
         navigationPath.append(AppFlow.slectedStation(station))
+    }
+    
+    func goToSensorDetailsView(for sensor: Sensor) {
+        navigationPath.append(AppFlow.sensorsDetails(sensor))
     }
     
     func showAlert(_ alert: AlertModel) {

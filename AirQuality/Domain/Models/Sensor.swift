@@ -17,3 +17,9 @@ struct Sensor: Sendable, Identifiable, Equatable {
         return Int((value / param.quota) * 100)
     }
 }
+
+extension Sensor: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}

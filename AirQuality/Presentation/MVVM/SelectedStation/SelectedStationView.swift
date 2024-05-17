@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SelectedStationView: View {
+    @EnvironmentObject private var appCoordinator: AppCoordinator
     @StateObject private var viewModel: SelectedStationViewModel
     
     var body: some View {
@@ -33,6 +34,10 @@ struct SelectedStationView: View {
                     }
                     .background(sensor.domainModel.param.getAqi(for: sensor.lastMeasurement.measurement?.value).color)
                     .cornerRadius(10)
+                    .gesture(TapGesture().onEnded({ _ in
+                        appCoordinator.goToSensorDetailsView(for: sensor.domainModel)
+                    }))
+                    .accessibilityAddTraits(.isButton)
                 }
             }
             .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
