@@ -15,6 +15,8 @@ enum AppFlow: Hashable {
 
 final class AppCoordinator: ObservableObject {
     
+    @Injected(\.notificationCenter) private var notificationCenter
+    
     @Published var navigationPath: NavigationPath
     
     init(navigationPath: Binding<NavigationPath>) {
@@ -39,5 +41,11 @@ final class AppCoordinator: ObservableObject {
     
     func gotSelectedStation(_ station: Station) {
         navigationPath.append(AppFlow.slectedStation(station))
+    }
+    
+    func showAlert(_ alert: AlertModel) {
+        let userInfo = [String(describing: AlertModel.self): alert]
+        
+        notificationCenter.post(name: .alert, object: alert, userInfo: userInfo)
     }
 }

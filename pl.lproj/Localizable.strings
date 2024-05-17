@@ -15,3 +15,9 @@
 "Param.no2.name" = "Dwutlenek azotu";
 "Param.co.name" = "Tlenek węgla";
 "Param.so2.name" = "Dwutlenetk siarki";
+
+// MARK: Alerts
+"Alert.SomethingWentWrong.title" = "Ups, coś poszło nie tak";
+"Alert.SomethingWentWrong.message" = "Spróbuj ponownie później";
+
+"Alert.Button.Ok.title" = "Ok";

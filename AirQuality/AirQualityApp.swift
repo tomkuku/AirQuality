@@ -11,6 +11,7 @@ import SwiftUI
 struct AirQualityApp: App {
     
     @StateObject private var appCoordinator = AppCoordinator(navigationPath: .constant(NavigationPath()))
+    @ObservedObject private var alertViewModel = AlertViewModel()
     
     var body: some Scene {
         WindowGroup {
@@ -21,6 +22,11 @@ struct AirQualityApp: App {
                     }
                     .environmentObject(appCoordinator)
             }
+            
+            AlertView(viewModel: alertViewModel)
+                .allowsHitTesting(false)
+                .background(.red)
+                .frame(width: .zero, height: .zero)
         }
     }
     

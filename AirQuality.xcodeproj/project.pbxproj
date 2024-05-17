@@ -34,12 +34,18 @@
 		726140D92BEB88FD0027961C /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 726140D82BEB88FD0027961C /* Alamofire */; };
 		726140E12BEE0B9F0027961C /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 726140E02BEE0B9F0027961C /* AppCoordinator.swift */; };
 		726140EB2BEE5EE70027961C /* Stations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 726140EA2BEE5EE70027961C /* Stations.swift */; };
+		729390012BF758300026B82C /* AnyPublisher+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729390002BF758300026B82C /* AnyPublisher+Extension.swift */; };
+		729390032BF75D1E0026B82C /* AlertModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729390022BF75D1E0026B82C /* AlertModel.swift */; };
 		72ACEE972BF115C4009A4A93 /* StationsListViewModel+PreviewDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725B51142BF1130800273235 /* StationsListViewModel+PreviewDummy.swift */; };
 		72ACEE982BF115C4009A4A93 /* StationsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725B51092BF0BC6A00273235 /* StationsListView.swift */; };
 		72ACEE9A2BF1162E009A4A93 /* StationPreviewDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72ACEE992BF1162E009A4A93 /* StationPreviewDummy.swift */; };
 		72CE026F2BF41F950088F5F3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 72CE026D2BF41F950088F5F3 /* Localizable.strings */; };
 		72CE02722BF656470088F5F3 /* ParamDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CE02712BF656470088F5F3 /* ParamDummy.swift */; };
 		72CE02742BF658280088F5F3 /* SensorDetailsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CE02732BF658280088F5F3 /* SensorDetailsContainerView.swift */; };
+		72CE02772BF6D4B90088F5F3 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CE02762BF6D4B90088F5F3 /* AlertView.swift */; };
+		72CE02792BF6D4C00088F5F3 /* AlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CE02782BF6D4C00088F5F3 /* AlertViewModel.swift */; };
+		72CE027B2BF74C210088F5F3 /* NotificationCenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CE027A2BF74C210088F5F3 /* NotificationCenterProtocol.swift */; };
+		72CE027D2BF74CCD0088F5F3 /* NotificationName+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CE027C2BF74CCD0088F5F3 /* NotificationName+Extension.swift */; };
 		72D8F9082BD8764500F26FB1 /* AirQualityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72D8F9072BD8764500F26FB1 /* AirQualityApp.swift */; };
 		72D8F90C2BD8764600F26FB1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 72D8F90B2BD8764600F26FB1 /* Assets.xcassets */; };
 		72D8F90F2BD8764600F26FB1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 72D8F90E2BD8764600F26FB1 /* Preview Assets.xcassets */; };
@@ -118,11 +124,17 @@
 		726140E02BEE0B9F0027961C /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		726140EA2BEE5EE70027961C /* Stations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stations.swift; sourceTree = "<group>"; };
 		726140EC2BEE5EEE0027961C /* Sensors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sensors.swift; sourceTree = "<group>"; };
+		729390002BF758300026B82C /* AnyPublisher+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnyPublisher+Extension.swift"; sourceTree = "<group>"; };
+		729390022BF75D1E0026B82C /* AlertModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModel.swift; sourceTree = "<group>"; };
 		72ACEE992BF1162E009A4A93 /* StationPreviewDummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationPreviewDummy.swift; sourceTree = "<group>"; };
 		72C422AB2BEAA3DA0076F8F7 /* Development.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Development.xctestplan; sourceTree = "<group>"; };
 		72CE02702BF41F9B0088F5F3 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		72CE02712BF656470088F5F3 /* ParamDummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamDummy.swift; sourceTree = "<group>"; };
 		72CE02732BF658280088F5F3 /* SensorDetailsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorDetailsContainerView.swift; sourceTree = "<group>"; };
+		72CE02762BF6D4B90088F5F3 /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
+		72CE02782BF6D4C00088F5F3 /* AlertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewModel.swift; sourceTree = "<group>"; };
+		72CE027A2BF74C210088F5F3 /* NotificationCenterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenterProtocol.swift; sourceTree = "<group>"; };
+		72CE027C2BF74CCD0088F5F3 /* NotificationName+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationName+Extension.swift"; sourceTree = "<group>"; };
 		72D8F9042BD8764500F26FB1 /* AirQuality.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AirQuality.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		72D8F9072BD8764500F26FB1 /* AirQualityApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirQualityApp.swift; sourceTree = "<group>"; };
 		72D8F90B2BD8764600F26FB1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -309,6 +321,7 @@
 				725B510B2BF0BC6A00273235 /* StationsList */,
 				72CE02752BF6582C0088F5F3 /* SensorDetails */,
 				72E81FCD2BF119F100218BEA /* SelectedStation */,
+				729390042BF762AC0026B82C /* Alert */,
 			);
 			path = MVVM;
 			sourceTree = "<group>";
@@ -331,6 +344,25 @@
 				722CC6DE2BEA17F100A978C7 /* GetStationsUseCase.swift */,
 			);
 			path = UseCases;
+			sourceTree = "<group>";
+		};
+		72938FFF2BF7581A0026B82C /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				72CE027C2BF74CCD0088F5F3 /* NotificationName+Extension.swift */,
+				729390002BF758300026B82C /* AnyPublisher+Extension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		729390042BF762AC0026B82C /* Alert */ = {
+			isa = PBXGroup;
+			children = (
+				72CE02762BF6D4B90088F5F3 /* AlertView.swift */,
+				72CE02782BF6D4C00088F5F3 /* AlertViewModel.swift */,
+				729390022BF75D1E0026B82C /* AlertModel.swift */,
+			);
+			path = Alert;
 			sourceTree = "<group>";
 		};
 		72ACEE9B2BF1163D009A4A93 /* Models */ = {
@@ -387,6 +419,7 @@
 				72D8F90B2BD8764600F26FB1 /* Assets.xcassets */,
 				72D8F90D2BD8764600F26FB1 /* Preview Content */,
 				72F4FF1F2BE8D1C6005A90EC /* ConfigurationFiles */,
+				72938FFF2BF7581A0026B82C /* Extensions */,
 				72E81FF52BF168F100218BEA /* Protocols */,
 				720FA9DD2BF2C49C00E3111A /* Presentation */,
 				720FA9DE2BF2C4B400E3111A /* Domain */,
@@ -448,6 +481,7 @@
 			isa = PBXGroup;
 			children = (
 				72E81FF32BF168E500218BEA /* MapperProtocol.swift */,
+				72CE027A2BF74C210088F5F3 /* NotificationCenterProtocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -626,7 +660,9 @@
 				72ACEE972BF115C4009A4A93 /* StationsListViewModel+PreviewDummy.swift in Sources */,
 				72ACEE982BF115C4009A4A93 /* StationsListView.swift in Sources */,
 				72E81FF92BF171B400218BEA /* SensorPreviewDummy.swift in Sources */,
+				72CE02792BF6D4C00088F5F3 /* AlertViewModel.swift in Sources */,
 				720FA9E72BF36E4D00E3111A /* BundleDataSource.swift in Sources */,
+				729390012BF758300026B82C /* AnyPublisher+Extension.swift in Sources */,
 				722CC6E92BEA17F100A978C7 /* StationNetworkModel.swift in Sources */,
 				72CE02742BF658280088F5F3 /* SensorDetailsContainerView.swift in Sources */,
 				72ACEE9A2BF1162E009A4A93 /* StationPreviewDummy.swift in Sources */,
@@ -644,10 +680,13 @@
 				722CC6EA2BEA17F100A978C7 /* Endpoint.swift in Sources */,
 				720FA9F22BF3854200E3111A /* BundleFile.swift in Sources */,
 				72E81FF42BF168E500218BEA /* MapperProtocol.swift in Sources */,
+				72CE027B2BF74C210088F5F3 /* NotificationCenterProtocol.swift in Sources */,
 				726140EB2BEE5EE70027961C /* Stations.swift in Sources */,
+				729390032BF75D1E0026B82C /* AlertModel.swift in Sources */,
 				722CC6EB2BEA17F100A978C7 /* GetStationsUseCase.swift in Sources */,
 				720FA9EC2BF3709000E3111A /* ParamBundleModel.swift in Sources */,
 				722CC6EF2BEA17F100A978C7 /* HTTPRequest.swift in Sources */,
+				72CE02772BF6D4B90088F5F3 /* AlertView.swift in Sources */,
 				72E81FFF2BF1791E00218BEA /* Measurement.swift in Sources */,
 				72E81FD12BF119FD00218BEA /* SensorsNetworkMapper.swift in Sources */,
 				72E820052BF17AA400218BEA /* MeasurementsNetworkMapper.swift in Sources */,
@@ -657,6 +696,7 @@
 				72E81FD52BF11A0C00218BEA /* GetSensorsUseCase.swift in Sources */,
 				72E81FE52BF1306A00218BEA /* Injected.swift in Sources */,
 				72E81FFB2BF172D300218BEA /* SelectedStationViewModel+PreviewDummy.swift in Sources */,
+				72CE027D2BF74CCD0088F5F3 /* NotificationName+Extension.swift in Sources */,
 				722CC6EE2BEA17F100A978C7 /* HTTPDataSource.swift in Sources */,
 				720FA9E52BF2D74500E3111A /* Param.swift in Sources */,
 				72E81FCE2BF119F100218BEA /* SelectedStationView.swift in Sources */,

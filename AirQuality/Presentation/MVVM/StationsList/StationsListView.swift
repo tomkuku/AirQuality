@@ -31,7 +31,22 @@ struct StationsListView: View {
                     .cornerRadius(10)
                     .accessibility(addTraits: [.isButton])
                     .gesture(TapGesture().onEnded {
-                        coordinator.gotSelectedStation(station)
+                        let alert = AlertModel(
+                            title: station.street ?? "none",
+                            message: station.cityName,
+                            buttons: [
+                                .init(title: "One", role: .none, action: {
+                                    print("One")
+                                }),
+                                .init(title: "Two", role: .destructive, action: {
+                                    print("Two")
+                                })
+                            ],
+                            dimissAction: nil)
+                        
+                        coordinator.showAlert(alert)
+                        coordinator.showAlert(alert)
+//                        coordinator.gotSelectedStation(station)
                     })
                 }
             }
