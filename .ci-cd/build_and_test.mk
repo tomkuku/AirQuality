@@ -19,6 +19,7 @@ all: prepare_environemnt build_and_test
 prepare_environemnt:
 	@echo "Removing Package.resolved"
 	@rm -rf $(PROJECT)/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+	@touch AirQuality/Localizable/Localizable.swift
 
 build_and_test:
 	@echo "ℹ️ Building and Testing"
