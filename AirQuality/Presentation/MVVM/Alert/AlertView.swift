@@ -16,7 +16,6 @@ struct AlertView: View {
                 .background(.clear)
                 .foregroundStyle(.clear)
                 .frame(width: .zero, height: .zero)
-                .allowsHitTesting(false)
                 .alert(alert.title, isPresented: $viewModel.isAnyAlertPresented) {
                     Group {
                         ForEach(0..<alert.buttons.count, id: \.self) { index in
@@ -29,9 +28,9 @@ struct AlertView: View {
                             }
                         }
                     }
-                    .onChange(of: viewModel.isAnyAlertPresented) { _ in
-                        if !viewModel.isAnyAlertPresented {
-                            alert.dimissAction?()
+                    .onChange(of: viewModel.isAnyAlertPresented) { newValue in
+                        if !newValue {
+                            alert.dismissAction?()
                         }
                     }
                 } message: {
@@ -46,8 +45,8 @@ struct AlertView: View {
         }
     }
     
-    init(viewModel: AlertViewModel) {
-        self._viewModel = StateObject(wrappedValue: viewModel)
+    init(viewModel: @autoclosure @escaping () -> AlertViewModel) {
+        self._viewModel = StateObject(wrappedValue: viewModel())
     }
 }
 
@@ -66,7 +65,7 @@ import Combine
             .init(title: "Button 1", role: .cancel),
             .init(title: "Button 2", role: .destructive),
             .init(title: "Button 3")
-        ], dimissAction: {
+        ], dismissAction: {
             print("Dismiss")
         })
     

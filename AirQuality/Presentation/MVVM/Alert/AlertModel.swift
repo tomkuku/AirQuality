@@ -29,18 +29,18 @@ struct AlertModel: Sendable, Equatable {
     let title: String
     let message: String?
     let buttons: [Button]
-    let dimissAction: (@Sendable () -> ())?
+    let dismissAction: (@Sendable () -> ())?
     
     init(
         title: String,
         message: String? = nil,
         buttons: [Button],
-        dimissAction: (@Sendable () -> Void)? = nil
+        dismissAction: (@Sendable () -> Void)? = nil
     ) {
         self.title = title
         self.message = message
         self.buttons = buttons
-        self.dimissAction = dimissAction
+        self.dismissAction = dismissAction
     }
     
     static func == (lhs: AlertModel, rhs: AlertModel) -> Bool {
@@ -62,7 +62,7 @@ extension AlertModel {
             title: Localizable.Alert.SomethingWentWrong.title,
             message: Localizable.Alert.SomethingWentWrong.message,
             buttons: [.ok()],
-            dimissAction: dismiss
+            dismissAction: dismiss
         )
     }
 }
