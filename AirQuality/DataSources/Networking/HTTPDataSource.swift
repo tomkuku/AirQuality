@@ -17,11 +17,17 @@ final class HTTPDataSource: HTTPDataSourceProtocol, @unchecked Sendable {
     private let queue = DispatchQueue(label: "com.http.data.source")
     
     init(sessionConfiguration: URLSessionConfiguration = .af.default) {
+        var eventMonitors: [EventMonitor] = []
+        
+        if !ProcessInfo.isTest {
+            eventMonitors.append(EventMonitorLogger())
+        }
+        
         self.session = Session(
             configuration: sessionConfiguration,
             rootQueue: queue,
             serializationQueue: queue,
-            eventMonitors: [EventMonitorLogger()]
+            eventMonitors: eventMonitors
         )
     }
     
