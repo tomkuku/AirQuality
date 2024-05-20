@@ -10,7 +10,8 @@ import SwiftUI
 @main
 struct AirQualityApp: App {
     
-    @StateObject private var appCoordinator = AppCoordinator(navigationPath: .constant(NavigationPath()))
+    @StateObject private var appCoordinator: AppCoordinator
+    @ObservedObject private var alertViewModel: AlertViewModel
     
     var body: some Scene {
         WindowGroup {
@@ -21,10 +22,29 @@ struct AirQualityApp: App {
                     }
                     .environmentObject(appCoordinator)
             }
+            .fullScreenCover(item: $appCoordinator.fullScreenCover) { route in
+                appCoordinator.getView(for: route)
+            }
+            .environmentObject(appCoordinator)
+            
+            AlertView(viewModel: alertViewModel)
+                .allowsHitTesting(false)
+                .background(.red)
+                .frame(width: .zero, height: .zero)
         }
     }
     
     init() {
-        DependenciesContainerManager.container = DependenciesContainer()
+        let appCoordinator = AppCoordinator(navigationPath: .constant(NavigationPath()))
+        let alertViewModel = AlertViewModel(appCoordinator.alertPublisher)
+        
+        self._appCoordinator = StateObject(wrappedValue: appCoordinator)
+        self._alertViewModel = ObservedObject(wrappedValue: alertViewModel)
+        
+        do {
+            DependenciesContainerManager.container = try DependenciesContainer()
+        } catch {
+            fatalError("Could not create DependenciesContainer due to error: \(error.localizedDescription)")
+        }
     }
 }

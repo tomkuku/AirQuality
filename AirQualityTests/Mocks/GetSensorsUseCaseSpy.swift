@@ -18,7 +18,6 @@ final class GetSensorsUseCaseSpy: GetSensorsUseCaseProtocol {
     
     var fetchResult: Result<[Sensor], Error>?
     
-    @TestActor
     func getSensors(for stationId: Int) async throws -> [Sensor] {
         events.append(.getSensors(stationId))
         
@@ -29,7 +28,7 @@ final class GetSensorsUseCaseSpy: GetSensorsUseCaseProtocol {
             case .failure(let error):
                 continuation.resume(throwing: error)
             case .none:
-                XCTFail("Result should have been set!")
+                fatalError("Result should have been set!")
             }
         }
     }

@@ -1,0 +1,23 @@
+/* 
+  Localizable.strings
+  AirQuality
+
+  Created by Tomasz Kukułka on 15/05/2024.
+  
+*/
+
+// MARK: Params
+
+"Param.c6h6.name" = "Benzen";
+"Param.pm10.name" = "Pył zawieszony PM10";
+"Param.pm25.name" = "Pył zawieszony PM2.5";
+"Param.o3.name" = "Ozon";
+"Param.no2.name" = "Dwutlenek azotu";
+"Param.co.name" = "Tlenek węgla";
+"Param.so2.name" = "Dwutlenetk siarki";
+
+// MARK: Alerts
+"Alert.SomethingWentWrong.title" = "Ups, coś poszło nie tak";
+"Alert.SomethingWentWrong.message" = "Spróbuj ponownie później";
+
+"Alert.Button.Ok.title" = "Ok";

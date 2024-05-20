@@ -1,5 +1,6 @@
 excluded:
   - AirQualityTests/*
+  - AirQuality/Localizable/*
 
 opt_in_rules:
   - all

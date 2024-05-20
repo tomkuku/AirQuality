@@ -16,12 +16,11 @@ jobs:
       run: |
         /usr/bin/xcodebuild -version
         xcrun swift -version
-    - name: Install xcbeautify
+    - name: Install Dependencies
       run: |
-        ./scripts/installBrewDependencyIfNeeded.sh "xcbeautify"
-    - name: Install SwiftLint
-      run: |
-        ./scripts/installBrewDependencyIfNeeded.sh "swiftlint"
+        ./.scripts/installBrewDependencyIfNeeded.sh "xcbeautify"
+        ./.scripts/installBrewDependencyIfNeeded.sh "swiftlint"
+        ./.scripts/installBrewDependencyIfNeeded.sh "swiftgen"
     - name: Build and Test
       run: |
         make -f .ci-cd/build_and_test.mk
