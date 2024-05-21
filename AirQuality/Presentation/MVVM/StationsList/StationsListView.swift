@@ -15,30 +15,38 @@ struct StationsListView: View {
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 8) {
-                ForEach(viewModel.stations) { station in
-                    HStack {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(station.street ?? "")
+                if viewModel.stations.isEmpty {
+                    Spacer()
+                    
+                    Text("Brak danych")
+                    
+                    Spacer()
+                } else {
+                    ForEach(viewModel.stations) { station in
+                        HStack {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text(station.street ?? "")
+                                
+                                Text(station.cityName)
+                            }
+                            .padding(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
                             
-                            Text(station.cityName)
+                            Rectangle()
+                                .foregroundStyle(.clear)
                         }
-                        .padding(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
-                        
-                        Rectangle()
-                            .foregroundStyle(.clear)
+                        .background(Color.gray.opacity(0.2))
+                        .cornerRadius(10)
+                        .accessibility(addTraits: [.isButton])
+                        .gesture(TapGesture().onEnded {
+                            coordinator.gotSelectedStation(station)
+                        })
                     }
-                    .background(Color.gray.opacity(0.2))
-                    .cornerRadius(10)
-                    .accessibility(addTraits: [.isButton])
-                    .gesture(TapGesture().onEnded {
-                        coordinator.gotSelectedStation(station)
-                    })
                 }
             }
             .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
             .navigationTitle("Lista Stacji")
         }
-        .task {
+        .taskOnFirstAppear {
             await viewModel.fetchStations()
         }
     }

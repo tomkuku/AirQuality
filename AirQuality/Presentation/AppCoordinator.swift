@@ -8,6 +8,18 @@
 import SwiftUI
 import Combine
 
+protocol HasAppCoordinator {
+    var appCoordinator: AppCoordinatorProtocol { get }
+}
+
+protocol AppCoordinatorProtocol {
+    func goToStationsList()
+    func gotSelectedStation(_ station: Station)
+    func goToSensorDetailsView(for sensor: Sensor)
+    func showAlert(_ alert: AlertModel)
+    func dismiss()
+}
+
 enum AppFlow: Hashable, Identifiable {
     case stationsList
     case slectedStation(Station)
@@ -22,20 +34,33 @@ enum AppFlow: Hashable, Identifiable {
     }
 }
 
-final class AppCoordinator: ObservableObject {
+final class AppCoordinator: ObservableObject, AppCoordinatorProtocol {
+    
+    // MARK: Properties
     
     @Published var navigationPath: NavigationPath
     @Published var fullScreenCover: AppFlow?
-    
-    private let alertSubject = PassthroughSubject<AlertModel, Never>()
     
     var alertPublisher: AnyPublisher<AlertModel, Never> {
         alertSubject.eraseToAnyPublisher()
     }
     
+    var dismissPublisher: AnyPublisher<Void, Never> {
+        dismissSubject.eraseToAnyPublisher()
+    }
+    
+    // MARK: Private properties
+    
+    private let alertSubject = PassthroughSubject<AlertModel, Never>()
+    private let dismissSubject = PassthroughSubject<Void, Never>()
+    
+    // MARK: Lifecycle
+    
     init(navigationPath: Binding<NavigationPath>) {
         self.navigationPath = navigationPath.wrappedValue
     }
+    
+    // MARK: Methods
     
     @MainActor
     @ViewBuilder
@@ -65,5 +90,9 @@ final class AppCoordinator: ObservableObject {
     
     func showAlert(_ alert: AlertModel) {
         alertSubject.send(alert)
+    }
+    
+    func dismiss() {
+        fullScreenCover = nil
     }
 }

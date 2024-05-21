@@ -40,7 +40,7 @@ struct SensorArchivalMeasurementsListView: View {
                 }
             }
         }
-        .task {
+        .taskOnFirstAppear {
             await viewModel.fetchArchivalMeasurements()
         }
     }

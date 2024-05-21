@@ -26,12 +26,15 @@ struct DependenciesContainer: AllDependencies, DependenciesContainerProtocol {
     }
     
     let giosApiRepository: GIOSApiRepositoryProtocol
+    let appCoordinator: AppCoordinatorProtocol
     
-    init() throws {
+    init(appCoordinator: AppCoordinatorProtocol) throws {
         let httpDataSource = HTTPDataSource()
         let bundleDataSource = try BundleDataSource()
         
         let paramsRepository = try ParamsRepository(bundleDataSource: bundleDataSource)
+        
         self.giosApiRepository = GIOSApiRepository(httpDataSource: httpDataSource, paramsRepository: paramsRepository)
+        self.appCoordinator = appCoordinator
     }
 }

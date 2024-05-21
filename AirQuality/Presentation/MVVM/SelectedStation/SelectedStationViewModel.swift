@@ -15,7 +15,6 @@ final class SelectedStationViewModel: ObservableObject {
     // MARK: Properties
     
     @Published private(set) var sensors: [Model.Sensor] = []
-    @Published private(set) var error: Error?
     
     var fomattedStationAddress: String {
         station.cityName + " " + (station.street ?? "")
@@ -24,6 +23,8 @@ final class SelectedStationViewModel: ObservableObject {
     let station: Station
     
     // MARK: Private properties
+    
+    @Injected(\.appCoordinator) private var appCoordinator
     
     private let getSensorsUseCase: GetSensorsUseCaseProtocol
     
@@ -61,7 +62,7 @@ final class SelectedStationViewModel: ObservableObject {
                 }
         } catch {
             Logger.error(error.localizedDescription)
-            self.error = error
+            appCoordinator.showAlert(.somethigWentWrong())
         }
     }
     
