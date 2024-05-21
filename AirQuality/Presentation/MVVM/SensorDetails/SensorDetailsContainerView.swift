@@ -27,6 +27,8 @@ enum SensorDetailsContainerSubview: CaseIterable {
 struct SensorDetailsContainerView: View {
     @State private var selectedElementId: Int = 0
     
+    private let sensor: Sensor
+    
     var body: some View {
         Text("Cos tam")
         
@@ -39,10 +41,14 @@ struct SensorDetailsContainerView: View {
                     LazyHStack(alignment: .center, spacing: 0) {
                         ForEach(0..<3, id: \.self) { index in
                             ZStack {
-                                StationsListView()
+                                if index == 0 {
+                                    let viewModel = SensorArchivalMeasurementsListViewModel(sensor: sensor)
+                                    SensorArchivalMeasurementsListView(viewModel: viewModel)
+                                } else {
+                                    StationsListView()
+                                }
                             }
                             .frame(width: geometry.size.width, height: geometry.size.height)
-                            .background(color(for: index))
                         }
                     }
                 }
@@ -55,6 +61,10 @@ struct SensorDetailsContainerView: View {
             })
         })
         .ignoresSafeArea(.container, edges: .bottom)
+    }
+    
+    init(sensor: Sensor) {
+        self.sensor = sensor
     }
     
     private func createNavigationMenuView() -> some View {
@@ -106,6 +116,6 @@ struct SensorDetailsContainerView: View {
         }
     }
 }
-#Preview {
-    SensorDetailsContainerView()
-}
+//#Preview {
+//    SensorDetailsContainerView()
+//}

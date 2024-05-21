@@ -20,4 +20,8 @@ enum Endpoint {
     enum Measurements {
         case get(Int)
     }
+    
+    enum ArchivalMeasurements {
+        case get(Int)
+    }
 }

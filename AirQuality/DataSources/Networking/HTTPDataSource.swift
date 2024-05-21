@@ -19,9 +19,11 @@ final class HTTPDataSource: HTTPDataSourceProtocol, @unchecked Sendable {
     init(sessionConfiguration: URLSessionConfiguration = .af.default) {
         var eventMonitors: [EventMonitor] = []
         
+#if DEBUG
         if !ProcessInfo.isTest {
             eventMonitors.append(EventMonitorLogger())
         }
+#endif
         
         self.session = Session(
             configuration: sessionConfiguration,
@@ -55,6 +57,7 @@ final class HTTPDataSource: HTTPDataSourceProtocol, @unchecked Sendable {
     }
 }
 
+#if DEBUG
 final class EventMonitorLogger: EventMonitor {
     func request(_ request: DataRequest, didParseResponse response: DataResponse<Data?, AFError>) {
         guard
@@ -83,3 +86,4 @@ final class EventMonitorLogger: EventMonitor {
         Logger.info(message)
     }
 }
+#endif

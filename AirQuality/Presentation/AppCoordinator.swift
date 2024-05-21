@@ -47,7 +47,7 @@ final class AppCoordinator: ObservableObject {
             let viewModel = SelectedStationViewModel(station: station)
             SelectedStationView(viewModel: viewModel)
         case .sensorsDetails(let sensor):
-            SensorDetailsContainerView()
+            SensorDetailsContainerView(sensor: sensor)
         }
     }
     
