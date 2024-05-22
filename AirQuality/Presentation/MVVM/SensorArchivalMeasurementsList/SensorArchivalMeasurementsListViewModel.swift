@@ -15,7 +15,7 @@ final class SensorArchivalMeasurementsListViewModel: ObservableObject, @unchecke
     
     private(set) var idLoading = true
     
-    private let sensor: Sensor
+    let sensor: Sensor
     private let getArchivalMeasurementsUseCase: GetArchivalMeasurementsUseCaseProtocol
     
     private let dateFormatter: DateFormatter = {
@@ -37,21 +37,28 @@ final class SensorArchivalMeasurementsListViewModel: ObservableObject, @unchecke
             let measurements = try await getArchivalMeasurementsUseCase.getArchivalMeasurements(for: sensor.id)
             
             let rows = measurements.map {
+                let percentageValue: Double
                 let formattedValue: String
                 let formattedPercentageValue: String
+                let formattedDate = dateFormatter.string(from: $0.date)
                 
                 if let value = $0.value {
+                    percentageValue = Double(((value / sensor.param.quota) * 100).rounded(.down))
                     formattedValue = String(format: "%.2f", value)
-                    formattedPercentageValue = "\(Int((value / sensor.param.quota) * 100))"
+                    formattedPercentageValue = "\(percentageValue)"
                 } else {
+                    percentageValue = 0
                     formattedValue = "-"
                     formattedPercentageValue = "-"
                 }
                 
-                return Model.Row(
-                    percentageValue: formattedPercentageValue,
-                    value: formattedValue,
-                    date: dateFormatter.string(from: $0.date)
+                return Model.Row.init(
+                    formattedPercentageValue: formattedPercentageValue,
+                    formattedValue: formattedValue,
+                    formattedDate: formattedDate,
+                    value: $0.value ?? 0,
+                    percentageValue: percentageValue,
+                    date: $0.date
                 )
             }
             

@@ -18,16 +18,16 @@ struct SensorArchivalMeasurementsListView: View {
                     let row = viewModel.rows[index]
                     
                     HStack {
-                        Text(row.date)
+                        Text(row.formattedDate)
                             .font(.system(size: 16, weight: .regular))
                         
                         Spacer()
                         
                         VStack(alignment: .trailing, spacing: 8) {
-                            Text("\(row.percentageValue)%")
+                            Text("\(row.formattedPercentageValue)%")
                                 .font(.system(size: 18, weight: .medium))
                             
-                            Text("\(row.value) µg/m³")
+                            Text("\(row.formattedValue) µg/m³")
                                 .font(.system(size: 16, weight: .regular))
                         }
                     }

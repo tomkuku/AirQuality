@@ -9,8 +9,12 @@ import Foundation
 
 enum SensorArchivalMeasurementsListModel {
     struct Row {
-        let percentageValue: String
-        let value: String
-        let date: String
+        let formattedPercentageValue: String
+        let formattedValue: String
+        let formattedDate: String
+        
+        let value: Double
+        let percentageValue: Double
+        let date: Date
     }
 }

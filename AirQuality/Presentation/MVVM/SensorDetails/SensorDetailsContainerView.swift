@@ -52,7 +52,8 @@ struct SensorDetailsContainerView: View {
                                         let viewModel = SensorParamDetailsViewModel(sensor: sensor)
                                         SensorParamDetailsView(viewModel: viewModel)
                                     } else {
-                                        StationsListView()
+                                        let viewModel = SensorArchivalMeasurementsListViewModel(sensor: sensor)
+                                        SensorArchivalMeasurementsChartView(viewModel: viewModel)
                                     }
                                 }
                                 .frame(width: geometry.size.width, height: geometry.size.height)
