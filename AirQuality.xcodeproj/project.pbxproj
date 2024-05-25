@@ -31,7 +31,7 @@
 		722CC6E92BEA17F100A978C7 /* StationNetworkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6DB2BEA17F100A978C7 /* StationNetworkModel.swift */; };
 		722CC6EA2BEA17F100A978C7 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6DD2BEA17F100A978C7 /* Endpoint.swift */; };
 		722CC6EB2BEA17F100A978C7 /* GetStationsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6DE2BEA17F100A978C7 /* GetStationsUseCase.swift */; };
-		722CC6EC2BEA17F100A978C7 /* GIOSApiRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6DF2BEA17F100A978C7 /* GIOSApiRepository.swift */; };
+		722CC6EC2BEA17F100A978C7 /* GIOSApiV1Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6DF2BEA17F100A978C7 /* GIOSApiV1Repository.swift */; };
 		722CC6ED2BEA17F100A978C7 /* GIOSApiResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6E02BEA17F100A978C7 /* GIOSApiResponse.swift */; };
 		722CC6EE2BEA17F100A978C7 /* HTTPDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6E12BEA17F100A978C7 /* HTTPDataSource.swift */; };
 		722CC6EF2BEA17F100A978C7 /* HTTPRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6E22BEA17F100A978C7 /* HTTPRequest.swift */; };
@@ -57,6 +57,8 @@
 		72CE02742BF658280088F5F3 /* SensorDetailsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CE02732BF658280088F5F3 /* SensorDetailsContainerView.swift */; };
 		72CE02772BF6D4B90088F5F3 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CE02762BF6D4B90088F5F3 /* AlertView.swift */; };
 		72CE02792BF6D4C00088F5F3 /* AlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CE02782BF6D4C00088F5F3 /* AlertViewModel.swift */; };
+		72CFCFB52C01DE37007BE1D5 /* GIOSApiRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CFCFB42C01DE37007BE1D5 /* GIOSApiRepository.swift */; };
+		72CFCFB82C01E89D007BE1D5 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 72CFCFB72C01E89D007BE1D5 /* Alamofire */; };
 		72D8F9082BD8764500F26FB1 /* AirQualityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72D8F9072BD8764500F26FB1 /* AirQualityApp.swift */; };
 		72D8F90C2BD8764600F26FB1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 72D8F90B2BD8764600F26FB1 /* Assets.xcassets */; };
 		72D8F90F2BD8764600F26FB1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 72D8F90E2BD8764600F26FB1 /* Preview Assets.xcassets */; };
@@ -88,8 +90,6 @@
 		72E820052BF17AA400218BEA /* MeasurementsNetworkMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E820042BF17AA400218BEA /* MeasurementsNetworkMapper.swift */; };
 		72F4FF1C2BE8D0A6005A90EC /* Development.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 72F4FF1B2BE8D0A6005A90EC /* Development.xcconfig */; };
 		72F4FF1E2BE8D140005A90EC /* Production.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 72F4FF1D2BE8D140005A90EC /* Production.xcconfig */; };
-		72F596602C00AB2100FD7E75 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 72F5965F2C00AB2100FD7E75 /* Alamofire */; };
-		72F596622C00AB2100FD7E75 /* AlamofireDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 72F596612C00AB2100FD7E75 /* AlamofireDynamic */; };
 		72FB16AD2BF1FDFB007FED02 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FB16AC2BF1FDFB007FED02 /* Logger.swift */; };
 		72FB16AF2BF20AC8007FED02 /* SelectedStationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FB16AE2BF20AC8007FED02 /* SelectedStationModel.swift */; };
 		72FB16B12BF2295C007FED02 /* SelectedStationViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FB16B02BF2295C007FED02 /* SelectedStationViewModelTests.swift */; };
@@ -132,7 +132,7 @@
 		722CC6DB2BEA17F100A978C7 /* StationNetworkModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationNetworkModel.swift; sourceTree = "<group>"; };
 		722CC6DD2BEA17F100A978C7 /* Endpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
 		722CC6DE2BEA17F100A978C7 /* GetStationsUseCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetStationsUseCase.swift; sourceTree = "<group>"; };
-		722CC6DF2BEA17F100A978C7 /* GIOSApiRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GIOSApiRepository.swift; sourceTree = "<group>"; };
+		722CC6DF2BEA17F100A978C7 /* GIOSApiV1Repository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GIOSApiV1Repository.swift; sourceTree = "<group>"; };
 		722CC6E02BEA17F100A978C7 /* GIOSApiResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GIOSApiResponse.swift; sourceTree = "<group>"; };
 		722CC6E12BEA17F100A978C7 /* HTTPDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPDataSource.swift; sourceTree = "<group>"; };
 		722CC6E22BEA17F100A978C7 /* HTTPRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPRequest.swift; sourceTree = "<group>"; };
@@ -160,6 +160,7 @@
 		72CE02732BF658280088F5F3 /* SensorDetailsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorDetailsContainerView.swift; sourceTree = "<group>"; };
 		72CE02762BF6D4B90088F5F3 /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		72CE02782BF6D4C00088F5F3 /* AlertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewModel.swift; sourceTree = "<group>"; };
+		72CFCFB42C01DE37007BE1D5 /* GIOSApiRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIOSApiRepository.swift; sourceTree = "<group>"; };
 		72D8F9042BD8764500F26FB1 /* AirQuality.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AirQuality.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		72D8F9072BD8764500F26FB1 /* AirQualityApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirQualityApp.swift; sourceTree = "<group>"; };
 		72D8F90B2BD8764600F26FB1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -204,8 +205,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				72F596602C00AB2100FD7E75 /* Alamofire in Frameworks */,
-				72F596622C00AB2100FD7E75 /* AlamofireDynamic in Frameworks */,
+				72CFCFB82C01E89D007BE1D5 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -313,7 +313,8 @@
 				722CC6DA2BEA17F100A978C7 /* Mappers */,
 				722CC6DC2BEA17F100A978C7 /* Models */,
 				726140E92BEE5EDA0027961C /* Endpoints */,
-				722CC6DF2BEA17F100A978C7 /* GIOSApiRepository.swift */,
+				722CC6DF2BEA17F100A978C7 /* GIOSApiV1Repository.swift */,
+				72CFCFB42C01DE37007BE1D5 /* GIOSApiRepository.swift */,
 				722CC6E02BEA17F100A978C7 /* GIOSApiResponse.swift */,
 				722CC6E12BEA17F100A978C7 /* HTTPDataSource.swift */,
 				722CC6E22BEA17F100A978C7 /* HTTPRequest.swift */,
@@ -605,8 +606,7 @@
 			);
 			name = AirQuality;
 			packageProductDependencies = (
-				72F5965F2C00AB2100FD7E75 /* Alamofire */,
-				72F596612C00AB2100FD7E75 /* AlamofireDynamic */,
+				72CFCFB72C01E89D007BE1D5 /* Alamofire */,
 			);
 			productName = AirQuality;
 			productReference = 72D8F9042BD8764500F26FB1 /* AirQuality.app */;
@@ -659,7 +659,7 @@
 			);
 			mainGroup = 72D8F8FB2BD8764500F26FB1;
 			packageReferences = (
-				72F5965E2C00AB2100FD7E75 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				72CFCFB62C01E89D007BE1D5 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = 72D8F9052BD8764500F26FB1 /* Products */;
 			projectDirPath = "";
@@ -777,6 +777,7 @@
 				721022DE2BFC06670099FBBE /* ProcessInfo+Extension.swift in Sources */,
 				72E81FFF2BF1791E00218BEA /* Measurement.swift in Sources */,
 				721022E22BFC08EF0099FBBE /* SensorArchivalMeasurementsListViewModel.swift in Sources */,
+				72CFCFB52C01DE37007BE1D5 /* GIOSApiRepository.swift in Sources */,
 				72E81FD12BF119FD00218BEA /* SensorsNetworkMapper.swift in Sources */,
 				72112DCF2BF77D6200D38D1B /* Localizable.swift in Sources */,
 				72E820052BF17AA400218BEA /* MeasurementsNetworkMapper.swift in Sources */,
@@ -799,7 +800,7 @@
 				721022F42BFCDDE40099FBBE /* Array+Extension.swift in Sources */,
 				72FB16AF2BF20AC8007FED02 /* SelectedStationModel.swift in Sources */,
 				72E81FE72BF1307B00218BEA /* AllDependencies.swift in Sources */,
-				722CC6EC2BEA17F100A978C7 /* GIOSApiRepository.swift in Sources */,
+				722CC6EC2BEA17F100A978C7 /* GIOSApiV1Repository.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1759,7 +1760,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		72F5965E2C00AB2100FD7E75 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+		72CFCFB62C01E89D007BE1D5 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
 			requirement = {
@@ -1770,15 +1771,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		72F5965F2C00AB2100FD7E75 /* Alamofire */ = {
+		72CFCFB72C01E89D007BE1D5 /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 72F5965E2C00AB2100FD7E75 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			package = 72CFCFB62C01E89D007BE1D5 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
-		};
-		72F596612C00AB2100FD7E75 /* AlamofireDynamic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 72F5965E2C00AB2100FD7E75 /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = AlamofireDynamic;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

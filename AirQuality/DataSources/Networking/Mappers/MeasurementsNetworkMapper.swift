@@ -7,7 +7,10 @@
 
 import Foundation
 
-struct MeasurementsNetworkMapper: NetworkMapperProtocol {
+protocol MeasurementsNetworkMapperProtocol: NetworkMapperProtocol
+where DTOModel == [MeasurementNetworkModel], DomainModel == [AirQuality.Measurement] { }
+
+struct MeasurementsNetworkMapper: MeasurementsNetworkMapperProtocol {
     private let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"

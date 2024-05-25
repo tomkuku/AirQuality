@@ -10,8 +10,6 @@ import SwiftUI
 @main
 struct AirQualityApp: App {
     
-//    @Environment(\.dismiss) private var dismiss
-    @Environment(\.presentationMode) var presentationMode
     @StateObject private var appCoordinator: AppCoordinator
     @ObservedObject private var alertViewModel: AlertViewModel
     
@@ -26,9 +24,6 @@ struct AirQualityApp: App {
             }
             .fullScreenCover(item: $appCoordinator.fullScreenCover) { route in
                 appCoordinator.getView(for: route)
-//                    .onReceive(appCoordinator.dismissPublisher) { _ in
-//                        presentationMode.wrappedValue.dismiss()
-//                    }
             }
             .environmentObject(appCoordinator)
             

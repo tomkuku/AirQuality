@@ -1,79 +1,84 @@
 //
 //  GIOSApiRepository.swift
+//  AirQuality
 //
-//
-//  Created by Tomasz Kukułka on 30/04/2024.
+//  Created by Tomasz Kukułka on 25/05/2024.
 //
 
 import Foundation
 
-protocol HasGIOSApiV1Repository {
-    var giosApiV1Repository: GIOSApiV1RepositoryProtocol { get }
+protocol HasGIOSApiRepository {
+    var giosApiRepository: GIOSApiRepositoryProtocol { get }
 }
 
-protocol GIOSApiV1RepositoryProtocol: Sendable {
+protocol GIOSApiRepositoryProtocol: Sendable {
     func fetch<T, R>(
-        mapperType: T.Type,
-        endpoint: R,
-        contentContainerName: String
+        mapper: T,
+        endpoint: R
     ) async throws -> T.DomainModel where T: NetworkMapperProtocol, R: HTTPRequest
     
     func fetchSensors(for stationId: Int) async throws -> [Sensor]
 }
 
-final class GIOSApiV1Repository: GIOSApiV1RepositoryProtocol {
+final class GIOSApiRepository: GIOSApiRepositoryProtocol, Sendable {
     
     // MARK: Private Properties
     
     private let decoder = JSONDecoder()
     private let httpDataSource: HTTPDataSourceProtocol
+    private let giosV1Repository: GIOSApiV1RepositoryProtocol
     private let paramsRepository: ParamsRepositoryProtocol
+    private let sensorsNetworkMapper: any SensorsNetworkMapperProtocol
+    private let measurementsNetworkMapper: any MeasurementsNetworkMapperProtocol
     
     // MARK: Lifecycle
     
     init(
         httpDataSource: HTTPDataSourceProtocol,
-        paramsRepository: ParamsRepositoryProtocol
+        paramsRepository: ParamsRepositoryProtocol,
+        giosV1Repository: GIOSApiV1RepositoryProtocol,
+        sensorsNetworkMapper: any SensorsNetworkMapperProtocol,
+        measurementsNetworkMapper: any MeasurementsNetworkMapperProtocol
     ) {
         self.httpDataSource = httpDataSource
         self.paramsRepository = paramsRepository
+        self.giosV1Repository = giosV1Repository
+        self.sensorsNetworkMapper = sensorsNetworkMapper
+        self.measurementsNetworkMapper = measurementsNetworkMapper
     }
     
     // MARK: Methods
     
     func fetch<T, R>(
-        mapperType: T.Type,
-        endpoint: R,
-        contentContainerName: String
+        mapper: T,
+        endpoint: R
     ) async throws -> T.DomainModel where T: NetworkMapperProtocol, R: HTTPRequest {
-        let mapper = T()
         let request = try endpoint.asURLRequest()
         
         let data = try await httpDataSource.requestData(request)
         
         do {
-            let container = try decoder.decode(GIOSApiV1Response.self, from: data)
-            let networkModelObjects: T.DTOModel = try container.getValue(for: contentContainerName)
-            return try mapper.map(networkModelObjects)
+            let dto = try decoder.decode(T.DTOModel.self, from: data)
+            return try mapper.map(dto)
         } catch {
             throw error
         }
     }
     
     func fetchSensors(for stationId: Int) async throws -> [Sensor] {
-        let mapper = SensorsNetworkMapper()
-        let request = try Endpoint.Sensors.get(stationId).asURLRequest()
+        let sensorNetworkModels = try await handleFetchSensors(for: stationId)
         
-        let data = try await httpDataSource.requestData(request)
-        
-        let sensorNetworkModels = try decoder.decode([SensorNetworkModel].self, from: data)
-        
-        return try await withThrowingTaskGroup(of: (SensorNetworkModel, Param, [Measurement]).self) { group in
+        return try await withThrowingTaskGroup(of: (SensorNetworkModel, Param, [Measurement]).self) { [weak self] group in
+            guard let self else {
+                Logger.error("\(String(describing: Self.self)) is nil")
+                return []
+            }
+            
             sensorNetworkModels.forEach { sensorNetworkModel in
                 guard let param = self.paramsRepository.getParam(withId: sensorNetworkModel.param.idParam) else { return }
                 
                 group.addTask {
-                    let measurements = try await self.fetchMeasurementsForSensor(id: sensorNetworkModel.id)
+                    let measurements = try await self.handleFetchMeasurements(forSensorId: sensorNetworkModel.id)
                     return (sensorNetworkModel, param, measurements)
                 }
             }
@@ -81,7 +86,7 @@ final class GIOSApiV1Repository: GIOSApiV1RepositoryProtocol {
             var sensors = [Sensor]()
             
             for try await value in group {
-                let sensor = try mapper.map(value)
+                let sensor = try sensorsNetworkMapper.map(value)
                 sensors.append(sensor)
             }
             
@@ -91,11 +96,18 @@ final class GIOSApiV1Repository: GIOSApiV1RepositoryProtocol {
     
     // MARK: Private methods
     
-    private func fetchMeasurementsForSensor(id sensorId: Int) async throws -> [Measurement] {
-        try await fetch(
-            mapperType: MeasurementsNetworkMapper.self,
+    private func handleFetchMeasurements(forSensorId sensorId: Int) async throws -> [Measurement] {
+        try await giosV1Repository.fetch(
+            mapper: measurementsNetworkMapper,
             endpoint: Endpoint.Measurements.get(sensorId),
             contentContainerName: "Lista danych pomiarowych"
         )
+    }
+    
+    private func handleFetchSensors(for stationId: Int) async throws -> [SensorNetworkModel] {
+        let request = try Endpoint.Sensors.get(stationId).asURLRequest()
+        let data = try await httpDataSource.requestData(request)
+        
+        return try decoder.decode([SensorNetworkModel].self, from: data)
     }
 }

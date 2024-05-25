@@ -9,7 +9,6 @@ import Foundation
 
 struct Station: Hashable, Sendable, Identifiable {
     let id: Int
-    let name: String
     let latitude: Double // φ
     let longitude: Double // λ
     let cityName: String

@@ -9,6 +9,6 @@ import Foundation
 
 extension Decodable {
     func isArray() -> Bool {
-        return self is [Any]
+        self is [Any]
     }
 }

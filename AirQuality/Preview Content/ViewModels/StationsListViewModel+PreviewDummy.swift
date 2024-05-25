@@ -9,7 +9,7 @@ import Foundation
 
 extension StationsListViewModel {
     private struct GetStationsUseCase: GetStationsUseCaseProtocol {
-        func getAllStations() async throws -> [Station] {
+        func getStations() async throws -> [Station] {
             [Station.previewDummy()]
         }
     }

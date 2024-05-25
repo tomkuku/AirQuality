@@ -15,9 +15,15 @@ protocol GetArchivalMeasurementsUseCaseProtocol: Sendable {
 final class GetArchivalMeasurementsUseCase: GetArchivalMeasurementsUseCaseProtocol, @unchecked Sendable {
     @Injected(\.giosApiV1Repository) private var giosApiV1Repository
     
+    private let measurementsNetworkMapper: any MeasurementsNetworkMapperProtocol
+    
+    init(measurementsNetworkMapper: any MeasurementsNetworkMapperProtocol) {
+        self.measurementsNetworkMapper = measurementsNetworkMapper
+    }
+    
     func getArchivalMeasurements(for sensorId: Int) async throws -> [Measurement] {
         try await giosApiV1Repository.fetch(
-            mapperType: MeasurementsNetworkMapper.self,
+            mapper: measurementsNetworkMapper,
             endpoint: Endpoint.ArchivalMeasurements.get(sensorId),
             contentContainerName: "Lista archiwalnych wyników pomiarów"
         )

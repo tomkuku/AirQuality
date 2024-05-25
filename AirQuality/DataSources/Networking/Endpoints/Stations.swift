@@ -19,7 +19,7 @@ extension Endpoint.Stations: HTTPRequest {
     var path: String {
         switch self {
         case .get:
-            "/pjp-api/v1/rest/station/findAll"
+            "/pjp-api/rest/station/findAll"
         }
     }
     

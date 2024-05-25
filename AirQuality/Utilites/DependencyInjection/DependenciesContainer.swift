@@ -26,6 +26,7 @@ struct DependenciesContainer: AllDependencies, DependenciesContainerProtocol {
     }
     
     let giosApiV1Repository: GIOSApiV1RepositoryProtocol
+    let giosApiRepository: GIOSApiRepositoryProtocol
     let appCoordinator: AppCoordinatorProtocol
     
     init(appCoordinator: AppCoordinatorProtocol) throws {
@@ -34,7 +35,14 @@ struct DependenciesContainer: AllDependencies, DependenciesContainerProtocol {
         
         let paramsRepository = try ParamsRepository(bundleDataSource: bundleDataSource)
         
-        self.giosApiV1Repository = GIOSApiV1Repository(httpDataSource: httpDataSource, paramsRepository: paramsRepository)
+        self.giosApiV1Repository = GIOSApiV1Repository(httpDataSource: httpDataSource)
+        self.giosApiRepository = GIOSApiRepository(
+            httpDataSource: httpDataSource,
+            paramsRepository: paramsRepository,
+            giosV1Repository: giosApiV1Repository,
+            sensorsNetworkMapper: SensorsNetworkMapper(),
+            measurementsNetworkMapper: MeasurementsNetworkMapper()
+        )
         self.appCoordinator = appCoordinator
     }
 }

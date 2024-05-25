@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-final class SelectedStationViewModel: ObservableObject {
+final class SelectedStationViewModel: ObservableObject, @unchecked Sendable {
     
     typealias Model = SelectedStationModel
     
