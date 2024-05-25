@@ -25,36 +25,60 @@ enum SensorDetailsContainerSubview: CaseIterable {
 }
 
 struct SensorDetailsContainerView: View {
+    
+//    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var appCoordinator: AppCoordinator
     @State private var selectedElementId: Int = 0
     
+    private let sensor: Sensor
+    
     var body: some View {
-        Text("Cos tam")
-        
-        createNavigationMenuView()
-            .frame(height: 40)
-        
-        GeometryReader(content: { geometry in
-            ScrollViewReader(content: { scrollViewProxy in
-                ScrollView(.horizontal) {
-                    LazyHStack(alignment: .center, spacing: 0) {
-                        ForEach(0..<3, id: \.self) { index in
-                            ZStack {
-                                StationsListView()
+        NavigationStack {
+            Text("Cos tam")
+            
+            createNavigationMenuView()
+                .frame(height: 40)
+            
+            GeometryReader(content: { geometry in
+                ScrollViewReader(content: { scrollViewProxy in
+                    ScrollView(.horizontal) {
+                        LazyHStack(alignment: .center, spacing: 0) {
+                            ForEach(0..<3, id: \.self) { index in
+                                ZStack {
+                                    if index == 1 {
+                                        let viewModel = SensorArchivalMeasurementsListViewModel(sensor: sensor)
+                                        SensorArchivalMeasurementsListView(viewModel: viewModel)
+                                    } else if index == 0 {
+                                        let viewModel = SensorParamDetailsViewModel(sensor: sensor)
+                                        SensorParamDetailsView(viewModel: viewModel)
+                                    } else {
+                                        let viewModel = SensorArchivalMeasurementsListViewModel(sensor: sensor)
+                                        SensorArchivalMeasurementsChartView(viewModel: viewModel)
+                                    }
+                                }
+                                .frame(width: geometry.size.width, height: geometry.size.height)
                             }
-                            .frame(width: geometry.size.width, height: geometry.size.height)
-                            .background(color(for: index))
                         }
                     }
-                }
-                .scrollDisabled(true)
-                .onChange(of: selectedElementId) { _ in
-                    withAnimation(.easeOut) {
-                        scrollViewProxy.scrollTo(selectedElementId)
+                    .scrollDisabled(true)
+                    .onChange(of: selectedElementId) { _ in
+                        withAnimation(.easeOut) {
+                            scrollViewProxy.scrollTo(selectedElementId)
+                        }
                     }
-                }
+                })
             })
-        })
-        .ignoresSafeArea(.container, edges: .bottom)
+            .toolbar {
+                Button("Close") {
+                    appCoordinator.dismiss()
+                }
+            }
+            .ignoresSafeArea(.container, edges: .bottom)
+        }
+    }
+    
+    init(sensor: Sensor) {
+        self.sensor = sensor
     }
     
     private func createNavigationMenuView() -> some View {
@@ -106,6 +130,6 @@ struct SensorDetailsContainerView: View {
         }
     }
 }
-#Preview {
-    SensorDetailsContainerView()
-}
+//#Preview {
+//    SensorDetailsContainerView()
+//}

@@ -13,6 +13,18 @@
 		720FA9EC2BF3709000E3111A /* ParamBundleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 720FA9EB2BF3709000E3111A /* ParamBundleModel.swift */; };
 		720FA9EE2BF373AF00E3111A /* ParamBundleMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 720FA9ED2BF373AF00E3111A /* ParamBundleMapper.swift */; };
 		720FA9F22BF3854200E3111A /* BundleFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 720FA9F12BF3854200E3111A /* BundleFile.swift */; };
+		721022DE2BFC06670099FBBE /* ProcessInfo+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721022DD2BFC06670099FBBE /* ProcessInfo+Extension.swift */; };
+		721022E02BFC08940099FBBE /* SensorArchivalMeasurementsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721022DF2BFC08940099FBBE /* SensorArchivalMeasurementsListView.swift */; };
+		721022E22BFC08EF0099FBBE /* SensorArchivalMeasurementsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721022E12BFC08EF0099FBBE /* SensorArchivalMeasurementsListViewModel.swift */; };
+		721022E42BFC09520099FBBE /* SensorArchivalMeasurementsListViewModel+PreviewDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721022E32BFC09520099FBBE /* SensorArchivalMeasurementsListViewModel+PreviewDummy.swift */; };
+		721022E72BFC0A930099FBBE /* ArchivalMeasurements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721022E62BFC0A930099FBBE /* ArchivalMeasurements.swift */; };
+		721022E92BFC0B5D0099FBBE /* GetArchivalMeasurementsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721022E82BFC0B5D0099FBBE /* GetArchivalMeasurementsUseCase.swift */; };
+		721022EB2BFC0F190099FBBE /* SensorArchivalMeasurementsListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721022EA2BFC0F190099FBBE /* SensorArchivalMeasurementsListModel.swift */; };
+		721022ED2BFC21AA0099FBBE /* SensorParamDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721022EC2BFC21AA0099FBBE /* SensorParamDetailsView.swift */; };
+		721022EF2BFC21B50099FBBE /* SensorParamDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721022EE2BFC21B50099FBBE /* SensorParamDetailsViewModel.swift */; };
+		721022F22BFCD9CF0099FBBE /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721022F12BFCD9CF0099FBBE /* View+Extension.swift */; };
+		721022F42BFCDDE40099FBBE /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721022F32BFCDDE40099FBBE /* Array+Extension.swift */; };
+		721022F62BFD50B60099FBBE /* SensorArchivalMeasurementsChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721022F52BFD50B60099FBBE /* SensorArchivalMeasurementsChartView.swift */; };
 		72112DCF2BF77D6200D38D1B /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72112DCE2BF77D6200D38D1B /* Localizable.swift */; };
 		72112DD22BF7938000D38D1B /* AlertViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72112DD12BF7938000D38D1B /* AlertViewModelTests.swift */; };
 		722CC6E82BEA17F100A978C7 /* StationsNetworkMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6D92BEA17F100A978C7 /* StationsNetworkMapper.swift */; };
@@ -33,7 +45,6 @@
 		722CC7062BEA182B00A978C7 /* ErrorDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6FD2BEA182B00A978C7 /* ErrorDummy.swift */; };
 		722CC7072BEA182B00A978C7 /* HTTPDataSourceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6FE2BEA182B00A978C7 /* HTTPDataSourceMock.swift */; };
 		725B510D2BF0BC6A00273235 /* StationsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725B510A2BF0BC6A00273235 /* StationsListViewModel.swift */; };
-		726140D92BEB88FD0027961C /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 726140D82BEB88FD0027961C /* Alamofire */; };
 		726140E12BEE0B9F0027961C /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 726140E02BEE0B9F0027961C /* AppCoordinator.swift */; };
 		726140EB2BEE5EE70027961C /* Stations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 726140EA2BEE5EE70027961C /* Stations.swift */; };
 		729390012BF758300026B82C /* Publisher+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729390002BF758300026B82C /* Publisher+Extension.swift */; };
@@ -77,6 +88,8 @@
 		72E820052BF17AA400218BEA /* MeasurementsNetworkMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E820042BF17AA400218BEA /* MeasurementsNetworkMapper.swift */; };
 		72F4FF1C2BE8D0A6005A90EC /* Development.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 72F4FF1B2BE8D0A6005A90EC /* Development.xcconfig */; };
 		72F4FF1E2BE8D140005A90EC /* Production.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 72F4FF1D2BE8D140005A90EC /* Production.xcconfig */; };
+		72F596602C00AB2100FD7E75 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 72F5965F2C00AB2100FD7E75 /* Alamofire */; };
+		72F596622C00AB2100FD7E75 /* AlamofireDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 72F596612C00AB2100FD7E75 /* AlamofireDynamic */; };
 		72FB16AD2BF1FDFB007FED02 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FB16AC2BF1FDFB007FED02 /* Logger.swift */; };
 		72FB16AF2BF20AC8007FED02 /* SelectedStationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FB16AE2BF20AC8007FED02 /* SelectedStationModel.swift */; };
 		72FB16B12BF2295C007FED02 /* SelectedStationViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FB16B02BF2295C007FED02 /* SelectedStationViewModelTests.swift */; };
@@ -101,6 +114,18 @@
 		720FA9EB2BF3709000E3111A /* ParamBundleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamBundleModel.swift; sourceTree = "<group>"; };
 		720FA9ED2BF373AF00E3111A /* ParamBundleMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamBundleMapper.swift; sourceTree = "<group>"; };
 		720FA9F12BF3854200E3111A /* BundleFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleFile.swift; sourceTree = "<group>"; };
+		721022DD2BFC06670099FBBE /* ProcessInfo+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProcessInfo+Extension.swift"; sourceTree = "<group>"; };
+		721022DF2BFC08940099FBBE /* SensorArchivalMeasurementsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorArchivalMeasurementsListView.swift; sourceTree = "<group>"; };
+		721022E12BFC08EF0099FBBE /* SensorArchivalMeasurementsListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorArchivalMeasurementsListViewModel.swift; sourceTree = "<group>"; };
+		721022E32BFC09520099FBBE /* SensorArchivalMeasurementsListViewModel+PreviewDummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SensorArchivalMeasurementsListViewModel+PreviewDummy.swift"; sourceTree = "<group>"; };
+		721022E62BFC0A930099FBBE /* ArchivalMeasurements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivalMeasurements.swift; sourceTree = "<group>"; };
+		721022E82BFC0B5D0099FBBE /* GetArchivalMeasurementsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetArchivalMeasurementsUseCase.swift; sourceTree = "<group>"; };
+		721022EA2BFC0F190099FBBE /* SensorArchivalMeasurementsListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorArchivalMeasurementsListModel.swift; sourceTree = "<group>"; };
+		721022EC2BFC21AA0099FBBE /* SensorParamDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorParamDetailsView.swift; sourceTree = "<group>"; };
+		721022EE2BFC21B50099FBBE /* SensorParamDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorParamDetailsViewModel.swift; sourceTree = "<group>"; };
+		721022F12BFCD9CF0099FBBE /* View+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
+		721022F32BFCDDE40099FBBE /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
+		721022F52BFD50B60099FBBE /* SensorArchivalMeasurementsChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorArchivalMeasurementsChartView.swift; sourceTree = "<group>"; };
 		72112DCE2BF77D6200D38D1B /* Localizable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Localizable.swift; sourceTree = "<group>"; };
 		72112DD12BF7938000D38D1B /* AlertViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewModelTests.swift; sourceTree = "<group>"; };
 		722CC6D92BEA17F100A978C7 /* StationsNetworkMapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationsNetworkMapper.swift; sourceTree = "<group>"; };
@@ -179,7 +204,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				726140D92BEB88FD0027961C /* Alamofire in Frameworks */,
+				72F596602C00AB2100FD7E75 /* Alamofire in Frameworks */,
+				72F596622C00AB2100FD7E75 /* AlamofireDynamic in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,6 +256,26 @@
 				720FA9F12BF3854200E3111A /* BundleFile.swift */,
 			);
 			path = Bundle;
+			sourceTree = "<group>";
+		};
+		721022E52BFC09E80099FBBE /* SensorArchivalMeasurementsList */ = {
+			isa = PBXGroup;
+			children = (
+				721022DF2BFC08940099FBBE /* SensorArchivalMeasurementsListView.swift */,
+				721022E12BFC08EF0099FBBE /* SensorArchivalMeasurementsListViewModel.swift */,
+				721022EA2BFC0F190099FBBE /* SensorArchivalMeasurementsListModel.swift */,
+				721022F52BFD50B60099FBBE /* SensorArchivalMeasurementsChartView.swift */,
+			);
+			path = SensorArchivalMeasurementsList;
+			sourceTree = "<group>";
+		};
+		721022F02BFC21BA0099FBBE /* SensorParamDetails */ = {
+			isa = PBXGroup;
+			children = (
+				721022EC2BFC21AA0099FBBE /* SensorParamDetailsView.swift */,
+				721022EE2BFC21B50099FBBE /* SensorParamDetailsViewModel.swift */,
+			);
+			path = SensorParamDetails;
 			sourceTree = "<group>";
 		};
 		72112DCD2BF77CCA00D38D1B /* Localizable */ = {
@@ -329,8 +375,10 @@
 		726140DE2BEC21BA0027961C /* MVVM */ = {
 			isa = PBXGroup;
 			children = (
+				721022F02BFC21BA0099FBBE /* SensorParamDetails */,
 				725B510B2BF0BC6A00273235 /* StationsList */,
 				72CE02752BF6582C0088F5F3 /* SensorDetails */,
+				721022E52BFC09E80099FBBE /* SensorArchivalMeasurementsList */,
 				72E81FCD2BF119F100218BEA /* SelectedStation */,
 				729390042BF762AC0026B82C /* Alert */,
 			);
@@ -344,6 +392,7 @@
 				726140EA2BEE5EE70027961C /* Stations.swift */,
 				726140EC2BEE5EEE0027961C /* Sensors.swift */,
 				72E820002BF1799400218BEA /* Measurements.swift */,
+				721022E62BFC0A930099FBBE /* ArchivalMeasurements.swift */,
 			);
 			path = Endpoints;
 			sourceTree = "<group>";
@@ -353,6 +402,7 @@
 			children = (
 				72E81FD42BF11A0C00218BEA /* GetSensorsUseCase.swift */,
 				722CC6DE2BEA17F100A978C7 /* GetStationsUseCase.swift */,
+				721022E82BFC0B5D0099FBBE /* GetArchivalMeasurementsUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -361,6 +411,9 @@
 			isa = PBXGroup;
 			children = (
 				729390002BF758300026B82C /* Publisher+Extension.swift */,
+				721022DD2BFC06670099FBBE /* ProcessInfo+Extension.swift */,
+				721022F12BFCD9CF0099FBBE /* View+Extension.swift */,
+				721022F32BFCDDE40099FBBE /* Array+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -389,6 +442,7 @@
 			children = (
 				725B51142BF1130800273235 /* StationsListViewModel+PreviewDummy.swift */,
 				72E81FFA2BF172D300218BEA /* SelectedStationViewModel+PreviewDummy.swift */,
+				721022E32BFC09520099FBBE /* SensorArchivalMeasurementsListViewModel+PreviewDummy.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -551,7 +605,8 @@
 			);
 			name = AirQuality;
 			packageProductDependencies = (
-				726140D82BEB88FD0027961C /* Alamofire */,
+				72F5965F2C00AB2100FD7E75 /* Alamofire */,
+				72F596612C00AB2100FD7E75 /* AlamofireDynamic */,
 			);
 			productName = AirQuality;
 			productReference = 72D8F9042BD8764500F26FB1 /* AirQuality.app */;
@@ -604,7 +659,7 @@
 			);
 			mainGroup = 72D8F8FB2BD8764500F26FB1;
 			packageReferences = (
-				726140D72BEB88FD0027961C /* XCRemoteSwiftPackageReference "Alamofire" */,
+				72F5965E2C00AB2100FD7E75 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = 72D8F9052BD8764500F26FB1 /* Products */;
 			projectDirPath = "";
@@ -691,10 +746,12 @@
 				72CE02792BF6D4C00088F5F3 /* AlertViewModel.swift in Sources */,
 				720FA9E72BF36E4D00E3111A /* BundleDataSource.swift in Sources */,
 				729390012BF758300026B82C /* Publisher+Extension.swift in Sources */,
+				721022E42BFC09520099FBBE /* SensorArchivalMeasurementsListViewModel+PreviewDummy.swift in Sources */,
 				722CC6E92BEA17F100A978C7 /* StationNetworkModel.swift in Sources */,
 				72CE02742BF658280088F5F3 /* SensorDetailsContainerView.swift in Sources */,
 				72ACEE9A2BF1162E009A4A93 /* StationPreviewDummy.swift in Sources */,
 				72E820032BF17A2F00218BEA /* MeasurementNetworkModel.swift in Sources */,
+				721022E92BFC0B5D0099FBBE /* GetArchivalMeasurementsUseCase.swift in Sources */,
 				72D8F9082BD8764500F26FB1 /* AirQualityApp.swift in Sources */,
 				72E81FE92BF1308F00218BEA /* DependenciesContainerManager.swift in Sources */,
 				72E81FDE2BF1247800218BEA /* Sensors.swift in Sources */,
@@ -702,8 +759,10 @@
 				722CC6ED2BEA17F100A978C7 /* GIOSApiResponse.swift in Sources */,
 				725B510D2BF0BC6A00273235 /* StationsListViewModel.swift in Sources */,
 				722CC6F12BEA17F100A978C7 /* DependenciesContainer.swift in Sources */,
+				721022ED2BFC21AA0099FBBE /* SensorParamDetailsView.swift in Sources */,
 				722CC6E82BEA17F100A978C7 /* StationsNetworkMapper.swift in Sources */,
 				72E81FD32BF11A0700218BEA /* SensorNetworkModel.swift in Sources */,
+				721022F62BFD50B60099FBBE /* SensorArchivalMeasurementsChartView.swift in Sources */,
 				720FA9EE2BF373AF00E3111A /* ParamBundleMapper.swift in Sources */,
 				722CC6EA2BEA17F100A978C7 /* Endpoint.swift in Sources */,
 				720FA9F22BF3854200E3111A /* BundleFile.swift in Sources */,
@@ -711,25 +770,33 @@
 				726140EB2BEE5EE70027961C /* Stations.swift in Sources */,
 				729390032BF75D1E0026B82C /* AlertModel.swift in Sources */,
 				722CC6EB2BEA17F100A978C7 /* GetStationsUseCase.swift in Sources */,
+				721022E72BFC0A930099FBBE /* ArchivalMeasurements.swift in Sources */,
 				720FA9EC2BF3709000E3111A /* ParamBundleModel.swift in Sources */,
 				722CC6EF2BEA17F100A978C7 /* HTTPRequest.swift in Sources */,
 				72CE02772BF6D4B90088F5F3 /* AlertView.swift in Sources */,
+				721022DE2BFC06670099FBBE /* ProcessInfo+Extension.swift in Sources */,
 				72E81FFF2BF1791E00218BEA /* Measurement.swift in Sources */,
+				721022E22BFC08EF0099FBBE /* SensorArchivalMeasurementsListViewModel.swift in Sources */,
 				72E81FD12BF119FD00218BEA /* SensorsNetworkMapper.swift in Sources */,
 				72112DCF2BF77D6200D38D1B /* Localizable.swift in Sources */,
 				72E820052BF17AA400218BEA /* MeasurementsNetworkMapper.swift in Sources */,
+				721022E02BFC08940099FBBE /* SensorArchivalMeasurementsListView.swift in Sources */,
+				721022EB2BFC0F190099FBBE /* SensorArchivalMeasurementsListModel.swift in Sources */,
 				722CC6F02BEA17F100A978C7 /* Station.swift in Sources */,
 				72E81FCF2BF119F100218BEA /* SelectedStationViewModel.swift in Sources */,
+				721022EF2BFC21B50099FBBE /* SensorParamDetailsViewModel.swift in Sources */,
 				726140E12BEE0B9F0027961C /* AppCoordinator.swift in Sources */,
 				72E81FD52BF11A0C00218BEA /* GetSensorsUseCase.swift in Sources */,
 				72E81FE52BF1306A00218BEA /* Injected.swift in Sources */,
 				72E81FFB2BF172D300218BEA /* SelectedStationViewModel+PreviewDummy.swift in Sources */,
+				721022F22BFCD9CF0099FBBE /* View+Extension.swift in Sources */,
 				722CC6EE2BEA17F100A978C7 /* HTTPDataSource.swift in Sources */,
 				720FA9E52BF2D74500E3111A /* Param.swift in Sources */,
 				72E81FCE2BF119F100218BEA /* SelectedStationView.swift in Sources */,
 				72E820012BF1799400218BEA /* Measurements.swift in Sources */,
 				72FB16AD2BF1FDFB007FED02 /* Logger.swift in Sources */,
 				72E81FDB2BF11C9200218BEA /* Sensor.swift in Sources */,
+				721022F42BFCDDE40099FBBE /* Array+Extension.swift in Sources */,
 				72FB16AF2BF20AC8007FED02 /* SelectedStationModel.swift in Sources */,
 				72E81FE72BF1307B00218BEA /* AllDependencies.swift in Sources */,
 				722CC6EC2BEA17F100A978C7 /* GIOSApiRepository.swift in Sources */,
@@ -1692,7 +1759,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		726140D72BEB88FD0027961C /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+		72F5965E2C00AB2100FD7E75 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
 			requirement = {
@@ -1703,10 +1770,15 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		726140D82BEB88FD0027961C /* Alamofire */ = {
+		72F5965F2C00AB2100FD7E75 /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 726140D72BEB88FD0027961C /* XCRemoteSwiftPackageReference "Alamofire" */;
+			package = 72F5965E2C00AB2100FD7E75 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		72F596612C00AB2100FD7E75 /* AlamofireDynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 72F5965E2C00AB2100FD7E75 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = AlamofireDynamic;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

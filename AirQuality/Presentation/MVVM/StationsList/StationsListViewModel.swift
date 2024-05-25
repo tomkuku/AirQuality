@@ -9,10 +9,15 @@ import Foundation
 
 final class StationsListViewModel: ObservableObject {
     
-    private let getStationsUseCase: GetStationsUseCaseProtocol
+    // MARK: Properties
     
     @Published private(set) var stations: [Station] = []
-    @Published private(set) var error: Error?
+    
+    // MARK: Private properties
+    
+    @Injected(\.appCoordinator) private var appCoordinator
+    
+    private let getStationsUseCase: GetStationsUseCaseProtocol
     
     init(
         getStationsUseCase: GetStationsUseCaseProtocol = GetStationsUseCase()
@@ -25,7 +30,7 @@ final class StationsListViewModel: ObservableObject {
         do {
             self.stations = try await getStationsUseCase.getAllStations()
         } catch {
-            self.error = error
+            appCoordinator.showAlert(.somethigWentWrong())
         }
     }
 }

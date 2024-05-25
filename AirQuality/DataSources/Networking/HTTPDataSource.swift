@@ -17,11 +17,19 @@ final class HTTPDataSource: HTTPDataSourceProtocol, @unchecked Sendable {
     private let queue = DispatchQueue(label: "com.http.data.source")
     
     init(sessionConfiguration: URLSessionConfiguration = .af.default) {
+        var eventMonitors: [EventMonitor] = []
+        
+#if DEBUG
+        if !ProcessInfo.isTest {
+            eventMonitors.append(EventMonitorLogger())
+        }
+#endif
+        
         self.session = Session(
             configuration: sessionConfiguration,
             rootQueue: queue,
             serializationQueue: queue,
-            eventMonitors: [EventMonitorLogger()]
+            eventMonitors: eventMonitors
         )
     }
     
@@ -49,6 +57,7 @@ final class HTTPDataSource: HTTPDataSourceProtocol, @unchecked Sendable {
     }
 }
 
+#if DEBUG
 final class EventMonitorLogger: EventMonitor {
     func request(_ request: DataRequest, didParseResponse response: DataResponse<Data?, AFError>) {
         guard
@@ -77,3 +86,4 @@ final class EventMonitorLogger: EventMonitor {
         Logger.info(message)
     }
 }
+#endif
