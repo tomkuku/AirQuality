@@ -25,7 +25,7 @@ struct DependenciesContainer: AllDependencies, DependenciesContainerProtocol {
         fatalError("Dependency \(String(describing: T.self)) not found!")
     }
     
-    let giosApiRepository: GIOSApiRepositoryProtocol
+    let giosApiV1Repository: GIOSApiV1RepositoryProtocol
     let appCoordinator: AppCoordinatorProtocol
     
     init(appCoordinator: AppCoordinatorProtocol) throws {
@@ -34,7 +34,7 @@ struct DependenciesContainer: AllDependencies, DependenciesContainerProtocol {
         
         let paramsRepository = try ParamsRepository(bundleDataSource: bundleDataSource)
         
-        self.giosApiRepository = GIOSApiRepository(httpDataSource: httpDataSource, paramsRepository: paramsRepository)
+        self.giosApiV1Repository = GIOSApiV1Repository(httpDataSource: httpDataSource, paramsRepository: paramsRepository)
         self.appCoordinator = appCoordinator
     }
 }

@@ -7,11 +7,11 @@
 
 import Foundation
 
-protocol HasGIOSApiRepository {
-    var giosApiRepository: GIOSApiRepositoryProtocol { get }
+protocol HasGIOSApiV1Repository {
+    var giosApiV1Repository: GIOSApiV1RepositoryProtocol { get }
 }
 
-protocol GIOSApiRepositoryProtocol: Sendable {
+protocol GIOSApiV1RepositoryProtocol: Sendable {
     func fetch<T, R>(
         mapperType: T.Type,
         endpoint: R,
@@ -21,7 +21,7 @@ protocol GIOSApiRepositoryProtocol: Sendable {
     func fetchSensors(for stationId: Int) async throws -> [Sensor]
 }
 
-final class GIOSApiRepository: GIOSApiRepositoryProtocol {
+final class GIOSApiV1Repository: GIOSApiV1RepositoryProtocol {
     
     // MARK: Private Properties
     
