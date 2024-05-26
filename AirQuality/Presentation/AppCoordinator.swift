@@ -24,14 +24,32 @@ enum AppFlow: Hashable, Identifiable {
     case stationsList
     case slectedStation(Station)
     case sensorsDetails(Sensor)
+    case addNewObservedStation
     
     var id: Int {
         switch self {
-        case .stationsList:     1
-        case .slectedStation:   2
-        case .sensorsDetails:   3
+        case .stationsList:             1
+        case .slectedStation:           2
+        case .sensorsDetails:           3
+        case .addNewObservedStation:    4
         }
     }
+}
+
+protocol CoordinatorProtocol: ObservableObject {
+    associatedtype NavigationComponentType: Identifiable
+    associatedtype StartViewType: View
+    associatedtype CreateViewType: View
+    
+    @ViewBuilder
+    @MainActor
+    func start() -> StartViewType
+    
+    @ViewBuilder
+    @MainActor
+    func createView(for navigationComponent: NavigationComponentType) -> CreateViewType
+    
+    func showAlert(_ alert: AlertModel)
 }
 
 final class AppCoordinator: ObservableObject, AppCoordinatorProtocol {
@@ -54,6 +72,8 @@ final class AppCoordinator: ObservableObject, AppCoordinatorProtocol {
     private let alertSubject = PassthroughSubject<AlertModel, Never>()
     private let dismissSubject = PassthroughSubject<Void, Never>()
     
+    private var childCoordinator: (any ObservableObject)?
+    
     // MARK: Lifecycle
     
     init(navigationPath: Binding<NavigationPath>) {
@@ -73,6 +93,8 @@ final class AppCoordinator: ObservableObject, AppCoordinatorProtocol {
             SelectedStationView(viewModel: viewModel)
         case .sensorsDetails(let sensor):
             SensorDetailsContainerView(sensor: sensor)
+        case .addNewObservedStation:
+            createChildCoordinator().start()
         }
     }
     
@@ -92,7 +114,24 @@ final class AppCoordinator: ObservableObject, AppCoordinatorProtocol {
         alertSubject.send(alert)
     }
     
+    func presentAddStationToObserved() {
+        fullScreenCover = .addNewObservedStation
+    }
+    
     func dismiss() {
         fullScreenCover = nil
+    }
+    
+    private func createChildCoordinator() -> some CoordinatorProtocol {
+        let dimissHandler: (() -> ()) = { [weak self] in
+            self?.dismissSubject.send()
+        }
+        
+        let coordinator = AddStationToObservedCoordinator(
+            dimissHandler: dimissHandler,
+            alertSubject: alertSubject
+        )
+        childCoordinator = coordinator
+        return coordinator
     }
 }

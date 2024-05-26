@@ -1,17 +1,17 @@
 //
-//  StationsListView.swift
+//  AddStationToObservedListView.swift
 //  AirQuality
 //
-//  Created by Tomasz Kukułka on 08/05/2024.
+//  Created by Tomasz Kukułka on 25/05/2024.
 //
 
 import SwiftUI
 
-struct StationsListView: View {
+struct AddStationToObservedListView: View {
     
     private typealias L10n = Localizable
     
-    @EnvironmentObject private var coordinator: AppCoordinator
+    @EnvironmentObject private var coordinator: AddStationToObservedCoordinator
     @StateObject private var viewModel: StationsListViewModel
     
     var body: some View {
@@ -55,12 +55,5 @@ struct StationsListView: View {
     
     init(viewModel: StationsListViewModel = .init()) {
         self._viewModel = StateObject(wrappedValue: viewModel)
-    }
-}
-
-#Preview {
-    NavigationStack {
-        StationsListView(viewModel: .previewDummy)
-            .navigationBarTitleDisplayMode(.inline)
     }
 }

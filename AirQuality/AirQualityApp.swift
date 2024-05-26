@@ -13,6 +13,8 @@ struct AirQualityApp: App {
     @StateObject private var appCoordinator: AppCoordinator
     @ObservedObject private var alertViewModel: AlertViewModel
     
+    @State private var isFullScreenCoverPresented: Bool = false
+    
     var body: some Scene {
         WindowGroup {
             NavigationStack(path: $appCoordinator.navigationPath) {

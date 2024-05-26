@@ -59,6 +59,11 @@
 		72CE02792BF6D4C00088F5F3 /* AlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CE02782BF6D4C00088F5F3 /* AlertViewModel.swift */; };
 		72CFCFB52C01DE37007BE1D5 /* GIOSApiRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CFCFB42C01DE37007BE1D5 /* GIOSApiRepository.swift */; };
 		72CFCFB82C01E89D007BE1D5 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 72CFCFB72C01E89D007BE1D5 /* Alamofire */; };
+		72CFCFBA2C022A3F007BE1D5 /* AddStationToObservedCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CFCFB92C022A3F007BE1D5 /* AddStationToObservedCoordinator.swift */; };
+		72CFCFBC2C023E2A007BE1D5 /* AddStationToObservedListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CFCFBB2C023E2A007BE1D5 /* AddStationToObservedListView.swift */; };
+		72CFCFBE2C0240A2007BE1D5 /* AddStationToObservedBaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CFCFBD2C0240A2007BE1D5 /* AddStationToObservedBaseView.swift */; };
+		72CFCFC02C029DF8007BE1D5 /* AddStationToObservedListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CFCFBF2C029DF8007BE1D5 /* AddStationToObservedListViewModel.swift */; };
+		72CFCFC22C029EE7007BE1D5 /* AddStationToObservedListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CFCFC12C029EE7007BE1D5 /* AddStationToObservedListModel.swift */; };
 		72D8F9082BD8764500F26FB1 /* AirQualityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72D8F9072BD8764500F26FB1 /* AirQualityApp.swift */; };
 		72D8F90C2BD8764600F26FB1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 72D8F90B2BD8764600F26FB1 /* Assets.xcassets */; };
 		72D8F90F2BD8764600F26FB1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 72D8F90E2BD8764600F26FB1 /* Preview Assets.xcassets */; };
@@ -161,6 +166,11 @@
 		72CE02762BF6D4B90088F5F3 /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		72CE02782BF6D4C00088F5F3 /* AlertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewModel.swift; sourceTree = "<group>"; };
 		72CFCFB42C01DE37007BE1D5 /* GIOSApiRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIOSApiRepository.swift; sourceTree = "<group>"; };
+		72CFCFB92C022A3F007BE1D5 /* AddStationToObservedCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStationToObservedCoordinator.swift; sourceTree = "<group>"; };
+		72CFCFBB2C023E2A007BE1D5 /* AddStationToObservedListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStationToObservedListView.swift; sourceTree = "<group>"; };
+		72CFCFBD2C0240A2007BE1D5 /* AddStationToObservedBaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStationToObservedBaseView.swift; sourceTree = "<group>"; };
+		72CFCFBF2C029DF8007BE1D5 /* AddStationToObservedListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStationToObservedListViewModel.swift; sourceTree = "<group>"; };
+		72CFCFC12C029EE7007BE1D5 /* AddStationToObservedListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStationToObservedListModel.swift; sourceTree = "<group>"; };
 		72D8F9042BD8764500F26FB1 /* AirQuality.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AirQuality.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		72D8F9072BD8764500F26FB1 /* AirQualityApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirQualityApp.swift; sourceTree = "<group>"; };
 		72D8F90B2BD8764600F26FB1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -232,6 +242,7 @@
 			isa = PBXGroup;
 			children = (
 				726140E02BEE0B9F0027961C /* AppCoordinator.swift */,
+				72CFCFB92C022A3F007BE1D5 /* AddStationToObservedCoordinator.swift */,
 				726140DE2BEC21BA0027961C /* MVVM */,
 			);
 			path = Presentation;
@@ -376,6 +387,8 @@
 		726140DE2BEC21BA0027961C /* MVVM */ = {
 			isa = PBXGroup;
 			children = (
+				72CFCFBD2C0240A2007BE1D5 /* AddStationToObservedBaseView.swift */,
+				72CFCFC32C029F1D007BE1D5 /* AddStationToObservedList */,
 				721022F02BFC21BA0099FBBE /* SensorParamDetails */,
 				725B510B2BF0BC6A00273235 /* StationsList */,
 				72CE02752BF6582C0088F5F3 /* SensorDetails */,
@@ -454,6 +467,16 @@
 				72CE02732BF658280088F5F3 /* SensorDetailsContainerView.swift */,
 			);
 			path = SensorDetails;
+			sourceTree = "<group>";
+		};
+		72CFCFC32C029F1D007BE1D5 /* AddStationToObservedList */ = {
+			isa = PBXGroup;
+			children = (
+				72CFCFBB2C023E2A007BE1D5 /* AddStationToObservedListView.swift */,
+				72CFCFBF2C029DF8007BE1D5 /* AddStationToObservedListViewModel.swift */,
+				72CFCFC12C029EE7007BE1D5 /* AddStationToObservedListModel.swift */,
+			);
+			path = AddStationToObservedList;
 			sourceTree = "<group>";
 		};
 		72D8F8FB2BD8764500F26FB1 = {
@@ -743,6 +766,7 @@
 				72ACEE972BF115C4009A4A93 /* StationsListViewModel+PreviewDummy.swift in Sources */,
 				72ACEE982BF115C4009A4A93 /* StationsListView.swift in Sources */,
 				72E81FF92BF171B400218BEA /* SensorPreviewDummy.swift in Sources */,
+				72CFCFC02C029DF8007BE1D5 /* AddStationToObservedListViewModel.swift in Sources */,
 				72CE02792BF6D4C00088F5F3 /* AlertViewModel.swift in Sources */,
 				720FA9E72BF36E4D00E3111A /* BundleDataSource.swift in Sources */,
 				729390012BF758300026B82C /* Publisher+Extension.swift in Sources */,
@@ -773,10 +797,13 @@
 				721022E72BFC0A930099FBBE /* ArchivalMeasurements.swift in Sources */,
 				720FA9EC2BF3709000E3111A /* ParamBundleModel.swift in Sources */,
 				722CC6EF2BEA17F100A978C7 /* HTTPRequest.swift in Sources */,
+				72CFCFBA2C022A3F007BE1D5 /* AddStationToObservedCoordinator.swift in Sources */,
+				72CFCFBC2C023E2A007BE1D5 /* AddStationToObservedListView.swift in Sources */,
 				72CE02772BF6D4B90088F5F3 /* AlertView.swift in Sources */,
 				721022DE2BFC06670099FBBE /* ProcessInfo+Extension.swift in Sources */,
 				72E81FFF2BF1791E00218BEA /* Measurement.swift in Sources */,
 				721022E22BFC08EF0099FBBE /* SensorArchivalMeasurementsListViewModel.swift in Sources */,
+				72CFCFBE2C0240A2007BE1D5 /* AddStationToObservedBaseView.swift in Sources */,
 				72CFCFB52C01DE37007BE1D5 /* GIOSApiRepository.swift in Sources */,
 				72E81FD12BF119FD00218BEA /* SensorsNetworkMapper.swift in Sources */,
 				72112DCF2BF77D6200D38D1B /* Localizable.swift in Sources */,
@@ -789,6 +816,7 @@
 				726140E12BEE0B9F0027961C /* AppCoordinator.swift in Sources */,
 				72E81FD52BF11A0C00218BEA /* GetSensorsUseCase.swift in Sources */,
 				72E81FE52BF1306A00218BEA /* Injected.swift in Sources */,
+				72CFCFC22C029EE7007BE1D5 /* AddStationToObservedListModel.swift in Sources */,
 				72E81FFB2BF172D300218BEA /* SelectedStationViewModel+PreviewDummy.swift in Sources */,
 				721022F22BFCD9CF0099FBBE /* View+Extension.swift in Sources */,
 				722CC6EE2BEA17F100A978C7 /* HTTPDataSource.swift in Sources */,

@@ -30,6 +30,7 @@ final class StationsListViewModel: ObservableObject {
         do {
             self.stations = try await getStationsUseCase.getStations()
         } catch {
+            Logger.error(error.localizedDescription)
             appCoordinator.showAlert(.somethigWentWrong())
         }
     }

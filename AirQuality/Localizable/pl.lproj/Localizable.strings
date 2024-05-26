@@ -6,6 +6,11 @@
   
 */
 
+// MARK: AddStationListView
+
+"AddStationListView.title" = "Lista Stacji";
+"AddStationListView.noData" = "Brak danych";
+
 // MARK: Params
 
 "Param.c6h6.name" = "Benzen";
