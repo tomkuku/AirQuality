@@ -6,13 +6,14 @@
 //
 
 import SwiftUI
+import Combine
 
-struct AddStationToObservedListView: View {
+struct AddStationToObservedListView: View, Sendable {
     
-    private typealias L10n = Localizable
+    private typealias L10n = Localizable.AddStationToObservedListView
     
     @EnvironmentObject private var coordinator: AddStationToObservedCoordinator
-    @StateObject private var viewModel: StationsListViewModel
+    @StateObject private var viewModel: AddStationToObservedListViewModel
     
     var body: some View {
         ScrollView {
@@ -20,7 +21,7 @@ struct AddStationToObservedListView: View {
                 if viewModel.stations.isEmpty {
                     Spacer()
                     
-                    Text(L10n.AddStationListView.noData)
+//                    Text(L10n.AddStationListView.noData)
                     
                     Spacer()
                 } else {
@@ -40,20 +41,25 @@ struct AddStationToObservedListView: View {
                         .cornerRadius(10)
                         .accessibility(addTraits: [.isButton])
                         .gesture(TapGesture().onEnded {
-                            coordinator.gotSelectedStation(station)
+//                            coordinator.showAlert(<#T##AlertModel#>)
                         })
                     }
                 }
             }
             .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
-            .navigationTitle(L10n.AddStationListView.title)
+            .navigationTitle(L10n.title)
+        }
+        .onReceive(viewModel.errorPublisher) { _ in
+            coordinator.showAlert(.somethigWentWrong())
         }
         .taskOnFirstAppear {
-            await viewModel.fetchStations()
+            Task { @HandlerActor in
+                await viewModel.fetchStations()
+            }
         }
     }
     
-    init(viewModel: StationsListViewModel = .init()) {
+    init(viewModel: AddStationToObservedListViewModel = .init()) {
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
 }

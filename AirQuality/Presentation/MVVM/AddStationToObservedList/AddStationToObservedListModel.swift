@@ -8,12 +8,7 @@
 import Foundation
 
 enum AddStationToObservedListModel {
-    enum SortOption {
-        case city
-        case street
-    }
-    
-    struct Sesction {
+    struct Section {
         let name: String
         var stations: [Station]
     }

@@ -17,7 +17,9 @@ final class GetStationsUseCase: GetStationsUseCaseProtocol, @unchecked Sendable 
     
     private let stationsNetworkMapper: any StationsNetworkMapperProtocol
     
-    init(stationsNetworkMapper: any StationsNetworkMapperProtocol) {
+    init(
+        stationsNetworkMapper: any StationsNetworkMapperProtocol = StationsNetworkMapper()
+    ) {
         self.stationsNetworkMapper = stationsNetworkMapper
     }
     

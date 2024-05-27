@@ -40,3 +40,8 @@
 "Alert.SomethingWentWrong.message" = "Spróbuj ponownie później";
 
 "Alert.Button.Ok.title" = "Ok";
+"Alert.Button.Cancel.title" = "Anuluj";
+
+// MARK: AddStationToObservedListView
+
+"AddStationToObservedListView.title" = "Lista Stacji";

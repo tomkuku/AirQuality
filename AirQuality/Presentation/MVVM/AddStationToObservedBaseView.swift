@@ -12,9 +12,11 @@ struct AddStationToObservedBaseView: View {
     @EnvironmentObject private var coordinator: AddStationToObservedCoordinator
     
     var body: some View {
-        TabView {
-            AddStationToObservedListView()
-                .environmentObject(coordinator)
+        NavigationStack(path: $coordinator.navigationPath) {
+            TabView {
+                AddStationToObservedListView()
+                    .environmentObject(coordinator)
+            }
         }
     }
 }

@@ -25,6 +25,8 @@ final class AddStationToObservedCoordinator: CoordinatorProtocol {
     private let dimissHandler: (() -> ())?
     private let alertSubject: any Subject<AlertModel, Never>
     
+    @Published var navigationPath = NavigationPath()
+    
     init(
         dimissHandler: @escaping () -> (),
         alertSubject: any Subject<AlertModel, Never>
