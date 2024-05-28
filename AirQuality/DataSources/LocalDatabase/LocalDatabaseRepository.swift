@@ -8,20 +8,35 @@
 import Foundation
 import SwiftData
 
-final class LocalDatabaseRepository {
+protocol HasLocalDatabaseRepository {
+    var localDatabaseRepository: LocalDatabaseRepositoryProtocol { get }
+}
+
+protocol LocalDatabaseRepositoryProtocol: Sendable {
+    func insert<T: LocalDatabaseMapperProtocol>(mapper: T.Type, object: T.DomainModel) async throws
+    
+//    func fetch<T>(
+//        _ fetchDescription: FetchDescriptor<T>
+//    ) async throws -> [T] where T: PersistentModel & Sendable
+}
+
+final class LocalDatabaseRepository: LocalDatabaseRepositoryProtocol {
     private let localDatabaseDataStore: LocalDatabaseDataStoreProtocol
     
     init(localDatabaseDataStore: LocalDatabaseDataStoreProtocol) {
         self.localDatabaseDataStore = localDatabaseDataStore
     }
     
-    func insert<T>(mapper: T, object: T.DomainModel) throws where T: LocalDatabaseMapperProtocol {
-        let databaseObject = try mapper.map(object)
+    func insert<T: LocalDatabaseMapperProtocol>(mapper: T.Type, object: T.DomainModel) async throws {
+        let mapper = T()
+        let databaseObject = try mapper.mapDomainModel(object)
         
-        localDatabaseDataStore.insert(databaseObject)
+        await localDatabaseDataStore.insert(databaseObject)
     }
     
-    func fetch<T>(_ fetchDescription: FetchDescriptor<T>) throws -> [T] where T: PersistentModel {
-        try 
-    }
+//    func fetch<T>(
+//        _ fetchDescription: FetchDescriptor<T>
+//    ) async throws -> [T] where T: PersistentModel & Sendable {
+//        try await localDatabaseDataStore.fetch(fetchDescription)
+//    }
 }

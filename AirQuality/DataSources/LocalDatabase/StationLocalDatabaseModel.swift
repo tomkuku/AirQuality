@@ -7,10 +7,9 @@
 
 import Foundation
 import SwiftData
-import SwiftUI
 
 @Model
-final class StationLocalDatabaseModel: PersistentModel {
+final class StationLocalDatabaseModel: Sendable {
     let id: Int
     let latitude: Double
     let longitude: Double

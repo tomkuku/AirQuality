@@ -7,7 +7,9 @@
 
 import Foundation
 
-enum DependenciesContainerManager: Sendable {
-    // https://github.com/apple/swift-evolution/blob/main/proposals/0412-strict-concurrency-for-global-variables.md
-    nonisolated(unsafe) static var container: DependenciesContainerProtocol! // swiftlint:disable:this implicitly_unwrapped_optional
+final class DependenciesContainerManager: Sendable {
+    // It's similar to a pointer because by using `unowned` it doesn't have strong reference ti container.
+    
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    nonisolated(unsafe) static unowned var container: DependenciesContainerProtocol!
 }

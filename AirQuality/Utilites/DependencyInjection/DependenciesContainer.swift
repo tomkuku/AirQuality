@@ -6,12 +6,14 @@
 //
 
 import Foundation
+import SwiftData
+import SwiftUI
 
-protocol DependenciesContainerProtocol {
+protocol DependenciesContainerProtocol: AnyObject {
     subscript<T>(_ keyPath: KeyPath<AllDependencies, T>) -> T { get }
 }
 
-struct DependenciesContainer: AllDependencies, DependenciesContainerProtocol {
+final class DependenciesContainer: AllDependencies, DependenciesContainerProtocol {
     subscript<T>(_ keyPath: KeyPath<AllDependencies, T>) -> T {
         let mirror = Mirror(reflecting: self)
         
@@ -27,12 +29,12 @@ struct DependenciesContainer: AllDependencies, DependenciesContainerProtocol {
     
     let giosApiV1Repository: GIOSApiV1RepositoryProtocol
     let giosApiRepository: GIOSApiRepositoryProtocol
-    let appCoordinator: AppCoordinatorProtocol
+    let appCoordinator: AppCoordinator
+    var localDatabaseRepository: LocalDatabaseRepositoryProtocol
     
-    init(appCoordinator: AppCoordinatorProtocol) throws {
+    init() throws {
         let httpDataSource = HTTPDataSource()
         let bundleDataSource = try BundleDataSource()
-        
         let paramsRepository = try ParamsRepository(bundleDataSource: bundleDataSource)
         
         self.giosApiV1Repository = GIOSApiV1Repository(httpDataSource: httpDataSource)
@@ -43,6 +45,21 @@ struct DependenciesContainer: AllDependencies, DependenciesContainerProtocol {
             sensorsNetworkMapper: SensorsNetworkMapper(),
             measurementsNetworkMapper: MeasurementsNetworkMapper()
         )
-        self.appCoordinator = appCoordinator
+        self.appCoordinator = AppCoordinator(navigationPath: .constant(NavigationPath()))
+        
+        let modelContainer = try Self.createModelContainer()
+        let modelContext = ModelContext(modelContainer)
+        
+        let localDatabaseDataStore = LocalDatabaseDataStore(modelContainer: modelContainer)
+        
+        self.localDatabaseRepository = LocalDatabaseRepository(localDatabaseDataStore: localDatabaseDataStore)
+    }
+    
+    private static func createModelContainer() throws -> ModelContainer {
+        let schema = Schema([StationLocalDatabaseModel.self])
+        let isStoredInMemoryOnly = ProcessInfo.isPreview || ProcessInfo.isTest
+        
+        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: isStoredInMemoryOnly)
+        return try ModelContainer(for: schema, configurations: [configuration])
     }
 }

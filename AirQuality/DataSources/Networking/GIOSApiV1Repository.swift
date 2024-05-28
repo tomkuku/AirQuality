@@ -41,7 +41,6 @@ final class GIOSApiV1Repository: GIOSApiV1RepositoryProtocol {
         endpoint: R,
         contentContainerName: String
     ) async throws -> T.DomainModel where T: NetworkMapperProtocol, R: HTTPRequest {
-        let mapper = T()
         let request = try endpoint.asURLRequest()
         
         let data = try await httpDataSource.requestData(request)

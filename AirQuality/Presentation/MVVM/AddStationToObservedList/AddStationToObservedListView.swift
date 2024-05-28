@@ -41,7 +41,7 @@ struct AddStationToObservedListView: View, Sendable {
                         .cornerRadius(10)
                         .accessibility(addTraits: [.isButton])
                         .gesture(TapGesture().onEnded {
-//                            coordinator.showAlert(<#T##AlertModel#>)
+                            viewModel.observeStation(station)
                         })
                     }
                 }

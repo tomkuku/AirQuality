@@ -9,16 +9,16 @@ import SwiftUI
 import Combine
 
 protocol HasAppCoordinator {
-    var appCoordinator: AppCoordinatorProtocol { get }
+    var appCoordinator: AppCoordinator { get }
 }
 
-protocol AppCoordinatorProtocol {
-    func goToStationsList()
-    func gotSelectedStation(_ station: Station)
-    func goToSensorDetailsView(for sensor: Sensor)
-    func showAlert(_ alert: AlertModel)
-    func dismiss()
-}
+//protocol AppCoordinatorProtocol {
+//    func goToStationsList()
+//    func gotSelectedStation(_ station: Station)
+//    func goToSensorDetailsView(for sensor: Sensor)
+//    func showAlert(_ alert: AlertModel)
+//    func dismiss()
+//}
 
 enum AppFlow: Hashable, Identifiable {
     case stationsList
@@ -52,7 +52,7 @@ protocol CoordinatorProtocol: ObservableObject {
     func showAlert(_ alert: AlertModel)
 }
 
-final class AppCoordinator: ObservableObject, AppCoordinatorProtocol {
+final class AppCoordinator: ObservableObject {
     
     // MARK: Properties
     

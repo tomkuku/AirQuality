@@ -24,10 +24,15 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
     // MARK: Private properties
     
     private let getStationsUseCase: GetStationsUseCaseProtocol
+    private let observeStationUseCase: ObserveStationUseCaseProtocol
     private let errorSubject = PassthroughSubject<Error, Never>()
     
-    init(getStationsUseCase: GetStationsUseCaseProtocol = GetStationsUseCase()) {
+    init(
+        getStationsUseCase: GetStationsUseCaseProtocol = GetStationsUseCase(),
+        observeStationUseCase: ObserveStationUseCaseProtocol = ObserveStationUseCase()
+    ) {
         self.getStationsUseCase = getStationsUseCase
+        self.observeStationUseCase = observeStationUseCase
     }
     
     @HandlerActor
@@ -42,6 +47,17 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
         } catch {
             Logger.error(error.localizedDescription)
             errorSubject.send(error)
+        }
+    }
+    
+    func observeStation(_ station: Station) {
+        Task { @HandlerActor [weak self] in
+            do {
+                try await self?.observeStationUseCase.observe(station: station)
+            } catch {
+                Logger.error("Observing station faild with error: \(error.localizedDescription)")
+                self?.errorSubject.send(error)
+            }
         }
     }
     

@@ -9,6 +9,7 @@ import SwiftUI
 
 @main
 struct AirQualityApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     @StateObject private var appCoordinator: AppCoordinator
     @ObservedObject private var alertViewModel: AlertViewModel
@@ -37,16 +38,10 @@ struct AirQualityApp: App {
     }
     
     init() {
-        let appCoordinator = AppCoordinator(navigationPath: .constant(NavigationPath()))
+        let appCoordinator = AppCoordinator(navigationPath: .init(projectedValue: .constant(NavigationPath())))
         let alertViewModel = AlertViewModel(appCoordinator.alertPublisher)
         
         self._appCoordinator = StateObject(wrappedValue: appCoordinator)
         self._alertViewModel = ObservedObject(wrappedValue: alertViewModel)
-        
-        do {
-            DependenciesContainerManager.container = try DependenciesContainer(appCoordinator: appCoordinator)
-        } catch {
-            fatalError("Could not create DependenciesContainer due to error: \(error.localizedDescription)")
-        }
     }
 }
