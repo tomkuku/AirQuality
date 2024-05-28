@@ -65,6 +65,11 @@
 		72CFCFC02C029DF8007BE1D5 /* AddStationToObservedListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CFCFBF2C029DF8007BE1D5 /* AddStationToObservedListViewModel.swift */; };
 		72CFCFC22C029EE7007BE1D5 /* AddStationToObservedListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CFCFC12C029EE7007BE1D5 /* AddStationToObservedListModel.swift */; };
 		72CFCFC52C046AB0007BE1D5 /* HandlerActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CFCFC42C046AB0007BE1D5 /* HandlerActor.swift */; };
+		72CFCFC72C046DB4007BE1D5 /* LocalDatabaseDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CFCFC62C046DB4007BE1D5 /* LocalDatabaseDataStore.swift */; };
+		72CFCFCA2C046E03007BE1D5 /* LocalDatabaseRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CFCFC92C046E03007BE1D5 /* LocalDatabaseRepository.swift */; };
+		72CFCFCC2C046E0E007BE1D5 /* LocalDatabaseStationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CFCFCB2C046E0E007BE1D5 /* LocalDatabaseStationModel.swift */; };
+		72CFCFCE2C047018007BE1D5 /* LocalDatabaseMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CFCFCD2C047018007BE1D5 /* LocalDatabaseMapper.swift */; };
+		72CFCFD02C047111007BE1D5 /* StationsLocalDatabaseMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CFCFCF2C047111007BE1D5 /* StationsLocalDatabaseMapper.swift */; };
 		72D8F9082BD8764500F26FB1 /* AirQualityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72D8F9072BD8764500F26FB1 /* AirQualityApp.swift */; };
 		72D8F90C2BD8764600F26FB1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 72D8F90B2BD8764600F26FB1 /* Assets.xcassets */; };
 		72D8F90F2BD8764600F26FB1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 72D8F90E2BD8764600F26FB1 /* Preview Assets.xcassets */; };
@@ -173,6 +178,11 @@
 		72CFCFBF2C029DF8007BE1D5 /* AddStationToObservedListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStationToObservedListViewModel.swift; sourceTree = "<group>"; };
 		72CFCFC12C029EE7007BE1D5 /* AddStationToObservedListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStationToObservedListModel.swift; sourceTree = "<group>"; };
 		72CFCFC42C046AB0007BE1D5 /* HandlerActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandlerActor.swift; sourceTree = "<group>"; };
+		72CFCFC62C046DB4007BE1D5 /* LocalDatabaseDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDatabaseDataStore.swift; sourceTree = "<group>"; };
+		72CFCFC92C046E03007BE1D5 /* LocalDatabaseRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDatabaseRepository.swift; sourceTree = "<group>"; };
+		72CFCFCB2C046E0E007BE1D5 /* LocalDatabaseStationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDatabaseStationModel.swift; sourceTree = "<group>"; };
+		72CFCFCD2C047018007BE1D5 /* LocalDatabaseMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDatabaseMapper.swift; sourceTree = "<group>"; };
+		72CFCFCF2C047111007BE1D5 /* StationsLocalDatabaseMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationsLocalDatabaseMapper.swift; sourceTree = "<group>"; };
 		72D8F9042BD8764500F26FB1 /* AirQuality.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AirQuality.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		72D8F9072BD8764500F26FB1 /* AirQualityApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirQualityApp.swift; sourceTree = "<group>"; };
 		72D8F90B2BD8764600F26FB1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -236,6 +246,7 @@
 			children = (
 				720FA9E82BF36E5200E3111A /* Bundle */,
 				722CC6E32BEA17F100A978C7 /* Networking */,
+				72CFCFC82C046DC8007BE1D5 /* LocalDatabase */,
 			);
 			path = DataSources;
 			sourceTree = "<group>";
@@ -480,6 +491,18 @@
 				72CFCFC12C029EE7007BE1D5 /* AddStationToObservedListModel.swift */,
 			);
 			path = AddStationToObservedList;
+			sourceTree = "<group>";
+		};
+		72CFCFC82C046DC8007BE1D5 /* LocalDatabase */ = {
+			isa = PBXGroup;
+			children = (
+				72CFCFC62C046DB4007BE1D5 /* LocalDatabaseDataStore.swift */,
+				72CFCFC92C046E03007BE1D5 /* LocalDatabaseRepository.swift */,
+				72CFCFCD2C047018007BE1D5 /* LocalDatabaseMapper.swift */,
+				72CFCFCF2C047111007BE1D5 /* StationsLocalDatabaseMapper.swift */,
+				72CFCFCB2C046E0E007BE1D5 /* LocalDatabaseStationModel.swift */,
+			);
+			path = LocalDatabase;
 			sourceTree = "<group>";
 		};
 		72D8F8FB2BD8764500F26FB1 = {
@@ -772,6 +795,8 @@
 				72CFCFC02C029DF8007BE1D5 /* AddStationToObservedListViewModel.swift in Sources */,
 				72CE02792BF6D4C00088F5F3 /* AlertViewModel.swift in Sources */,
 				720FA9E72BF36E4D00E3111A /* BundleDataSource.swift in Sources */,
+				72CFCFC72C046DB4007BE1D5 /* LocalDatabaseDataStore.swift in Sources */,
+				72CFCFCC2C046E0E007BE1D5 /* LocalDatabaseStationModel.swift in Sources */,
 				729390012BF758300026B82C /* Publisher+Extension.swift in Sources */,
 				721022E42BFC09520099FBBE /* SensorArchivalMeasurementsListViewModel+PreviewDummy.swift in Sources */,
 				722CC6E92BEA17F100A978C7 /* StationNetworkModel.swift in Sources */,
@@ -782,6 +807,7 @@
 				72D8F9082BD8764500F26FB1 /* AirQualityApp.swift in Sources */,
 				72E81FE92BF1308F00218BEA /* DependenciesContainerManager.swift in Sources */,
 				72E81FDE2BF1247800218BEA /* Sensors.swift in Sources */,
+				72CFCFD02C047111007BE1D5 /* StationsLocalDatabaseMapper.swift in Sources */,
 				720FA9EA2BF36F0900E3111A /* BundleRepository.swift in Sources */,
 				722CC6ED2BEA17F100A978C7 /* GIOSApiResponse.swift in Sources */,
 				725B510D2BF0BC6A00273235 /* StationsListViewModel.swift in Sources */,
@@ -790,6 +816,7 @@
 				722CC6E82BEA17F100A978C7 /* StationsNetworkMapper.swift in Sources */,
 				72E81FD32BF11A0700218BEA /* SensorNetworkModel.swift in Sources */,
 				721022F62BFD50B60099FBBE /* SensorArchivalMeasurementsChartView.swift in Sources */,
+				72CFCFCE2C047018007BE1D5 /* LocalDatabaseMapper.swift in Sources */,
 				720FA9EE2BF373AF00E3111A /* ParamBundleMapper.swift in Sources */,
 				722CC6EA2BEA17F100A978C7 /* Endpoint.swift in Sources */,
 				720FA9F22BF3854200E3111A /* BundleFile.swift in Sources */,
@@ -829,6 +856,7 @@
 				72FB16AD2BF1FDFB007FED02 /* Logger.swift in Sources */,
 				72E81FDB2BF11C9200218BEA /* Sensor.swift in Sources */,
 				721022F42BFCDDE40099FBBE /* Array+Extension.swift in Sources */,
+				72CFCFCA2C046E03007BE1D5 /* LocalDatabaseRepository.swift in Sources */,
 				72FB16AF2BF20AC8007FED02 /* SelectedStationModel.swift in Sources */,
 				72E81FE72BF1307B00218BEA /* AllDependencies.swift in Sources */,
 				72CFCFC52C046AB0007BE1D5 /* HandlerActor.swift in Sources */,
@@ -938,7 +966,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1116,7 +1144,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1175,7 +1203,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -1307,7 +1335,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1400,7 +1428,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
