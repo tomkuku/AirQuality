@@ -45,3 +45,9 @@
 // MARK: AddStationToObservedListView
 
 "AddStationToObservedListView.title" = "Lista Stacji";
+
+// MAKR: AddStationToObservedListView
+
+"AddStationToObservedListView.ShrinkButton.shrink" = "Zwiń";
+"AddStationToObservedListView.ShrinkButton.expand" = "Rozwiń";
+"AddStationToObservedListView.noStations" = "Brak stacji";

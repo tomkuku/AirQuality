@@ -8,8 +8,12 @@
 import Foundation
 
 enum AddStationToObservedListModel {
-    struct Section {
+    struct Section: Identifiable {
         let name: String
         var stations: [Station]
+        
+        var id: String {
+            name
+        }
     }
 }

@@ -14,8 +14,9 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
     
     // MARK: Properties
     
-    @Published private(set) var stations: [Station] = []
     @Published private(set) var sections: [Model.Section] = []
+    
+    private(set) var isLoading = false
     
     var errorPublisher: AnyPublisher<Error, Never> {
         errorSubject.eraseToAnyPublisher()
@@ -37,16 +38,24 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
     
     @HandlerActor
     func fetchStations() async {
+        await MainActor.run { [weak self] in
+            self?.isLoading = true
+            self?.sections.removeAll()
+        }
+        
         do {
             let stations = try await getStationsUseCase.getStations()
             let sections = createAndSortSections(stations)
             
-            await MainActor.run {
-                self.sections = sections
+            await MainActor.run { [weak self] in
+                self?.sections = sections
             }
         } catch {
             Logger.error(error.localizedDescription)
-            errorSubject.send(error)
+            
+            await MainActor.run { [weak self] in
+                self?.errorSubject.send(error)
+            }
         }
     }
     
@@ -61,12 +70,12 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
         }
     }
     
-    func createAndSortSections(_ stations: [Station]) -> [Model.Section] {
+    private func createAndSortSections(_ stations: [Station]) -> [Model.Section] {
         var sections: [Model.Section] = stations.reduce(into: [Model.Section]()) { sections, station in
-            if let sectionIndex = sections.firstIndex(where: { $0.name == station.province }) {
+            if let sectionIndex = sections.firstIndex(where: { $0.name.lowercased() == station.province.lowercased() }) {
                 sections[sectionIndex].stations.append(station)
             } else {
-                let section = Model.Section(name: station.province, stations: [station])
+                let section = Model.Section(name: station.province.capitalized, stations: [station])
                 sections.append(section)
             }
         }

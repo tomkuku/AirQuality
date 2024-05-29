@@ -22,9 +22,9 @@ struct AirQualityApp: App {
     
     var body: some Scene {
         WindowGroup {
-            GeometryReader { _ in
+//            GeometryReader { geometryProxy in
                 NavigationStack(path: $appCoordinator.navigationPath) {
-                    appCoordinator.getView(for: .stationsList)
+                    appCoordinator.getView(for: .addNewObservedStation)
                         .navigationDestination(for: AppFlow.self) { appFlow in
                             appCoordinator.getView(for: appFlow)
                         }
@@ -34,17 +34,18 @@ struct AirQualityApp: App {
                     appCoordinator.getView(for: route)
                 }
                 .environmentObject(appCoordinator)
+//                .frame(width: geometryProxy.size.width, height: geometryProxy.size.height)
                 
                 AlertView(viewModel: alertViewModel)
                     .allowsHitTesting(false)
                     .background(.red)
                     .frame(width: .zero, height: .zero)
                 
-                ToastView(toastsViewModel: toastsViewModel)
-                    .allowsHitTesting(false)
-                    .background(.red)
-                    .frame(width: .zero, height: .zero)
-            }
+//                ToastView(toastsViewModel: toastsViewModel)
+//                    .allowsHitTesting(false)
+//                    .background(.red)
+//                    .frame(width: .zero, height: .zero)
+//            }
         }
     }
     
