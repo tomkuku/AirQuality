@@ -12,14 +12,6 @@ protocol HasAppCoordinator {
     var appCoordinator: AppCoordinator { get }
 }
 
-//protocol AppCoordinatorProtocol {
-//    func goToStationsList()
-//    func gotSelectedStation(_ station: Station)
-//    func goToSensorDetailsView(for sensor: Sensor)
-//    func showAlert(_ alert: AlertModel)
-//    func dismiss()
-//}
-
 enum AppFlow: Hashable, Identifiable {
     case stationsList
     case slectedStation(Station)
@@ -63,6 +55,10 @@ final class AppCoordinator: ObservableObject {
         alertSubject.eraseToAnyPublisher()
     }
     
+    var toastPublisher: AnyPublisher<Toast, Never> {
+        toastSubject.eraseToAnyPublisher()
+    }
+    
     var dismissPublisher: AnyPublisher<Void, Never> {
         dismissSubject.eraseToAnyPublisher()
     }
@@ -70,6 +66,7 @@ final class AppCoordinator: ObservableObject {
     // MARK: Private properties
     
     private let alertSubject = PassthroughSubject<AlertModel, Never>()
+    private let toastSubject = PassthroughSubject<Toast, Never>()
     private let dismissSubject = PassthroughSubject<Void, Never>()
     
     private var childCoordinator: (any ObservableObject)?
@@ -112,6 +109,10 @@ final class AppCoordinator: ObservableObject {
     
     func showAlert(_ alert: AlertModel) {
         alertSubject.send(alert)
+    }
+    
+    func showToast(_ toast: Toast) {
+        toastSubject.send(toast)
     }
     
     func presentAddStationToObserved() {

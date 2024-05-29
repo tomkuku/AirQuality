@@ -22,7 +22,6 @@ extension Station {
     ) -> Self {
         Self(
             id: id,
-            name: name,
             latitude: latitude,
             longitude: longitude,
             cityName: cityName,

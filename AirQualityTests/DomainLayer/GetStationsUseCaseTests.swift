@@ -33,7 +33,7 @@ final class GetStationsUseCaseTests: BaseTestCase {
         giosApiRepositorySpy.fetchResult = .success([station1, station2])
         
         // When
-        let stations = try await sut.getAllStations()
+        let stations = try await sut.getStations()
         
         let expectedRequest = try Endpoint.Stations.get.asURLRequest()
         let expectedDomainModelName = String(describing: [Station].self)
@@ -60,7 +60,7 @@ final class GetStationsUseCaseTests: BaseTestCase {
         
         // When
         do {
-            _ = try await sut.getAllStations()
+            _ = try await sut.getStations()
             XCTFail("getAllStations should have thrown!")
         } catch {
             XCTAssertTrue(error is ErrorDummy)

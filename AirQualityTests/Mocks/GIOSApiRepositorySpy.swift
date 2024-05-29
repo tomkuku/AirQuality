@@ -10,7 +10,6 @@ import XCTest
 @testable import AirQuality
 
 final class GIOSApiRepositorySpy: GIOSApiRepositoryProtocol, @unchecked Sendable {
-    
     enum Event: Equatable {
         case fetch(String, URLRequest, String)
         case fetchSensors(Int)
@@ -33,11 +32,10 @@ final class GIOSApiRepositorySpy: GIOSApiRepositoryProtocol, @unchecked Sendable
     var fetchSensorsResult: Result<[Sensor], Error>?
     
     func fetch<T, R>(
-        mapperType: T.Type,
-        endpoint: R,
-        contentContainerName: String
-    ) async throws -> T.DomainModel where T: MapperProtocol, R: HTTPRequest {
-        events.append(.fetch(String(describing: T.DomainModel.self), try! endpoint.asURLRequest(), contentContainerName))
+        mapper: T,
+        endpoint: R
+    ) async throws -> T.DomainModel where T: NetworkMapperProtocol, R: HTTPRequest {
+        events.append(.fetch(String(describing: T.DomainModel.self), try! endpoint.asURLRequest(), ""))
         
         return try await withCheckedThrowingContinuation { continuation in
             switch fetchResult {
