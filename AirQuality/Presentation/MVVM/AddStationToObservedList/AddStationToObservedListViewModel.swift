@@ -26,43 +26,57 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
     
     private let getStationsUseCase: GetStationsUseCaseProtocol
     private let observeStationUseCase: ObserveStationUseCaseProtocol
+    private let deleteStationFromObservedListUseCase: DeleteStationFromObservedListUseCaseProtocol
+    private let publishObservedStationsUseCase: PublishObservedStationsUseCaseProtocol
     private let errorSubject = PassthroughSubject<Error, Never>()
+    
+    @MainActor
+    private var observedSations: [Station] = []
     
     init(
         getStationsUseCase: GetStationsUseCaseProtocol = GetStationsUseCase(),
-        observeStationUseCase: ObserveStationUseCaseProtocol = ObserveStationUseCase()
+        observeStationUseCase: ObserveStationUseCaseProtocol = ObserveStationUseCase(),
+        deleteStationFromObservedListUseCase: DeleteStationFromObservedListUseCaseProtocol = DeleteStationFromObservedListUseCase(),
+        publishObservedStationsUseCase: PublishObservedStationsUseCaseProtocol = PublishObservedStationsUseCase()
     ) {
         self.getStationsUseCase = getStationsUseCase
         self.observeStationUseCase = observeStationUseCase
+        self.deleteStationFromObservedListUseCase = deleteStationFromObservedListUseCase
+        self.publishObservedStationsUseCase = publishObservedStationsUseCase
+        
+        subscribeObservedStations()
     }
     
-    @HandlerActor
+    @MainActor
+    func isStationObserved(_ station: Station) -> Bool {
+        observedSations.contains(station)
+    }
+    
+    @MainActor
     func fetchStations() async {
-        await MainActor.run { [weak self] in
-            self?.isLoading = true
-            self?.sections.removeAll()
-        }
+        isLoading = true
+        sections.removeAll()
         
         do {
             let stations = try await getStationsUseCase.getStations()
-            let sections = createAndSortSections(stations)
+            let sections = await createAndSortSections(stations)
             
-            await MainActor.run { [weak self] in
-                self?.sections = sections
-            }
+            self.sections = sections
         } catch {
             Logger.error(error.localizedDescription)
             
-            await MainActor.run { [weak self] in
-                self?.errorSubject.send(error)
-            }
+            errorSubject.send(error)
         }
     }
     
-    func observeStation(_ station: Station) {
+    func stationDidSelect(_ station: Station) {
         Task { @HandlerActor [weak self] in
             do {
+            if await self?.isStationObserved(station) == true {
                 try await self?.observeStationUseCase.observe(station: station)
+            } else {
+                try await self?.deleteStationFromObservedListUseCase.delete(station: station)
+            }
             } catch {
                 Logger.error("Observing station faild with error: \(error.localizedDescription)")
                 self?.errorSubject.send(error)
@@ -70,6 +84,7 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
         }
     }
     
+    @HandlerActor
     private func createAndSortSections(_ stations: [Station]) -> [Model.Section] {
         var sections: [Model.Section] = stations.reduce(into: [Model.Section]()) { sections, station in
             if let sectionIndex = sections.firstIndex(where: { $0.name.lowercased() == station.province.lowercased() }) {
@@ -89,6 +104,7 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
         return sections
     }
     
+    @HandlerActor
     private func sortRows(in sections: inout [Model.Section]) {
         for i in 0..<sections.count {
             sections[i].stations.sort(by: {
@@ -104,6 +120,17 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
                     $0.cityName > $1.cityName
                 }
             })
+        }
+    }
+    
+    private func subscribeObservedStations() {
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            
+            for try await stations in self.publishObservedStationsUseCase.observe() {
+                self.observedSations = observedSations
+                self.objectWillChange.send()
+            }
         }
     }
 }

@@ -13,11 +13,14 @@ protocol HasLocalDatabaseRepository {
 }
 
 protocol LocalDatabaseRepositoryProtocol: Sendable {
-    func insert<T: LocalDatabaseMapperProtocol>(mapper: T.Type, object: T.DomainModel) async throws
+    func insert<T, L>(mapper: T, object: L) async throws where T: LocalDatabaseMapperProtocol, L == T.DomainModel
     
-//    func fetch<T>(
-//        _ fetchDescription: FetchDescriptor<T>
-//    ) async throws -> [T] where T: PersistentModel & Sendable
+    func delete<T, L>(mapper: T, object: L) async throws where T: LocalDatabaseMapperProtocol, L == T.DomainModel
+    
+    func observe<T, L, R>(
+        mapper: T,
+        fetchDescriptor: FetchDescriptor<L>
+    ) -> AsyncThrowingStream<[R], Error> where T: LocalDatabaseMapperProtocol, L == T.DTOModel, R == T.DomainModel
 }
 
 final class LocalDatabaseRepository: LocalDatabaseRepositoryProtocol {
@@ -27,16 +30,44 @@ final class LocalDatabaseRepository: LocalDatabaseRepositoryProtocol {
         self.localDatabaseDataStore = localDatabaseDataStore
     }
     
-    func insert<T: LocalDatabaseMapperProtocol>(mapper: T.Type, object: T.DomainModel) async throws {
-        let mapper = T()
-        let databaseObject = try mapper.mapDomainModel(object)
+    func insert<T, L>(
+        mapper: T,
+        object: L
+    ) async throws where T: LocalDatabaseMapperProtocol, L == T.DomainModel {
+        let persistentModel = try mapper.mapDomainModel(object)
         
-        await localDatabaseDataStore.insert(databaseObject)
+        await localDatabaseDataStore.insert(persistentModel)
     }
     
-//    func fetch<T>(
-//        _ fetchDescription: FetchDescriptor<T>
-//    ) async throws -> [T] where T: PersistentModel & Sendable {
-//        try await localDatabaseDataStore.fetch(fetchDescription)
-//    }
+    func delete<T, L>(
+        mapper: T,
+        object: L
+    ) async throws where T: LocalDatabaseMapperProtocol, L == T.DomainModel {
+        let persistentModel = try mapper.mapDomainModel(object)
+        
+        await localDatabaseDataStore.delete(persistentModel)
+    }
+    
+    func observe<T, L, R>(
+        mapper: T,
+        fetchDescriptor: FetchDescriptor<L>
+    ) -> AsyncThrowingStream<[R], Error> where T: LocalDatabaseMapperProtocol, L == T.DTOModel, R == T.DomainModel {
+        AsyncThrowingStream { continuation in
+            Task { [weak localDatabaseDataStore] in
+                guard let localDatabaseDataStore else { return }
+                
+                for try await models in await localDatabaseDataStore.fetchStream(fetchDescriptor: fetchDescriptor) {
+                    do {
+                        let mappedModels = try models.map {
+                            try mapper.map($0)
+                        }
+                        
+                        continuation.yield(mappedModels)
+                    } catch {
+                        continuation.yield(with: .failure(error))
+                    }
+                }
+            }
+        }
+    }
 }

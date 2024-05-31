@@ -16,4 +16,13 @@ enum AddStationToObservedListModel {
             name
         }
     }
+    
+    struct Row: Identifiable {
+        var id: Int {
+            station.id
+        }
+        
+        let station: Station
+        var isObserved: Bool
+    }
 }

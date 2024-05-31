@@ -48,7 +48,6 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         self.appCoordinator = AppCoordinator(navigationPath: .constant(NavigationPath()))
         
         let modelContainer = try Self.createModelContainer()
-        let modelContext = ModelContext(modelContainer)
         
         let localDatabaseDataStore = LocalDatabaseDataStore(modelContainer: modelContainer)
         
@@ -59,7 +58,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         let schema = Schema([StationLocalDatabaseModel.self])
         let isStoredInMemoryOnly = ProcessInfo.isPreview || ProcessInfo.isTest
         
-        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: isStoredInMemoryOnly)
+        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
         return try ModelContainer(for: schema, configurations: [configuration])
     }
 }

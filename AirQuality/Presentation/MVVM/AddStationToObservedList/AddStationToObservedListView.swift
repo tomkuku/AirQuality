@@ -31,8 +31,8 @@ struct AddStationToObservedListView: View, Sendable {
             } else {
                 List {
                     ForEach(viewModel.sections) { section in
-                        SectionView(section: section) { station in
-                            viewModel.observeStation(station)
+                        SectionView(section: section, viewModel: viewModel) { station in
+                            viewModel.stationDidSelect(station)
                         }
                     }
                 }
@@ -58,6 +58,7 @@ struct AddStationToObservedListView: View, Sendable {
 extension AddStationToObservedListView {
     struct SectionView: View {
         @State private var isShrunk = false
+        @ObservedObject private var viewModel: AddStationToObservedListViewModel
         
         private let section: AddStationToObservedListModel.Section
         private let onSelectedStation: (Station) -> ()
@@ -70,16 +71,31 @@ extension AddStationToObservedListView {
                 } else {
                     ForEach(section.stations) { station in
                         HStack {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text(station.street ?? "")
+                            ZStack {
+                                let isStationObserved = viewModel.isStationObserved(station)
+                                let imageName = isStationObserved ? "checkmark.circle.fill" : "circle"
+                                let imageColor: Color = isStationObserved ? .blue : .gray
                                 
-                                Text(station.cityName)
+                                Image(systemName: imageName)
+                                    .resizable()
+                                    .renderingMode(.template)
+                                    .frame(width: 24, height: 24, alignment: .center)
+                                    .foregroundStyle(imageColor)
+                            }
+                            .padding(.trailing, 16)
+                            .accessibility(addTraits: [.isButton])
+                            .gesture(TapGesture().onEnded {
+                                onSelectedStation(station)
+                            })
+                            
+                            HStack {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text(station.street ?? "")
+                                    
+                                    Text(station.cityName)
+                                }
                             }
                         }
-                        .accessibility(addTraits: [.isButton])
-                        .gesture(TapGesture().onEnded {
-                            onSelectedStation(station)
-                        })
                     }
                 }
             } header: {
@@ -115,9 +131,11 @@ extension AddStationToObservedListView {
         
         init(
             section: AddStationToObservedListModel.Section,
+            viewModel: AddStationToObservedListViewModel,
             onSelectedStation: @escaping (Station) -> ()
         ) {
             self.section = section
+            self._viewModel = ObservedObject(wrappedValue: viewModel)
             self.onSelectedStation = onSelectedStation
         }
     }
