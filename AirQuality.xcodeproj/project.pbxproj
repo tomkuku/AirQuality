@@ -44,6 +44,7 @@
 		722CC7052BEA182B00A978C7 /* EndpointFake.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6FC2BEA182B00A978C7 /* EndpointFake.swift */; };
 		722CC7062BEA182B00A978C7 /* ErrorDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6FD2BEA182B00A978C7 /* ErrorDummy.swift */; };
 		722CC7072BEA182B00A978C7 /* HTTPDataSourceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6FE2BEA182B00A978C7 /* HTTPDataSourceMock.swift */; };
+		725A535C2C0BD31000B1CBC0 /* FetchResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725A535B2C0BD31000B1CBC0 /* FetchResultsController.swift */; };
 		725B510D2BF0BC6A00273235 /* StationsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725B510A2BF0BC6A00273235 /* StationsListViewModel.swift */; };
 		726140E12BEE0B9F0027961C /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 726140E02BEE0B9F0027961C /* AppCoordinator.swift */; };
 		726140EB2BEE5EE70027961C /* Stations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 726140EA2BEE5EE70027961C /* Stations.swift */; };
@@ -164,6 +165,7 @@
 		722CC6FC2BEA182B00A978C7 /* EndpointFake.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndpointFake.swift; sourceTree = "<group>"; };
 		722CC6FD2BEA182B00A978C7 /* ErrorDummy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorDummy.swift; sourceTree = "<group>"; };
 		722CC6FE2BEA182B00A978C7 /* HTTPDataSourceMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPDataSourceMock.swift; sourceTree = "<group>"; };
+		725A535B2C0BD31000B1CBC0 /* FetchResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchResultsController.swift; sourceTree = "<group>"; };
 		725B51092BF0BC6A00273235 /* StationsListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationsListView.swift; sourceTree = "<group>"; };
 		725B510A2BF0BC6A00273235 /* StationsListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationsListViewModel.swift; sourceTree = "<group>"; };
 		725B51142BF1130800273235 /* StationsListViewModel+PreviewDummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StationsListViewModel+PreviewDummy.swift"; sourceTree = "<group>"; };
@@ -448,6 +450,7 @@
 				72E81FD42BF11A0C00218BEA /* GetSensorsUseCase.swift */,
 				722CC6DE2BEA17F100A978C7 /* GetStationsUseCase.swift */,
 				721022E82BFC0B5D0099FBBE /* GetArchivalMeasurementsUseCase.swift */,
+				729BBF242C0A008800A6216D /* DeleteStationFromObservedListUseCase.swift */,
 				72CFCFD12C06161E007BE1D5 /* ObserveStation.swift */,
 				729BBF222C07EA4700A6216D /* PublishObservedStationsUseCase.swift */,
 			);
@@ -517,7 +520,6 @@
 			isa = PBXGroup;
 			children = (
 				72CFCFBB2C023E2A007BE1D5 /* AddStationToObservedListView.swift */,
-				729BBF242C0A008800A6216D /* DeleteStationFromObservedListUseCase.swift */,
 				72CFCFBF2C029DF8007BE1D5 /* AddStationToObservedListViewModel.swift */,
 				72CFCFC12C029EE7007BE1D5 /* AddStationToObservedListModel.swift */,
 			);
@@ -528,6 +530,7 @@
 			isa = PBXGroup;
 			children = (
 				72CFCFC62C046DB4007BE1D5 /* LocalDatabaseDataStore.swift */,
+				725A535B2C0BD31000B1CBC0 /* FetchResultsController.swift */,
 				72CFCFC92C046E03007BE1D5 /* LocalDatabaseRepository.swift */,
 				72CFCFCD2C047018007BE1D5 /* LocalDatabaseMapper.swift */,
 				72CFCFCF2C047111007BE1D5 /* StationsLocalDatabaseMapper.swift */,
@@ -852,6 +855,7 @@
 				721022F62BFD50B60099FBBE /* SensorArchivalMeasurementsChartView.swift in Sources */,
 				72CFCFCE2C047018007BE1D5 /* LocalDatabaseMapper.swift in Sources */,
 				720FA9EE2BF373AF00E3111A /* ParamBundleMapper.swift in Sources */,
+				725A535C2C0BD31000B1CBC0 /* FetchResultsController.swift in Sources */,
 				729BBF232C07EA4700A6216D /* PublishObservedStationsUseCase.swift in Sources */,
 				722CC6EA2BEA17F100A978C7 /* Endpoint.swift in Sources */,
 				720FA9F22BF3854200E3111A /* BundleFile.swift in Sources */,

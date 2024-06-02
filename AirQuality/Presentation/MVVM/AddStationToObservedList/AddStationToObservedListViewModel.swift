@@ -71,15 +71,19 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
     
     func stationDidSelect(_ station: Station) {
         Task { @HandlerActor [weak self] in
+            guard let self else { return }
+            
             do {
-            if await self?.isStationObserved(station) == true {
-                try await self?.observeStationUseCase.observe(station: station)
-            } else {
-                try await self?.deleteStationFromObservedListUseCase.delete(station: station)
-            }
+                let fetchedStations = try await publishObservedStationsUseCase.fetchedStations()
+                
+                if fetchedStations.contains(station) {
+                    try await deleteStationFromObservedListUseCase.delete(station: station)
+                } else {
+                    try await observeStationUseCase.observe(station: station)
+                }
             } catch {
                 Logger.error("Observing station faild with error: \(error.localizedDescription)")
-                self?.errorSubject.send(error)
+                errorSubject.send(error)
             }
         }
     }
@@ -128,7 +132,7 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
             guard let self else { return }
             
             for try await stations in self.publishObservedStationsUseCase.observe() {
-                self.observedSations = observedSations
+                self.observedSations = stations
                 self.objectWillChange.send()
             }
         }

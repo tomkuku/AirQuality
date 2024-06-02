@@ -8,6 +8,9 @@
 import Foundation
 import protocol SwiftData.PersistentModel
 
-protocol LocalDatabaseMapperProtocol: MapperProtocol where DTOModel: PersistentModel & Sendable {
+protocol LocalDatabaseMapperProtocol: MapperProtocol
+where DTOModel: LocalDatabaseModel,
+      DomainModel: Identifiable,
+      DTOModel.IdentifierType == DomainModel.ID {
     func mapDomainModel(_ input: DomainModel) throws -> DTOModel
 }

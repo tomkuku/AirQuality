@@ -15,8 +15,6 @@ final class StationsListViewModel: ObservableObject {
     
     // MARK: Private properties
     
-    @Injected(\.appCoordinator) private var appCoordinator
-    
     private let getStationsUseCase: GetStationsUseCaseProtocol
     
     init(
@@ -31,7 +29,7 @@ final class StationsListViewModel: ObservableObject {
             self.stations = try await getStationsUseCase.getStations()
         } catch {
             Logger.error(error.localizedDescription)
-            appCoordinator.showAlert(.somethigWentWrong())
+//            appCoordinator.showAlert(.somethigWentWrong())
         }
     }
 }

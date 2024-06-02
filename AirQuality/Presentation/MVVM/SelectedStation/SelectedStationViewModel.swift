@@ -24,7 +24,7 @@ final class SelectedStationViewModel: ObservableObject, @unchecked Sendable {
     
     // MARK: Private properties
     
-    @Injected(\.appCoordinator) private var appCoordinator
+//    @Injected(\.appCoxordinator) private var appCoordinator
     
     private let getSensorsUseCase: GetSensorsUseCaseProtocol
     
@@ -62,7 +62,7 @@ final class SelectedStationViewModel: ObservableObject, @unchecked Sendable {
                 }
         } catch {
             Logger.error(error.localizedDescription)
-            appCoordinator.showAlert(.somethigWentWrong())
+//            appCoordinator.showAlert(.somethigWentWrong())
         }
     }
     

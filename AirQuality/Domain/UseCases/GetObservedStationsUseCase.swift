@@ -9,6 +9,7 @@ import Foundation
 import struct SwiftData.FetchDescriptor
 
 protocol PublishObservedStationsUseCaseProtocol {
+    func fetchedStations() async throws -> [Station]
     func observe() -> AsyncThrowingStream<[Station], Error>
 }
 
@@ -21,12 +22,11 @@ final class PublishObservedStationsUseCase: PublishObservedStationsUseCaseProtoc
         self.stationsLocalDatabaseMapper = stationsLocalDatabaseMapper
     }
     
+    func fetchedStations() async throws -> [Station] {
+        try await localDatabaseRepository.getFetchedStations()
+    }
+    
     func observe() -> AsyncThrowingStream<[Station], Error> {
-        let fetchDescriptor = FetchDescriptor<StationLocalDatabaseModel>()
-        
-        return localDatabaseRepository.observe(
-            mapper: stationsLocalDatabaseMapper,
-            fetchDescriptor: fetchDescriptor
-        )
+        localDatabaseRepository.streamObservedStations(mapper: stationsLocalDatabaseMapper)
     }
 }

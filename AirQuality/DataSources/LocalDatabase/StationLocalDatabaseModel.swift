@@ -8,9 +8,17 @@
 import Foundation
 import SwiftData
 
+protocol LocalDatabaseModel: PersistentModel, Sendable {
+    associatedtype IdentifierType: Equatable
+    
+    var identifier: IdentifierType { get }
+    
+    static func idPredicate(with id: IdentifierType) -> Predicate<Self>
+}
+
 @Model
-final class StationLocalDatabaseModel: Sendable {
-    let id: Int
+final class StationLocalDatabaseModel: LocalDatabaseModel {
+    let identifier: Int
     let latitude: Double
     let longitude: Double
     let cityName: String
@@ -18,8 +26,14 @@ final class StationLocalDatabaseModel: Sendable {
     let province: String
     let street: String?
     
+    static func idPredicate(with id: Int) -> Predicate<StationLocalDatabaseModel> {
+        #Predicate<StationLocalDatabaseModel> { model in
+            model.identifier == id
+        }
+    }
+    
     init(
-        id: Int,
+        identifier: Int,
         latitude: Double,
         longitude: Double,
         cityName: String,
@@ -27,7 +41,7 @@ final class StationLocalDatabaseModel: Sendable {
         province: String,
         street: String?
     ) {
-        self.id = id
+        self.identifier = identifier
         self.latitude = latitude
         self.longitude = longitude
         self.cityName = cityName

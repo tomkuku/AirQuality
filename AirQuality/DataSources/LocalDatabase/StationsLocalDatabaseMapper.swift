@@ -13,7 +13,7 @@ where DTOModel == StationLocalDatabaseModel, DomainModel == Station { }
 struct StationsLocalDatabaseMapper: StationsLocalDatabaseMapperProtocol {
     func mapDomainModel(_ input: Station) throws -> StationLocalDatabaseModel {
         StationLocalDatabaseModel(
-            id: input.id,
+            identifier: input.id,
             latitude: input.latitude,
             longitude: input.longitude,
             cityName: input.cityName,
@@ -25,7 +25,7 @@ struct StationsLocalDatabaseMapper: StationsLocalDatabaseMapperProtocol {
     
     func map(_ input: StationLocalDatabaseModel) throws -> Station {
         Station(
-            id: input.id,
+            id: input.identifier,
             latitude: input.latitude,
             longitude: input.longitude,
             cityName: input.cityName,

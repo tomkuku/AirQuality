@@ -29,7 +29,6 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     
     let giosApiV1Repository: GIOSApiV1RepositoryProtocol
     let giosApiRepository: GIOSApiRepositoryProtocol
-    let appCoordinator: AppCoordinator
     var localDatabaseRepository: LocalDatabaseRepositoryProtocol
     
     init() throws {
@@ -45,13 +44,26 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
             sensorsNetworkMapper: SensorsNetworkMapper(),
             measurementsNetworkMapper: MeasurementsNetworkMapper()
         )
-        self.appCoordinator = AppCoordinator(navigationPath: .constant(NavigationPath()))
         
         let modelContainer = try Self.createModelContainer()
         
         let localDatabaseDataStore = LocalDatabaseDataStore(modelContainer: modelContainer)
         
-        self.localDatabaseRepository = LocalDatabaseRepository(localDatabaseDataStore: localDatabaseDataStore)
+        let fetchDescriptor = FetchDescriptor<StationLocalDatabaseModel>()
+        
+        let fetchResultsController = FetchResultsController<StationLocalDatabaseModel>(
+            localDatabaseDataSource: localDatabaseDataStore,
+            modelContainer: modelContainer,
+            modelExecutor: localDatabaseDataStore.modelExecutor
+        )
+        
+        let stationsLocalDatabaseMapper = StationsLocalDatabaseMapper()
+        
+        self.localDatabaseRepository = LocalDatabaseRepository(
+            localDatabaseDataStore: localDatabaseDataStore,
+            stationsFetchResultsController: fetchResultsController,
+            stationsLocalDatabaseMapper: stationsLocalDatabaseMapper
+        )
     }
     
     private static func createModelContainer() throws -> ModelContainer {

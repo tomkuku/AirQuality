@@ -15,19 +15,32 @@ protocol HasLocalDatabaseRepository {
 protocol LocalDatabaseRepositoryProtocol: Sendable {
     func insert<T, L>(mapper: T, object: L) async throws where T: LocalDatabaseMapperProtocol, L == T.DomainModel
     
-    func delete<T, L>(mapper: T, object: L) async throws where T: LocalDatabaseMapperProtocol, L == T.DomainModel
+    func delete<T, D>(
+        mapperType: T.Type,
+        object: D
+    ) async throws where T: LocalDatabaseMapperProtocol, D == T.DomainModel
     
-    func observe<T, L, R>(
-        mapper: T,
-        fetchDescriptor: FetchDescriptor<L>
-    ) -> AsyncThrowingStream<[R], Error> where T: LocalDatabaseMapperProtocol, L == T.DTOModel, R == T.DomainModel
+    func getFetchedStations() async throws -> [Station]
+    
+    func streamObservedStations<T>(
+        mapper: T
+    ) -> AsyncThrowingStream<[Station], Error> where T: StationsLocalDatabaseMapperProtocol
 }
 
 final class LocalDatabaseRepository: LocalDatabaseRepositoryProtocol {
-    private let localDatabaseDataStore: LocalDatabaseDataStoreProtocol
     
-    init(localDatabaseDataStore: LocalDatabaseDataStoreProtocol) {
+    private let localDatabaseDataStore: LocalDatabaseDataStoreProtocol
+    private let stationsFetchResultsController: FetchResultsController<StationLocalDatabaseModel>
+    private let stationsLocalDatabaseMapper: any StationsLocalDatabaseMapperProtocol
+    
+    init(
+        localDatabaseDataStore: LocalDatabaseDataStoreProtocol,
+        stationsFetchResultsController: FetchResultsController<StationLocalDatabaseModel>,
+        stationsLocalDatabaseMapper: any StationsLocalDatabaseMapperProtocol
+    ) {
         self.localDatabaseDataStore = localDatabaseDataStore
+        self.stationsFetchResultsController = stationsFetchResultsController
+        self.stationsLocalDatabaseMapper = stationsLocalDatabaseMapper
     }
     
     func insert<T, L>(
@@ -39,33 +52,46 @@ final class LocalDatabaseRepository: LocalDatabaseRepositoryProtocol {
         await localDatabaseDataStore.insert(persistentModel)
     }
     
-    func delete<T, L>(
-        mapper: T,
-        object: L
-    ) async throws where T: LocalDatabaseMapperProtocol, L == T.DomainModel {
-        let persistentModel = try mapper.mapDomainModel(object)
+    func delete<T, D>(
+        mapperType: T.Type,
+        object: D
+    ) async throws where T: LocalDatabaseMapperProtocol, D == T.DomainModel {
+        let predicate = T.DTOModel.idPredicate(with: object.id)
         
-        await localDatabaseDataStore.delete(persistentModel)
+        guard let fetchedObject = try await localDatabaseDataStore.fetchFirst(object: T.DTOModel.self, predicate: predicate) else {
+            Logger.info("Object \(object) not found. Deletion is not possible!")
+            return
+        }
+        
+        await localDatabaseDataStore.delete(fetchedObject)
     }
     
-    func observe<T, L, R>(
-        mapper: T,
-        fetchDescriptor: FetchDescriptor<L>
-    ) -> AsyncThrowingStream<[R], Error> where T: LocalDatabaseMapperProtocol, L == T.DTOModel, R == T.DomainModel {
+    func getFetchedStations() async throws -> [Station] {
+        try await stationsFetchResultsController
+            .fetchedModels
+            .map {
+                try stationsLocalDatabaseMapper.map($0)
+            }
+    }
+    
+    func streamObservedStations<T>(
+        mapper: T
+    ) -> AsyncThrowingStream<[Station], Error> where T: StationsLocalDatabaseMapperProtocol {
         AsyncThrowingStream { continuation in
-            Task { [weak localDatabaseDataStore] in
-                guard let localDatabaseDataStore else { return }
+            Task { [weak stationsFetchResultsController] in
+                guard let stationsFetchResultsController else { return }
                 
-                for try await models in await localDatabaseDataStore.fetchStream(fetchDescriptor: fetchDescriptor) {
-                    do {
+                do {
+                    for try await models in try await stationsFetchResultsController.fetchStream() {
+                        
                         let mappedModels = try models.map {
                             try mapper.map($0)
                         }
                         
                         continuation.yield(mappedModels)
-                    } catch {
-                        continuation.yield(with: .failure(error))
                     }
+                } catch {
+                    continuation.yield(with: .failure(error))
                 }
             }
         }

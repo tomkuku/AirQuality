@@ -22,7 +22,7 @@ final class DeleteStationFromObservedListUseCase: DeleteStationFromObservedListU
     
     func delete(station: Station) async throws {
         try await localDatabaseRepository.delete(
-            mapper: stationsLocalDatabaseMapper,
+            mapperType: StationsLocalDatabaseMapper.self,
             object: station
         )
     }
