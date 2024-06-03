@@ -52,21 +52,22 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         
         let modelContainer = try Self.createModelContainer()
         
-        let localDatabaseDataStore = LocalDatabaseDataStore(
+        let localDatabaseDataSource = LocalDatabaseDataSource(
             modelContainer: modelContainer,
-            backgroundTasksManager: backgroundTasksManager
+            backgroundTasksManager: backgroundTasksManager, 
+            notificationCenter: NotificationCenter.default
         )
         
         let observedStationFetchedModelsController = FetchResultsController<StationLocalDatabaseModel>(
-            localDatabaseDataSource: localDatabaseDataStore,
+            localDatabaseDataSource: localDatabaseDataSource,
             modelContainer: modelContainer,
-            modelExecutor: localDatabaseDataStore.modelExecutor
+            modelExecutor: localDatabaseDataSource.modelExecutor
         )
         
         let stationsLocalDatabaseMapper = StationsLocalDatabaseMapper()
         
         self.localDatabaseRepository = LocalDatabaseRepository(
-            localDatabaseDataStore: localDatabaseDataStore,
+            localDatabaseDataSource: localDatabaseDataSource,
             stationsFetchResultsController: observedStationFetchedModelsController,
             stationsLocalDatabaseMapper: stationsLocalDatabaseMapper
         )

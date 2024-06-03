@@ -29,16 +29,16 @@ protocol LocalDatabaseRepositoryProtocol: Sendable {
 
 final class LocalDatabaseRepository: LocalDatabaseRepositoryProtocol {
     
-    private let localDatabaseDataStore: LocalDatabaseDataStoreProtocol
+    private let localDatabaseDataSource: LocalDatabaseDataSourceProtocol
     private let stationsFetchResultsController: any FetchedModelsControllerProtocol<StationLocalDatabaseModel>
     private let stationsLocalDatabaseMapper: any StationsLocalDatabaseMapperProtocol
     
     init(
-        localDatabaseDataStore: LocalDatabaseDataStoreProtocol,
+        localDatabaseDataSource: LocalDatabaseDataSourceProtocol,
         stationsFetchResultsController: FetchResultsController<StationLocalDatabaseModel>,
         stationsLocalDatabaseMapper: any StationsLocalDatabaseMapperProtocol
     ) {
-        self.localDatabaseDataStore = localDatabaseDataStore
+        self.localDatabaseDataSource = localDatabaseDataSource
         self.stationsFetchResultsController = stationsFetchResultsController
         self.stationsLocalDatabaseMapper = stationsLocalDatabaseMapper
     }
@@ -49,7 +49,7 @@ final class LocalDatabaseRepository: LocalDatabaseRepositoryProtocol {
     ) async throws where T: LocalDatabaseMapperProtocol, L == T.DomainModel {
         let persistentModel = try mapper.mapDomainModel(object)
         
-        await localDatabaseDataStore.insert(persistentModel)
+        await localDatabaseDataSource.insert(persistentModel)
     }
     
     func delete<T, D>(
@@ -58,12 +58,12 @@ final class LocalDatabaseRepository: LocalDatabaseRepositoryProtocol {
     ) async throws where T: LocalDatabaseMapperProtocol, D == T.DomainModel {
         let predicate = T.DTOModel.idPredicate(with: object.id)
         
-        guard let fetchedObject = try await localDatabaseDataStore.fetchFirst(object: T.DTOModel.self, predicate: predicate) else {
+        guard let fetchedObject = try await localDatabaseDataSource.fetchFirst(object: T.DTOModel.self, predicate: predicate) else {
             Logger.info("Object \(object) not found. Deletion is not possible!")
             return
         }
         
-        await localDatabaseDataStore.delete(fetchedObject)
+        await localDatabaseDataSource.delete(fetchedObject)
     }
     
     func getFetchedStations() async throws -> [Station] {

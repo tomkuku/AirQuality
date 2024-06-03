@@ -28,7 +28,7 @@ actor FetchResultsController<T>: FetchedModelsControllerProtocol, Sendable where
     
     // MARK: Private properties
     
-    private let localDatabaseDataSource: LocalDatabaseDataStoreProtocol
+    private let localDatabaseDataSource: LocalDatabaseDataSourceProtocol
     private let predicate: Predicate<T>?
     private let sortDescriptors: [SortDescriptor<T>]
     private let subject = CurrentValueSubject<[T], Error>([])
@@ -55,7 +55,7 @@ actor FetchResultsController<T>: FetchedModelsControllerProtocol, Sendable where
     init(
         predicate: Predicate<T>? = nil,
         sortDescriptors: [SortDescriptor<T>] = [],
-        localDatabaseDataSource: LocalDatabaseDataStoreProtocol,
+        localDatabaseDataSource: LocalDatabaseDataSourceProtocol,
         modelContainer: ModelContainer,
         modelExecutor: any ModelExecutor
     ) {

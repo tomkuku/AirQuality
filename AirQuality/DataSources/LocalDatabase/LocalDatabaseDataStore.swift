@@ -1,5 +1,5 @@
 //
-//  LocalDatabaseDataStore.swift
+//  LocalDatabaseDataSource.swift
 //  AirQuality
 //
 //  Created by Tomasz Kukułka on 27/05/2024.
@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 import class UIKit.UIScene
 
-protocol LocalDatabaseDataStoreProtocol: Sendable, AnyObject {
+protocol LocalDatabaseDataSourceProtocol: Sendable, AnyObject {
     func getInsertedModels<T>() async -> [T] where T: LocalDatabaseModel
     func getDeletedModels<T>() async -> [T] where T: LocalDatabaseModel
     
@@ -24,7 +24,7 @@ protocol LocalDatabaseDataStoreProtocol: Sendable, AnyObject {
     ) async throws -> [T] where T: LocalDatabaseModel
 }
 
-extension LocalDatabaseDataStoreProtocol {
+extension LocalDatabaseDataSourceProtocol {
     func fetch<T>(
         object: T.Type,
         predicate: Predicate<T>? = nil,
@@ -54,7 +54,7 @@ extension LocalDatabaseDataStoreProtocol {
     }
 }
 
-actor LocalDatabaseDataStore: ModelActor, LocalDatabaseDataStoreProtocol {
+actor LocalDatabaseDataSource: ModelActor, LocalDatabaseDataSourceProtocol {
     
     // MARK: Properties
     
@@ -65,20 +65,23 @@ actor LocalDatabaseDataStore: ModelActor, LocalDatabaseDataStoreProtocol {
     
     private let modelContext: ModelContext
     private let backgroundTasksManager: BackgroundTasksManagerProtocol
+    private let notificationCenter: NotificationCenterProtocol
     
     // MARK: Lifecycle
     
     init(
         modelContainer: ModelContainer,
-        backgroundTasksManager: BackgroundTasksManagerProtocol
+        backgroundTasksManager: BackgroundTasksManagerProtocol,
+        notificationCenter: NotificationCenterProtocol
     ) {
         self.modelContext = ModelContext(modelContainer)
         modelContext.autosaveEnabled = false
         self.modelContainer = modelContainer
         self.modelExecutor = DefaultSerialModelExecutor(modelContext: modelContext)
         self.backgroundTasksManager = backgroundTasksManager
+        self.notificationCenter = notificationCenter
         
-        Task { @MainActor [weak self] in
+        Task { [weak self] in
             await self?.observeSceneStates()
         }
     }
@@ -115,9 +118,7 @@ actor LocalDatabaseDataStore: ModelActor, LocalDatabaseDataStoreProtocol {
         do {
             try modelContext.save()
             
-            Task.detached {
-                NotificationCenter.default.post(name: .persistentModelDidSave, object: nil)
-            }
+            notificationCenter.post(name: .persistentModelDidSave, object: nil)
         } catch {
             Logger.error("Saving context failed with error: \(error.localizedDescription)")
         }
@@ -135,14 +136,13 @@ actor LocalDatabaseDataStore: ModelActor, LocalDatabaseDataStoreProtocol {
         return try modelContext.fetch(fetchDescriptor)
     }
     
-    @MainActor
     private func observeSceneStates() async {
-        for await _ in NotificationCenter.default.notifications(named: UIScene.willDeactivateNotification).map({ $0.name }) {
-            backgroundTasksManager.beginFiniteLengthTask()
+        for await _ in await notificationCenter.notifications(named: UIScene.willDeactivateNotification).map({ $0.name }) {
+            await backgroundTasksManager.beginFiniteLengthTask()
             
-            try? await save()
+            try? save()
             
-            backgroundTasksManager.endFiniteLengthTask()
+            await backgroundTasksManager.endFiniteLengthTask()
         }
     }
 }
