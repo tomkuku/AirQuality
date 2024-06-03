@@ -9,9 +9,11 @@ import Foundation
 import class UIKit.UIApplication
 import struct UIKit.UIBackgroundTaskIdentifier
 
-@MainActor
 protocol UIApplicationProtocol {
+    @MainActor
     func beginBackgroundTask(withName taskName: String?, expirationHandler handler: (() -> Void)?) -> UIBackgroundTaskIdentifier
+    
+    @MainActor
     func endBackgroundTask(_ identifier: UIBackgroundTaskIdentifier)
 }
 

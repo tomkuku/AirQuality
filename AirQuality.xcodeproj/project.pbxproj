@@ -47,6 +47,8 @@
 		725A535C2C0BD31000B1CBC0 /* FetchResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725A535B2C0BD31000B1CBC0 /* FetchResultsController.swift */; };
 		725A53602C0DCAA800B1CBC0 /* BackgroundTasksManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725A535F2C0DCAA800B1CBC0 /* BackgroundTasksManager.swift */; };
 		725A53622C0DCF3500B1CBC0 /* UIApplicationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725A53612C0DCF3500B1CBC0 /* UIApplicationProtocol.swift */; };
+		725A53652C0DE15400B1CBC0 /* BackgroundTasksManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725A53632C0DE15000B1CBC0 /* BackgroundTasksManagerTests.swift */; };
+		725A53672C0DE16500B1CBC0 /* UIApplicationSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725A53662C0DE16500B1CBC0 /* UIApplicationSpy.swift */; };
 		725B510D2BF0BC6A00273235 /* StationsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725B510A2BF0BC6A00273235 /* StationsListViewModel.swift */; };
 		726140E12BEE0B9F0027961C /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 726140E02BEE0B9F0027961C /* AppCoordinator.swift */; };
 		726140EB2BEE5EE70027961C /* Stations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 726140EA2BEE5EE70027961C /* Stations.swift */; };
@@ -170,6 +172,8 @@
 		725A535B2C0BD31000B1CBC0 /* FetchResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchResultsController.swift; sourceTree = "<group>"; };
 		725A535F2C0DCAA800B1CBC0 /* BackgroundTasksManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTasksManager.swift; sourceTree = "<group>"; };
 		725A53612C0DCF3500B1CBC0 /* UIApplicationProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplicationProtocol.swift; sourceTree = "<group>"; };
+		725A53632C0DE15000B1CBC0 /* BackgroundTasksManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTasksManagerTests.swift; sourceTree = "<group>"; };
+		725A53662C0DE16500B1CBC0 /* UIApplicationSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplicationSpy.swift; sourceTree = "<group>"; };
 		725B51092BF0BC6A00273235 /* StationsListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationsListView.swift; sourceTree = "<group>"; };
 		725B510A2BF0BC6A00273235 /* StationsListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationsListViewModel.swift; sourceTree = "<group>"; };
 		725B51142BF1130800273235 /* StationsListViewModel+PreviewDummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StationsListViewModel+PreviewDummy.swift"; sourceTree = "<group>"; };
@@ -412,6 +416,14 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		725A53682C0DE39500B1CBC0 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				725A53632C0DE15000B1CBC0 /* BackgroundTasksManagerTests.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
 		725B510B2BF0BC6A00273235 /* StationsList */ = {
 			isa = PBXGroup;
 			children = (
@@ -625,6 +637,7 @@
 				72FB16B82BF22D1D007FED02 /* MeasurementDummy.swift */,
 				72E81FF62BF16C2A00218BEA /* DependenciesContainerDummy.swift */,
 				72FB16B42BF22B20007FED02 /* GetSensorsUseCaseSpy.swift */,
+				725A53662C0DE16500B1CBC0 /* UIApplicationSpy.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -653,6 +666,7 @@
 				722CC6FF2BEA182B00A978C7 /* Helpers */,
 				72E81FEE2BF162C400218BEA /* Mocks */,
 				72FB16B32BF22A3C007FED02 /* DomainLayer */,
+				725A53682C0DE39500B1CBC0 /* Utilities */,
 				722CC6FB2BEA182B00A978C7 /* DataSourceLayer */,
 				72FB16B22BF22A2B007FED02 /* PresentationLayer */,
 			);
@@ -920,6 +934,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				725A53672C0DE16500B1CBC0 /* UIApplicationSpy.swift in Sources */,
 				72FB16B12BF2295C007FED02 /* SelectedStationViewModelTests.swift in Sources */,
 				722CC7072BEA182B00A978C7 /* HTTPDataSourceMock.swift in Sources */,
 				72E81FD72BF11A6A00218BEA /* GetStationsUseCaseTests.swift in Sources */,
@@ -935,6 +950,7 @@
 				72FB16B52BF22B20007FED02 /* GetSensorsUseCaseSpy.swift in Sources */,
 				72FB16B92BF22D1D007FED02 /* MeasurementDummy.swift in Sources */,
 				72E81FDD2BF11D2400218BEA /* StationDummy.swift in Sources */,
+				725A53652C0DE15400B1CBC0 /* BackgroundTasksManagerTests.swift in Sources */,
 				722CC7042BEA182B00A978C7 /* HTTPDataStoreTests.swift in Sources */,
 				72E81FEB2BF1627400218BEA /* BaseTestCase.swift in Sources */,
 				722CC7052BEA182B00A978C7 /* EndpointFake.swift in Sources */,

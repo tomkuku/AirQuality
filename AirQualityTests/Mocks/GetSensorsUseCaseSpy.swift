@@ -9,7 +9,7 @@ import XCTest
 
 @testable import AirQuality
 
-final class GetSensorsUseCaseSpy: GetSensorsUseCaseProtocol {
+final class GetSensorsUseCaseSpy: GetSensorsUseCaseProtocol, @unchecked Sendable {
     enum Event: Equatable {
         case getSensors(Int)
     }

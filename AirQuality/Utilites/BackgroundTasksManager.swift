@@ -8,31 +8,37 @@
 import Foundation
 import struct UIKit.UIBackgroundTaskIdentifier
 
-@MainActor
 protocol BackgroundTasksManagerProtocol: Sendable {
+    @MainActor
     func beginFiniteLengthTask(_ name: String, completion: (@Sendable () -> ())?)
+    
+    @MainActor
     func endFiniteLengthTask(_ name: String)
 }
 
 extension BackgroundTasksManagerProtocol {
+    @MainActor
     func beginFiniteLengthTask(_ name: String = #fileID, completion: (@Sendable () -> ())? = nil) {
         beginFiniteLengthTask(name, completion: completion)
     }
     
+    @MainActor
     func endFiniteLengthTask(_ name: String = #fileID) {
         endFiniteLengthTask(name)
     }
 }
 
-@MainActor
-final class BackgroundTasksManager: BackgroundTasksManagerProtocol, Sendable {
+final class BackgroundTasksManager: BackgroundTasksManagerProtocol, @unchecked Sendable {
     private let uiApplication: UIApplicationProtocol
+    
+    @MainActor
     private var identifiers: [String: UIBackgroundTaskIdentifier] = [:]
     
     init(uiApplication: UIApplicationProtocol) {
         self.uiApplication = uiApplication
     }
     
+    @MainActor
     func beginFiniteLengthTask(_ name: String, completion: (@Sendable () -> ())?) {
         guard !identifiers.contains(where: { $0.key == name }) else {
             Logger.error("There is already task with name: \(name)!")
@@ -48,6 +54,7 @@ final class BackgroundTasksManager: BackgroundTasksManagerProtocol, Sendable {
         identifiers[name] = identifier
     }
     
+    @MainActor
     func endFiniteLengthTask(_ name: String) {
         guard let identifier = identifiers[name] else {
             Logger.info("No task's identifier with name: \(name)")
