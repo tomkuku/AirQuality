@@ -106,6 +106,9 @@ large_tuple:
   warning: 4
   error: 5
 
+closure_body_length:
+  warning: 50
+
 modifier_order:
   preferred_modifier_order:
     [acl, final, override, setterACL, dynamic, mutators, lazy, required, convenience, typeMethods, owned]

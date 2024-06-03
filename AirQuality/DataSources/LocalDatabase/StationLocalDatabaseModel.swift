@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 protocol LocalDatabaseModel: PersistentModel, Sendable {
-    associatedtype IdentifierType: Equatable
+    associatedtype IdentifierType: Equatable, Sendable
     
     var identifier: IdentifierType { get }
     
@@ -17,7 +17,7 @@ protocol LocalDatabaseModel: PersistentModel, Sendable {
 }
 
 @Model
-final class StationLocalDatabaseModel: LocalDatabaseModel {
+final class StationLocalDatabaseModel: LocalDatabaseModel, @unchecked Sendable {
     let identifier: Int
     let latitude: Double
     let longitude: Double

@@ -29,7 +29,7 @@ struct AlertView: View {
                             }
                         }
                     }
-                    .onChange(of: viewModel.isAnyAlertPresented) { newValue in
+                    .onChange(of: viewModel.isAnyAlertPresented) { newValue, _ in
                         if !newValue {
                             alert.dismissAction?()
                         }

@@ -58,15 +58,16 @@ struct ToastView: View {
 }
 
 #Preview {
-    let publisher = PassthroughSubject<Toast, Never>()
+    // swiftlint:disable:next private_subject
+    let subject = PassthroughSubject<Toast, Never>()
     
-    @StateObject var toastsViewModel = ToastsViewModel(publisher)
+    @StateObject var toastsViewModel = ToastsViewModel(subject)
     
     Task {
         for i in 0..<Int.max {
             try? await Task.sleep(nanoseconds: UInt64(i) * 250_000_000)
             
-            publisher.send(Toast(body: "\(i) Toast body text"))
+            subject.send(Toast(body: "\(i) Toast body text"))
         }
     }
     

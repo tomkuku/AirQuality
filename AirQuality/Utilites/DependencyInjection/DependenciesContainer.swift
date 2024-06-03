@@ -76,7 +76,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         let schema = Schema([StationLocalDatabaseModel.self])
         let isStoredInMemoryOnly = ProcessInfo.isPreview || ProcessInfo.isTest
         
-        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: isStoredInMemoryOnly)
         return try ModelContainer(for: schema, configurations: [configuration])
     }
 }
