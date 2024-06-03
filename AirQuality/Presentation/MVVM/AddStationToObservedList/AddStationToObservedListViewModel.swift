@@ -16,8 +16,10 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
     
     @Published private(set) var sections: [Model.Section] = []
     
+    @MainActor
     private(set) var isLoading = false
     
+    @MainActor
     var errorPublisher: AnyPublisher<Error, Never> {
         errorSubject.eraseToAnyPublisher()
     }
@@ -27,56 +29,66 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
     private let getStationsUseCase: GetStationsUseCaseProtocol
     private let observeStationUseCase: ObserveStationUseCaseProtocol
     private let deleteStationFromObservedListUseCase: DeleteStationFromObservedListUseCaseProtocol
-    private let publishObservedStationsUseCase: PublishObservedStationsUseCaseProtocol
+    private let getObservedStationsUseCase: GetObservedStationsUseCaseProtocol
     private let errorSubject = PassthroughSubject<Error, Never>()
     
     @MainActor
-    private var observedSations: [Station] = []
+    private var fetchedStations: [Station] = []
     
     init(
         getStationsUseCase: GetStationsUseCaseProtocol = GetStationsUseCase(),
         observeStationUseCase: ObserveStationUseCaseProtocol = ObserveStationUseCase(),
         deleteStationFromObservedListUseCase: DeleteStationFromObservedListUseCaseProtocol = DeleteStationFromObservedListUseCase(),
-        publishObservedStationsUseCase: PublishObservedStationsUseCaseProtocol = PublishObservedStationsUseCase()
+        getObservedStationsUseCase: GetObservedStationsUseCaseProtocol = GetObservedStationsUseCase()
     ) {
         self.getStationsUseCase = getStationsUseCase
         self.observeStationUseCase = observeStationUseCase
         self.deleteStationFromObservedListUseCase = deleteStationFromObservedListUseCase
-        self.publishObservedStationsUseCase = publishObservedStationsUseCase
+        self.getObservedStationsUseCase = getObservedStationsUseCase
         
-        subscribeObservedStations()
+        receiveObservedStationsStream()
     }
     
-    @MainActor
-    func isStationObserved(_ station: Station) -> Bool {
-        observedSations.contains(station)
+    func receiveObservedStationsStream() {
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            
+            do {
+                for try await observedSations in getObservedStationsUseCase.observe() {
+                    self.createAndSortSections(fetchedStations, observedStations: observedSations)
+                }
+            } catch {
+                Logger.error(error.localizedDescription)
+                errorSubject.send(error)
+            }
+        }
     }
     
-    @MainActor
-    func fetchStations() async {
-        isLoading = true
-        sections.removeAll()
-        
-        do {
-            let stations = try await getStationsUseCase.getStations()
-            let sections = await createAndSortSections(stations)
+    func fetchStations() {
+        Task { @MainActor [weak self] in
+            guard let self else { return }
             
-            self.sections = sections
-        } catch {
-            Logger.error(error.localizedDescription)
-            
-            errorSubject.send(error)
+            do {
+                let fetchedStations = try await getStationsUseCase.getStations()
+                let observedStations = try await getObservedStationsUseCase.fetchedStations()
+                
+                createAndSortSections(fetchedStations, observedStations: observedStations)
+                self.fetchedStations = fetchedStations
+            } catch {
+                Logger.error(error.localizedDescription)
+                errorSubject.send(error)
+            }
         }
     }
     
     func stationDidSelect(_ station: Station) {
-        Task { @HandlerActor [weak self] in
+        Task { @MainActor [weak self] in
             guard let self else { return }
             
             do {
-                let fetchedStations = try await publishObservedStationsUseCase.fetchedStations()
+                let observedStations = try await getObservedStationsUseCase.fetchedStations()
                 
-                if fetchedStations.contains(station) {
+                if observedStations.contains(station) {
                     try await deleteStationFromObservedListUseCase.delete(station: station)
                 } else {
                     try await observeStationUseCase.observe(station: station)
@@ -88,13 +100,15 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
         }
     }
     
-    @HandlerActor
-    private func createAndSortSections(_ stations: [Station]) -> [Model.Section] {
+    @MainActor
+    private func createAndSortSections(_ stations: [Station], observedStations: [Station]) {
         var sections: [Model.Section] = stations.reduce(into: [Model.Section]()) { sections, station in
+            let row = Model.Row(station: station, isStationObserved: observedStations.contains(station))
+            
             if let sectionIndex = sections.firstIndex(where: { $0.name.lowercased() == station.province.lowercased() }) {
-                sections[sectionIndex].stations.append(station)
+                sections[sectionIndex].rows.append(row)
             } else {
-                let section = Model.Section(name: station.province.capitalized, stations: [station])
+                let section = Model.Section(name: station.province.capitalized, rows: [row])
                 sections.append(section)
             }
         }
@@ -105,36 +119,24 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
             $0.name > $1.name
         })
         
-        return sections
+        self.sections = sections
     }
     
-    @HandlerActor
     private func sortRows(in sections: inout [Model.Section]) {
         for i in 0..<sections.count {
-            sections[i].stations.sort(by: {
-                if $0.cityName == $1.cityName {
-                    if let lhsStreet = $0.street, let rhsSteet = $1.street {
+            sections[i].rows.sort(by: {
+                if $0.station.cityName == $1.station.cityName {
+                    if let lhsStreet = $0.station.street, let rhsSteet = $1.station.street {
                         lhsStreet > rhsSteet
-                    } else if $0.street != nil {
+                    } else if $0.station.street != nil {
                         true
                     } else {
                         false
                     }
                 } else {
-                    $0.cityName > $1.cityName
+                    $0.station.cityName > $1.station.cityName
                 }
             })
-        }
-    }
-    
-    private func subscribeObservedStations() {
-        Task { @MainActor [weak self] in
-            guard let self else { return }
-            
-            for try await stations in self.publishObservedStationsUseCase.observe() {
-                self.observedSations = stations
-                self.objectWillChange.send()
-            }
         }
     }
 }

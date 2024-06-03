@@ -34,3 +34,20 @@ extension Publisher where Output: Sendable, Failure == Never {
         }
     }
 }
+
+extension Publisher where Output: Sendable {
+    func asyncSink(
+        receiveCompletion: @Sendable @escaping (Subscribers.Completion<Self.Failure>) async -> Void,
+        receiveValue: @Sendable @escaping (Self.Output) async -> Void
+    ) -> AnyCancellable {
+        sink { completion in
+            Task {
+                await receiveCompletion(completion)
+            }
+        } receiveValue: { value in
+            Task {
+                await receiveValue(value)
+            }
+        }
+    }
+}

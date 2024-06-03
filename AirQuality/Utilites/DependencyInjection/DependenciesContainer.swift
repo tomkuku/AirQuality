@@ -7,13 +7,14 @@
 
 import Foundation
 import SwiftData
-import SwiftUI
+import class UIKit.UIApplication
 
 protocol DependenciesContainerProtocol: AnyObject {
     subscript<T>(_ keyPath: KeyPath<AllDependencies, T>) -> T { get }
 }
 
 final class DependenciesContainer: AllDependencies, DependenciesContainerProtocol {
+    
     subscript<T>(_ keyPath: KeyPath<AllDependencies, T>) -> T {
         let mirror = Mirror(reflecting: self)
         
@@ -29,12 +30,16 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     
     let giosApiV1Repository: GIOSApiV1RepositoryProtocol
     let giosApiRepository: GIOSApiRepositoryProtocol
-    var localDatabaseRepository: LocalDatabaseRepositoryProtocol
+    let localDatabaseRepository: LocalDatabaseRepositoryProtocol
     
+    @MainActor
     init() throws {
         let httpDataSource = HTTPDataSource()
         let bundleDataSource = try BundleDataSource()
         let paramsRepository = try ParamsRepository(bundleDataSource: bundleDataSource)
+        let uiApplication = UIApplication.shared
+        
+        let backgroundTasksManager = BackgroundTasksManager(uiApplication: uiApplication)
         
         self.giosApiV1Repository = GIOSApiV1Repository(httpDataSource: httpDataSource)
         self.giosApiRepository = GIOSApiRepository(
@@ -47,11 +52,12 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         
         let modelContainer = try Self.createModelContainer()
         
-        let localDatabaseDataStore = LocalDatabaseDataStore(modelContainer: modelContainer)
+        let localDatabaseDataStore = LocalDatabaseDataStore(
+            modelContainer: modelContainer,
+            backgroundTasksManager: backgroundTasksManager
+        )
         
-        let fetchDescriptor = FetchDescriptor<StationLocalDatabaseModel>()
-        
-        let fetchResultsController = FetchResultsController<StationLocalDatabaseModel>(
+        let observedStationFetchedModelsController = FetchResultsController<StationLocalDatabaseModel>(
             localDatabaseDataSource: localDatabaseDataStore,
             modelContainer: modelContainer,
             modelExecutor: localDatabaseDataStore.modelExecutor
@@ -61,7 +67,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         
         self.localDatabaseRepository = LocalDatabaseRepository(
             localDatabaseDataStore: localDatabaseDataStore,
-            stationsFetchResultsController: fetchResultsController,
+            stationsFetchResultsController: observedStationFetchedModelsController,
             stationsLocalDatabaseMapper: stationsLocalDatabaseMapper
         )
     }
@@ -70,7 +76,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         let schema = Schema([StationLocalDatabaseModel.self])
         let isStoredInMemoryOnly = ProcessInfo.isPreview || ProcessInfo.isTest
         
-        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         return try ModelContainer(for: schema, configurations: [configuration])
     }
 }

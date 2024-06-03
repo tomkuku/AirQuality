@@ -45,6 +45,8 @@
 		722CC7062BEA182B00A978C7 /* ErrorDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6FD2BEA182B00A978C7 /* ErrorDummy.swift */; };
 		722CC7072BEA182B00A978C7 /* HTTPDataSourceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6FE2BEA182B00A978C7 /* HTTPDataSourceMock.swift */; };
 		725A535C2C0BD31000B1CBC0 /* FetchResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725A535B2C0BD31000B1CBC0 /* FetchResultsController.swift */; };
+		725A53602C0DCAA800B1CBC0 /* BackgroundTasksManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725A535F2C0DCAA800B1CBC0 /* BackgroundTasksManager.swift */; };
+		725A53622C0DCF3500B1CBC0 /* UIApplicationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725A53612C0DCF3500B1CBC0 /* UIApplicationProtocol.swift */; };
 		725B510D2BF0BC6A00273235 /* StationsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725B510A2BF0BC6A00273235 /* StationsListViewModel.swift */; };
 		726140E12BEE0B9F0027961C /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 726140E02BEE0B9F0027961C /* AppCoordinator.swift */; };
 		726140EB2BEE5EE70027961C /* Stations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 726140EA2BEE5EE70027961C /* Stations.swift */; };
@@ -54,7 +56,7 @@
 		729BBF1C2C069FB300A6216D /* ToastsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729BBF1B2C069FB300A6216D /* ToastsViewModel.swift */; };
 		729BBF1E2C069FE300A6216D /* ToastModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729BBF1D2C069FE300A6216D /* ToastModel.swift */; };
 		729BBF212C076C3800A6216D /* Notification+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729BBF202C076C3800A6216D /* Notification+Extension.swift */; };
-		729BBF232C07EA4700A6216D /* PublishObservedStationsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729BBF222C07EA4700A6216D /* PublishObservedStationsUseCase.swift */; };
+		729BBF232C07EA4700A6216D /* GetObservedStationsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729BBF222C07EA4700A6216D /* GetObservedStationsUseCase.swift */; };
 		729BBF252C0A008800A6216D /* DeleteStationFromObservedListUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729BBF242C0A008800A6216D /* DeleteStationFromObservedListUseCase.swift */; };
 		72ACEE972BF115C4009A4A93 /* StationsListViewModel+PreviewDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725B51142BF1130800273235 /* StationsListViewModel+PreviewDummy.swift */; };
 		72ACEE982BF115C4009A4A93 /* StationsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725B51092BF0BC6A00273235 /* StationsListView.swift */; };
@@ -166,6 +168,8 @@
 		722CC6FD2BEA182B00A978C7 /* ErrorDummy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorDummy.swift; sourceTree = "<group>"; };
 		722CC6FE2BEA182B00A978C7 /* HTTPDataSourceMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPDataSourceMock.swift; sourceTree = "<group>"; };
 		725A535B2C0BD31000B1CBC0 /* FetchResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchResultsController.swift; sourceTree = "<group>"; };
+		725A535F2C0DCAA800B1CBC0 /* BackgroundTasksManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTasksManager.swift; sourceTree = "<group>"; };
+		725A53612C0DCF3500B1CBC0 /* UIApplicationProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplicationProtocol.swift; sourceTree = "<group>"; };
 		725B51092BF0BC6A00273235 /* StationsListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationsListView.swift; sourceTree = "<group>"; };
 		725B510A2BF0BC6A00273235 /* StationsListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationsListViewModel.swift; sourceTree = "<group>"; };
 		725B51142BF1130800273235 /* StationsListViewModel+PreviewDummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StationsListViewModel+PreviewDummy.swift"; sourceTree = "<group>"; };
@@ -178,7 +182,7 @@
 		729BBF1B2C069FB300A6216D /* ToastsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastsViewModel.swift; sourceTree = "<group>"; };
 		729BBF1D2C069FE300A6216D /* ToastModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastModel.swift; sourceTree = "<group>"; };
 		729BBF202C076C3800A6216D /* Notification+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+Extension.swift"; sourceTree = "<group>"; };
-		729BBF222C07EA4700A6216D /* PublishObservedStationsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishObservedStationsUseCase.swift; sourceTree = "<group>"; };
+		729BBF222C07EA4700A6216D /* GetObservedStationsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetObservedStationsUseCase.swift; sourceTree = "<group>"; };
 		729BBF242C0A008800A6216D /* DeleteStationFromObservedListUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteStationFromObservedListUseCase.swift; sourceTree = "<group>"; };
 		72ACEE992BF1162E009A4A93 /* StationPreviewDummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationPreviewDummy.swift; sourceTree = "<group>"; };
 		72C422AB2BEAA3DA0076F8F7 /* Development.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Development.xctestplan; sourceTree = "<group>"; };
@@ -383,6 +387,7 @@
 				72E81FE32BF1305E00218BEA /* DependencyInjection */,
 				72FB16AC2BF1FDFB007FED02 /* Logger.swift */,
 				72CFCFC42C046AB0007BE1D5 /* HandlerActor.swift */,
+				725A535F2C0DCAA800B1CBC0 /* BackgroundTasksManager.swift */,
 			);
 			path = Utilites;
 			sourceTree = "<group>";
@@ -452,7 +457,7 @@
 				721022E82BFC0B5D0099FBBE /* GetArchivalMeasurementsUseCase.swift */,
 				729BBF242C0A008800A6216D /* DeleteStationFromObservedListUseCase.swift */,
 				72CFCFD12C06161E007BE1D5 /* ObserveStation.swift */,
-				729BBF222C07EA4700A6216D /* PublishObservedStationsUseCase.swift */,
+				729BBF222C07EA4700A6216D /* GetObservedStationsUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -628,6 +633,7 @@
 			isa = PBXGroup;
 			children = (
 				72E81FF32BF168E500218BEA /* MapperProtocol.swift */,
+				725A53612C0DCF3500B1CBC0 /* UIApplicationProtocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -852,11 +858,12 @@
 				721022ED2BFC21AA0099FBBE /* SensorParamDetailsView.swift in Sources */,
 				722CC6E82BEA17F100A978C7 /* StationsNetworkMapper.swift in Sources */,
 				72E81FD32BF11A0700218BEA /* SensorNetworkModel.swift in Sources */,
+				725A53602C0DCAA800B1CBC0 /* BackgroundTasksManager.swift in Sources */,
 				721022F62BFD50B60099FBBE /* SensorArchivalMeasurementsChartView.swift in Sources */,
 				72CFCFCE2C047018007BE1D5 /* LocalDatabaseMapper.swift in Sources */,
 				720FA9EE2BF373AF00E3111A /* ParamBundleMapper.swift in Sources */,
 				725A535C2C0BD31000B1CBC0 /* FetchResultsController.swift in Sources */,
-				729BBF232C07EA4700A6216D /* PublishObservedStationsUseCase.swift in Sources */,
+				729BBF232C07EA4700A6216D /* GetObservedStationsUseCase.swift in Sources */,
 				722CC6EA2BEA17F100A978C7 /* Endpoint.swift in Sources */,
 				720FA9F22BF3854200E3111A /* BundleFile.swift in Sources */,
 				72E81FF42BF168E500218BEA /* MapperProtocol.swift in Sources */,
@@ -881,6 +888,7 @@
 				729BBF1E2C069FE300A6216D /* ToastModel.swift in Sources */,
 				72CFCFD42C061775007BE1D5 /* AppDelegate.swift in Sources */,
 				721022EB2BFC0F190099FBBE /* SensorArchivalMeasurementsListModel.swift in Sources */,
+				725A53622C0DCF3500B1CBC0 /* UIApplicationProtocol.swift in Sources */,
 				722CC6F02BEA17F100A978C7 /* Station.swift in Sources */,
 				72E81FCF2BF119F100218BEA /* SelectedStationViewModel.swift in Sources */,
 				721022EF2BFC21B50099FBBE /* SensorParamDetailsViewModel.swift in Sources */,

@@ -1,5 +1,5 @@
 //
-//  PublishObservedStationsUseCase.swift
+//  GetObservedStationsUseCase.swift
 //  AirQuality
 //
 //  Created by Tomasz Kukułka on 30/05/2024.
@@ -8,12 +8,13 @@
 import Foundation
 import struct SwiftData.FetchDescriptor
 
-protocol PublishObservedStationsUseCaseProtocol {
+protocol GetObservedStationsUseCaseProtocol: Sendable {
     func fetchedStations() async throws -> [Station]
+    
     func observe() -> AsyncThrowingStream<[Station], Error>
 }
 
-final class PublishObservedStationsUseCase: PublishObservedStationsUseCaseProtocol {
+final class GetObservedStationsUseCase: GetObservedStationsUseCaseProtocol, Sendable {
     @Injected(\.localDatabaseRepository) private var localDatabaseRepository
     
     private var stationsLocalDatabaseMapper: any StationsLocalDatabaseMapperProtocol
@@ -27,6 +28,6 @@ final class PublishObservedStationsUseCase: PublishObservedStationsUseCaseProtoc
     }
     
     func observe() -> AsyncThrowingStream<[Station], Error> {
-        localDatabaseRepository.streamObservedStations(mapper: stationsLocalDatabaseMapper)
+        localDatabaseRepository.ceateObservedStationsStrem(mapper: stationsLocalDatabaseMapper)
     }
 }

@@ -69,12 +69,11 @@ extension AddStationToObservedListView {
                     EmptyView()
                         .frame(width: .zero, height: .zero)
                 } else {
-                    ForEach(section.stations) { station in
+                    ForEach(section.rows) { row in
                         HStack {
                             ZStack {
-                                let isStationObserved = viewModel.isStationObserved(station)
-                                let imageName = isStationObserved ? "checkmark.circle.fill" : "circle"
-                                let imageColor: Color = isStationObserved ? .blue : .gray
+                                let imageName =  row.isStationObserved ? "checkmark.circle.fill" : "circle"
+                                let imageColor: Color = row.isStationObserved ? .blue : .gray
                                 
                                 Image(systemName: imageName)
                                     .resizable()
@@ -85,14 +84,14 @@ extension AddStationToObservedListView {
                             .padding(.trailing, 16)
                             .accessibility(addTraits: [.isButton])
                             .gesture(TapGesture().onEnded {
-                                onSelectedStation(station)
+                                onSelectedStation(row.station)
                             })
                             
                             HStack {
                                 VStack(alignment: .leading, spacing: 8) {
-                                    Text(station.street ?? "")
+                                    Text(row.station.street ?? "")
                                     
-                                    Text(station.cityName)
+                                    Text(row.station.cityName)
                                 }
                             }
                         }

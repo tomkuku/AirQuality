@@ -7,26 +7,48 @@
 
 import Foundation
 import SwiftData
+import Combine
 
-actor FetchResultsController<T>: ModelActor where T: LocalDatabaseModel {
+protocol FetchedModelsControllerProtocol<FetchModel>: Sendable {
+    associatedtype FetchModel: LocalDatabaseModel
+    
+    var fetchedModels: [FetchModel] { get async }
+    
+    func createNewStrem() async throws -> AsyncThrowingStream<[FetchModel], Error>
+}
+
+actor FetchResultsController<T>: FetchedModelsControllerProtocol, Sendable where T: LocalDatabaseModel {
+    
+    typealias FetchModel = T
     
     // MARK: Properties
     
-    nonisolated var modelExecutor: any ModelExecutor { _modelExecutor }
-    nonisolated var modelContainer: ModelContainer { _modelContainer }
+    nonisolated let modelExecutor: any ModelExecutor
+    nonisolated let modelContainer: ModelContainer
     
     // MARK: Private properties
     
-    private let _modelExecutor: any ModelExecutor
-    private let _modelContainer: ModelContainer
     private let localDatabaseDataSource: LocalDatabaseDataStoreProtocol
     private let predicate: Predicate<T>?
     private let sortDescriptors: [SortDescriptor<T>]
-    private var baseFetchedModels: [T] = []
+    private let subject = CurrentValueSubject<[T], Error>([])
+    private let fetchedModelsPublisher: AsyncThrowingPublisher<AnyPublisher<[T], Error>>
+    private var cancellable = Set<AnyCancellable>()
+    private var hasStarted = false
+    
+    private var baseFetchedModels: [T] = [] {
+        didSet {
+            subject.send(baseFetchedModels)
+        }
+    }
     
     // MARK: Properties
     
-    private(set) var fetchedModels: [T] = []
+    var fetchedModels: [FetchModel] {
+        get async {
+            subject.value
+        }
+    }
     
     // MARK: Lifecycle
     
@@ -40,67 +62,75 @@ actor FetchResultsController<T>: ModelActor where T: LocalDatabaseModel {
         self.predicate = predicate
         self.sortDescriptors = sortDescriptors
         self.localDatabaseDataSource = localDatabaseDataSource
-        self._modelContainer = modelContainer
-        self._modelExecutor = modelExecutor
+        self.modelContainer = modelContainer
+        self.modelExecutor = modelExecutor
+        self.fetchedModelsPublisher = .init(subject.eraseToAnyPublisher())
     }
     
     // MARK: Methods
     
-    func fetchStream() async throws -> AsyncThrowingStream<[T], Error> {
-        do {
-            let fetchedModels = try await localDatabaseDataSource.fetch(
-                object: T.self,
-                predicate: predicate,
-                sorts: sortDescriptors
-            )
-            
-            self.fetchedModels = fetchedModels
-        } catch {
-            Logger.error("Creating fetch stream for object: \(String(describing: T.self)) failed with error:\n\(error)")
-            throw error
+    func createNewStrem() async throws -> AsyncThrowingStream<[T], Error> {
+        if !hasStarted {
+            do {
+                try await start()
+                hasStarted = true
+            } catch {
+                throw error
+            }
         }
         
         return AsyncThrowingStream { continuation in
-            Task { [weak self] in
-                await self?.observeLocalDatabaseChanges { models in
-                    continuation.yield(with: .success(models))
-                }
-            }
-            
-            Task { [weak self] in
-                await self?.observeLocalDatabaseSave(resultBlock: { result in
-                    continuation.yield(with: result)
+            subject
+                .asyncSink(receiveCompletion: {
+                    guard case .failure(let error) = $0 else { return }
+                    continuation.finish(throwing: error)
+                }, receiveValue: {
+                    continuation.yield($0)
                 })
-            }
+                .store(in: &cancellable)
         }
     }
     
     // MARK: Private methods
     
-    private func observeLocalDatabaseChanges(successBlock: @Sendable @escaping ([T]) -> ()) async {
+    private func start() async throws {
+        baseFetchedModels = try await localDatabaseDataSource.fetch(
+            object: T.self,
+            predicate: predicate,
+            sorts: sortDescriptors
+        )
+            
+        Task { [weak self] in
+            await self?.observeLocalDatabaseChanges()
+        }
+        
+        Task { [weak self] in
+            await self?.observeLocalDatabaseSave()
+        }
+    }
+    
+    private func observeLocalDatabaseChanges() async {
         for await _ in NotificationCenter.default.notifications(named: .persistentModelDidChange).map({ $0.name }) {
             let insertedModels: [T] = await localDatabaseDataSource.getInsertedModels()
             let deletedModels: [T] = await localDatabaseDataSource.getDeletedModels()
             
             var models = self.baseFetchedModels
             
-            for i in 0..<models.count where deletedModels.contains(models[i]) {
-                models.remove(at: i)
-            }
-            
             for insertedModel in insertedModels where !models.contains(insertedModel) {
                 models.append(insertedModel)
             }
             
+            for (i, model) in models.enumerated() where deletedModels.contains(model) {
+                models.remove(at: i)
+            }
+            
             models.sort(using: sortDescriptors)
             
-            fetchedModels = models
-            
-            successBlock(models)
+            subject.send(models)
         }
     }
     
-    private func observeLocalDatabaseSave(resultBlock: @Sendable @escaping (Result<[T], Error>) -> ()) async {
+    private func observeLocalDatabaseSave() async {
         for await _ in NotificationCenter.default.notifications(named: .persistentModelDidSave).map({ $0.name }) {
             do {
                 let models = try await localDatabaseDataSource.fetch(
@@ -110,9 +140,8 @@ actor FetchResultsController<T>: ModelActor where T: LocalDatabaseModel {
                 )
                 
                 baseFetchedModels = models
-                resultBlock(.success(models))
             } catch {
-                resultBlock(.failure(error))
+                subject.send(completion: .failure(error))
             }
         }
     }

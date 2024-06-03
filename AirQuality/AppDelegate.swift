@@ -7,6 +7,8 @@
 
 import UIKit
 import SwiftUI
+import SwiftData
+import Combine
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
     
@@ -23,10 +25,12 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         super.init()
     }
     
+    var cancellables = Set<AnyCancellable>()
+    
     func application(
         _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
-        return true
+        true
     }
 }

@@ -22,7 +22,7 @@ protocol LocalDatabaseRepositoryProtocol: Sendable {
     
     func getFetchedStations() async throws -> [Station]
     
-    func streamObservedStations<T>(
+    func ceateObservedStationsStrem<T>(
         mapper: T
     ) -> AsyncThrowingStream<[Station], Error> where T: StationsLocalDatabaseMapperProtocol
 }
@@ -30,7 +30,7 @@ protocol LocalDatabaseRepositoryProtocol: Sendable {
 final class LocalDatabaseRepository: LocalDatabaseRepositoryProtocol {
     
     private let localDatabaseDataStore: LocalDatabaseDataStoreProtocol
-    private let stationsFetchResultsController: FetchResultsController<StationLocalDatabaseModel>
+    private let stationsFetchResultsController: any FetchedModelsControllerProtocol<StationLocalDatabaseModel>
     private let stationsLocalDatabaseMapper: any StationsLocalDatabaseMapperProtocol
     
     init(
@@ -74,16 +74,15 @@ final class LocalDatabaseRepository: LocalDatabaseRepositoryProtocol {
             }
     }
     
-    func streamObservedStations<T>(
+    func ceateObservedStationsStrem<T>(
         mapper: T
     ) -> AsyncThrowingStream<[Station], Error> where T: StationsLocalDatabaseMapperProtocol {
         AsyncThrowingStream { continuation in
-            Task { [weak stationsFetchResultsController] in
-                guard let stationsFetchResultsController else { return }
+            Task { [weak self] in
+                guard let self else { return }
                 
                 do {
-                    for try await models in try await stationsFetchResultsController.fetchStream() {
-                        
+                    for try await models in try await stationsFetchResultsController.createNewStrem() {
                         let mappedModels = try models.map {
                             try mapper.map($0)
                         }

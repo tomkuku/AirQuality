@@ -10,7 +10,7 @@ import Foundation
 enum AddStationToObservedListModel {
     struct Section: Identifiable {
         let name: String
-        var stations: [Station]
+        var rows: [Row]
         
         var id: String {
             name
@@ -18,11 +18,11 @@ enum AddStationToObservedListModel {
     }
     
     struct Row: Identifiable {
+        let station: Station
+        let isStationObserved: Bool
+        
         var id: Int {
             station.id
         }
-        
-        let station: Station
-        var isObserved: Bool
     }
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftData
-import Combine
+import class UIKit.UIScene
 
 protocol LocalDatabaseDataStoreProtocol: Sendable, AnyObject {
     func getInsertedModels<T>() async -> [T] where T: LocalDatabaseModel
@@ -54,30 +54,33 @@ extension LocalDatabaseDataStoreProtocol {
     }
 }
 
-@ModelActor
-actor LocalDatabaseDataStore: LocalDatabaseDataStoreProtocol {
+actor LocalDatabaseDataStore: ModelActor, LocalDatabaseDataStoreProtocol {
     
     // MARK: Properties
     
-    nonisolated var modelExecutor: any ModelExecutor { _modelExecutor }
-    nonisolated var modelContainer: ModelContainer { _modelContainer }
+    nonisolated let modelExecutor: any ModelExecutor
+    nonisolated let modelContainer: ModelContainer
     
     // MARK: Private properties
     
     private let modelContext: ModelContext
-    private let _modelExecutor: any ModelExecutor
-    private let _modelContainer: ModelContainer
+    private let backgroundTasksManager: BackgroundTasksManagerProtocol
     
     // MARK: Lifecycle
     
     init(
-        modelContainer: ModelContainer
+        modelContainer: ModelContainer,
+        backgroundTasksManager: BackgroundTasksManagerProtocol
     ) {
         self.modelContext = ModelContext(modelContainer)
         modelContext.autosaveEnabled = false
-        self._modelContainer = modelContainer
-        let defaultSerialModelExecutor = DefaultSerialModelExecutor(modelContext: modelContext)
-        self._modelExecutor = defaultSerialModelExecutor
+        self.modelContainer = modelContainer
+        self.modelExecutor = DefaultSerialModelExecutor(modelContext: modelContext)
+        self.backgroundTasksManager = backgroundTasksManager
+        
+        Task { @MainActor [weak self] in
+            await self?.observeSceneStates()
+        }
     }
     
     // MARK: Methods
@@ -107,7 +110,17 @@ actor LocalDatabaseDataStore: LocalDatabaseDataStoreProtocol {
     }
     
     func save() throws {
-        try modelContext.save()
+        guard modelContext.hasChanges else { return }
+        
+        do {
+            try modelContext.save()
+            
+            Task.detached {
+                NotificationCenter.default.post(name: .persistentModelDidSave, object: nil)
+            }
+        } catch {
+            Logger.error("Saving context failed with error: \(error.localizedDescription)")
+        }
     }
     
     func fetch<T>(
@@ -122,13 +135,14 @@ actor LocalDatabaseDataStore: LocalDatabaseDataStoreProtocol {
         return try modelContext.fetch(fetchDescriptor)
     }
     
-    // MARK: Privaet methods
-    
-    private func observeNotifications() {
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: ModelContext.didSave, object: modelContext).map({ $0.name }) {
-                NotificationCenter.default.post(name: .persistentModelDidSave, object: self)
-            }
+    @MainActor
+    private func observeSceneStates() async {
+        for await _ in NotificationCenter.default.notifications(named: UIScene.willDeactivateNotification).map({ $0.name }) {
+            backgroundTasksManager.beginFiniteLengthTask()
+            
+            try? await save()
+            
+            backgroundTasksManager.endFiniteLengthTask()
         }
     }
 }
