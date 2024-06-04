@@ -30,16 +30,16 @@ protocol LocalDatabaseRepositoryProtocol: Sendable {
 final class LocalDatabaseRepository: LocalDatabaseRepositoryProtocol {
     
     private let localDatabaseDataSource: LocalDatabaseDataSourceProtocol
-    private let stationsFetchResultsController: any FetchedModelsControllerProtocol<StationLocalDatabaseModel>
+    private let stationsFetchedModelsController: any FetchedModelsControllerProtocol<StationLocalDatabaseModel>
     private let stationsLocalDatabaseMapper: any StationsLocalDatabaseMapperProtocol
     
     init(
         localDatabaseDataSource: LocalDatabaseDataSourceProtocol,
-        stationsFetchResultsController: FetchResultsController<StationLocalDatabaseModel>,
+        stationsFetchedModelsController: FetchedModelsController<StationLocalDatabaseModel>,
         stationsLocalDatabaseMapper: any StationsLocalDatabaseMapperProtocol
     ) {
         self.localDatabaseDataSource = localDatabaseDataSource
-        self.stationsFetchResultsController = stationsFetchResultsController
+        self.stationsFetchedModelsController = stationsFetchedModelsController
         self.stationsLocalDatabaseMapper = stationsLocalDatabaseMapper
     }
     
@@ -67,7 +67,7 @@ final class LocalDatabaseRepository: LocalDatabaseRepositoryProtocol {
     }
     
     func getFetchedStations() async throws -> [Station] {
-        try await stationsFetchResultsController
+        try await stationsFetchedModelsController
             .fetchedModels
             .map {
                 try stationsLocalDatabaseMapper.map($0)
@@ -82,7 +82,7 @@ final class LocalDatabaseRepository: LocalDatabaseRepositoryProtocol {
                 guard let self else { return }
                 
                 do {
-                    for try await models in try await stationsFetchResultsController.createNewStrem() {
+                    for try await models in try await stationsFetchedModelsController.createNewStrem() {
                         let mappedModels = try models.map {
                             try mapper.map($0)
                         }

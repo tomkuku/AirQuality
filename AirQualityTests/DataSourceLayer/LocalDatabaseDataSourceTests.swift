@@ -40,12 +40,7 @@ final class LocalDatabaseDataSourceTests: BaseTestCase, @unchecked Sendable {
         
         let mirrored = Mirror(reflecting: localDatabaseDataSource)
         for child in mirrored.children {
-            guard
-                let label = child.label,
-                let modelContext = child.value as? ModelContext
-            else {
-                continue
-            }
+            guard let modelContext = child.value as? ModelContext else { continue }
             
             modelContextSpy = modelContext
             break
@@ -234,7 +229,7 @@ final class LocalDatabaseDataSourceTests: BaseTestCase, @unchecked Sendable {
 }
 
 @Model
-private final class LocalDatabaseModelDummy: LocalDatabaseModel, @unchecked Sendable {
+final class LocalDatabaseModelDummy: LocalDatabaseModel, @unchecked Sendable {
     static func idPredicate(with id: Int) -> Predicate<LocalDatabaseModelDummy> {
         #Predicate<LocalDatabaseModelDummy> { model in
             model.identifier == id

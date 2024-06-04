@@ -1,5 +1,5 @@
 //
-//  FetchResultsController.swift
+//  FetchedModelsController.swift
 //  AirQuality
 //
 //  Created by Tomasz Kukułka on 02/06/2024.
@@ -17,7 +17,7 @@ protocol FetchedModelsControllerProtocol<FetchModel>: Sendable {
     func createNewStrem() async throws -> AsyncThrowingStream<[FetchModel], Error>
 }
 
-actor FetchResultsController<T>: FetchedModelsControllerProtocol, Sendable where T: LocalDatabaseModel {
+actor FetchedModelsController<T>: FetchedModelsControllerProtocol, Sendable where T: LocalDatabaseModel {
     
     typealias FetchModel = T
     
@@ -35,6 +35,7 @@ actor FetchResultsController<T>: FetchedModelsControllerProtocol, Sendable where
     private let fetchedModelsPublisher: AsyncThrowingPublisher<AnyPublisher<[T], Error>>
     private var cancellable = Set<AnyCancellable>()
     private var hasStarted = false
+    private let notificationCenter: NotificationCenterProtocol
     
     private var baseFetchedModels: [T] = [] {
         didSet {
@@ -57,7 +58,8 @@ actor FetchResultsController<T>: FetchedModelsControllerProtocol, Sendable where
         sortDescriptors: [SortDescriptor<T>] = [],
         localDatabaseDataSource: LocalDatabaseDataSourceProtocol,
         modelContainer: ModelContainer,
-        modelExecutor: any ModelExecutor
+        modelExecutor: any ModelExecutor,
+        notificationCenter: NotificationCenterProtocol
     ) {
         self.predicate = predicate
         self.sortDescriptors = sortDescriptors
@@ -65,6 +67,7 @@ actor FetchResultsController<T>: FetchedModelsControllerProtocol, Sendable where
         self.modelContainer = modelContainer
         self.modelExecutor = modelExecutor
         self.fetchedModelsPublisher = .init(subject.eraseToAnyPublisher())
+        self.notificationCenter = notificationCenter
     }
     
     // MARK: Methods
@@ -72,9 +75,10 @@ actor FetchResultsController<T>: FetchedModelsControllerProtocol, Sendable where
     func createNewStrem() async throws -> AsyncThrowingStream<[T], Error> {
         if !hasStarted {
             do {
-                try await start()
                 hasStarted = true
+                try await start()
             } catch {
+                hasStarted = false
                 throw error
             }
         }
@@ -99,7 +103,7 @@ actor FetchResultsController<T>: FetchedModelsControllerProtocol, Sendable where
             predicate: predicate,
             sorts: sortDescriptors
         )
-            
+        
         Task { [weak self] in
             await self?.observeLocalDatabaseChanges()
         }
@@ -110,7 +114,7 @@ actor FetchResultsController<T>: FetchedModelsControllerProtocol, Sendable where
     }
     
     private func observeLocalDatabaseChanges() async {
-        for await _ in NotificationCenter.default.notifications(named: .persistentModelDidChange).map({ $0.name }) {
+        for await _ in notificationCenter.notifications(named: .persistentModelDidChange).map({ $0.name }) {
             let insertedModels: [T] = await localDatabaseDataSource.getInsertedModels()
             let deletedModels: [T] = await localDatabaseDataSource.getDeletedModels()
             
@@ -131,13 +135,15 @@ actor FetchResultsController<T>: FetchedModelsControllerProtocol, Sendable where
     }
     
     private func observeLocalDatabaseSave() async {
-        for await _ in NotificationCenter.default.notifications(named: .persistentModelDidSave).map({ $0.name }) {
+        for await _ in notificationCenter.notifications(named: .persistentModelDidSave).map({ $0.name }) {
             do {
                 let models = try await localDatabaseDataSource.fetch(
                     object: T.self,
                     predicate: predicate,
                     sorts: sortDescriptors
                 )
+                
+                print("[LL] fetch 2")
                 
                 baseFetchedModels = models
             } catch {

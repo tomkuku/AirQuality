@@ -58,17 +58,18 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
             notificationCenter: NotificationCenter.default
         )
         
-        let observedStationFetchedModelsController = FetchResultsController<StationLocalDatabaseModel>(
+        let observedStationFetchedModelsController = FetchedModelsController<StationLocalDatabaseModel>(
             localDatabaseDataSource: localDatabaseDataSource,
             modelContainer: modelContainer,
-            modelExecutor: localDatabaseDataSource.modelExecutor
+            modelExecutor: localDatabaseDataSource.modelExecutor, 
+            notificationCenter: NotificationCenter.default
         )
         
         let stationsLocalDatabaseMapper = StationsLocalDatabaseMapper()
         
         self.localDatabaseRepository = LocalDatabaseRepository(
             localDatabaseDataSource: localDatabaseDataSource,
-            stationsFetchResultsController: observedStationFetchedModelsController,
+            stationsFetchedModelsController: observedStationFetchedModelsController,
             stationsLocalDatabaseMapper: stationsLocalDatabaseMapper
         )
     }

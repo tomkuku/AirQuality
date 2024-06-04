@@ -44,7 +44,10 @@
 		722CC7052BEA182B00A978C7 /* EndpointFake.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6FC2BEA182B00A978C7 /* EndpointFake.swift */; };
 		722CC7062BEA182B00A978C7 /* ErrorDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6FD2BEA182B00A978C7 /* ErrorDummy.swift */; };
 		722CC7072BEA182B00A978C7 /* HTTPDataSourceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CC6FE2BEA182B00A978C7 /* HTTPDataSourceMock.swift */; };
-		725A535C2C0BD31000B1CBC0 /* FetchResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725A535B2C0BD31000B1CBC0 /* FetchResultsController.swift */; };
+		72396C6D2C0F63C000908878 /* FetchedModelsControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72396C6C2C0F63C000908878 /* FetchedModelsControllerTests.swift */; };
+		72396C6F2C0FD04000908878 /* LocalDatabaseDataSourceSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72396C6E2C0FD04000908878 /* LocalDatabaseDataSourceSpy.swift */; };
+		72396C712C0FD06600908878 /* NotificationCenterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72396C702C0FD06600908878 /* NotificationCenterSpy.swift */; };
+		725A535C2C0BD31000B1CBC0 /* FetchedModelsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725A535B2C0BD31000B1CBC0 /* FetchedModelsController.swift */; };
 		725A53602C0DCAA800B1CBC0 /* BackgroundTasksManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725A535F2C0DCAA800B1CBC0 /* BackgroundTasksManager.swift */; };
 		725A53622C0DCF3500B1CBC0 /* UIApplicationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725A53612C0DCF3500B1CBC0 /* UIApplicationProtocol.swift */; };
 		725A53652C0DE15400B1CBC0 /* BackgroundTasksManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725A53632C0DE15000B1CBC0 /* BackgroundTasksManagerTests.swift */; };
@@ -172,7 +175,10 @@
 		722CC6FC2BEA182B00A978C7 /* EndpointFake.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndpointFake.swift; sourceTree = "<group>"; };
 		722CC6FD2BEA182B00A978C7 /* ErrorDummy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorDummy.swift; sourceTree = "<group>"; };
 		722CC6FE2BEA182B00A978C7 /* HTTPDataSourceMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPDataSourceMock.swift; sourceTree = "<group>"; };
-		725A535B2C0BD31000B1CBC0 /* FetchResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchResultsController.swift; sourceTree = "<group>"; };
+		72396C6C2C0F63C000908878 /* FetchedModelsControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedModelsControllerTests.swift; sourceTree = "<group>"; };
+		72396C6E2C0FD04000908878 /* LocalDatabaseDataSourceSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDatabaseDataSourceSpy.swift; sourceTree = "<group>"; };
+		72396C702C0FD06600908878 /* NotificationCenterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenterSpy.swift; sourceTree = "<group>"; };
+		725A535B2C0BD31000B1CBC0 /* FetchedModelsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedModelsController.swift; sourceTree = "<group>"; };
 		725A535F2C0DCAA800B1CBC0 /* BackgroundTasksManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTasksManager.swift; sourceTree = "<group>"; };
 		725A53612C0DCF3500B1CBC0 /* UIApplicationProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplicationProtocol.swift; sourceTree = "<group>"; };
 		725A53632C0DE15000B1CBC0 /* BackgroundTasksManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTasksManagerTests.swift; sourceTree = "<group>"; };
@@ -409,6 +415,7 @@
 				722CC6F92BEA182B00A978C7 /* GIOSApiRepositoryTests.swift */,
 				722CC6FA2BEA182B00A978C7 /* HTTPDataStoreTests.swift */,
 				725A536B2C0DEC6C00B1CBC0 /* LocalDatabaseDataSourceTests.swift */,
+				72396C6C2C0F63C000908878 /* FetchedModelsControllerTests.swift */,
 			);
 			path = DataSourceLayer;
 			sourceTree = "<group>";
@@ -554,7 +561,7 @@
 			isa = PBXGroup;
 			children = (
 				72CFCFC62C046DB4007BE1D5 /* LocalDatabaseDataStore.swift */,
-				725A535B2C0BD31000B1CBC0 /* FetchResultsController.swift */,
+				725A535B2C0BD31000B1CBC0 /* FetchedModelsController.swift */,
 				72CFCFC92C046E03007BE1D5 /* LocalDatabaseRepository.swift */,
 				72CFCFCD2C047018007BE1D5 /* LocalDatabaseMapper.swift */,
 				72CFCFCF2C047111007BE1D5 /* StationsLocalDatabaseMapper.swift */,
@@ -646,6 +653,8 @@
 				72FB16B42BF22B20007FED02 /* GetSensorsUseCaseSpy.swift */,
 				725A53662C0DE16500B1CBC0 /* UIApplicationSpy.swift */,
 				725A53692C0DEBAD00B1CBC0 /* BackgroundTasksManagerSpy.swift */,
+				72396C6E2C0FD04000908878 /* LocalDatabaseDataSourceSpy.swift */,
+				72396C702C0FD06600908878 /* NotificationCenterSpy.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -885,7 +894,7 @@
 				721022F62BFD50B60099FBBE /* SensorArchivalMeasurementsChartView.swift in Sources */,
 				72CFCFCE2C047018007BE1D5 /* LocalDatabaseMapper.swift in Sources */,
 				720FA9EE2BF373AF00E3111A /* ParamBundleMapper.swift in Sources */,
-				725A535C2C0BD31000B1CBC0 /* FetchResultsController.swift in Sources */,
+				725A535C2C0BD31000B1CBC0 /* FetchedModelsController.swift in Sources */,
 				729BBF232C07EA4700A6216D /* GetObservedStationsUseCase.swift in Sources */,
 				722CC6EA2BEA17F100A978C7 /* Endpoint.swift in Sources */,
 				720FA9F22BF3854200E3111A /* BundleFile.swift in Sources */,
@@ -946,12 +955,14 @@
 			files = (
 				725A53672C0DE16500B1CBC0 /* UIApplicationSpy.swift in Sources */,
 				72FB16B12BF2295C007FED02 /* SelectedStationViewModelTests.swift in Sources */,
+				72396C712C0FD06600908878 /* NotificationCenterSpy.swift in Sources */,
 				722CC7072BEA182B00A978C7 /* HTTPDataSourceMock.swift in Sources */,
 				72E81FD72BF11A6A00218BEA /* GetStationsUseCaseTests.swift in Sources */,
 				72E81FE22BF127BD00218BEA /* SensorDummy.swift in Sources */,
 				72E81FE02BF1268B00218BEA /* GetSensorsUseCaseTests.swift in Sources */,
 				72CE02722BF656470088F5F3 /* ParamDummy.swift in Sources */,
 				725A536A2C0DEBAD00B1CBC0 /* BackgroundTasksManagerSpy.swift in Sources */,
+				72396C6F2C0FD04000908878 /* LocalDatabaseDataSourceSpy.swift in Sources */,
 				72112DD22BF7938000D38D1B /* AlertViewModelTests.swift in Sources */,
 				722CC7012BEA182B00A978C7 /* EmptyError.swift in Sources */,
 				722CC7062BEA182B00A978C7 /* ErrorDummy.swift in Sources */,
@@ -961,6 +972,7 @@
 				72FB16B52BF22B20007FED02 /* GetSensorsUseCaseSpy.swift in Sources */,
 				72FB16B92BF22D1D007FED02 /* MeasurementDummy.swift in Sources */,
 				72E81FDD2BF11D2400218BEA /* StationDummy.swift in Sources */,
+				72396C6D2C0F63C000908878 /* FetchedModelsControllerTests.swift in Sources */,
 				725A53652C0DE15400B1CBC0 /* BackgroundTasksManagerTests.swift in Sources */,
 				722CC7042BEA182B00A978C7 /* HTTPDataStoreTests.swift in Sources */,
 				72E81FEB2BF1627400218BEA /* BaseTestCase.swift in Sources */,
