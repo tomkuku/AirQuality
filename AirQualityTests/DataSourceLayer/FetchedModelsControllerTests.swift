@@ -80,8 +80,8 @@ final class FetchedModelsControllerTests: BaseTestCase, @unchecked Sendable {
         var localDatabaseDataSourceSpyEvents = await localDatabaseDataSourceSpy.events
         XCTAssertEqual(localDatabaseDataSourceSpyEvents, [.fetch])
         XCTAssertEqual(Set(notificationCeneterSpy.events), Set([
-            .publisher(.persistentModelDidSave),
-            .publisher(.persistentModelDidChange)
+            .publisher(.localDatabaseDidSave),
+            .publisher(.localDatabaseDidChange)
         ]))
         
         XCTAssertEqual(streamedObjects, [model1])
@@ -91,14 +91,14 @@ final class FetchedModelsControllerTests: BaseTestCase, @unchecked Sendable {
         
         // Given
         await localDatabaseDataSourceSpy.deleteAllEvents()
-        expectation = XCTestExpectation(description: "com.persistent.model.did.save")
+        expectation = XCTestExpectation(description: "com.local.database.did.save")
         
         let model2 = LocalDatabaseModelDummy(identifier: 222)
         
         await localDatabaseDataSourceSpy.setFetchReturnValue(models: [model1, model2])
         
         // When
-        notificationCeneterSpy.notificationCenter.post(Notification(name: .persistentModelDidSave))
+        notificationCeneterSpy.notificationCenter.post(Notification(name: .localDatabaseDidSave, object: localDatabaseDataSourceSpy))
         
         // Then
         await fulfillment(of: [expectation], timeout: 2.0)
@@ -112,7 +112,7 @@ final class FetchedModelsControllerTests: BaseTestCase, @unchecked Sendable {
         
         // Given
         await localDatabaseDataSourceSpy.deleteAllEvents()
-        expectation = XCTestExpectation(description: "com.persistent.model.did.change")
+        expectation = XCTestExpectation(description: "com.local.database.did.change")
         
         let model3 = LocalDatabaseModelDummy(identifier: 333)
         
@@ -120,7 +120,7 @@ final class FetchedModelsControllerTests: BaseTestCase, @unchecked Sendable {
         await localDatabaseDataSourceSpy.setGetDeletedModelsReturnValue(models: [model1])
         
         // When
-        notificationCeneterSpy.notificationCenter.post(Notification(name: .persistentModelDidChange))
+        notificationCeneterSpy.notificationCenter.post(Notification(name: .localDatabaseDidChange, object: localDatabaseDataSourceSpy))
         
         // Then
         await fulfillment(of: [expectation], timeout: 2.0)
@@ -184,8 +184,8 @@ final class FetchedModelsControllerTests: BaseTestCase, @unchecked Sendable {
         XCTAssertEqual(streamedModels1, [model1])
         XCTAssertEqual(streamedModels2, [model1])
         XCTAssertEqual(Set(notificationCeneterSpy.events), Set([
-            .publisher(.persistentModelDidSave),
-            .publisher(.persistentModelDidChange)
+            .publisher(.localDatabaseDidSave),
+            .publisher(.localDatabaseDidChange)
         ]))
         
         // Given
@@ -199,7 +199,7 @@ final class FetchedModelsControllerTests: BaseTestCase, @unchecked Sendable {
         await localDatabaseDataSourceSpy.setInsertedModelsReturnValue(models: [model2])
         
         // When
-        notificationCeneterSpy.notificationCenter.post(Notification(name: .persistentModelDidChange))
+        notificationCeneterSpy.notificationCenter.post(Notification(name: .localDatabaseDidChange, object: localDatabaseDataSourceSpy))
         
         // Then
         await fulfillment(of: [expectation], timeout: 2.0)
@@ -212,10 +212,12 @@ final class FetchedModelsControllerTests: BaseTestCase, @unchecked Sendable {
         XCTAssertEqual(streamedModels1, [model1, model2])
         XCTAssertEqual(streamedModels2, [model1, model2])
         XCTAssertEqual(Set(notificationCeneterSpy.events), Set([
-            .publisher(.persistentModelDidSave),
-            .publisher(.persistentModelDidChange)
+            .publisher(.localDatabaseDidSave),
+            .publisher(.localDatabaseDidChange)
         ]))
     }
+    
+    // MARK: StreamsWrapper
     
     private actor StreamsWrapper {
         var streamedModels1: [LocalDatabaseModelDummy] = []

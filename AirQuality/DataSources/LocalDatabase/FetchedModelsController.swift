@@ -114,7 +114,7 @@ actor FetchedModelsController<T>: FetchedModelsControllerProtocol, Sendable wher
     }
     
     private func observeLocalDatabaseChanges() async {
-        for await _ in notificationCenter.notifications(named: .persistentModelDidChange).map({ $0.name }) {
+        for await _ in notificationCenter.notifications(named: .localDatabaseDidChange, object: localDatabaseDataSource).map({ $0.name }) {
             let insertedModels: [T] = await localDatabaseDataSource.getInsertedModels()
             let deletedModels: [T] = await localDatabaseDataSource.getDeletedModels()
             
@@ -135,7 +135,7 @@ actor FetchedModelsController<T>: FetchedModelsControllerProtocol, Sendable wher
     }
     
     private func observeLocalDatabaseSave() async {
-        for await _ in notificationCenter.notifications(named: .persistentModelDidSave).map({ $0.name }) {
+        for await _ in notificationCenter.notifications(named: .localDatabaseDidSave, object: localDatabaseDataSource).map({ $0.name }) {
             do {
                 let models = try await localDatabaseDataSource.fetch(
                     object: T.self,

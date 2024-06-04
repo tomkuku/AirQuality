@@ -67,16 +67,22 @@ final class LocalDatabaseDataSourceTests: BaseTestCase, @unchecked Sendable {
         // Given
         let model = LocalDatabaseModelDummy(identifier: 123)
         
+        let expectation = XCTNSNotificationExpectation(
+            name: .localDatabaseDidChange,
+            object: sut,
+            notificationCenter: notificationCenterDummy
+        )
+        
         // When
         await sut.insert(model)
         
         // Then
+        await fulfillment(of: [expectation], timeout: 2.0)
+        
         XCTAssertEqual(modelContextSpy?.insertedModelsArray.map { $0.persistentModelID }, [model.persistentModelID])
         
-        // When
         let insertedModels: [LocalDatabaseModelDummy] = await sut.getInsertedModels()
         
-        // Then
         XCTAssertEqual(insertedModels, [model])
     }
     
@@ -90,10 +96,18 @@ final class LocalDatabaseDataSourceTests: BaseTestCase, @unchecked Sendable {
         
         try await sut.save()
         
+        let expectation = XCTNSNotificationExpectation(
+            name: .localDatabaseDidChange,
+            object: sut,
+            notificationCenter: notificationCenterDummy
+        )
+        
         // When
         await sut.delete(model)
         
         // Then
+        await fulfillment(of: [expectation], timeout: 2.0)
+        
         let deletedModels: [LocalDatabaseModelDummy] = await sut.getDeletedModels()
         let insertedModels: [LocalDatabaseModelDummy] = await sut.getInsertedModels()
         
@@ -111,10 +125,18 @@ final class LocalDatabaseDataSourceTests: BaseTestCase, @unchecked Sendable {
         
         await sut.insert(model)
         
+        let expectation = XCTNSNotificationExpectation(
+            name: .localDatabaseDidChange,
+            object: sut,
+            notificationCenter: notificationCenterDummy
+        )
+        
         // When
         await sut.delete(model)
         
         // Then
+        await fulfillment(of: [expectation], timeout: 2.0)
+        
         let deletedModels: [LocalDatabaseModelDummy] = await sut.getDeletedModels()
         let insertedModels: [LocalDatabaseModelDummy] = await sut.getInsertedModels()
         
@@ -182,8 +204,8 @@ final class LocalDatabaseDataSourceTests: BaseTestCase, @unchecked Sendable {
         await sut.insert(model)
         
         let expectation = XCTNSNotificationExpectation(
-            name: .persistentModelDidSave,
-            object: nil,
+            name: .localDatabaseDidSave,
+            object: sut,
             notificationCenter: notificationCenterDummy
         )
         

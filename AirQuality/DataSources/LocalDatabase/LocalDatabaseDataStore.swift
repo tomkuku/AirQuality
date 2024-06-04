@@ -100,7 +100,7 @@ actor LocalDatabaseDataSource: ModelActor, LocalDatabaseDataSourceProtocol {
         modelContext.insert(model)
         
         Task.detached {
-            NotificationCenter.default.post(name: .persistentModelDidChange, object: nil)
+            NotificationCenter.default.post(name: .localDatabaseDidChange, object: self)
         }
     }
     
@@ -108,7 +108,7 @@ actor LocalDatabaseDataSource: ModelActor, LocalDatabaseDataSourceProtocol {
         modelContext.delete(model)
         
         Task.detached {
-            NotificationCenter.default.post(name: .persistentModelDidChange, object: nil)
+            NotificationCenter.default.post(name: .localDatabaseDidChange, object: self)
         }
     }
     
@@ -118,7 +118,7 @@ actor LocalDatabaseDataSource: ModelActor, LocalDatabaseDataSourceProtocol {
         do {
             try modelContext.save()
             
-            notificationCenter.post(name: .persistentModelDidSave, object: nil)
+            notificationCenter.post(name: .localDatabaseDidSave, object: self)
         } catch {
             Logger.error("Saving context failed with error: \(error.localizedDescription)")
         }

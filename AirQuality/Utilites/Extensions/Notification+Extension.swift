@@ -8,6 +8,6 @@
 import Foundation
 
 extension Notification.Name {
-    static let persistentModelDidChange = Notification.Name("persistentModelDidChange")
-    static let persistentModelDidSave = Notification.Name("persistentModelDidSave")
+    static let localDatabaseDidChange = Notification.Name("localDatabaseDidChange")
+    static let localDatabaseDidSave = Notification.Name("localDatabaseDidSave")
 }
