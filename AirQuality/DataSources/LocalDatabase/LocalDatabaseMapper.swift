@@ -12,5 +12,5 @@ protocol LocalDatabaseMapperProtocol: MapperProtocol
 where DTOModel: LocalDatabaseModel,
       DomainModel: Identifiable,
       DTOModel.IdentifierType == DomainModel.ID {
-    func mapDomainModel(_ input: DomainModel) throws -> DTOModel
+    func map(_ input: DomainModel) throws -> DTOModel
 }

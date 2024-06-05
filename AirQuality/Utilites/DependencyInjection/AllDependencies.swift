@@ -10,4 +10,5 @@ import Foundation
 typealias AllDependencies =
 HasGIOSApiV1Repository &
 HasGIOSApiRepository &
-HasLocalDatabaseRepository
+HasLocalDatabaseRepository &
+HasObservedStationsFetchResultsRepository

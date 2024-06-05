@@ -54,7 +54,7 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
             guard let self else { return }
             
             do {
-                for try await observedSations in getObservedStationsUseCase.observe() {
+                for try await observedSations in getObservedStationsUseCase.createNewStream() {
                     self.createAndSortSections(fetchedStations, observedStations: observedSations)
                 }
             } catch {

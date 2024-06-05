@@ -31,6 +31,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     let giosApiV1Repository: GIOSApiV1RepositoryProtocol
     let giosApiRepository: GIOSApiRepositoryProtocol
     let localDatabaseRepository: LocalDatabaseRepositoryProtocol
+    let observedStationsFetchResultsRepository: LocalDatabaseFetchResultsRepository<StationsLocalDatabaseMapper>
     
     @MainActor
     init() throws {
@@ -58,19 +59,19 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
             notificationCenter: NotificationCenter.default
         )
         
-        let observedStationFetchedModelsController = FetchedModelsController<StationLocalDatabaseModel>(
+        let stationsLocalDatabaseMapper = StationsLocalDatabaseMapper()
+        
+        let observedStationLocalDatabaseFetchResultsDataSource = LocalDatabaseFetchResultsDataSource<StationLocalDatabaseModel>(
             localDatabaseDataSource: localDatabaseDataSource,
             modelContainer: modelContainer,
-            modelExecutor: localDatabaseDataSource.modelExecutor, 
+            modelExecutor: localDatabaseDataSource.modelExecutor,
             notificationCenter: NotificationCenter.default
         )
         
-        let stationsLocalDatabaseMapper = StationsLocalDatabaseMapper()
-        
-        self.localDatabaseRepository = LocalDatabaseRepository(
-            localDatabaseDataSource: localDatabaseDataSource,
-            stationsFetchedModelsController: observedStationFetchedModelsController,
-            stationsLocalDatabaseMapper: stationsLocalDatabaseMapper
+        self.localDatabaseRepository = LocalDatabaseRepository(localDatabaseDataSource: localDatabaseDataSource)
+        self.observedStationsFetchResultsRepository = LocalDatabaseFetchResultsRepository(
+            localDatabaseFetchResultsDataSource: observedStationLocalDatabaseFetchResultsDataSource,
+            mapper: stationsLocalDatabaseMapper
         )
     }
     
@@ -81,4 +82,8 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: isStoredInMemoryOnly)
         return try ModelContainer(for: schema, configurations: [configuration])
     }
+}
+
+protocol HasObservedStationsFetchResultsRepository {
+    var observedStationsFetchResultsRepository: LocalDatabaseFetchResultsRepository<StationsLocalDatabaseMapper> { get }
 }

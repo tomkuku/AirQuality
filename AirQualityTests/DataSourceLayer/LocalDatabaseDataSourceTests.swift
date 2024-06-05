@@ -249,18 +249,3 @@ final class LocalDatabaseDataSourceTests: BaseTestCase, @unchecked Sendable {
         XCTAssertEqual(modelContextSpy?.insertedModelsArray.isEmpty, true)
     }
 }
-
-@Model
-final class LocalDatabaseModelDummy: LocalDatabaseModel, @unchecked Sendable {
-    static func idPredicate(with id: Int) -> Predicate<LocalDatabaseModelDummy> {
-        #Predicate<LocalDatabaseModelDummy> { model in
-            model.identifier == id
-        }
-    }
-    
-    init(identifier: Int) {
-        self.identifier = identifier
-    }
-    
-    let identifier: Int
-}

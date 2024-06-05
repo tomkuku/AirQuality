@@ -11,11 +11,11 @@ import struct SwiftData.FetchDescriptor
 protocol GetObservedStationsUseCaseProtocol: Sendable {
     func fetchedStations() async throws -> [Station]
     
-    func observe() -> AsyncThrowingStream<[Station], Error>
+    func createNewStream() -> AsyncThrowingStream<[Station], Error>
 }
 
 final class GetObservedStationsUseCase: GetObservedStationsUseCaseProtocol, @unchecked Sendable {
-    @Injected(\.localDatabaseRepository) private var localDatabaseRepository
+    @Injected(\.observedStationsFetchResultsRepository) private var observedStationsFetchResultsRepository
     
     private var stationsLocalDatabaseMapper: any StationsLocalDatabaseMapperProtocol
     
@@ -24,10 +24,10 @@ final class GetObservedStationsUseCase: GetObservedStationsUseCaseProtocol, @unc
     }
     
     func fetchedStations() async throws -> [Station] {
-        try await localDatabaseRepository.getFetchedStations()
+        try await observedStationsFetchResultsRepository.getFetchedObjects()
     }
     
-    func observe() -> AsyncThrowingStream<[Station], Error> {
-        localDatabaseRepository.ceateObservedStationsStrem(mapper: stationsLocalDatabaseMapper)
+    func createNewStream() -> AsyncThrowingStream<[Station], Error> {
+        observedStationsFetchResultsRepository.ceateNewStrem()
     }
 }

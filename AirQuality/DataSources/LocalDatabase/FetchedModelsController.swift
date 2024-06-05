@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 import Combine
 
-protocol FetchedModelsControllerProtocol<FetchModel>: Sendable {
+protocol LocalDatabaseFetchResultsDataSourceProtocol<FetchModel>: Sendable {
     associatedtype FetchModel: LocalDatabaseModel
     
     var fetchedModels: [FetchModel] { get async }
@@ -17,7 +17,7 @@ protocol FetchedModelsControllerProtocol<FetchModel>: Sendable {
     func createNewStrem() async throws -> AsyncThrowingStream<[FetchModel], Error>
 }
 
-actor FetchedModelsController<T>: FetchedModelsControllerProtocol, Sendable where T: LocalDatabaseModel {
+actor LocalDatabaseFetchResultsDataSource<T>: LocalDatabaseFetchResultsDataSourceProtocol where T: LocalDatabaseModel {
     
     typealias FetchModel = T
     

@@ -19,35 +19,23 @@ protocol LocalDatabaseRepositoryProtocol: Sendable {
         mapperType: T.Type,
         object: D
     ) async throws where T: LocalDatabaseMapperProtocol, D == T.DomainModel
-    
-    func getFetchedStations() async throws -> [Station]
-    
-    func ceateObservedStationsStrem<T>(
-        mapper: T
-    ) -> AsyncThrowingStream<[Station], Error> where T: StationsLocalDatabaseMapperProtocol
 }
 
 final class LocalDatabaseRepository: LocalDatabaseRepositoryProtocol {
     
     private let localDatabaseDataSource: LocalDatabaseDataSourceProtocol
-    private let stationsFetchedModelsController: any FetchedModelsControllerProtocol<StationLocalDatabaseModel>
-    private let stationsLocalDatabaseMapper: any StationsLocalDatabaseMapperProtocol
     
     init(
-        localDatabaseDataSource: LocalDatabaseDataSourceProtocol,
-        stationsFetchedModelsController: FetchedModelsController<StationLocalDatabaseModel>,
-        stationsLocalDatabaseMapper: any StationsLocalDatabaseMapperProtocol
+        localDatabaseDataSource: LocalDatabaseDataSourceProtocol
     ) {
         self.localDatabaseDataSource = localDatabaseDataSource
-        self.stationsFetchedModelsController = stationsFetchedModelsController
-        self.stationsLocalDatabaseMapper = stationsLocalDatabaseMapper
     }
     
     func insert<T, L>(
         mapper: T,
         object: L
     ) async throws where T: LocalDatabaseMapperProtocol, L == T.DomainModel {
-        let persistentModel = try mapper.mapDomainModel(object)
+        let persistentModel = try mapper.map(object)
         
         await localDatabaseDataSource.insert(persistentModel)
     }
@@ -64,35 +52,5 @@ final class LocalDatabaseRepository: LocalDatabaseRepositoryProtocol {
         }
         
         await localDatabaseDataSource.delete(fetchedObject)
-    }
-    
-    func getFetchedStations() async throws -> [Station] {
-        try await stationsFetchedModelsController
-            .fetchedModels
-            .map {
-                try stationsLocalDatabaseMapper.map($0)
-            }
-    }
-    
-    func ceateObservedStationsStrem<T>(
-        mapper: T
-    ) -> AsyncThrowingStream<[Station], Error> where T: StationsLocalDatabaseMapperProtocol {
-        AsyncThrowingStream { continuation in
-            Task { [weak self] in
-                guard let self else { return }
-                
-                do {
-                    for try await models in try await stationsFetchedModelsController.createNewStrem() {
-                        let mappedModels = try models.map {
-                            try mapper.map($0)
-                        }
-                        
-                        continuation.yield(mappedModels)
-                    }
-                } catch {
-                    continuation.yield(with: .failure(error))
-                }
-            }
-        }
     }
 }

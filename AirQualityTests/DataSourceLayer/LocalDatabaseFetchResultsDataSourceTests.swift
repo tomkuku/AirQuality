@@ -1,5 +1,5 @@
 //
-//  FetchedModelsControllerTests.swift
+//  LocalDatabaseFetchResultsDataSourceTests.swift
 //  AirQualityTests
 //
 //  Created by Tomasz Kukułka on 04/06/2024.
@@ -10,9 +10,9 @@ import SwiftData
 
 @testable import AirQuality
 
-final class FetchedModelsControllerTests: BaseTestCase, @unchecked Sendable {
+final class LocalDatabaseFetchResultsDataSourceTests: BaseTestCase, @unchecked Sendable {
     
-    private var sut: FetchedModelsController<LocalDatabaseModelDummy>!
+    private var sut: LocalDatabaseFetchResultsDataSource<LocalDatabaseModelDummy>!
     
     private var localDatabaseDataSourceSpy: LocalDatabaseDataSourceSpy!
     private var notificationCeneterSpy: NotificationCenterSpy!

@@ -11,7 +11,10 @@ protocol StationsLocalDatabaseMapperProtocol: LocalDatabaseMapperProtocol
 where DTOModel == StationLocalDatabaseModel, DomainModel == Station { }
 
 struct StationsLocalDatabaseMapper: StationsLocalDatabaseMapperProtocol {
-    func mapDomainModel(_ input: Station) throws -> StationLocalDatabaseModel {
+    typealias DomainModel = Station
+    typealias DTOModel = StationLocalDatabaseModel
+    
+    func map(_ input: Station) throws -> StationLocalDatabaseModel {
         StationLocalDatabaseModel(
             identifier: input.id,
             latitude: input.latitude,
