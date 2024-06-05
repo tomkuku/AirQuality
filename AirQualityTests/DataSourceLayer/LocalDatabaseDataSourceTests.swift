@@ -15,23 +15,22 @@ final class LocalDatabaseDataSourceTests: BaseTestCase, @unchecked Sendable {
     private var sut: LocalDatabaseDataSource!
     
     private var backgroundTasksManagerSpy: BackgroundTasksManagerSpy!
-    private var modelContainerSpy: ModelContainer!
+    private var modelContainerSpy: ModelContainerSpy!
     private var modelContextSpy: ModelContext?
     private var notificationCenterDummy: NotificationCenter!
     
     override func setUpWithError() throws {
         try super.setUpWithError()
         
-        let schema = Schema([LocalDatabaseModelDummy.self])
-        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-        modelContainerSpy = try ModelContainer(for: schema, configurations: [configuration])
+        modelContainerSpy = ModelContainerSpy(schemeModels: [LocalDatabaseModelDummy.self])
+        modelContextSpy = modelContainerSpy.modelContext
         
         backgroundTasksManagerSpy = BackgroundTasksManagerSpy()
         
         notificationCenterDummy = NotificationCenter.default
         
         let localDatabaseDataSource = LocalDatabaseDataSource(
-            modelContainer: modelContainerSpy,
+            modelContainer: modelContainerSpy.modelContainer,
             backgroundTasksManager: backgroundTasksManagerSpy,
             notificationCenter: notificationCenterDummy
         )
@@ -58,7 +57,7 @@ final class LocalDatabaseDataSourceTests: BaseTestCase, @unchecked Sendable {
     override func tearDown() {
         super.tearDown()
         
-        modelContainerSpy.deleteAllData()
+        modelContainerSpy.modelContainer.deleteAllData()
     }
     
     // MARK: Insert

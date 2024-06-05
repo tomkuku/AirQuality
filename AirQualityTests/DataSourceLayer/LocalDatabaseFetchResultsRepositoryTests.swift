@@ -38,12 +38,6 @@ final class LocalDatabaseFetchResultsRepositoryTests: BaseTestCase, @unchecked S
     
     func testCreateNewStream() async {
         // Given
-        let task: Task<Void, Error>
-        
-        defer {
-            task.cancel()
-        }
-        
         let domainModel1 = DomainModelDummy(id: 1)
         let domainModel2 = DomainModelDummy(id: 2)
         
@@ -61,12 +55,12 @@ final class LocalDatabaseFetchResultsRepositoryTests: BaseTestCase, @unchecked S
         localDatabaseFetchResultsDataSourceSpy.streamResultClosure = .success([localDatabaseModel1, localDatabaseModel2])
         
         // When
-        task = Task {
+        tasks.append( Task {
             for try await objests in sut.ceateNewStrem() {
                 streamedObjects = objests
                 expectation.fulfill()
             }
-        }
+        })
         
         // Then
         await fulfillment(of: [expectation], timeout: 2.0)
@@ -125,7 +119,11 @@ final class LocalDatabaseFetchResultsDataSourceSpy<T>: LocalDatabaseFetchResults
 }
 
 final class ModelContainerSpy {
-    private var modelContainer: ModelContainer?
+    let modelContainer: ModelContainer
+    
+    var modelContext: ModelContext {
+        ModelContext(modelContainer)
+    }
     
     init(schemeModels: [any PersistentModel.Type]) {
         let schema = Schema([LocalDatabaseModelDummy.self])
@@ -133,7 +131,7 @@ final class ModelContainerSpy {
         do {
             modelContainer = try ModelContainer(for: schema, configurations: [configuration])
         } catch {
-            XCTFail("Creating model container failed with error: \(error.localizedDescription)")
+            fatalError("Creating model container failed with error: \(error.localizedDescription)")
         }
     }
 }

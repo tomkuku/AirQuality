@@ -16,10 +16,9 @@ final class LocalDatabaseFetchResultsDataSourceTests: BaseTestCase, @unchecked S
     
     private var localDatabaseDataSourceSpy: LocalDatabaseDataSourceSpy!
     private var notificationCeneterSpy: NotificationCenterSpy!
+    private var modelContextSpy: ModelContainerSpy!
     
     private var streamedObjects: [LocalDatabaseModelDummy]!
-    
-    private var task: Task<Void, Error>?
     
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -28,15 +27,14 @@ final class LocalDatabaseFetchResultsDataSourceTests: BaseTestCase, @unchecked S
         
         notificationCeneterSpy = NotificationCenterSpy()
         
-        let schema = Schema([LocalDatabaseModelDummy.self])
-        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-        let modelContainer = try ModelContainer(for: schema, configurations: [configuration])
-        let modelContext = ModelContext(modelContainer)
+        modelContextSpy = ModelContainerSpy(schemeModels: [LocalDatabaseModelDummy.self])
+        
+        let modelContext = modelContextSpy.modelContext
         let modelExecutor = DefaultSerialModelExecutor(modelContext: modelContext)
         
         sut = .init(
             localDatabaseDataSource: localDatabaseDataSourceSpy,
-            modelContainer: modelContainer,
+            modelContainer: modelContextSpy.modelContainer,
             modelExecutor: modelExecutor,
             notificationCenter: notificationCeneterSpy
         )
@@ -50,19 +48,13 @@ final class LocalDatabaseFetchResultsDataSourceTests: BaseTestCase, @unchecked S
         DependenciesContainerManager.container = appDependencies
     }
     
-    override func tearDown() {
-        task?.cancel()
-        
-        super.tearDown()
-    }
-    
     func testCreateNewStream() async throws {
         // Given
         let model1 = LocalDatabaseModelDummy(identifier: 111)
         
         await localDatabaseDataSourceSpy.setFetchReturnValue(models: [model1])
         
-        task = Task {
+        tasks.append(Task {
             // When
             do {
                 for try await objects in try await sut.createNewStrem() {
@@ -72,7 +64,7 @@ final class LocalDatabaseFetchResultsDataSourceTests: BaseTestCase, @unchecked S
             } catch {
                 XCTFail("Stream should not thown an error!")
             }
-        }
+        })
         
         // Then
         await fulfillment(of: [expectation], timeout: 2.0)
@@ -135,14 +127,6 @@ final class LocalDatabaseFetchResultsDataSourceTests: BaseTestCase, @unchecked S
     
     func testCreateNewStreamWhenOtherStreamHasAlreadyBeenCreated() async throws {
         // Given
-        let task1: Task<Void, Error>
-        let task2: Task<Void, Error>
-        
-        defer {
-            task1.cancel()
-            task2.cancel()
-        }
-        
         expectation.expectedFulfillmentCount = 2
         
         let streamsWrapper = StreamsWrapper()
@@ -151,7 +135,7 @@ final class LocalDatabaseFetchResultsDataSourceTests: BaseTestCase, @unchecked S
         await localDatabaseDataSourceSpy.setFetchReturnValue(models: [model1])
         
         // When
-        task1 = Task {
+        tasks.append(Task {
             do {
                 for try await models in try await sut.createNewStrem() {
                     await streamsWrapper.setStreamedModels1(models)
@@ -160,9 +144,9 @@ final class LocalDatabaseFetchResultsDataSourceTests: BaseTestCase, @unchecked S
             } catch {
                 XCTFail("Stream should not thown an error!")
             }
-        }
+        })
         
-        task2 = Task {
+        tasks.append(Task {
             do {
                 for try await models in try await sut.createNewStrem() {
                     await streamsWrapper.setStreamedModels2(models)
@@ -171,7 +155,7 @@ final class LocalDatabaseFetchResultsDataSourceTests: BaseTestCase, @unchecked S
             } catch {
                 XCTFail("Stream should not thown an error!")
             }
-        }
+        })
         
         // Then
         await fulfillment(of: [expectation], timeout: 2.0)

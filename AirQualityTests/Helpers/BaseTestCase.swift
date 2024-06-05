@@ -14,6 +14,7 @@ class BaseTestCase: XCTestCase {
     var dependenciesContainerDummy: DependenciesContainerDummy!
     var expectation: XCTestExpectation!
     var appDependencies: DependenciesContainerProtocol!
+    var tasks: [Task<Void, Error>]!
     // swiftlint:enable test_case_accessibility
     
     override func setUp() {
@@ -26,10 +27,16 @@ class BaseTestCase: XCTestCase {
         DependenciesContainerManager.container = dependenciesContainerDummy
         
         expectation = XCTestExpectation(description: String(describing: Self.self))
+        
+        tasks = []
     }
     
     override func tearDown() {
         DependenciesContainerManager.container = appDependencies
+        
+        for i in 0..<tasks.count {
+            tasks[i].cancel()
+        }
         
         let mirror = Mirror(reflecting: self)
         
