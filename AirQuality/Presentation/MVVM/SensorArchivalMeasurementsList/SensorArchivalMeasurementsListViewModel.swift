@@ -26,7 +26,7 @@ final class SensorArchivalMeasurementsListViewModel: ObservableObject, @unchecke
     
     init(
         sensor: Sensor,
-        getArchivalMeasurementsUseCase: GetArchivalMeasurementsUseCaseProtocol = GetArchivalMeasurementsUseCase()
+        getArchivalMeasurementsUseCase: GetArchivalMeasurementsUseCaseProtocol = GetArchivalMeasurementsUseCase(measurementsNetworkMapper: MeasurementsNetworkMapper())
     ) {
         self.sensor = sensor
         self.getArchivalMeasurementsUseCase = getArchivalMeasurementsUseCase
@@ -52,7 +52,7 @@ final class SensorArchivalMeasurementsListViewModel: ObservableObject, @unchecke
                     formattedPercentageValue = "-"
                 }
                 
-                return Model.Row.init(
+                return Model.Row(
                     formattedPercentageValue: formattedPercentageValue,
                     formattedValue: formattedValue,
                     formattedDate: formattedDate,

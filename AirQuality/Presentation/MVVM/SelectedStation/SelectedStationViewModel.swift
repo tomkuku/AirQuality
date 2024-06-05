@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-final class SelectedStationViewModel: ObservableObject {
+final class SelectedStationViewModel: ObservableObject, @unchecked Sendable {
     
     typealias Model = SelectedStationModel
     
@@ -24,7 +24,7 @@ final class SelectedStationViewModel: ObservableObject {
     
     // MARK: Private properties
     
-    @Injected(\.appCoordinator) private var appCoordinator
+//    @Injected(\.appCoxordinator) private var appCoordinator
     
     private let getSensorsUseCase: GetSensorsUseCaseProtocol
     
@@ -62,7 +62,7 @@ final class SelectedStationViewModel: ObservableObject {
                 }
         } catch {
             Logger.error(error.localizedDescription)
-            appCoordinator.showAlert(.somethigWentWrong())
+//            appCoordinator.showAlert(.somethigWentWrong())
         }
     }
     

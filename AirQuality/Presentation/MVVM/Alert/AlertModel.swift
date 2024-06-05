@@ -54,6 +54,10 @@ extension AlertModel.Button {
     static func ok() -> Self {
         Self(title: Localizable.Alert.Button.Ok.title)
     }
+    
+    static func cancel() -> Self {
+        Self(title: Localizable.Alert.Button.Cancel.title)
+    }
 }
 
 extension AlertModel {

@@ -25,8 +25,6 @@ enum SensorDetailsContainerSubview: CaseIterable {
 }
 
 struct SensorDetailsContainerView: View {
-    
-//    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var appCoordinator: AppCoordinator
     @State private var selectedElementId: Int = 0
     
@@ -34,8 +32,6 @@ struct SensorDetailsContainerView: View {
     
     var body: some View {
         NavigationStack {
-            Text("Cos tam")
-            
             createNavigationMenuView()
                 .frame(height: 40)
             
@@ -61,7 +57,7 @@ struct SensorDetailsContainerView: View {
                         }
                     }
                     .scrollDisabled(true)
-                    .onChange(of: selectedElementId) { _ in
+                    .onChange(of: selectedElementId) {
                         withAnimation(.easeOut) {
                             scrollViewProxy.scrollTo(selectedElementId)
                         }
@@ -130,6 +126,3 @@ struct SensorDetailsContainerView: View {
         }
     }
 }
-//#Preview {
-//    SensorDetailsContainerView()
-//}

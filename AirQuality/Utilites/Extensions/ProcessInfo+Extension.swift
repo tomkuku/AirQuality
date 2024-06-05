@@ -11,4 +11,8 @@ extension ProcessInfo {
     static var isTest: Bool {
         processInfo.environment["IS_TEST"] != nil
     }
+    
+    static var isPreview: Bool {
+        processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != nil
+    }
 }

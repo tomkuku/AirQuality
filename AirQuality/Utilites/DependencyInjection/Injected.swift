@@ -15,6 +15,10 @@ struct Injected<T>: @unchecked Sendable {
     
     private let keyPath: KeyPath<AllDependencies, T>
     
+    static subscript(_ keyPath: KeyPath<AllDependencies, T>) -> T {
+        DependenciesContainerManager.container[keyPath]
+    }
+    
     init(_ keyPath: KeyPath<AllDependencies, T>) {
         self.keyPath = keyPath
     }

@@ -7,7 +7,10 @@
 
 import Foundation
 
-struct StationsNetworkMapper: NetworkMapperProtocol {
+protocol StationsNetworkMapperProtocol: NetworkMapperProtocol 
+where DTOModel == [StationNetworkModel], DomainModel == [Station] { }
+
+struct StationsNetworkMapper: StationsNetworkMapperProtocol {
     func map(_ input: [StationNetworkModel]) throws -> [Station] {
         try input.map {
             guard let latitude = Double($0.latitude), let longitude = Double($0.longitude) else {
@@ -18,12 +21,11 @@ struct StationsNetworkMapper: NetworkMapperProtocol {
             
             return Station(
                 id: $0.id,
-                name: $0.name,
                 latitude: latitude,
                 longitude: longitude,
-                cityName: $0.cityName,
-                commune: $0.commune,
-                province: $0.province,
+                cityName: $0.city.name,
+                commune: $0.city.commune.name,
+                province: $0.city.commune.provinceName,
                 street: $0.street
             )
         }

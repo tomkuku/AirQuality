@@ -8,5 +8,7 @@
 import Foundation
 
 typealias AllDependencies =
+HasGIOSApiV1Repository &
 HasGIOSApiRepository &
-HasAppCoordinator
+HasLocalDatabaseRepository &
+HasObservedStationsFetchResultsRepository

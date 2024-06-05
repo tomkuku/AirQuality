@@ -9,17 +9,24 @@ import Foundation
 import Alamofire
 
 protocol GetStationsUseCaseProtocol: Sendable {
-    func getAllStations() async throws -> [Station]
+    func getStations() async throws -> [Station]
 }
 
 final class GetStationsUseCase: GetStationsUseCaseProtocol, @unchecked Sendable {
     @Injected(\.giosApiRepository) private var giosApiRepository
     
-    func getAllStations() async throws -> [Station] {
+    private let stationsNetworkMapper: any StationsNetworkMapperProtocol
+    
+    init(
+        stationsNetworkMapper: any StationsNetworkMapperProtocol = StationsNetworkMapper()
+    ) {
+        self.stationsNetworkMapper = stationsNetworkMapper
+    }
+    
+    func getStations() async throws -> [Station] {
         try await giosApiRepository.fetch(
-            mapperType: StationsNetworkMapper.self,
-            endpoint: Endpoint.Stations.get,
-            contentContainerName: "Lista stacji pomiarowych"
+            mapper: stationsNetworkMapper,
+            endpoint: Endpoint.Stations.get
         )
     }
 }

@@ -9,47 +9,53 @@ import SwiftUI
 
 @main
 struct AirQualityApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
-//    @Environment(\.dismiss) private var dismiss
-    @Environment(\.presentationMode) var presentationMode
     @StateObject private var appCoordinator: AppCoordinator
     @ObservedObject private var alertViewModel: AlertViewModel
+    @ObservedObject private var toastsViewModel: ToastsViewModel
+    
+    @State private var isFullScreenCoverPresented: Bool = false
+    
+    @State private var isPresented = true
+    @State private var showToast = true
     
     var body: some Scene {
         WindowGroup {
-            NavigationStack(path: $appCoordinator.navigationPath) {
-                appCoordinator.getView(for: .stationsList)
-                    .navigationDestination(for: AppFlow.self) { appFlow in
-                        appCoordinator.getView(for: appFlow)
-                    }
-                    .environmentObject(appCoordinator)
-            }
-            .fullScreenCover(item: $appCoordinator.fullScreenCover) { route in
-                appCoordinator.getView(for: route)
-//                    .onReceive(appCoordinator.dismissPublisher) { _ in
-//                        presentationMode.wrappedValue.dismiss()
-//                    }
-            }
-            .environmentObject(appCoordinator)
-            
-            AlertView(viewModel: alertViewModel)
-                .allowsHitTesting(false)
-                .background(.red)
-                .frame(width: .zero, height: .zero)
+//            GeometryReader { geometryProxy in
+                NavigationStack(path: $appCoordinator.navigationPath) {
+                    appCoordinator.getView(for: .addNewObservedStation)
+                        .navigationDestination(for: AppFlow.self) { appFlow in
+                            appCoordinator.getView(for: appFlow)
+                        }
+                        .environmentObject(appCoordinator)
+                }
+                .fullScreenCover(item: $appCoordinator.fullScreenCover) { route in
+                    appCoordinator.getView(for: route)
+                }
+                .environmentObject(appCoordinator)
+//                .frame(width: geometryProxy.size.width, height: geometryProxy.size.height)
+                
+                AlertView(viewModel: alertViewModel)
+                    .allowsHitTesting(false)
+                    .background(.red)
+                    .frame(width: .zero, height: .zero)
+                
+//                ToastView(toastsViewModel: toastsViewModel)
+//                    .allowsHitTesting(false)
+//                    .background(.red)
+//                    .frame(width: .zero, height: .zero)
+//            }
         }
     }
     
     init() {
-        let appCoordinator = AppCoordinator(navigationPath: .constant(NavigationPath()))
+        let appCoordinator = AppCoordinator(navigationPath: .init(projectedValue: .constant(NavigationPath())))
         let alertViewModel = AlertViewModel(appCoordinator.alertPublisher)
+        let toastsViewModel = ToastsViewModel(appCoordinator.toastPublisher)
         
         self._appCoordinator = StateObject(wrappedValue: appCoordinator)
         self._alertViewModel = ObservedObject(wrappedValue: alertViewModel)
-        
-        do {
-            DependenciesContainerManager.container = try DependenciesContainer(appCoordinator: appCoordinator)
-        } catch {
-            fatalError("Could not create DependenciesContainer due to error: \(error.localizedDescription)")
-        }
+        self._toastsViewModel = ObservedObject(wrappedValue: toastsViewModel)
     }
 }

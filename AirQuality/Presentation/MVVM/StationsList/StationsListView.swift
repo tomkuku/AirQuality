@@ -9,6 +9,8 @@ import SwiftUI
 
 struct StationsListView: View {
     
+    private typealias L10n = Localizable
+    
     @EnvironmentObject private var coordinator: AppCoordinator
     @StateObject private var viewModel: StationsListViewModel
     
@@ -18,7 +20,7 @@ struct StationsListView: View {
                 if viewModel.stations.isEmpty {
                     Spacer()
                     
-                    Text("Brak danych")
+                    Text(L10n.AddStationListView.noData)
                     
                     Spacer()
                 } else {
@@ -44,7 +46,7 @@ struct StationsListView: View {
                 }
             }
             .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
-            .navigationTitle("Lista Stacji")
+            .navigationTitle(L10n.AddStationListView.title)
         }
         .taskOnFirstAppear {
             await viewModel.fetchStations()

@@ -15,12 +15,10 @@ final class StationsListViewModel: ObservableObject {
     
     // MARK: Private properties
     
-    @Injected(\.appCoordinator) private var appCoordinator
-    
     private let getStationsUseCase: GetStationsUseCaseProtocol
     
     init(
-        getStationsUseCase: GetStationsUseCaseProtocol = GetStationsUseCase()
+        getStationsUseCase: GetStationsUseCaseProtocol = GetStationsUseCase(stationsNetworkMapper: StationsNetworkMapper())
     ) {
         self.getStationsUseCase = getStationsUseCase
     }
@@ -28,9 +26,10 @@ final class StationsListViewModel: ObservableObject {
     @MainActor
     func fetchStations() async {
         do {
-            self.stations = try await getStationsUseCase.getAllStations()
+            self.stations = try await getStationsUseCase.getStations()
         } catch {
-            appCoordinator.showAlert(.somethigWentWrong())
+            Logger.error(error.localizedDescription)
+//            appCoordinator.showAlert(.somethigWentWrong())
         }
     }
 }

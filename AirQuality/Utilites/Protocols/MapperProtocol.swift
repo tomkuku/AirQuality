@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol MapperProtocol {
+protocol MapperProtocol: Sendable {
     associatedtype DTOModel
     associatedtype DomainModel
     

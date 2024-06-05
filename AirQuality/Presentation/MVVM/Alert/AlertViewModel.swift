@@ -32,7 +32,7 @@ final class AlertViewModel: ObservableObject, @unchecked Sendable {
         $isAnyAlertPresented
             .dropFirst()
             .filter { !$0 }
-            .asyncSink { @MainActor [weak self] value in
+            .asyncSink { @MainActor [weak self] _ in
                 guard let self else { return }
                 
                 alerts.first?.dismissAction?()

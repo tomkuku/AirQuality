@@ -7,24 +7,58 @@
 
 import Foundation
 
+/*
+{
+        "id": 114,
+        "stationName": "Wrocław, ul. Bartnicza",
+        "gegrLat": "51.115933",
+        "gegrLon": "17.141125",
+        "city": {
+            "id": 1064,
+            "name": "Wrocław",
+            "commune": {
+                "communeName": "Wrocław",
+                "districtName": "Wrocław",
+                "provinceName": "DOLNOŚLĄSKIE"
+            }
+        },
+        "addressStreet": "ul. Bartnicza"
+    }
+*/
+
 struct StationNetworkModel: Decodable {
     enum CodingKeys: String, CodingKey {
-        case id = "Identyfikator stacji"
-        case name = "Nazwa stacji"
-        case latitude = "WGS84 φ N"
-        case longitude = "WGS84 λ E"
-        case cityName = "Nazwa miasta"
-        case commune = "Gmina"
-        case province = "Województwo"
-        case street = "Ulica"
+        case id
+        case latitude = "gegrLat"
+        case longitude = "gegrLon"
+        case city
+        case street = "addressStreet"
     }
     
     let id: Int
-    let name: String
     let latitude: String
     let longitude: String
-    let cityName: String
-    let commune: String
-    let province: String
-    let street: String
+    let street: String?
+    let city: City
+}
+
+extension StationNetworkModel {
+    struct City: Decodable {
+        let name: String
+        let commune: Commune
+    }
+}
+
+extension StationNetworkModel.City {
+    struct Commune: Decodable {
+        enum CodingKeys: String, CodingKey {
+            case name = "communeName"
+            case districtName
+            case provinceName
+        }
+        
+        let name: String
+        let districtName: String
+        let provinceName: String
+    }
 }

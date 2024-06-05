@@ -33,18 +33,16 @@ final class GetStationsUseCaseTests: BaseTestCase {
         giosApiRepositorySpy.fetchResult = .success([station1, station2])
         
         // When
-        let stations = try await sut.getAllStations()
+        let stations = try await sut.getStations()
         
         let expectedRequest = try Endpoint.Stations.get.asURLRequest()
         let expectedDomainModelName = String(describing: [Station].self)
-        let expectedBodyContentDirName = "Lista stacji pomiarowych"
         
         // Then
         XCTAssertEqual(giosApiRepositorySpy.events, [
             .fetch(
                 expectedDomainModelName,
-                expectedRequest,
-                expectedBodyContentDirName
+                expectedRequest
             )
         ])
         XCTAssertEqual(stations, [station1, station2])
@@ -56,11 +54,10 @@ final class GetStationsUseCaseTests: BaseTestCase {
         
         let expectedRequest = try Endpoint.Stations.get.asURLRequest()
         let expectedDomainModelName = String(describing: [Station].self)
-        let expectedBodyContentDirName = "Lista stacji pomiarowych"
         
         // When
         do {
-            _ = try await sut.getAllStations()
+            _ = try await sut.getStations()
             XCTFail("getAllStations should have thrown!")
         } catch {
             XCTAssertTrue(error is ErrorDummy)
@@ -70,8 +67,7 @@ final class GetStationsUseCaseTests: BaseTestCase {
         XCTAssertEqual(giosApiRepositorySpy.events, [
             .fetch(
                 expectedDomainModelName,
-                expectedRequest,
-                expectedBodyContentDirName
+                expectedRequest
             )
         ])
     }

@@ -16,6 +16,7 @@ struct AlertView: View {
                 .background(.clear)
                 .foregroundStyle(.clear)
                 .frame(width: .zero, height: .zero)
+                .padding(.all, .zero)
                 .alert(alert.title, isPresented: $viewModel.isAnyAlertPresented) {
                     Group {
                         ForEach(0..<alert.buttons.count, id: \.self) { index in
@@ -28,7 +29,7 @@ struct AlertView: View {
                             }
                         }
                     }
-                    .onChange(of: viewModel.isAnyAlertPresented) { newValue in
+                    .onChange(of: viewModel.isAnyAlertPresented) { _, newValue in
                         if !newValue {
                             alert.dismissAction?()
                         }

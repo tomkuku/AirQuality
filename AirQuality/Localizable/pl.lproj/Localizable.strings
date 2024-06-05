@@ -6,6 +6,11 @@
   
 */
 
+// MARK: AddStationListView
+
+"AddStationListView.title" = "Lista Stacji";
+"AddStationListView.noData" = "Brak danych";
+
 // MARK: Params
 
 "Param.c6h6.name" = "Benzen";
@@ -35,3 +40,14 @@
 "Alert.SomethingWentWrong.message" = "Spróbuj ponownie później";
 
 "Alert.Button.Ok.title" = "Ok";
+"Alert.Button.Cancel.title" = "Anuluj";
+
+// MARK: AddStationToObservedListView
+
+"AddStationToObservedListView.title" = "Lista Stacji";
+
+// MAKR: AddStationToObservedListView
+
+"AddStationToObservedListView.ShrinkButton.shrink" = "Zwiń";
+"AddStationToObservedListView.ShrinkButton.expand" = "Rozwiń";
+"AddStationToObservedListView.noStations" = "Brak stacji";

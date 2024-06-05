@@ -8,11 +8,11 @@
 import Foundation
 import Alamofire
 
-protocol GetSensorsUseCaseProtocol {
+protocol GetSensorsUseCaseProtocol: Sendable {
     func getSensors(for stationId: Int) async throws -> [Sensor]
 }
 
-final class GetSensorsUseCase: GetSensorsUseCaseProtocol {
+final class GetSensorsUseCase: GetSensorsUseCaseProtocol, @unchecked Sendable {
     @Injected(\.giosApiRepository) private var giosApiRepository
     
     func getSensors(for stationId: Int) async throws -> [Sensor] {

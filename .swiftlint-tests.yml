@@ -48,6 +48,7 @@ disabled_rules:
   - superfluous_else
   - switch_case_on_newline
   - trailing_closure
+  - todo
   - type_body_length
   - unavailable_function
   - unused_capture_list # It's deprecated and will be removed in a future release.
