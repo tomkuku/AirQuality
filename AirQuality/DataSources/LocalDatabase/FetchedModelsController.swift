@@ -143,8 +143,6 @@ actor LocalDatabaseFetchResultsDataSource<T>: LocalDatabaseFetchResultsDataSourc
                     sorts: sortDescriptors
                 )
                 
-                print("[LL] fetch 2")
-                
                 baseFetchedModels = models
             } catch {
                 subject.send(completion: .failure(error))

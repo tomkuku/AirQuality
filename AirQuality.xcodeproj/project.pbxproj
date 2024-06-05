@@ -53,6 +53,7 @@
 		72396C7B2C106F9C00908878 /* LocalDatabaseFetchResultsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72396C7A2C106F9C00908878 /* LocalDatabaseFetchResultsRepository.swift */; };
 		72396C7D2C1078EA00908878 /* LocalDatabaseMapperSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72396C7C2C1078EA00908878 /* LocalDatabaseMapperSpy.swift */; };
 		72396C7F2C10798700908878 /* LocalDatabaseFetchResultsRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72396C7E2C10798600908878 /* LocalDatabaseFetchResultsRepositoryTests.swift */; };
+		72396C832C1099A100908878 /* ModelContainerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72396C822C1099A100908878 /* ModelContainerSpy.swift */; };
 		725A535C2C0BD31000B1CBC0 /* FetchedModelsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725A535B2C0BD31000B1CBC0 /* FetchedModelsController.swift */; };
 		725A53602C0DCAA800B1CBC0 /* BackgroundTasksManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725A535F2C0DCAA800B1CBC0 /* BackgroundTasksManager.swift */; };
 		725A53622C0DCF3500B1CBC0 /* UIApplicationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725A53612C0DCF3500B1CBC0 /* UIApplicationProtocol.swift */; };
@@ -190,6 +191,7 @@
 		72396C7A2C106F9C00908878 /* LocalDatabaseFetchResultsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDatabaseFetchResultsRepository.swift; sourceTree = "<group>"; };
 		72396C7C2C1078EA00908878 /* LocalDatabaseMapperSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDatabaseMapperSpy.swift; sourceTree = "<group>"; };
 		72396C7E2C10798600908878 /* LocalDatabaseFetchResultsRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDatabaseFetchResultsRepositoryTests.swift; sourceTree = "<group>"; };
+		72396C822C1099A100908878 /* ModelContainerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerSpy.swift; sourceTree = "<group>"; };
 		725A535B2C0BD31000B1CBC0 /* FetchedModelsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedModelsController.swift; sourceTree = "<group>"; };
 		725A535F2C0DCAA800B1CBC0 /* BackgroundTasksManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTasksManager.swift; sourceTree = "<group>"; };
 		725A53612C0DCF3500B1CBC0 /* UIApplicationProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplicationProtocol.swift; sourceTree = "<group>"; };
@@ -673,6 +675,7 @@
 				72396C6E2C0FD04000908878 /* LocalDatabaseDataSourceSpy.swift */,
 				72396C702C0FD06600908878 /* NotificationCenterSpy.swift */,
 				72396C7C2C1078EA00908878 /* LocalDatabaseMapperSpy.swift */,
+				72396C822C1099A100908878 /* ModelContainerSpy.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -974,6 +977,7 @@
 			files = (
 				725A53672C0DE16500B1CBC0 /* UIApplicationSpy.swift in Sources */,
 				72FB16B12BF2295C007FED02 /* SelectedStationViewModelTests.swift in Sources */,
+				72396C832C1099A100908878 /* ModelContainerSpy.swift in Sources */,
 				72396C712C0FD06600908878 /* NotificationCenterSpy.swift in Sources */,
 				722CC7072BEA182B00A978C7 /* HTTPDataSourceMock.swift in Sources */,
 				72396C732C0FD85900908878 /* LocalDatabaseRepositoryTests.swift in Sources */,
