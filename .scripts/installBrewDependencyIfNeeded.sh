@@ -17,8 +17,8 @@ fi
 readonly isDependencyInstalled=`brew list | grep $1`
 
 if [ "$isDependencyInstalled" == "$1" ] ; then
-    echo "$1 is installed!"
+    echo "$1 is already installed"
 else 
-    echo "Installing $1!"
+    echo "Installing $1"
     brew install $1
 fi

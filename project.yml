@@ -1,5 +1,6 @@
 name: AirQuality
 
+
 options:
   usesTabs: false
   transitivelyLinkDependencies: true
@@ -8,8 +9,10 @@ options:
     - order: [AirQuality, AirQualityTests]
   developmentLanguage: pl
 
+
 fileGroups:
   - AirQuality
   - AirQualityTests
+
 
 include: [.xcodegen/targets.yml, .xcodegen/schemes.yml, .xcodegen/settings.yml, .xcodegen/dependencies.yml]

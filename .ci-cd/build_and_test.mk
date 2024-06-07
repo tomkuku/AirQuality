@@ -10,14 +10,13 @@ SCHEME = Development
 PLATFORM = 'iOS Simulator'
 DEVICE = 'iPhone 15 Pro'
 OS_VERSION = 17.4
-CODE_SIGNING_ALLOWED = NO
 XCRESULT_PATH = danger.xcresult
 
 # - Targets
 all: prepare_environemnt build_and_test
 
 prepare_environemnt:
-	@echo "Removing Package.resolved"
+	@echo "ℹ️ Removing Package.resolved"
 	@rm -rf $(PROJECT)/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
 	@touch AirQuality/Localizable/Localizable.swift
 

@@ -5,12 +5,14 @@ configs:
   Production_Debug: debug
   Production_Release: release
 
+
 configFiles:
   Development_Debug: ../ConfigurationFiles/Development.xcconfig
   Development_Release: ../ConfigurationFiles/Development.xcconfig
   Tests: ../ConfigurationFiles/Development.xcconfig
   Production_Debug: ../ConfigurationFiles/Production.xcconfig
   Production_Release: ../ConfigurationFiles/Production.xcconfig
+
 
 settings:
   base:
