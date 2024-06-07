@@ -44,6 +44,3 @@ targets:
       - target: AirQuality
     postbuildScripts:
       - name: "Swiftlint"
-        basedOnDependencyAnalysis: no
-        script: |
-          ./.scripts/swiftlint.sh

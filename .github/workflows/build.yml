@@ -22,9 +22,6 @@ jobs:
         ./.scripts/installBrewDependencyIfNeeded.sh "xcodegen"
         ./.scripts/installBrewDependencyIfNeeded.sh "swiftlint"
         ./.scripts/installBrewDependencyIfNeeded.sh "swiftgen"
-    - name: Generate .xcodeproj
-      run: |
-        xcodegen generate
     - name: Build and Test
       run: |
         make -f .ci-cd/build_and_test.mk
