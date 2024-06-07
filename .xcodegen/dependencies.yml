@@ -1,0 +1,4 @@
+packages:
+  Alamofire:
+    url: https://github.com/Alamofire/Alamofire
+    version: 5.9.1

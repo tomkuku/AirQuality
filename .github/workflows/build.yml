@@ -19,6 +19,7 @@ jobs:
     - name: Install Dependencies
       run: |
         ./.scripts/installBrewDependencyIfNeeded.sh "xcbeautify"
+        ./.scripts/installBrewDependencyIfNeeded.sh "xcodegen"
         ./.scripts/installBrewDependencyIfNeeded.sh "swiftlint"
         ./.scripts/installBrewDependencyIfNeeded.sh "swiftgen"
     - name: Build and Test

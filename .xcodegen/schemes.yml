@@ -1,0 +1,47 @@
+schemeTemplates:
+  AppScheme:
+    build:
+      targets:
+        '${appTargetName}': all
+    run:
+      executable: '${appTargetName}'
+  
+  SharedConfigScheme:
+    build:
+      config: '${configName}_Debug'
+    run:
+      config: '${configName}_Debug'
+    profile:
+      config: '${configName}_Release'
+    analyze:
+      config: '${configName}_Release'
+    archive:
+      config: '${configName}_Release'
+    test:
+      config: Tests
+      gatherCoverageData: false
+      language: en
+      targets:
+        - name: AirQualityTests
+      environmentVariables:
+        - variable: IS_TEST
+          value: ''
+          isEnabled: true
+
+
+schemes:
+  Development:
+    templates:
+      - SharedConfigScheme
+      - AppScheme
+    templateAttributes:
+      configName: Development
+      appTargetName: AirQuality
+
+  Production:
+    templates:
+      - SharedConfigScheme
+      - AppScheme
+    templateAttributes:
+      configName: Production
+      appTargetName: AirQuality
