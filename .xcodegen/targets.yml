@@ -1,0 +1,44 @@
+targetTemplates:
+  Application:
+    type: application
+    platform: iOS
+    supportedDestinations: [iOS]
+    attributes:
+      ProvisioningStyle: Automatic
+    settings:
+      SDKROOT: iphoneos
+      TARGETED_DEVICE_FAMILY: 1
+    dependencies:
+      - package: Alamofire
+    info:
+      path: ../AirQuality/Info.plist
+      properties:
+        UILaunchScreen:
+          UIImageName: LaunchImage
+    postbuildScripts:
+      - name: "Swiftlint"
+        basedOnDependencyAnalysis: no
+        script: |
+          ./.scripts/swiftlint.sh
+
+
+targets:
+  AirQuality:
+    templates: 
+      - Application
+    sources: 
+      - ../AirQuality
+    preBuildScripts:
+      - name: "SwiftGen"
+        basedOnDependencyAnalysis: no
+        script: |
+          ./.scripts/swiftgen.sh
+          
+  AirQualityTests:
+    type: bundle.unit-test
+    platform: iOS
+    supportedDestinations: [iOS]
+    sources:
+      - ../AirQualityTests
+    dependencies:
+      - target: AirQuality
