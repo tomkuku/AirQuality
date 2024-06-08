@@ -9,24 +9,6 @@ import Foundation
 import SwiftUI
 import Combine
 
-protocol CoordinatorProtocol: ObservableObject {
-    associatedtype NavigationComponentType: Identifiable, Hashable
-    associatedtype StartViewType: View
-    associatedtype CreateViewType: View
-    
-    var fullScreenCover: NavigationComponentType? { get set }
-    
-    @ViewBuilder
-    @MainActor
-    func startView() -> StartViewType
-    
-    var navigationComponentStart: NavigationComponentType { get}
-    
-    @ViewBuilder
-    @MainActor
-    func createView(for navigationComponent: NavigationComponentType) -> CreateViewType
-}
-
 enum CoordinatorNavigationType {
     case presentation(dimissHandler: () -> ())
     

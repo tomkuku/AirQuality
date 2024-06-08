@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-final class AddStationToObservedListViewModel: ObservableObject, @unchecked Sendable {
+final class AddStationToObservedListViewModel: BaseViewModel, @unchecked Sendable {
     
     typealias Model = AddStationToObservedListModel
     
@@ -16,21 +16,12 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
     
     @Published private(set) var sections: [Model.Section] = []
     
-    @MainActor
-    private(set) var isLoading = false
-    
-    @MainActor
-    var errorPublisher: AnyPublisher<Error, Never> {
-        errorSubject.eraseToAnyPublisher()
-    }
-    
     // MARK: Private properties
     
     private let getStationsUseCase: GetStationsUseCaseProtocol
     private let observeStationUseCase: ObserveStationUseCaseProtocol
     private let deleteStationFromObservedListUseCase: DeleteStationFromObservedListUseCaseProtocol
     private let getObservedStationsUseCase: GetObservedStationsUseCaseProtocol
-    private let errorSubject = PassthroughSubject<Error, Never>()
     
     @MainActor
     private var fetchedStations: [Station] = []
@@ -46,6 +37,8 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
         self.deleteStationFromObservedListUseCase = deleteStationFromObservedListUseCase
         self.getObservedStationsUseCase = getObservedStationsUseCase
         
+        super.init()
+        
         receiveObservedStationsStream()
     }
     
@@ -59,7 +52,7 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
                 }
             } catch {
                 Logger.error(error.localizedDescription)
-                errorSubject.send(error)
+                alertSubject.send(.somethigWentWrong())
             }
         }
     }
@@ -76,7 +69,7 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
                 self.fetchedStations = fetchedStations
             } catch {
                 Logger.error(error.localizedDescription)
-                errorSubject.send(error)
+                alertSubject.send(.somethigWentWrong())
             }
         }
     }
@@ -95,12 +88,11 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
                 }
             } catch {
                 Logger.error("Observing station faild with error: \(error.localizedDescription)")
-                errorSubject.send(error)
+                alertSubject.send(.somethigWentWrong())
             }
         }
     }
     
-    @MainActor
     private func createAndSortSections(_ stations: [Station], observedStations: [Station]) {
         var sections: [Model.Section] = stations.reduce(into: [Model.Section]()) { sections, station in
             let row = Model.Row(station: station, isStationObserved: observedStations.contains(station))

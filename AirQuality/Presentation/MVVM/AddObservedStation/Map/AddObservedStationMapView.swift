@@ -9,33 +9,29 @@ import SwiftUI
 import MapKit
 
 struct AddObservedStationMapView: View {
-    @ObservedObject private var viewModel: AddObservedStationMapViewModel
+    @StateObject private var viewModel: AddObservedStationMapViewModel
     
     @EnvironmentObject private var coordinator: AddStationToObservedCoordinator
     
     var body: some View {
-        Map {
-            ForEach(viewModel.annotations) { stationAnnotation in
-                StationMapAnnotationView(stationAnnotation: stationAnnotation, viewModel: viewModel)
+        BaseView(viewModel: viewModel, coordinator: coordinator) {
+            Map {
+                ForEach(viewModel.annotations) { stationAnnotation in
+                    StationMapAnnotationView(stationAnnotation: stationAnnotation, viewModel: viewModel)
+                }
             }
-        }
-        .mapControls {
-            MapUserLocationButton()
-            MapScaleView()
-        }
-        .onReceive(viewModel.toastPublisher) { toast in
-            coordinator.showToast(toast)
-        }
-        .onReceive(viewModel.errorPublisher) { _ in
-            coordinator.showAlert(.somethigWentWrong())
-        }
-        .taskOnFirstAppear {
-            viewModel.fetchStations()
+            .mapControls {
+                MapUserLocationButton()
+                MapScaleView()
+            }
+            .taskOnFirstAppear {
+                viewModel.fetchStations()
+            }
         }
     }
     
-    init(viewModel: AddObservedStationMapViewModel) {
-        self._viewModel = ObservedObject(wrappedValue: viewModel)
+    init(viewModel: @autoclosure @escaping () -> AddObservedStationMapViewModel = .init()) {
+        self._viewModel = StateObject(wrappedValue: viewModel())
     }
 }
 

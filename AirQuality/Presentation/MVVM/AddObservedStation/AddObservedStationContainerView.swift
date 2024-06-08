@@ -1,5 +1,5 @@
 //
-//  AddStationToObservedContainerView.swift
+//  AddObservedStationContainerView.swift
 //  AirQuality
 //
 //  Created by Tomasz Kukułka on 25/05/2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-struct AddStationToObservedContainerView: View {
+struct AddObservedStationContainerView: View {
     
     typealias L10n = Localizable.AddStationToObservedContainerView
     
@@ -22,13 +22,13 @@ struct AddStationToObservedContainerView: View {
     
     var body: some View {
         TabView(selection: $selctedTabItemIndex) {
-            coordinator.createView(for: .statinsList)
+            AddStationToObservedListView()
                 .tabItem {
                     Label(L10n.ListItem.itemTitle, systemImage: "text.justify")
                 }
                 .tag(Item.list)
             
-            coordinator.createView(for: .stationsMap)
+            AddObservedStationMapView()
                 .tabItem {
                     Label(L10n.MapItem.itemTitle, systemImage: "map")
                 }
