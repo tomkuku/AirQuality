@@ -20,6 +20,9 @@ enum CoordinatorNavigationType {
 }
 
 class CoordinatorBase: ObservableObject {
+    
+    // MARK: Properties
+    
     @Published var navigationPath: NavigationPath
     
     var alertPublisher: AnyPublisher<AlertModel, Never> {
@@ -30,15 +33,19 @@ class CoordinatorBase: ObservableObject {
         toastSubject.eraseToAnyPublisher()
     }
     
-    let dimissHandler: (() -> ())?
     let alertSubject: any Subject<AlertModel, Never>
     let toastSubject: any Subject<Toast, Never>
     
     var childCoordinator: (any ObservableObject)?
     
+    // MARK: Private properties
+    
+    /// Closure which executes dismiss coordinator (self) if it's presented by sheet or fullScreenCover.
+    private let dimissHandler: (() -> ())?
+    
     // MARK: Lifecycle
     
-    required init(
+    init(
         coordinatorNavigationType: CoordinatorNavigationType
     ) {
         switch coordinatorNavigationType {
@@ -54,6 +61,18 @@ class CoordinatorBase: ObservableObject {
             self.alertSubject = alertSubject
             self.toastSubject = toastSubject
         }
+    }
+    
+    // MARK: Methods
+    
+    /// It dismisses coordinator (self) if it's presented (sheet or fullScreenCover).
+    func dismiss() {
+        dimissHandler?()
+    }
+    
+    /// It handles completion after presented coordinator by this coordinator.
+    func presentationDismissed() {
+        childCoordinator = nil
     }
     
     func showAlert(_ alert: AlertModel) {

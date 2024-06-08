@@ -48,6 +48,8 @@ final class AddObservedStationMapViewModel: BaseViewModel {
     // MARK: Methods
     
     func fetchStations() {
+        isLoading(true, objectWillChnage: true)
+        
         Task { [weak self] in
             guard let self else { return }
             
@@ -58,6 +60,8 @@ final class AddObservedStationMapViewModel: BaseViewModel {
                 let result = try await (fetchedStations, observedStations)
                 
                 self.fetchedStations = result.0
+                
+                isLoading(false, objectWillChnage: false)
                 
                 createStationAnnotations(with: result.1)
             } catch {

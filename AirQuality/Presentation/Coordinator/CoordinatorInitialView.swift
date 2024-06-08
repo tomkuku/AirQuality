@@ -24,9 +24,10 @@ struct CoordinatorInitialView<C>: View where C: CoordinatorBase & CoordinatorPro
                     }
             }
             .fullScreenCover(item: $coordinator.fullScreenCover, onDismiss: {
-                coordinator.dimissHandler?()
+                coordinator.presentationDismissed()
             }, content: { navigationComponent in
                 coordinator.createView(for: navigationComponent)
+                    .environmentObject(coordinator)
             })
             
             Spacer()

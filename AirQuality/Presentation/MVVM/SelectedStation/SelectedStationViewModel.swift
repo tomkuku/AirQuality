@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-final class SelectedStationViewModel: ObservableObject, @unchecked Sendable {
+final class SelectedStationViewModel: BaseViewModel, @unchecked Sendable {
     
     typealias Model = SelectedStationModel
     
@@ -23,8 +23,6 @@ final class SelectedStationViewModel: ObservableObject, @unchecked Sendable {
     let station: Station
     
     // MARK: Private properties
-    
-//    @Injected(\.appCoxordinator) private var appCoordinator
     
     private let getSensorsUseCase: GetSensorsUseCaseProtocol
     
@@ -48,8 +46,11 @@ final class SelectedStationViewModel: ObservableObject, @unchecked Sendable {
     
     @MainActor
     func fetchSensorsForStation() async {
+        isLoading = true
+        objectWillChange.send()
+        
         do {
-            self.sensors = try await getSensorsUseCase.getSensors(for: station.id)
+            let sensors = try await getSensorsUseCase.getSensors(for: station.id)
                 .map {
                     Model.Sensor(
                         id: $0.id,
@@ -60,9 +61,12 @@ final class SelectedStationViewModel: ObservableObject, @unchecked Sendable {
                 .sorted {
                     $0.lastMeasurement.percentageValue ?? 0 > $1.lastMeasurement.percentageValue ?? 0
                 }
+            isLoading = false
+            
+            self.sensors = sensors
         } catch {
             Logger.error(error.localizedDescription)
-//            appCoordinator.showAlert(.somethigWentWrong())
+            alertSubject.send(.somethigWentWrong())
         }
     }
     

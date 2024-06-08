@@ -24,9 +24,9 @@ struct AddObservedStationMapView: View {
                 MapUserLocationButton()
                 MapScaleView()
             }
-            .taskOnFirstAppear {
-                viewModel.fetchStations()
-            }
+        }
+        .taskOnFirstAppear {
+            viewModel.fetchStations()
         }
     }
     

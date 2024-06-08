@@ -38,7 +38,7 @@ struct AddObservedStationContainerView: View {
         .navigationTitle(navigationTitle)
         .toolbar {
             Button(action: {
-                coordinator.dimissHandler?()
+                coordinator.dismiss()
             }, label: {
                 Text(L10n.closeButton)
             })

@@ -21,6 +21,10 @@ extension AddStationToObservedCoordinator {
 
 final class AddStationToObservedCoordinator: CoordinatorBase, CoordinatorProtocol {
     
+    // MARK: Properties
+    
+    @Published var fullScreenCover: NavigationComponent?
+    
     // MARK: Methods
     
     @ViewBuilder
@@ -38,4 +42,6 @@ final class AddStationToObservedCoordinator: CoordinatorBase, CoordinatorProtoco
                 .environmentObject(self)
         }
     }
+    
+    func goTo(_ navigationComponent: NavigationComponent) { }
 }

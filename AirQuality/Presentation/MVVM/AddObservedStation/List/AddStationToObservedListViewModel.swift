@@ -58,12 +58,16 @@ final class AddStationToObservedListViewModel: BaseViewModel, @unchecked Sendabl
     }
     
     func fetchStations() {
+        isLoading(true, objectWillChnage: true)
+        
         Task { @MainActor [weak self] in
             guard let self else { return }
             
             do {
                 let fetchedStations = try await getStationsUseCase.getStations()
                 let observedStations = try await getObservedStationsUseCase.fetchedStations()
+                
+                isLoading(false, objectWillChnage: false)
                 
                 createAndSortSections(fetchedStations, observedStations: observedStations)
                 self.fetchedStations = fetchedStations

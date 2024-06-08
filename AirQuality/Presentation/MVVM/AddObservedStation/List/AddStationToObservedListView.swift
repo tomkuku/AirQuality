@@ -40,11 +40,9 @@ struct AddStationToObservedListView: View, Sendable {
                     .listStyle(.inset)
                 }
             }
-            .taskOnFirstAppear {
-                Task { @HandlerActor in
-                    await viewModel.fetchStations()
-                }
-            }
+        }
+        .taskOnFirstAppear {
+            viewModel.fetchStations()
         }
     }
     

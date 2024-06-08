@@ -8,121 +8,91 @@
 import SwiftUI
 import Combine
 
-enum AppFlow: Hashable, Identifiable {
-    case stationsList
-    case slectedStation(Station)
-    case sensorsDetails(Sensor)
-    case addNewObservedStation
-    
-    var id: Int {
-        switch self {
-        case .stationsList:             1
-        case .slectedStation:           2
-        case .sensorsDetails:           3
-        case .addNewObservedStation:    4
+extension AppCoordinator {
+    enum NavigationComponent: Hashable, Identifiable {
+        case stationsList
+        case slectedStation(Station)
+        case sensorsDetails(Sensor)
+        case addNewObservedStation
+        
+        var id: Int {
+            switch self {
+            case .stationsList:             1
+            case .slectedStation:           2
+            case .sensorsDetails:           3
+            case .addNewObservedStation:    4
+            }
         }
     }
 }
 
-final class AppCoordinator: ObservableObject {
-    
-    // MARK: Properties
-    
-    @Published var navigationPath: NavigationPath
-    @Published var fullScreenCover: AppFlow?
-    
-    var alertPublisher: AnyPublisher<AlertModel, Never> {
-        alertSubject.eraseToAnyPublisher()
-    }
-    
-    var toastPublisher: AnyPublisher<Toast, Never> {
-        toastSubject.eraseToAnyPublisher()
-    }
-    
-    var dismissPublisher: AnyPublisher<Void, Never> {
-        dismissSubject.eraseToAnyPublisher()
-    }
-    
-    // MARK: Private properties
-    
-    private let alertSubject = PassthroughSubject<AlertModel, Never>()
-    private let toastSubject = PassthroughSubject<Toast, Never>()
-    private let dismissSubject = PassthroughSubject<Void, Never>()
-    
-    private var childCoordinator: (any ObservableObject)?
-    
+final class AppCoordinator: CoordinatorBase, CoordinatorProtocol {
     // MARK: Lifecycle
     
-    init(navigationPath: Binding<NavigationPath>) {
-        self.navigationPath = navigationPath.wrappedValue
-    }
+    @Published var fullScreenCover: NavigationComponent?
     
     // MARK: Methods
     
     @MainActor
     @ViewBuilder
-    func getView(for flow: AppFlow) -> some View {
-        switch flow {
+    func startView() -> some View {
+        createView(for: .stationsList)
+            .environmentObject(self)
+    }
+    
+    @MainActor
+    @ViewBuilder
+    func createView(for navigationComponent: NavigationComponent) -> some View {
+        switch navigationComponent {
         case .stationsList:
             StationsListView()
         case .slectedStation(let station):
             let viewModel = SelectedStationViewModel(station: station)
             SelectedStationView(viewModel: viewModel)
         case .sensorsDetails(let sensor):
-            SensorDetailsContainerView(sensor: sensor)
+            let coordinator = createSensorDetailsCoordinator(for: sensor)
+            CoordinatorInitialView(coordinator: coordinator)
         case .addNewObservedStation:
-            let coordinator: AddStationToObservedCoordinator = createChildCoordinator()
-            
+            let coordinator = createAddStationToObservedCoordinator()
             CoordinatorInitialView(coordinator: coordinator)
         }
     }
     
-    func goToAddObservedStation() {
-        fullScreenCover = AppFlow.addNewObservedStation
+    func goTo(_ navigationComponent: NavigationComponent) {
+        switch navigationComponent {
+        case .stationsList, .slectedStation:
+            navigationPath.append(navigationComponent)
+        case .addNewObservedStation, .sensorsDetails:
+            fullScreenCover = navigationComponent
+        }
     }
     
-    func goToStationsList() {
-        navigationPath.append(AppFlow.stationsList)
-    }
-    
-    func gotSelectedStation(_ station: Station) {
-        navigationPath.append(AppFlow.slectedStation(station))
-    }
-    
-    func goToSensorDetailsView(for sensor: Sensor) {
-        fullScreenCover = .sensorsDetails(sensor)
-    }
-    
-    func showAlert(_ alert: AlertModel) {
-        alertSubject.send(alert)
-    }
-    
-    func showToast(_ toast: Toast) {
-        toastSubject.send(toast)
-    }
-    
-    func presentAddStationToObserved() {
-        fullScreenCover = .addNewObservedStation
-    }
-    
-    func handleDismiss() {
-        childCoordinator = nil
-    }
-    
-    func dismiss() {
-        fullScreenCover = nil
-    }
-    
-    private func createChildCoordinator<T>() -> T where T: CoordinatorBase & CoordinatorProtocol {
-        if let childCoordinator = self.childCoordinator as? T {
+    private func createAddStationToObservedCoordinator() -> AddStationToObservedCoordinator {
+        if let childCoordinator = self.childCoordinator as? AddStationToObservedCoordinator {
             return childCoordinator
         }
         
         let dimissHandler: (() -> ()) = { [weak self] in
-            self?.dismiss()
+            self?.fullScreenCover = nil
         }
         
-        let coordinator = T(coordinatorNavigationType: .presentation(dimissHandler: dimissHandler))
+        let coordinator = AddStationToObservedCoordinator(coordinatorNavigationType: .presentation(dimissHandler: dimissHandler))
+        
+        childCoordinator = coordinator
+        
+        return coordinator
+    }
+    
+    private func createSensorDetailsCoordinator(for sensor: Sensor) -> SensorDetailsCoordinator {
+        if let childCoordinator = self.childCoordinator as? SensorDetailsCoordinator {
+            return childCoordinator
+        }
+        
+        let dimissHandler: (() -> ()) = { [weak self] in
+            self?.fullScreenCover = nil
+        }
+        
+        let coordinator = SensorDetailsCoordinator(coordinatorNavigationType: .presentation(dimissHandler: dimissHandler), sensor: sensor)
         
         childCoordinator = coordinator
         

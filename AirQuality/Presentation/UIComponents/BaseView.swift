@@ -17,6 +17,14 @@ class BaseViewModel: ObservableObject {
     // swiftlint:enable private_subject
     
     var isLoading = false
+    
+    func isLoading(_ isLoading: Bool, objectWillChnage: Bool) {
+        self.isLoading = isLoading
+        
+        if objectWillChnage {
+            self.objectWillChange.send()
+        }
+    }
 }
 
 struct BaseView<C, V, VM>: View 
@@ -38,7 +46,6 @@ where C: CoordinatorBase & CoordinatorProtocol, V: View, VM: BaseViewModel {
                         Text("Pobieranie danych")
                     }
                     
-                    
                     Spacer()
                 }
             } else {
@@ -59,5 +66,35 @@ where C: CoordinatorBase & CoordinatorProtocol, V: View, VM: BaseViewModel {
         self.viewModel = viewModel
         self.coordinator = coordinator
         self.contentView = contentView()
+    }
+}
+
+#Preview {
+    final class CoordinatorPreviewDummy: CoordinatorBase, CoordinatorProtocol {
+        struct NavigationComponent: Identifiable, Hashable {
+            let id: Int
+        }
+        
+        var fullScreenCover: NavigationComponent?
+        
+        func startView() -> some View {
+            Rectangle()
+        }
+        
+        func createView(for navigationComponent: NavigationComponent) -> some View {
+            Rectangle()
+        }
+        
+        func goTo(_ navigationComponent: NavigationComponent) { }
+    }
+    
+    let baseViewModel = BaseViewModel()
+    baseViewModel.isLoading = true
+    
+    @StateObject var viewModel = baseViewModel
+    @StateObject var coordinator = CoordinatorPreviewDummy(coordinatorNavigationType: .presentation(dimissHandler: {}))
+    
+    return BaseView(viewModel: viewModel, coordinator: coordinator) {
+        EmptyView()
     }
 }

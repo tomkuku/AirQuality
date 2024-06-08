@@ -35,7 +35,7 @@ struct SelectedStationView: View {
                     .background(sensor.domainModel.param.getAqi(for: sensor.lastMeasurement.measurement?.value).color)
                     .cornerRadius(10)
                     .gesture(TapGesture().onEnded({ _ in
-                        appCoordinator.goToSensorDetailsView(for: sensor.domainModel)
+                        appCoordinator.goTo(.sensorsDetails(sensor.domainModel))
                     }))
                     .accessibilityAddTraits(.isButton)
                 }

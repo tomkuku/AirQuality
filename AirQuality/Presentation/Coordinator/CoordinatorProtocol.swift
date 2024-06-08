@@ -22,11 +22,6 @@ protocol CoordinatorProtocol: ObservableObject {
     @ViewBuilder
     @MainActor
     func createView(for navigationComponent: NavigationComponentType) -> CreateViewType
-}
-
-extension CoordinatorProtocol {
-    var fullScreenCover: NavigationComponentType? {
-        get { nil }
-        set { } // swiftlint:disable:this unused_setter_value
-    }
+    
+    func goTo(_ navigationComponent: NavigationComponentType)
 }

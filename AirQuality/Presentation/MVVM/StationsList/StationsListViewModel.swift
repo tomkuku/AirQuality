@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class StationsListViewModel: ObservableObject {
+final class StationsListViewModel: BaseViewModel {
     
     // MARK: Properties
     
@@ -24,12 +24,14 @@ final class StationsListViewModel: ObservableObject {
     }
     
     @MainActor
-    func fetchStations() async {
-        do {
-            self.stations = try await getStationsUseCase.getStations()
-        } catch {
-            Logger.error(error.localizedDescription)
-//            appCoordinator.showAlert(.somethigWentWrong())
+    func fetchStations() { 
+        Task {
+            do {
+                self.stations = try await getStationsUseCase.getStations()
+            } catch {
+                Logger.error(error.localizedDescription)
+                alertSubject.send(.somethigWentWrong())
+            }
         }
     }
 }
