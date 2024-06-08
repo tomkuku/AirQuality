@@ -20,40 +20,32 @@ extension AddStationToObservedCoordinator {
     }
 }
 
-final class AddStationToObservedCoordinator: CoordinatorProtocol {
+final class AddStationToObservedCoordinator: CoordinatorBase, CoordinatorProtocol {
     
     // MARK: Properties
     
-    @Published var navigationPath = NavigationPath()
+    var fullScreenCover: NavigationComponent?
+    
+    var navigationComponentStart: NavigationComponent {
+        .statinsList
+    }
     
     // MARK: Private properties
-    
-    private let dimissHandler: () -> ()
-    private let alertSubject: any Subject<AlertModel, Never>
-    private let toastSubject: any Subject<Toast, Never>
     
     private var stationsListViewModel: AddStationToObservedListViewModel?
     private var stationsMapViewModel: AddObservedStationMapViewModel?
     
-    // MARK: Lifecycle
-    
-    init(
-        dimissHandler: @escaping () -> (),
-        alertSubject: any Subject<AlertModel, Never>,
-        toastSubject: any Subject<Toast, Never>
-    ) {
-        self.dimissHandler = dimissHandler
-        self.alertSubject = alertSubject
-        self.toastSubject = toastSubject
-    }
-    
     // MARK: Methods
     
-    func start() -> some View {
+    @ViewBuilder
+    @MainActor
+    func startView() -> some View {
         AddStationToObservedContainerView()
             .environmentObject(self)
     }
     
+    @ViewBuilder
+    @MainActor
     func createView(for navigationComponent: NavigationComponent) -> some View {
         switch navigationComponent {
         case .statinsList:
@@ -67,18 +59,6 @@ final class AddStationToObservedCoordinator: CoordinatorProtocol {
             AddObservedStationMapView(viewModel: viewModel)
                 .environmentObject(self)
         }
-    }
-    
-    func dismiss() {
-        dimissHandler()
-    }
-    
-    func showAlert(_ alert: AlertModel) {
-        alertSubject.send(alert)
-    }
-    
-    func showToast(_ toast: Toast) {
-        toastSubject.send(toast)
     }
     
     // MARK: Private methods

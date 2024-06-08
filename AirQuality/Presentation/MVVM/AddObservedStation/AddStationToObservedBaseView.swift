@@ -21,30 +21,27 @@ struct AddStationToObservedContainerView: View {
     @State private var selctedTabItemIndex: Item = .list
     
     var body: some View {
-        NavigationStack(path: $coordinator.navigationPath) {
-            TabView(selection: $selctedTabItemIndex) {
-                coordinator.createView(for: .statinsList)
-                    .tabItem {
-                        Label(L10n.ListItem.itemTitle, systemImage: "text.justify")
-                    }
-                    .tag(Item.list)
-                
-                coordinator.createView(for: .stationsMap)
-                    .tabItem {
-                        Label(L10n.MapItem.itemTitle, systemImage: "map")
-                    }
-                    .tag(Item.map)
-            }
+        TabView(selection: $selctedTabItemIndex) {
+            coordinator.createView(for: .statinsList)
+                .tabItem {
+                    Label(L10n.ListItem.itemTitle, systemImage: "text.justify")
+                }
+                .tag(Item.list)
             
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle(navigationTitle)
-            .toolbar {
-                Button(action: {
-                    coordinator.dismiss()
-                }, label: {
-                    Text(L10n.closeButton)
-                })
-            }
+            coordinator.createView(for: .stationsMap)
+                .tabItem {
+                    Label(L10n.MapItem.itemTitle, systemImage: "map")
+                }
+                .tag(Item.map)
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(navigationTitle)
+        .toolbar {
+            Button(action: {
+                coordinator.dimissHandler?()
+            }, label: {
+                Text(L10n.closeButton)
+            })
         }
     }
     
@@ -58,18 +55,18 @@ struct AddStationToObservedContainerView: View {
     }
 }
 
-#Preview {
-    // swiftlint:disable private_subject
-    let alertSubject = PassthroughSubject<AlertModel, Never>()
-    let toastSubject = PassthroughSubject<Toast, Never>()
-    // swiftlint:enable private_subject
-    
-    let coordinator = AddStationToObservedCoordinator(
-        dimissHandler: {},
-        alertSubject: alertSubject,
-        toastSubject: toastSubject
-    )
-    
-    return AddStationToObservedContainerView()
-        .environmentObject(coordinator)
-}
+//#Preview {
+//    // swiftslint:disable private_subject
+//    let alertSubject = PassthroughSubject<AlertModel, Never>()
+//    let toastSubject = PassthroughSubject<Toast, Never>()
+//    // swiftslint:enable private_subject
+//
+//    let coordinator = AddStationToObservedCoordinator(
+//        dimissHandler: {},
+//        alertSubject: alertSubject,
+//        toastSubject: toastSubject
+//    )
+//    
+//    return AddStationToObservedContainerView()
+//        .environmentObject(coordinator)
+//}

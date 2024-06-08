@@ -24,28 +24,6 @@ enum AppFlow: Hashable, Identifiable {
     }
 }
 
-protocol CoordinatorProtocol: ObservableObject {
-    associatedtype NavigationComponentType: Identifiable
-    associatedtype StartViewType: View
-    associatedtype CreateViewType: View
-    
-    init(
-        dimissHandler: @escaping () -> (),
-        alertSubject: any Subject<AlertModel, Never>,
-        toastSubject: any Subject<Toast, Never>
-    )
-    
-    @ViewBuilder
-    @MainActor
-    func start() -> StartViewType
-    
-    @ViewBuilder
-    @MainActor
-    func createView(for navigationComponent: NavigationComponentType) -> CreateViewType
-    
-    func showAlert(_ alert: AlertModel)
-}
-
 final class AppCoordinator: ObservableObject {
     
     // MARK: Properties
@@ -94,7 +72,8 @@ final class AppCoordinator: ObservableObject {
             SensorDetailsContainerView(sensor: sensor)
         case .addNewObservedStation:
             let coordinator: AddStationToObservedCoordinator = createChildCoordinator()
-            coordinator.start()
+            
+            CoordinatorInitialView(coordinator: coordinator)
         }
     }
     
@@ -134,7 +113,7 @@ final class AppCoordinator: ObservableObject {
         fullScreenCover = nil
     }
     
-    private func createChildCoordinator<T>() -> T where T: CoordinatorProtocol {
+    private func createChildCoordinator<T>() -> T where T: CoordinatorBase & CoordinatorProtocol {
         if let childCoordinator = self.childCoordinator as? T {
             return childCoordinator
         }
@@ -143,11 +122,7 @@ final class AppCoordinator: ObservableObject {
             self?.dismiss()
         }
         
-        let coordinator = T(
-            dimissHandler: dimissHandler,
-            alertSubject: alertSubject,
-            toastSubject: toastSubject
-        )
+        let coordinator = T(coordinatorNavigationType: .presentation(dimissHandler: dimissHandler))
         
         childCoordinator = coordinator
         
