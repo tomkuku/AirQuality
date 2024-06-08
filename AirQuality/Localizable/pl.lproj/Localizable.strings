@@ -51,3 +51,11 @@
 "AddStationToObservedListView.ShrinkButton.shrink" = "Zwiń";
 "AddStationToObservedListView.ShrinkButton.expand" = "Rozwiń";
 "AddStationToObservedListView.noStations" = "Brak stacji";
+
+// MARK: AddStationToObservedBaseView
+
+"AddStationToObservedContainerView.MapItem.navigationTitle" = "Mapa stacji";
+"AddStationToObservedContainerView.MapItem.itemTitle" = "Mapa";
+"AddStationToObservedContainerView.ListItem.navigationTitle" = "Lista Stacji";
+"AddStationToObservedContainerView.ListItem.itemTitle" = "Lista";
+"AddStationToObservedContainerView.closeButton" = "Zamknij";

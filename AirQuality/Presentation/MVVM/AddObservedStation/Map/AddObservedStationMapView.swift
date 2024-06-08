@@ -11,6 +11,8 @@ import MapKit
 struct AddObservedStationMapView: View {
     @ObservedObject private var viewModel: AddObservedStationMapViewModel
     
+    @EnvironmentObject private var coordinator: AddStationToObservedCoordinator
+    
     var body: some View {
         Map {
             ForEach(viewModel.annotations) { stationAnnotation in
@@ -21,13 +23,19 @@ struct AddObservedStationMapView: View {
             MapUserLocationButton()
             MapScaleView()
         }
+        .onReceive(viewModel.toastPublisher) { toast in
+            coordinator.showToast(toast)
+        }
+        .onReceive(viewModel.errorPublisher) { _ in
+            coordinator.showAlert(.somethigWentWrong())
+        }
         .taskOnFirstAppear {
             viewModel.fetchStations()
         }
     }
     
-    init(viewModel: @escaping @autoclosure () -> AddObservedStationMapViewModel) {
-        self._viewModel = ObservedObject(wrappedValue: viewModel())
+    init(viewModel: AddObservedStationMapViewModel) {
+        self._viewModel = ObservedObject(wrappedValue: viewModel)
     }
 }
 

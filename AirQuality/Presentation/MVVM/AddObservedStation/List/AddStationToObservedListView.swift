@@ -39,7 +39,6 @@ struct AddStationToObservedListView: View, Sendable {
                 .listStyle(.inset)
             }
         }
-        .navigationTitle(L10n.title)
         .onReceive(viewModel.errorPublisher) { _ in
             coordinator.showAlert(.somethigWentWrong())
         }

@@ -10,11 +10,9 @@ import Combine
 
 final class ToastsViewModel: ObservableObject, @unchecked Sendable {
     @Published var toasts: [Toast] = []
-    
     @Published var presentedToasts: [Toast] = []
     
     private let toastsPublisher: any Publisher<Toast, Never>
-    
     private var cancellables = Set<AnyCancellable>()
     
     init(_ toastsPublisher: any Publisher<Toast, Never>) {

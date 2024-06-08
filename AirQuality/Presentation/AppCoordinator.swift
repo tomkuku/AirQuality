@@ -8,10 +8,6 @@
 import SwiftUI
 import Combine
 
-protocol HasAppCoordinator {
-    var appCoordinator: AppCoordinator { get }
-}
-
 enum AppFlow: Hashable, Identifiable {
     case stationsList
     case slectedStation(Station)
@@ -32,6 +28,12 @@ protocol CoordinatorProtocol: ObservableObject {
     associatedtype NavigationComponentType: Identifiable
     associatedtype StartViewType: View
     associatedtype CreateViewType: View
+    
+    init(
+        dimissHandler: @escaping () -> (),
+        alertSubject: any Subject<AlertModel, Never>,
+        toastSubject: any Subject<Toast, Never>
+    )
     
     @ViewBuilder
     @MainActor
@@ -91,8 +93,13 @@ final class AppCoordinator: ObservableObject {
         case .sensorsDetails(let sensor):
             SensorDetailsContainerView(sensor: sensor)
         case .addNewObservedStation:
-            createChildCoordinator().start()
+            let coordinator: AddStationToObservedCoordinator = createChildCoordinator()
+            coordinator.start()
         }
+    }
+    
+    func goToAddObservedStation() {
+        fullScreenCover = AppFlow.addNewObservedStation
     }
     
     func goToStationsList() {
@@ -119,20 +126,31 @@ final class AppCoordinator: ObservableObject {
         fullScreenCover = .addNewObservedStation
     }
     
+    func handleDismiss() {
+        childCoordinator = nil
+    }
+    
     func dismiss() {
         fullScreenCover = nil
     }
     
-    private func createChildCoordinator() -> some CoordinatorProtocol {
-        let dimissHandler: (() -> ()) = { [weak self] in
-            self?.dismissSubject.send()
+    private func createChildCoordinator<T>() -> T where T: CoordinatorProtocol {
+        if let childCoordinator = self.childCoordinator as? T {
+            return childCoordinator
         }
         
-        let coordinator = AddStationToObservedCoordinator(
+        let dimissHandler: (() -> ()) = { [weak self] in
+            self?.dismiss()
+        }
+        
+        let coordinator = T(
             dimissHandler: dimissHandler,
-            alertSubject: alertSubject
+            alertSubject: alertSubject,
+            toastSubject: toastSubject
         )
+        
         childCoordinator = coordinator
+        
         return coordinator
     }
 }

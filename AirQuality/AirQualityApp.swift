@@ -12,40 +12,42 @@ struct AirQualityApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     @StateObject private var appCoordinator: AppCoordinator
+    
     @ObservedObject private var alertViewModel: AlertViewModel
     @ObservedObject private var toastsViewModel: ToastsViewModel
     
-    @State private var isFullScreenCoverPresented: Bool = false
-    
-    @State private var isPresented = true
-    @State private var showToast = true
-    
     var body: some Scene {
         WindowGroup {
-//            GeometryReader { geometryProxy in
-                NavigationStack(path: $appCoordinator.navigationPath) {
-                    appCoordinator.getView(for: .addNewObservedStation)
-                        .navigationDestination(for: AppFlow.self) { appFlow in
-                            appCoordinator.getView(for: appFlow)
-                        }
-                        .environmentObject(appCoordinator)
+            GeometryReader { geometry in
+                ZStack {
+                    NavigationStack(path: $appCoordinator.navigationPath) {
+                        appCoordinator.getView(for: .stationsList)
+                            .navigationDestination(for: AppFlow.self) { appFlow in
+                                appCoordinator.getView(for: appFlow)
+                            }
+                            .environmentObject(appCoordinator)
+                    }
+                    .fullScreenCover(item: $appCoordinator.fullScreenCover, onDismiss: {
+                        appCoordinator.handleDismiss()
+                    }, content: { route in
+                        appCoordinator.getView(for: route)
+                    })
+                    .environmentObject(appCoordinator)
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    
+                    Spacer()
+                    
+                    ToastView(toastsViewModel: toastsViewModel)
+                        .allowsHitTesting(false)
+                        .background(.clear)
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                    
+                    AlertView(viewModel: alertViewModel)
+                        .allowsHitTesting(false)
+                        .background(.clear)
+                        .frame(width: .zero, height: .zero)
                 }
-                .fullScreenCover(item: $appCoordinator.fullScreenCover) { route in
-                    appCoordinator.getView(for: route)
-                }
-                .environmentObject(appCoordinator)
-//                .frame(width: geometryProxy.size.width, height: geometryProxy.size.height)
-                
-                AlertView(viewModel: alertViewModel)
-                    .allowsHitTesting(false)
-                    .background(.red)
-                    .frame(width: .zero, height: .zero)
-                
-//                ToastView(toastsViewModel: toastsViewModel)
-//                    .allowsHitTesting(false)
-//                    .background(.red)
-//                    .frame(width: .zero, height: .zero)
-//            }
+            }
         }
     }
     

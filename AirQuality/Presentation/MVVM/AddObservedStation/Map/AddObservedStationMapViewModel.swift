@@ -23,6 +23,10 @@ final class AddObservedStationMapViewModel: ObservableObject {
         errorSubject.eraseToAnyPublisher()
     }
     
+    var toastPublisher: AnyPublisher<Toast, Never> {
+        toastSubject.eraseToAnyPublisher()
+    }
+    
     // MARK: Private properties
     
     private let getStationsUseCase: GetStationsUseCaseProtocol
@@ -30,6 +34,7 @@ final class AddObservedStationMapViewModel: ObservableObject {
     private let deleteStationFromObservedListUseCase: DeleteStationFromObservedListUseCaseProtocol
     private let getObservedStationsUseCase: GetObservedStationsUseCaseProtocol
     private let errorSubject = PassthroughSubject<Error, Never>()
+    private let toastSubject = PassthroughSubject<Toast, Never>()
     
     private var fetchedStations: [Station] = []
     
@@ -77,6 +82,7 @@ final class AddObservedStationMapViewModel: ObservableObject {
             
             do {
                 try await self.observeStationUseCase.observe(station: station)
+                self.toastSubject.send(Toast(body: "Stacja została dodana do obserwowanych"))
             } catch {
                 Logger.error("Observing station faild with error: \(error.localizedDescription)")
                 errorSubject.send(error)
@@ -90,6 +96,7 @@ final class AddObservedStationMapViewModel: ObservableObject {
             
             do {
                 try await self.deleteStationFromObservedListUseCase.delete(station: station)
+                self.toastSubject.send(Toast(body: "Stacja została usunięta z listy obserwowanych"))
             } catch {
                 Logger.error("Observing station faild with error: \(error.localizedDescription)")
                 errorSubject.send(error)

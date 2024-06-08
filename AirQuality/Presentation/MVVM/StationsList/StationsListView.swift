@@ -40,7 +40,8 @@ struct StationsListView: View {
                         .cornerRadius(10)
                         .accessibility(addTraits: [.isButton])
                         .gesture(TapGesture().onEnded {
-                            coordinator.gotSelectedStation(station)
+                            coordinator.goToAddObservedStation()
+//                            coordinator.gotSelectedStation(station)
                         })
                     }
                 }
