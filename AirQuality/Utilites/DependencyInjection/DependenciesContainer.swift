@@ -37,6 +37,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     let deleteObservedStationUseCase: DeleteObservedStationUseCaseProtocol
     let getStationsUseCase: GetStationsUseCaseProtocol
     let getObservedStationsUseCase: GetObservedStationsUseCaseProtocol
+    let cacheDataSource: CacheDataSourceProtocol
     
     @MainActor
     init() throws {
@@ -83,6 +84,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         self.deleteObservedStationUseCase = DeleteObservedStationUseCase()
         self.getObservedStationsUseCase = GetObservedStationsUseCase()
         self.getStationsUseCase = GetStationsUseCase()
+        self.cacheDataSource = CacheDataSource()
     }
     
     private static func createModelContainer() throws -> ModelContainer {

@@ -16,4 +16,5 @@ HasStationsLocalDatabaseMapper &
 HasGetStationsUseCase &
 HasAddObservedStationUseCase &
 HasDeleteObservedStationUseCase &
-HasGetObservedStationsUseCase
+HasGetObservedStationsUseCase &
+HasCacheDataSource

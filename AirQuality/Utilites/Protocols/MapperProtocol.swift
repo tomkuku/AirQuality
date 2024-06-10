@@ -9,7 +9,7 @@ import Foundation
 
 protocol MapperProtocol: Sendable {
     associatedtype DTOModel
-    associatedtype DomainModel
+    associatedtype DomainModel: Sendable
     
     init()
     

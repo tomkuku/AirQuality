@@ -30,7 +30,8 @@ final class GetStationsUseCase: GetStationsUseCaseProtocol, @unchecked Sendable 
     func getStations() async throws -> [Station] {
         try await giosApiRepository.fetch(
             mapper: stationsNetworkMapper,
-            endpoint: Endpoint.Stations.get
+            endpoint: Endpoint.Stations.get,
+            source: .cacheIfPossible
         )
     }
 }
