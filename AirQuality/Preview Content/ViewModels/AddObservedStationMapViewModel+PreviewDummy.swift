@@ -8,10 +8,10 @@
 import Foundation
 
 extension AddObservedStationMapViewModel {
-    static let previewDummy = AddObservedStationMapViewModel(
-        getStationsUseCase: GetStationsUseCasePreviewDummy(),
-        observeStationUseCase: ObserveStationUseCase(),
-        deleteStationFromObservedListUseCase: DeleteStationFromObservedListUseCase(),
-        getObservedStationsUseCase: GetObservedStationsUseCase()
-    )
+//    static let previewDummy = AddObservedStationMapViewModel(
+//        getStationsUseCase: GetStationsUseCasePreviewDummy(),
+//        observeStationUseCase: ObserveStationUseCase(),
+//        deleteStationFromObservedListUseCase: DeleteStationFromObservedListUseCase(),
+//        getObservedStationsUseCase: GetObservedStationsUseCase()
+//    )
 }

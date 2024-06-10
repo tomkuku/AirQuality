@@ -8,6 +8,10 @@
 import Foundation
 import Alamofire
 
+protocol HasGetStationsUseCase {
+    var getStationsUseCase: GetStationsUseCaseProtocol { get }
+}
+
 protocol GetStationsUseCaseProtocol: Sendable {
     func getStations() async throws -> [Station]
 }

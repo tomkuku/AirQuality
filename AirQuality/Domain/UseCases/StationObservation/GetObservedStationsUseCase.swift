@@ -8,20 +8,20 @@
 import Foundation
 import struct SwiftData.FetchDescriptor
 
+protocol HasGetObservedStationsUseCase {
+    var getObservedStationsUseCase: GetObservedStationsUseCaseProtocol { get }
+}
+
 protocol GetObservedStationsUseCaseProtocol: Sendable {
     func fetchedStations() async throws -> [Station]
-    
     func createNewStream() -> AsyncThrowingStream<[Station], Error>
 }
 
 final class GetObservedStationsUseCase: GetObservedStationsUseCaseProtocol, @unchecked Sendable {
     @Injected(\.observedStationsFetchResultsRepository) private var observedStationsFetchResultsRepository
+    @Injected(\.stationsLocalDatabaseMapper) private var stationsLocalDatabaseMapper
     
-    private var stationsLocalDatabaseMapper: any StationsLocalDatabaseMapperProtocol
-    
-    init(stationsLocalDatabaseMapper: any StationsLocalDatabaseMapperProtocol = StationsLocalDatabaseMapper()) {
-        self.stationsLocalDatabaseMapper = stationsLocalDatabaseMapper
-    }
+    init() { }
     
     func fetchedStations() async throws -> [Station] {
         try await observedStationsFetchResultsRepository.getFetchedObjects()

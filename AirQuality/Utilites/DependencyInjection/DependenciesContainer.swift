@@ -32,6 +32,11 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     let giosApiRepository: GIOSApiRepositoryProtocol
     let localDatabaseRepository: LocalDatabaseRepositoryProtocol
     let observedStationsFetchResultsRepository: LocalDatabaseFetchResultsRepository<StationsLocalDatabaseMapper>
+    let stationsLocalDatabaseMapper: any StationsLocalDatabaseMapperProtocol
+    let addObservedStationUseCase: AddObservedStationUseCaseProtocol
+    let deleteObservedStationUseCase: DeleteObservedStationUseCaseProtocol
+    let getStationsUseCase: GetStationsUseCaseProtocol
+    let getObservedStationsUseCase: GetObservedStationsUseCaseProtocol
     
     @MainActor
     init() throws {
@@ -73,6 +78,11 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
             localDatabaseFetchResultsDataSource: observedStationLocalDatabaseFetchResultsDataSource,
             mapper: stationsLocalDatabaseMapper
         )
+        self.stationsLocalDatabaseMapper = stationsLocalDatabaseMapper
+        self.addObservedStationUseCase = AddObservedStationUseCase()
+        self.deleteObservedStationUseCase = DeleteObservedStationUseCase()
+        self.getObservedStationsUseCase = GetObservedStationsUseCase()
+        self.getStationsUseCase = GetStationsUseCase()
     }
     
     private static func createModelContainer() throws -> ModelContainer {

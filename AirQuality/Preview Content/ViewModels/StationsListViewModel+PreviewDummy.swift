@@ -8,5 +8,5 @@
 import Foundation
 
 extension StationsListViewModel {
-    nonisolated(unsafe) static let previewDummy = StationsListViewModel(getStationsUseCase: GetStationsUseCase())
+//    nonisolated(unsafe) static let previewDummy = StationsListViewModel(getStationsUseCase: GetStationsUseCase())
 }

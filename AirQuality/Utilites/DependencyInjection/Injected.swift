@@ -8,7 +8,7 @@
 import Foundation
 
 @propertyWrapper
-struct Injected<T>: @unchecked Sendable {
+struct Injected<T>: @unchecked Sendable where T: Sendable {
     var wrappedValue: T {
         DependenciesContainerManager.container[keyPath]
     }

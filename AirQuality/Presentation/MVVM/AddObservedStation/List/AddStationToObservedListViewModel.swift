@@ -18,25 +18,15 @@ final class AddStationToObservedListViewModel: BaseViewModel, @unchecked Sendabl
     
     // MARK: Private properties
     
-    private let getStationsUseCase: GetStationsUseCaseProtocol
-    private let observeStationUseCase: ObserveStationUseCaseProtocol
-    private let deleteStationFromObservedListUseCase: DeleteStationFromObservedListUseCaseProtocol
-    private let getObservedStationsUseCase: GetObservedStationsUseCaseProtocol
+    @Injected(\.addObservedStationUseCase) private var addObservedStationUseCase
+    @Injected(\.deleteObservedStationUseCase) private var deleteObservedStationUseCase
+    @Injected(\.getObservedStationsUseCase) private var getObservedStationsUseCase
+    @Injected(\.getStationsUseCase) private var getStationsUseCase
     
     @MainActor
     private var fetchedStations: [Station] = []
     
-    init(
-        getStationsUseCase: GetStationsUseCaseProtocol = GetStationsUseCase(),
-        observeStationUseCase: ObserveStationUseCaseProtocol = ObserveStationUseCase(),
-        deleteStationFromObservedListUseCase: DeleteStationFromObservedListUseCaseProtocol = DeleteStationFromObservedListUseCase(),
-        getObservedStationsUseCase: GetObservedStationsUseCaseProtocol = GetObservedStationsUseCase()
-    ) {
-        self.getStationsUseCase = getStationsUseCase
-        self.observeStationUseCase = observeStationUseCase
-        self.deleteStationFromObservedListUseCase = deleteStationFromObservedListUseCase
-        self.getObservedStationsUseCase = getObservedStationsUseCase
-        
+    override init() {
         super.init()
         
         receiveObservedStationsStream()
@@ -86,9 +76,9 @@ final class AddStationToObservedListViewModel: BaseViewModel, @unchecked Sendabl
                 let observedStations = try await getObservedStationsUseCase.fetchedStations()
                 
                 if observedStations.contains(station) {
-                    try await deleteStationFromObservedListUseCase.delete(station: station)
+                    try await deleteObservedStationUseCase.delete(station: station)
                 } else {
-                    try await observeStationUseCase.observe(station: station)
+                    try await addObservedStationUseCase.add(station: station)
                 }
             } catch {
                 Logger.error("Observing station faild with error: \(error.localizedDescription)")

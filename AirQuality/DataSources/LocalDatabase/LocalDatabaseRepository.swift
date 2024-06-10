@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-protocol HasLocalDatabaseRepository {
+protocol HasLocalDatabaseRepository: Sendable {
     var localDatabaseRepository: LocalDatabaseRepositoryProtocol { get }
 }
 
@@ -21,7 +21,7 @@ protocol LocalDatabaseRepositoryProtocol: Sendable {
     ) async throws where T: LocalDatabaseMapperProtocol, D == T.DomainModel
 }
 
-final class LocalDatabaseRepository: LocalDatabaseRepositoryProtocol {
+final class LocalDatabaseRepository: LocalDatabaseRepositoryProtocol, Sendable {
     
     private let localDatabaseDataSource: LocalDatabaseDataSourceProtocol
     

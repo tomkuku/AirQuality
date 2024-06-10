@@ -11,4 +11,9 @@ typealias AllDependencies =
 HasGIOSApiV1Repository &
 HasGIOSApiRepository &
 HasLocalDatabaseRepository &
-HasObservedStationsFetchResultsRepository
+HasObservedStationsFetchResultsRepository &
+HasStationsLocalDatabaseMapper & 
+HasGetStationsUseCase &
+HasAddObservedStationUseCase &
+HasDeleteObservedStationUseCase &
+HasGetObservedStationsUseCase

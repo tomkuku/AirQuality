@@ -45,7 +45,7 @@ final class AppCoordinator: CoordinatorBase, CoordinatorProtocol {
     func createView(for navigationComponent: NavigationComponent) -> some View {
         switch navigationComponent {
         case .stationsList:
-            StationsListView()
+            ObservedStationsListView()
         case .slectedStation(let station):
             let viewModel = SelectedStationViewModel(station: station)
             SelectedStationView(viewModel: viewModel)

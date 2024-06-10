@@ -15,30 +15,20 @@ final class AddObservedStationMapViewModel: BaseViewModel {
     
     // MARK: Properties
     
+    @Injected(\.addObservedStationUseCase) private var addObservedStationUseCase
+    @Injected(\.deleteObservedStationUseCase) private var deleteObservedStationUseCase
+    @Injected(\.getObservedStationsUseCase) private var getObservedStationsUseCase
+    @Injected(\.getStationsUseCase) private var getStationsUseCase
+    
     @Published private(set) var annotations: [Model.StationAnnotation] = []
     
     // MARK: Private properties
-    
-    private let getStationsUseCase: GetStationsUseCaseProtocol
-    private let observeStationUseCase: ObserveStationUseCaseProtocol
-    private let deleteStationFromObservedListUseCase: DeleteStationFromObservedListUseCaseProtocol
-    private let getObservedStationsUseCase: GetObservedStationsUseCaseProtocol
     
     private var fetchedStations: [Station] = []
     
     // MARK: Lifecycle
     
-    init(
-        getStationsUseCase: GetStationsUseCaseProtocol = GetStationsUseCase(),
-        observeStationUseCase: ObserveStationUseCaseProtocol = ObserveStationUseCase(),
-        deleteStationFromObservedListUseCase: DeleteStationFromObservedListUseCaseProtocol = DeleteStationFromObservedListUseCase(),
-        getObservedStationsUseCase: GetObservedStationsUseCaseProtocol = GetObservedStationsUseCase()
-    ) {
-        self.getStationsUseCase = getStationsUseCase
-        self.observeStationUseCase = observeStationUseCase
-        self.deleteStationFromObservedListUseCase = deleteStationFromObservedListUseCase
-        self.getObservedStationsUseCase = getObservedStationsUseCase
-        
+    override init() {
         super.init()
         
         isLoading = true
@@ -76,7 +66,7 @@ final class AddObservedStationMapViewModel: BaseViewModel {
             guard let self else { return }
             
             do {
-                try await self.observeStationUseCase.observe(station: station)
+                try await self.addObservedStationUseCase.add(station: station)
                 self.toastSubject.send(Toast(body: "Stacja została dodana do obserwowanych"))
             } catch {
                 Logger.error("Observing station faild with error: \(error.localizedDescription)")
@@ -90,7 +80,7 @@ final class AddObservedStationMapViewModel: BaseViewModel {
             guard let self else { return }
             
             do {
-                try await self.deleteStationFromObservedListUseCase.delete(station: station)
+                try await self.deleteObservedStationUseCase.delete(station: station)
                 self.toastSubject.send(Toast(body: "Stacja została usunięta z listy obserwowanych"))
             } catch {
                 Logger.error("Observing station faild with error: \(error.localizedDescription)")
