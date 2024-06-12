@@ -92,7 +92,7 @@ where C: CoordinatorBase & CoordinatorProtocol, V: View, VM: BaseViewModel {
     baseViewModel.isLoading = true
     
     @StateObject var viewModel = baseViewModel
-    @StateObject var coordinator = CoordinatorPreviewDummy(coordinatorNavigationType: .presentation(dimissHandler: {}))
+    @StateObject var coordinator = CoordinatorPreviewDummy(coordinatorNavigationType: .presentation(dismissHandler: {}))
     
     return BaseView(viewModel: viewModel, coordinator: coordinator) {
         EmptyView()

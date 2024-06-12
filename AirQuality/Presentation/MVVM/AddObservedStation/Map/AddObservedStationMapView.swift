@@ -9,9 +9,11 @@ import SwiftUI
 import MapKit
 
 struct AddObservedStationMapView: View {
+    private typealias L10n = Localizable.AddObservedStationMapView
+    
     @StateObject private var viewModel: AddObservedStationMapViewModel
     
-    @EnvironmentObject private var coordinator: AddStationToObservedCoordinator
+    @EnvironmentObject private var coordinator: AddObservedStationMapCoordinator
     
     var body: some View {
         BaseView(viewModel: viewModel, coordinator: coordinator) {
@@ -25,6 +27,11 @@ struct AddObservedStationMapView: View {
                 MapScaleView()
             }
         }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(L10n.navigationTitle)
+        .dimissToolbarButton {
+            coordinator.dismiss()
+        }
         .taskOnFirstAppear {
             viewModel.fetchStations()
         }
@@ -36,11 +43,20 @@ struct AddObservedStationMapView: View {
 }
 
 #Preview {
-    let viewModel = AddObservedStationMapViewModel()
+    GetStationsUseCasePreviewDummy.getStationsReturnValue = [
+        .previewDummy(id: 1, latitude: 50.057678, longitude: 19.926189),
+        .previewDummy(id: 2, latitude: 50.010575, longitude: 19.949189),
+        .previewDummy(id: 3, latitude: 50.069308, longitude: 20.053492)
+    ]
     
-    return NavigationStack {
-        AddObservedStationMapView(viewModel: viewModel)
-            .navigationTitle("Title")
-            .navigationBarTitleDisplayMode(.inline)
+    @ObservedObject var coordinator = AddObservedStationMapCoordinator(
+        coordinatorNavigationType: .presentation(dismissHandler: {})
+    )
+    
+    return TabView {
+        NavigationStack {
+            AddObservedStationMapView()
+                .environmentObject(coordinator)
+        }
     }
 }

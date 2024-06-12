@@ -25,12 +25,17 @@ final class AddStationToObservedListViewModel: BaseViewModel, @unchecked Sendabl
     
     @MainActor
     private var fetchedStations: [Station] = []
+    private var searchedText: String = ""
+    
+    // MARK: Lifecycle
     
     override init() {
         super.init()
         
         receiveObservedStationsStream()
     }
+    
+    // MARK: Methods
     
     func receiveObservedStationsStream() {
         Task { @MainActor [weak self] in
@@ -50,12 +55,20 @@ final class AddStationToObservedListViewModel: BaseViewModel, @unchecked Sendabl
     func fetchStations() {
         isLoading(true, objectWillChnage: true)
         
+        print("LL start")
+        
         Task { @MainActor [weak self] in
+            print("LL start 2", self)
             guard let self else { return }
             
             do {
+                print("LL start 3", getStationsUseCase)
                 let fetchedStations = try await getStationsUseCase.getStations()
+                print("LL fetched stations", fetchedStations)
                 let observedStations = try await getObservedStationsUseCase.fetchedStations()
+                print("LL fetched observed stations", observedStations)
+                
+                print("LL fetched")
                 
                 isLoading(false, objectWillChnage: false)
                 
@@ -87,8 +100,31 @@ final class AddStationToObservedListViewModel: BaseViewModel, @unchecked Sendabl
         }
     }
     
+    func searchedTextDidChange(_ text: String) {
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            
+            self.searchedText = text
+            
+            do {
+                let observedStations = try await self.getObservedStationsUseCase.fetchedStations()
+                
+                self.createAndSortSections(fetchedStations, observedStations: observedStations)
+            } catch {
+                Logger.error("Observing station faild with error: \(error.localizedDescription)")
+                self.alertSubject.send(.somethigWentWrong())
+            }
+        }
+    }
+    
+    // MARK: Private methods
+    
     private func createAndSortSections(_ stations: [Station], observedStations: [Station]) {
         var sections: [Model.Section] = stations.reduce(into: [Model.Section]()) { sections, station in
+            if !searchedText.isEmpty && !isStationMatchToSerachedText(station) {
+                return
+            }
+            
             let row = Model.Row(station: station, isStationObserved: observedStations.contains(station))
             
             if let sectionIndex = sections.firstIndex(where: { $0.name.lowercased() == station.province.lowercased() }) {
@@ -106,6 +142,8 @@ final class AddStationToObservedListViewModel: BaseViewModel, @unchecked Sendabl
         })
         
         self.sections = sections
+        
+        print("LL done", sections.count, stations)
     }
     
     private func sortRows(in sections: inout [Model.Section]) {
@@ -124,5 +162,13 @@ final class AddStationToObservedListViewModel: BaseViewModel, @unchecked Sendabl
                 }
             })
         }
+    }
+    
+    private func isStationMatchToSerachedText(_ station: Station) -> Bool {
+        if let stationStreet = station.street, stationStreet.contains(searchedText) {
+            return true
+        }
+        
+        return station.cityName.contains(searchedText)
     }
 }

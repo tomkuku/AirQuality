@@ -82,3 +82,16 @@ struct StationMapAnnotationView: MapContent {
         self._viewModel = ObservedObject(wrappedValue: viewModel)
     }
 }
+
+#Preview {
+    GetStationsUseCasePreviewDummy.getStationsReturnValue = [
+        .previewDummy(latitude: 50.057678, longitude: 19.926189)
+    ]
+    
+    @ObservedObject var coordinator = AddObservedStationMapCoordinator(
+        coordinatorNavigationType: .presentation(dismissHandler: {})
+    )
+    
+    return AddObservedStationMapView()
+                .environmentObject(coordinator)
+}

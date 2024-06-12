@@ -10,10 +10,11 @@ import SwiftUI
 import Combine
 
 enum CoordinatorNavigationType {
-    case presentation(dimissHandler: () -> ())
+    case presentation(dismissHandler: () -> ())
     
     case push(
         navigationPath: NavigationPath,
+        dismissHandler: (() -> ())? = nil,
         alertSubject: any Subject<AlertModel, Never>,
         toastSubject: any Subject<Toast, Never>
     )
@@ -41,7 +42,7 @@ class CoordinatorBase: ObservableObject {
     // MARK: Private properties
     
     /// Closure which executes dismiss coordinator (self) if it's presented by sheet or fullScreenCover.
-    private let dimissHandler: (() -> ())?
+    let dismissHandler: (() -> ())?
     
     // MARK: Lifecycle
     
@@ -51,13 +52,13 @@ class CoordinatorBase: ObservableObject {
         switch coordinatorNavigationType {
         case .presentation(let dimissHandler):
             self.navigationPath = .init()
-            self.dimissHandler = dimissHandler
+            self.dismissHandler = dimissHandler
             self.alertSubject = PassthroughSubject<AlertModel, Never>()
             self.toastSubject = PassthroughSubject<Toast, Never>()
             
-        case .push(let navigationPath, let alertSubject, let toastSubject):
+        case .push(let navigationPath, let dismissHandler, let alertSubject, let toastSubject):
             self.navigationPath = navigationPath
-            self.dimissHandler = nil
+            self.dismissHandler = dismissHandler
             self.alertSubject = alertSubject
             self.toastSubject = toastSubject
         }
@@ -67,7 +68,7 @@ class CoordinatorBase: ObservableObject {
     
     /// It dismisses coordinator (self) if it's presented (sheet or fullScreenCover).
     func dismiss() {
-        dimissHandler?()
+        dismissHandler?()
     }
     
     /// It handles completion after presented coordinator by this coordinator.

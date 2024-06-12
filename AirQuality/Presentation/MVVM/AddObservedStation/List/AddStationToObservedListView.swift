@@ -10,10 +10,11 @@ import Combine
 
 struct AddStationToObservedListView: View, Sendable {
     
-    private typealias L10n = Localizable.AddStationToObservedListView
+    private typealias L10n = Localizable.AddObservedStationListView
     
-    @EnvironmentObject private var coordinator: AddStationToObservedCoordinator
+    @EnvironmentObject private var coordinator: AddObservedStationListCoordinator
     @StateObject private var viewModel: AddStationToObservedListViewModel
+    @State private var searchedText = ""
     
     var body: some View {
         BaseView(viewModel: viewModel, coordinator: coordinator) {
@@ -25,7 +26,7 @@ struct AddStationToObservedListView: View, Sendable {
                         ProgressView()
                             .progressViewStyle(.circular)
                     } else {
-                        Text(Localizable.AddStationToObservedListView.noStations)
+                        Text(L10n.noStations)
                     }
                     
                     Spacer()
@@ -41,6 +42,15 @@ struct AddStationToObservedListView: View, Sendable {
                 }
             }
         }
+        .onChange(of: searchedText) {
+            viewModel.searchedTextDidChange(searchedText)
+        }
+        .searchable(text: $searchedText, placement: .navigationBarDrawer(displayMode: .always), prompt: L10n.seach)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(L10n.navigationTitle)
+        .dimissToolbarButton {
+            coordinator.dismiss()
+        }
         .taskOnFirstAppear {
             viewModel.fetchStations()
         }
@@ -48,5 +58,26 @@ struct AddStationToObservedListView: View, Sendable {
     
     init(viewModel: @autoclosure @escaping () -> AddStationToObservedListViewModel = .init()) {
         self._viewModel = StateObject(wrappedValue: viewModel())
+    }
+}
+
+#Preview {
+    GetStationsUseCasePreviewDummy.getStationsReturnValue = [
+        .previewDummy(id: 1),
+        .previewDummy(id: 2),
+        .previewDummy(id: 3),
+        .previewDummy(id: 4)
+    ]
+    
+    @ObservedObject var viewModel = AddStationToObservedListViewModel()
+    @ObservedObject var coordinator = AddObservedStationListCoordinator(
+        coordinatorNavigationType: .presentation(dismissHandler: {})
+    )
+    
+    return TabView {
+        NavigationStack {
+            AddStationToObservedListView(viewModel: viewModel)
+                .environmentObject(coordinator)
+        }
     }
 }

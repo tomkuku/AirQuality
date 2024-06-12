@@ -1,12 +1,13 @@
 //
-//  CoordinatorInitialView.swift
+//  CoordinatorInitialNavigationView.swift
 //  AirQuality
 //
-//  Created by Tomasz Kukułka on 08/06/2024.
+//  Created by Tomasz Kukułka on 12/06/2024.
 //
 
 import Foundation
 import SwiftUI
+import Combine
 
 struct CoordinatorInitialView<C>: View where C: CoordinatorBase & CoordinatorProtocol {
     
@@ -16,19 +17,13 @@ struct CoordinatorInitialView<C>: View where C: CoordinatorBase & CoordinatorPro
     
     var body: some View {
         ZStack {
-            NavigationStack(path: $coordinator.navigationPath) {
-                coordinator.startView()
-                    .navigationDestination(for: C.NavigationComponentType.self) { navigationComponent in
-                        coordinator.createView(for: navigationComponent)
-                            .environmentObject(coordinator)
-                    }
-            }
-            .fullScreenCover(item: $coordinator.fullScreenCover, onDismiss: {
-                coordinator.presentationDismissed()
-            }, content: { navigationComponent in
-                coordinator.createView(for: navigationComponent)
-                    .environmentObject(coordinator)
-            })
+            coordinator.startView()
+                .fullScreenCover(item: $coordinator.fullScreenCover, onDismiss: {
+                    coordinator.presentationDismissed()
+                }, content: { navigationComponent in
+                    coordinator.createView(for: navigationComponent)
+                        .environmentObject(coordinator)
+                })
             
             Spacer()
             

@@ -9,14 +9,8 @@ import Foundation
 import SwiftUI
 
 extension SensorDetailsCoordinator {
-    enum NavigationComponent: Identifiable, Hashable {
+    enum NavigationComponent: CoordinatorNavigationComponentProtocol {
         case containerView
-        
-        var id: Int {
-            switch self {
-            case .containerView: 1
-            }
-        }
     }
 }
 
@@ -34,11 +28,15 @@ final class SensorDetailsCoordinator: CoordinatorBase, CoordinatorProtocol {
         super.init(coordinatorNavigationType: coordinatorNavigationType)
     }
     
+    @ViewBuilder
+    @MainActor
     func startView() -> some View {
         createView(for: .containerView)
             .environmentObject(self)
     }
     
+    @ViewBuilder
+    @MainActor
     func createView(for navigationComponent: NavigationComponent) -> some View {
         switch navigationComponent {
         case .containerView:

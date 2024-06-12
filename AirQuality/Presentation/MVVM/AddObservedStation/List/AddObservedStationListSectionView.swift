@@ -71,9 +71,9 @@ struct SectionView: View {
                         .rotationEffect(.degrees(isShrunk ? 0 : 180))
                     
                     if isShrunk {
-                        Text(Localizable.AddStationToObservedListView.ShrinkButton.expand)
+                        Text(Localizable.AddObservedStationListView.ShrinkButton.expand)
                     } else {
-                        Text(Localizable.AddStationToObservedListView.ShrinkButton.shrink)
+                        Text(Localizable.AddObservedStationListView.ShrinkButton.shrink)
                     }
                 }
             }
@@ -89,4 +89,21 @@ struct SectionView: View {
         self._viewModel = ObservedObject(wrappedValue: viewModel)
         self.onSelectedStation = onSelectedStation
     }
+}
+
+#Preview {
+    GetStationsUseCasePreviewDummy.getStationsReturnValue = [
+        .previewDummy(id: 1),
+        .previewDummy(id: 2),
+        .previewDummy(id: 3),
+        .previewDummy(id: 4)
+    ]
+    
+    @ObservedObject var viewModel = AddStationToObservedListViewModel()
+    @ObservedObject var coordinator = AddObservedStationListCoordinator(
+        coordinatorNavigationType: .presentation(dismissHandler: {})
+    )
+    
+    return AddStationToObservedListView(viewModel: viewModel)
+                .environmentObject(coordinator)
 }

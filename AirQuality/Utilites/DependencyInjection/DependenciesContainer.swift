@@ -83,7 +83,17 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         self.addObservedStationUseCase = AddObservedStationUseCase()
         self.deleteObservedStationUseCase = DeleteObservedStationUseCase()
         self.getObservedStationsUseCase = GetObservedStationsUseCase()
+        
+#if targetEnvironment(simulator)
+        if ProcessInfo.isPreview {
+            self.getStationsUseCase = GetStationsUseCasePreviewDummy()
+        } else {
+            self.getStationsUseCase = GetStationsUseCase()
+        }
+#else
         self.getStationsUseCase = GetStationsUseCase()
+#endif
+        
         self.cacheDataSource = CacheDataSource()
     }
     

@@ -8,9 +8,8 @@
 import Foundation
 
 final class GetStationsUseCasePreviewDummy: GetStationsUseCaseProtocol, @unchecked Sendable {
-    var getStationsReturnValue: [Station] = []
     
     func getStations() async throws -> [Station] {
-        getStationsReturnValue
+        Self.getStationsReturnValue
     }
 }

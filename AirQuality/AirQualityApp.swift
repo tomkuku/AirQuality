@@ -15,12 +15,12 @@ struct AirQualityApp: App {
     
     var body: some Scene {
         WindowGroup {
-            CoordinatorInitialView(coordinator: appCoordinator)
+            CoordinatorInitialNavigationView(coordinator: appCoordinator)
         }
     }
     
     init() {
-        let coordinator = AppCoordinator(coordinatorNavigationType: .presentation(dimissHandler: { }))
+        let coordinator = AppCoordinator(coordinatorNavigationType: .presentation(dismissHandler: { }))
         self._appCoordinator = StateObject(wrappedValue: coordinator)
     }
 }

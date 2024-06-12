@@ -51,7 +51,7 @@ final class AppCoordinator: CoordinatorBase, CoordinatorProtocol {
             SelectedStationView(viewModel: viewModel)
         case .sensorsDetails(let sensor):
             let coordinator = createSensorDetailsCoordinator(for: sensor)
-            CoordinatorInitialView(coordinator: coordinator)
+            CoordinatorInitialNavigationView(coordinator: coordinator)
         case .addNewObservedStation:
             let coordinator = createAddStationToObservedCoordinator()
             CoordinatorInitialView(coordinator: coordinator)
@@ -72,11 +72,11 @@ final class AppCoordinator: CoordinatorBase, CoordinatorProtocol {
             return childCoordinator
         }
         
-        let dimissHandler: (() -> ()) = { [weak self] in
+        let dismissHandler: (() -> ()) = { [weak self] in
             self?.fullScreenCover = nil
         }
         
-        let coordinator = AddStationToObservedCoordinator(coordinatorNavigationType: .presentation(dimissHandler: dimissHandler))
+        let coordinator = AddStationToObservedCoordinator(coordinatorNavigationType: .presentation(dismissHandler: dismissHandler))
         
         childCoordinator = coordinator
         
@@ -88,11 +88,11 @@ final class AppCoordinator: CoordinatorBase, CoordinatorProtocol {
             return childCoordinator
         }
         
-        let dimissHandler: (() -> ()) = { [weak self] in
+        let dismissHandler: (() -> ()) = { [weak self] in
             self?.fullScreenCover = nil
         }
         
-        let coordinator = SensorDetailsCoordinator(coordinatorNavigationType: .presentation(dimissHandler: dimissHandler), sensor: sensor)
+        let coordinator = SensorDetailsCoordinator(coordinatorNavigationType: .presentation(dismissHandler: dismissHandler), sensor: sensor)
         
         childCoordinator = coordinator
         

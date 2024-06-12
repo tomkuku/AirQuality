@@ -10,7 +10,7 @@ import Combine
 
 struct AddObservedStationContainerView: View {
     
-    typealias L10n = Localizable.AddStationToObservedContainerView
+    private typealias L10n = Localizable.AddObservedStationContainerView
     
     private enum Item: Int, Hashable {
         case list
@@ -22,35 +22,17 @@ struct AddObservedStationContainerView: View {
     
     var body: some View {
         TabView(selection: $selctedTabItemIndex) {
-            AddStationToObservedListView()
+            CoordinatorInitialNavigationView(coordinator: coordinator.addObservedStationListCoordinator, showAlerts: false, showToasts: false)
                 .tabItem {
                     Label(L10n.ListItem.itemTitle, systemImage: "text.justify")
                 }
                 .tag(Item.list)
             
-            AddObservedStationMapView()
+            CoordinatorInitialNavigationView(coordinator: coordinator.addObservedStationMapCoordinator, showAlerts: false, showToasts: false)
                 .tabItem {
                     Label(L10n.MapItem.itemTitle, systemImage: "map")
                 }
                 .tag(Item.map)
-        }
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle(navigationTitle)
-        .toolbar {
-            Button(action: {
-                coordinator.dismiss()
-            }, label: {
-                Text(L10n.closeButton)
-            })
-        }
-    }
-    
-    private var navigationTitle: String {
-        switch selctedTabItemIndex {
-        case .list:
-            L10n.ListItem.navigationTitle
-        case .map:
-            L10n.MapItem.navigationTitle
         }
     }
 }

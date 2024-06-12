@@ -91,7 +91,7 @@ struct ObservedStationsListView: View {
 
 struct ObservedStationsListView_Previews: PreviewProvider {
     static var previews: some View {
-        let appCoordinator = AppCoordinator(coordinatorNavigationType: .presentation(dimissHandler: {}))
+        let appCoordinator = AppCoordinator(coordinatorNavigationType: .presentation(dismissHandler: {}))
         @Injected(\.addObservedStationUseCase) var addObservedStationUseCase
         
         Task {
