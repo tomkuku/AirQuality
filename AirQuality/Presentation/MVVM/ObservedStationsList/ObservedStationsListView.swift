@@ -14,6 +14,8 @@ struct ObservedStationsListView: View {
     @EnvironmentObject private var coordinator: AppCoordinator
     @StateObject private var viewModel: StationsListViewModel
     
+    @Injected(\.locationRespository) private var locationRespository
+    
     var body: some View {
         BaseView(viewModel: viewModel, coordinator: coordinator) {
             ZStack {

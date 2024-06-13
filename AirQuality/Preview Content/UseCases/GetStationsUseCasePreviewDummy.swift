@@ -8,6 +8,7 @@
 import Foundation
 
 final class GetStationsUseCasePreviewDummy: GetStationsUseCaseProtocol, @unchecked Sendable {
+    nonisolated(unsafe) static var getStationsReturnValue: [Station] = []
     
     func getStations() async throws -> [Station] {
         Self.getStationsReturnValue

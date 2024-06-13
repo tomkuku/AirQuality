@@ -7,6 +7,10 @@
 
 import Foundation
 
+protocol HasStationsNetworkMapper {
+    var stationsNetworkMapper: any StationsNetworkMapperProtocol { get }
+}
+
 protocol StationsNetworkMapperProtocol: NetworkMapperProtocol 
 where DTOModel == [StationNetworkModel], DomainModel == [Station] { }
 

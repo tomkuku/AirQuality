@@ -19,6 +19,8 @@ class BaseViewModel: ObservableObject {
     var isLoading = false
     
     func isLoading(_ isLoading: Bool, objectWillChnage: Bool) {
+        guard self.isLoading != isLoading else { return }
+        
         self.isLoading = isLoading
         
         if objectWillChnage {

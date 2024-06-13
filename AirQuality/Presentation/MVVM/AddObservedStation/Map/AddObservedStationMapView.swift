@@ -15,25 +15,82 @@ struct AddObservedStationMapView: View {
     
     @EnvironmentObject private var coordinator: AddObservedStationMapCoordinator
     
+    @State private var mapCameraPosition: MapCameraPosition = .automatic
+    @State private var findingTheNearestStation = false
+    
     var body: some View {
         BaseView(viewModel: viewModel, coordinator: coordinator) {
-            Map {
-                ForEach(viewModel.annotations) { stationAnnotation in
-                    StationMapAnnotationView(stationAnnotation: stationAnnotation, viewModel: viewModel)
+            ZStack {
+                Map(position: $mapCameraPosition) {
+                    ForEach(viewModel.annotations) { stationAnnotation in
+                        StationMapAnnotationView(
+                            stationAnnotation: stationAnnotation,
+                            viewModel: viewModel
+                        )
+                    }
+                }
+                .mapControls {
+                    MapUserLocationButton()
+                    MapScaleView()
+                }
+                
+                findTheNearestStationButton
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle(L10n.navigationTitle)
+            .onReceive(viewModel.theNearestStationPublisher) { station in
+                let stationLocationCoordinate = CLLocationCoordinate2D(
+                    latitude: station.latitude,
+                    longitude: station.longitude
+                )
+                
+                let coordinateRegion = MKCoordinateRegion(
+                    center: stationLocationCoordinate,
+                    latitudinalMeters: 500,
+                    longitudinalMeters: 500
+                )
+                withAnimation {
+                    findingTheNearestStation = false
+                    mapCameraPosition = MapCameraPosition.region(coordinateRegion)
                 }
             }
-            .mapControls {
-                MapUserLocationButton()
-                MapScaleView()
+            .dimissToolbarButton {
+                coordinator.dismiss()
             }
-        }
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle(L10n.navigationTitle)
-        .dimissToolbarButton {
-            coordinator.dismiss()
         }
         .taskOnFirstAppear {
             viewModel.fetchStations()
+        }
+    }
+    
+    private var findTheNearestStationButton: some View {
+        VStack {
+            Spacer()
+            
+            Button {
+                findingTheNearestStation = true
+                viewModel.findTheNearestStation()
+            } label: {
+                if findingTheNearestStation {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .tint(.white)
+                        .frame(maxWidth: .infinity)
+                } else {
+                    Text(L10n.findTheNearestStationButton)
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                }
+            }
+            .frame(height: 48)
+            .disabled(findingTheNearestStation)
+            .background(.blue)
+            .clipShape(
+                RoundedRectangle(cornerRadius: 12)
+            )
+            .padding(.horizontal, 16)
+            .padding(.bottom, 32)
         }
     }
     
@@ -44,10 +101,12 @@ struct AddObservedStationMapView: View {
 
 #Preview {
     GetStationsUseCasePreviewDummy.getStationsReturnValue = [
-        .previewDummy(id: 1, latitude: 50.057678, longitude: 19.926189),
-        .previewDummy(id: 2, latitude: 50.010575, longitude: 19.949189),
-        .previewDummy(id: 3, latitude: 50.069308, longitude: 20.053492)
+        Station.previewDummy(id: 1, latitude: 50.057678, longitude: 19.926189),
+        Station.previewDummy(id: 2, latitude: 50.010575, longitude: 19.949189),
+        Station.previewDummy(id: 3, latitude: 50.069308, longitude: 20.053492)
     ]
+    
+    FindTheNearestStationUseCasePreviewDummy.theNearestStation = (station: Station.previewDummy(latitude: 50.057678, longitude: 19.926189), distance: 20)
     
     @ObservedObject var coordinator = AddObservedStationMapCoordinator(
         coordinatorNavigationType: .presentation(dismissHandler: {})

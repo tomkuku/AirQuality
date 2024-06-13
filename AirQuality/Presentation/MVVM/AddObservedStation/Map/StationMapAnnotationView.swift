@@ -10,6 +10,8 @@ import MapKit
 import SwiftUI
 
 struct StationMapAnnotationView: MapContent {
+    private typealias L10n = Localizable.AddObservedStationMapView.AnnotationView
+    
     @State private var isPopoverPresented = false
     
     @ObservedObject private var viewModel: AddObservedStationMapViewModel
@@ -47,9 +49,9 @@ struct StationMapAnnotationView: MapContent {
                         }
                     }, label: {
                         let text: String = if stationAnnotation.isStationObserved {
-                            "Przestań obserwować"
+                            L10n.addObservedStation
                         } else {
-                            "Dodaj do obserwowanych"
+                            L10n.deleteObservedStation
                         }
                         
                         Text(text)

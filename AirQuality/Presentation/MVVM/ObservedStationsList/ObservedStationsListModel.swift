@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 final class StationsListViewModel: BaseViewModel {
     
@@ -17,6 +18,7 @@ final class StationsListViewModel: BaseViewModel {
     
     @Injected(\.getObservedStationsUseCase) private var getObservedStationsUseCase
     @Injected(\.deleteObservedStationUseCase) private var deleteObservedStationUseCase
+    @Injected(\.locationRespository) private var locationRespository
     
     // MARK: Lifecycle
     

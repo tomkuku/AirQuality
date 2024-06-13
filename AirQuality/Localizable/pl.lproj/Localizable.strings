@@ -51,6 +51,9 @@
 // MARK: AddObservedStationMapView
 
 "AddObservedStationMapView.navigationTitle" = "Mapa stacji";
+"AddObservedStationMapView.findTheNearestStationButton" = "Znajdź najbliższą stację";
+"AddObservedStationMapView.AnnotationView.addObservedStation" = "Przestań obserwować";
+"AddObservedStationMapView.AnnotationView.deleteObservedStation" = "Dodaj do obserwowanych";
 
 // MARK: AddObservedStationListView
 

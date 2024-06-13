@@ -23,5 +23,7 @@
 		<key>UIImageName</key>
 		<string>LaunchImage</string>
 	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Zapytanie</string>
 </dict>
 </plist>
