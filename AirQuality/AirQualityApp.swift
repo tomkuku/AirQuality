@@ -15,7 +15,11 @@ struct AirQualityApp: App {
     
     var body: some Scene {
         WindowGroup {
-            CoordinatorInitialNavigationView(coordinator: appCoordinator)
+            if ProcessInfo.isTest {
+                Text("Tests")
+            } else {
+                CoordinatorInitialNavigationView(coordinator: appCoordinator)
+            }
         }
     }
     

@@ -22,14 +22,14 @@ final class LocationDataSource: NSObject, LocationDataSourceProtocol, @unchecked
     
     // MARK: Private properties
     
-    private let locationManager: CLLocationManager
+    private let locationManager: CLLocationManagerProtocol
     private let subject = PassthroughSubject<CLLocation, Error>()
     
     @Injected(\.notificationCenter) private var notificationCeneter
     
     // MARK: Lifecycle
     
-    init(locationManager: CLLocationManager) {
+    init(locationManager: CLLocationManagerProtocol) {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         
         self.locationManager = locationManager
