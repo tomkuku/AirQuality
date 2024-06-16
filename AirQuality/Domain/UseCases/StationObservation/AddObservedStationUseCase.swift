@@ -15,7 +15,7 @@ protocol AddObservedStationUseCaseProtocol: Sendable {
     func add(station: Station) async throws
 }
 
-final class AddObservedStationUseCase: AddObservedStationUseCaseProtocol, Sendable {
+final class AddObservedStationUseCase: AddObservedStationUseCaseProtocol {
     @Injected(\.localDatabaseRepository) private var localDatabaseRepository
     @Injected(\.stationsLocalDatabaseMapper) private var stationsLocalDatabaseMapper
     

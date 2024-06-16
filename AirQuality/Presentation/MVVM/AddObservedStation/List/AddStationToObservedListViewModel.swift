@@ -21,7 +21,7 @@ final class AddStationToObservedListViewModel: BaseViewModel, @unchecked Sendabl
     @Injected(\.addObservedStationUseCase) private var addObservedStationUseCase
     @Injected(\.deleteObservedStationUseCase) private var deleteObservedStationUseCase
     @Injected(\.getObservedStationsUseCase) private var getObservedStationsUseCase
-    @Injected(\.getStationsUseCase) private var getStationsUseCase
+    @Injected(\.fetchAllStationsUseCase) private var fetchAllStationsUseCase
     
     @MainActor
     private var fetchedStations: [Station] = []
@@ -55,20 +55,12 @@ final class AddStationToObservedListViewModel: BaseViewModel, @unchecked Sendabl
     func fetchStations() {
         isLoading(true, objectWillChnage: true)
         
-        print("LL start")
-        
         Task { @MainActor [weak self] in
-            print("LL start 2", self)
             guard let self else { return }
             
             do {
-                print("LL start 3", getStationsUseCase)
-                let fetchedStations = try await getStationsUseCase.getStations()
-                print("LL fetched stations", fetchedStations)
+                let fetchedStations = try await fetchAllStationsUseCase.fetch()
                 let observedStations = try await getObservedStationsUseCase.fetchedStations()
-                print("LL fetched observed stations", observedStations)
-                
-                print("LL fetched")
                 
                 isLoading(false, objectWillChnage: false)
                 

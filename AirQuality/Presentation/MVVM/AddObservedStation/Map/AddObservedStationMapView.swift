@@ -100,7 +100,7 @@ struct AddObservedStationMapView: View {
 }
 
 #Preview {
-    GetStationsUseCasePreviewDummy.getStationsReturnValue = [
+    FetchAllStationsUseCasePreviewDummy.fetchReturnValue = [
         Station.previewDummy(id: 1, latitude: 50.057678, longitude: 19.926189),
         Station.previewDummy(id: 2, latitude: 50.010575, longitude: 19.949189),
         Station.previewDummy(id: 3, latitude: 50.069308, longitude: 20.053492)

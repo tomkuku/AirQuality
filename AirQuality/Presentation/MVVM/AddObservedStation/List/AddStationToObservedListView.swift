@@ -62,7 +62,7 @@ struct AddStationToObservedListView: View, Sendable {
 }
 
 #Preview {
-    GetStationsUseCasePreviewDummy.getStationsReturnValue = [
+    FetchAllStationsUseCasePreviewDummy.fetchReturnValue = [
         .previewDummy(id: 1),
         .previewDummy(id: 2),
         .previewDummy(id: 3),

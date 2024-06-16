@@ -86,7 +86,7 @@ struct StationMapAnnotationView: MapContent {
 }
 
 #Preview {
-    GetStationsUseCasePreviewDummy.getStationsReturnValue = [
+    FetchAllStationsUseCasePreviewDummy.fetchReturnValue = [
         .previewDummy(latitude: 50.057678, longitude: 19.926189)
     ]
     

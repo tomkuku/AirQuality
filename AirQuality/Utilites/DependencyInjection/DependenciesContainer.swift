@@ -36,7 +36,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     let stationsLocalDatabaseMapper: any StationsLocalDatabaseMapperProtocol
     let addObservedStationUseCase: AddObservedStationUseCaseProtocol
     let deleteObservedStationUseCase: DeleteObservedStationUseCaseProtocol
-    let getStationsUseCase: GetStationsUseCaseProtocol
+    let fetchAllStationsUseCase: FetchAllStationsUseCaseProtocol
     let getObservedStationsUseCase: GetObservedStationsUseCaseProtocol
     let cacheDataSource: CacheDataSourceProtocol
     let locationRespository: LocationRespositoryProtocol
@@ -102,10 +102,10 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         
 #if targetEnvironment(simulator)
         if ProcessInfo.isPreview {
-            self.getStationsUseCase = GetStationsUseCasePreviewDummy()
+            self.fetchAllStationsUseCase = FetchAllStationsUseCasePreviewDummy()
             self.findTheNearestStationUseCase = FindTheNearestStationUseCasePreviewDummy()
         } else {
-            self.getStationsUseCase = GetStationsUseCase()
+            self.fetchAllStationsUseCase = FetchAllStationsUseCase()
             self.findTheNearestStationUseCase = FindTheNearestStationUseCase()
         }
 #else

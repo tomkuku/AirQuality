@@ -17,7 +17,7 @@ protocol GetObservedStationsUseCaseProtocol: Sendable {
     func createNewStream() -> AsyncThrowingStream<[Station], Error>
 }
 
-final class GetObservedStationsUseCase: GetObservedStationsUseCaseProtocol, @unchecked Sendable {
+final class GetObservedStationsUseCase: GetObservedStationsUseCaseProtocol {
     @Injected(\.observedStationsFetchResultsRepository) private var observedStationsFetchResultsRepository
     @Injected(\.stationsLocalDatabaseMapper) private var stationsLocalDatabaseMapper
     

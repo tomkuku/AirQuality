@@ -7,10 +7,10 @@
 
 import Foundation
 
-final class GetStationsUseCasePreviewDummy: GetStationsUseCaseProtocol, @unchecked Sendable {
-    nonisolated(unsafe) static var getStationsReturnValue: [Station] = []
+final class FetchAllStationsUseCasePreviewDummy: FetchAllStationsUseCaseProtocol, @unchecked Sendable {
+    nonisolated(unsafe) static var fetchReturnValue: [Station] = []
     
-    func getStations() async throws -> [Station] {
-        Self.getStationsReturnValue
+    func fetch() async throws -> [Station] {
+        Self.fetchReturnValue
     }
 }

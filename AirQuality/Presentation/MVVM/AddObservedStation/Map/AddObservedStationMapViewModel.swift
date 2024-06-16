@@ -30,7 +30,7 @@ final class AddObservedStationMapViewModel: BaseViewModel {
     @Injected(\.addObservedStationUseCase) private var addObservedStationUseCase
     @Injected(\.deleteObservedStationUseCase) private var deleteObservedStationUseCase
     @Injected(\.getObservedStationsUseCase) private var getObservedStationsUseCase
-    @Injected(\.getStationsUseCase) private var getStationsUseCase
+    @Injected(\.fetchAllStationsUseCase) private var fetchAllStationsUseCase
     @Injected(\.findTheNearestStationUseCase) private var findTheNearestStationUseCase
     
     private var theNearestStationSubject = PassthroughSubject<Station, Never>()
@@ -55,7 +55,7 @@ final class AddObservedStationMapViewModel: BaseViewModel {
             guard let self else { return }
             
             do {
-                async let fetchedStations = getStationsUseCase.getStations()
+                async let fetchedStations = fetchAllStationsUseCase.fetch()
                 async let observedStations = getObservedStationsUseCase.fetchedStations()
                 
                 let result = try await (fetchedStations, observedStations)

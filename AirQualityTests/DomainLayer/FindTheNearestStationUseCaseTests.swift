@@ -10,7 +10,7 @@ import CoreLocation
 
 @testable import AirQuality
 
-final class FindTheNearestStationUseCaseTests: BaseTestCase, @unchecked Sendable {
+final class FindTheNearestStationUseCaseTests: BaseTestCase {
     
     private var sut: FindTheNearestStationUseCase!
     
@@ -45,7 +45,6 @@ final class FindTheNearestStationUseCaseTests: BaseTestCase, @unchecked Sendable
         await userLocationRepositorySpy.setRequestLocationOnceResult(.success(userLocation))
         
         // When
-        
         let result = try await sut.find()
         
         // Then
@@ -77,8 +76,6 @@ final class FindTheNearestStationUseCaseTests: BaseTestCase, @unchecked Sendable
             XCTFail("Find should have thrown an error!")
         } catch {
             // Then
-            let userLocationRepositorySpyEvents = await userLocationRepositorySpy.events
-            
             XCTAssertTrue(error is ErrorDummy)
             XCTAssertEqual(giosApiRepositorySpy.events, [
                 .fetch(
