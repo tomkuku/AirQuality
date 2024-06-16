@@ -11,18 +11,38 @@ protocol HasGIOSApiRepository {
     var giosApiRepository: GIOSApiRepositoryProtocol { get }
 }
 
+enum SourceType {
+    // Checks if value of requested resource is cached. If it's cached, it will return this value. If it is not cached, fetch value remotly, caches it and then returns value.
+    case cacheIfPossible
+    // Fetch value remotly.
+    case remote
+}
+
 protocol GIOSApiRepositoryProtocol: Sendable {
     func fetch<T, R>(
         mapper: T,
-        endpoint: R
+        endpoint: R,
+        source: SourceType
     ) async throws -> T.DomainModel where T: NetworkMapperProtocol, R: HTTPRequest
     
     func fetchSensors(for stationId: Int) async throws -> [Sensor]
 }
 
+extension GIOSApiRepositoryProtocol {
+    func fetch<T, R>(
+        mapper: T,
+        endpoint: R,
+        source: SourceType = .remote
+    ) async throws -> T.DomainModel where T: NetworkMapperProtocol, R: HTTPRequest {
+        try await self.fetch(mapper: mapper, endpoint: endpoint, source: source)
+    }
+}
+
 final class GIOSApiRepository: GIOSApiRepositoryProtocol, Sendable {
     
     // MARK: Private Properties
+    
+    @Injected(\.cacheDataSource) private var cacheDataSource
     
     private let decoder = JSONDecoder()
     private let httpDataSource: HTTPDataSourceProtocol
@@ -51,17 +71,24 @@ final class GIOSApiRepository: GIOSApiRepositoryProtocol, Sendable {
     
     func fetch<T, R>(
         mapper: T,
-        endpoint: R
+        endpoint: R,
+        source: SourceType
     ) async throws -> T.DomainModel where T: NetworkMapperProtocol, R: HTTPRequest {
-        let request = try endpoint.asURLRequest()
-        
-        let data = try await httpDataSource.requestData(request)
-        
-        do {
-            let dto = try decoder.decode(T.DTOModel.self, from: data)
-            return try mapper.map(dto)
-        } catch {
-            throw error
+        switch source {
+        case .cacheIfPossible:
+            let url = endpoint.urlRequest?.url
+            
+            if source == .cacheIfPossible, let value: T.DomainModel = await cacheDataSource.get(url: url) {
+                return value
+            }
+            
+            let value = try await handleFetchRemote(mapper: mapper, endpoint: endpoint)
+            
+            await cacheDataSource.set(url: url, value: value)
+            
+            return value
+        case .remote:
+            return try await handleFetchRemote(mapper: mapper, endpoint: endpoint)
         }
     }
     
@@ -109,5 +136,21 @@ final class GIOSApiRepository: GIOSApiRepositoryProtocol, Sendable {
         let data = try await httpDataSource.requestData(request)
         
         return try decoder.decode([SensorNetworkModel].self, from: data)
+    }
+    
+    private func handleFetchRemote<T, R>(
+        mapper: T,
+        endpoint: R
+    ) async throws -> T.DomainModel where T: NetworkMapperProtocol, R: HTTPRequest {
+        let request = try endpoint.asURLRequest()
+        
+        let data = try await httpDataSource.requestData(request)
+        
+        do {
+            let dto = try decoder.decode(T.DTOModel.self, from: data)
+            return try mapper.map(dto)
+        } catch {
+            throw error
+        }
     }
 }

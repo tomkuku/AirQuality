@@ -25,52 +25,52 @@ enum SensorDetailsContainerSubview: CaseIterable {
 }
 
 struct SensorDetailsContainerView: View {
-    @EnvironmentObject private var appCoordinator: AppCoordinator
+    @EnvironmentObject private var coordinator: SensorDetailsCoordinator
     @State private var selectedElementId: Int = 0
     
     private let sensor: Sensor
     
     var body: some View {
-        NavigationStack {
-            createNavigationMenuView()
-                .frame(height: 40)
-            
-            GeometryReader(content: { geometry in
-                ScrollViewReader(content: { scrollViewProxy in
-                    ScrollView(.horizontal) {
-                        LazyHStack(alignment: .center, spacing: 0) {
-                            ForEach(0..<3, id: \.self) { index in
-                                ZStack {
-                                    if index == 1 {
-                                        let viewModel = SensorArchivalMeasurementsListViewModel(sensor: sensor)
-                                        SensorArchivalMeasurementsListView(viewModel: viewModel)
-                                    } else if index == 0 {
-                                        let viewModel = SensorParamDetailsViewModel(sensor: sensor)
-                                        SensorParamDetailsView(viewModel: viewModel)
-                                    } else {
-                                        let viewModel = SensorArchivalMeasurementsListViewModel(sensor: sensor)
-                                        SensorArchivalMeasurementsChartView(viewModel: viewModel)
-                                    }
+        createNavigationMenuView()
+            .frame(height: 40)
+        
+        GeometryReader(content: { geometry in
+            ScrollViewReader(content: { scrollViewProxy in
+                ScrollView(.horizontal) {
+                    LazyHStack(alignment: .center, spacing: 0) {
+                        ForEach(0..<3, id: \.self) { index in
+                            ZStack {
+                                if index == 1 {
+                                    let viewModel = SensorArchivalMeasurementsListViewModel(sensor: sensor)
+                                    SensorArchivalMeasurementsListView(viewModel: viewModel)
+                                } else if index == 0 {
+                                    let viewModel = SensorParamDetailsViewModel(sensor: sensor)
+                                    SensorParamDetailsView(viewModel: viewModel)
+                                } else {
+                                    let viewModel = SensorArchivalMeasurementsListViewModel(sensor: sensor)
+                                    SensorArchivalMeasurementsChartView(viewModel: viewModel)
                                 }
-                                .frame(width: geometry.size.width, height: geometry.size.height)
                             }
+                            .frame(width: geometry.size.width, height: geometry.size.height)
                         }
                     }
-                    .scrollDisabled(true)
-                    .onChange(of: selectedElementId) {
-                        withAnimation(.easeOut) {
-                            scrollViewProxy.scrollTo(selectedElementId)
-                        }
-                    }
-                })
-            })
-            .toolbar {
-                Button("Close") {
-                    appCoordinator.dismiss()
                 }
+                .scrollDisabled(true)
+                .onChange(of: selectedElementId) {
+                    withAnimation(.easeOut) {
+                        scrollViewProxy.scrollTo(selectedElementId)
+                    }
+                }
+            })
+        })
+        .navigationTitle(sensor.param.name)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            Button("Close") {
+                coordinator.dismiss()
             }
-            .ignoresSafeArea(.container, edges: .bottom)
         }
+        .ignoresSafeArea(.container, edges: .bottom)
     }
     
     init(sensor: Sensor) {

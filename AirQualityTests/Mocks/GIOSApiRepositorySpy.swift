@@ -11,13 +11,13 @@ import XCTest
 
 final class GIOSApiRepositorySpy: GIOSApiRepositoryProtocol, @unchecked Sendable {
     enum Event: Equatable {
-        case fetch(String, URLRequest)
+        case fetch(String, URLRequest, SourceType)
         case fetchSensors(Int)
         
         static func == (lhs: Self, rhs: Self) -> Bool {
             switch (lhs, rhs) {
-            case let (.fetch(method1, request1), .fetch(method2, request2)):
-                method1 == method2 && request1 == request2
+            case let (.fetch(method1, request1, source1), .fetch(method2, request2, source2)):
+                method1 == method2 && request1 == request2 && source1 == source2
             case let (.fetchSensors(lhsSensorId), .fetchSensors(rhsSensorId)):
                 lhsSensorId == rhsSensorId
             default:
@@ -33,9 +33,10 @@ final class GIOSApiRepositorySpy: GIOSApiRepositoryProtocol, @unchecked Sendable
     
     func fetch<T, R>(
         mapper: T,
-        endpoint: R
+        endpoint: R,
+        source: SourceType
     ) async throws -> T.DomainModel where T: NetworkMapperProtocol, R: HTTPRequest {
-        events.append(.fetch(String(describing: T.DomainModel.self), try! endpoint.asURLRequest()))
+        events.append(.fetch(String(describing: T.DomainModel.self), try! endpoint.asURLRequest(), source))
         
         return try await withCheckedThrowingContinuation { continuation in
             switch fetchResult {

@@ -12,7 +12,7 @@ protocol GetArchivalMeasurementsUseCaseProtocol: Sendable {
     func getArchivalMeasurements(for sensorId: Int) async throws -> [Measurement]
 }
 
-final class GetArchivalMeasurementsUseCase: GetArchivalMeasurementsUseCaseProtocol, @unchecked Sendable {
+final class GetArchivalMeasurementsUseCase: GetArchivalMeasurementsUseCaseProtocol {
     @Injected(\.giosApiV1Repository) private var giosApiV1Repository
     
     private let measurementsNetworkMapper: any MeasurementsNetworkMapperProtocol

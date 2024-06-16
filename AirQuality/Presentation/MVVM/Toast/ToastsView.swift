@@ -35,6 +35,7 @@ struct ToastView: View {
                     }
                     .opacity(isToastPresnted(toast) ? 1 : 0)
                     .frame(height: isToastPresnted(toast) ? nil : 0)
+                    .padding(.horizontal, 16)
                     .onAppear {
                         if !isToastPresnted(toast) {
                             withAnimation(.easeOut(duration: 0.4)) {
@@ -44,7 +45,6 @@ struct ToastView: View {
                     }
                 }
             }
-            .padding(.horizontal, 8)
         }
     }
     

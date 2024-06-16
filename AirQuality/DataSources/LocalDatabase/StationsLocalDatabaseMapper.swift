@@ -7,8 +7,12 @@
 
 import Foundation
 
+protocol HasStationsLocalDatabaseMapper {
+    var stationsLocalDatabaseMapper: any StationsLocalDatabaseMapperProtocol { get }
+}
+
 protocol StationsLocalDatabaseMapperProtocol: LocalDatabaseMapperProtocol
-where DTOModel == StationLocalDatabaseModel, DomainModel == Station { }
+where DomainModel == Station, DTOModel == StationLocalDatabaseModel { }
 
 struct StationsLocalDatabaseMapper: StationsLocalDatabaseMapperProtocol {
     typealias DomainModel = Station

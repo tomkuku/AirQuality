@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 import class UIKit.UIApplication
+import CoreLocation
 
 protocol DependenciesContainerProtocol: AnyObject {
     subscript<T>(_ keyPath: KeyPath<AllDependencies, T>) -> T { get }
@@ -32,6 +33,16 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     let giosApiRepository: GIOSApiRepositoryProtocol
     let localDatabaseRepository: LocalDatabaseRepositoryProtocol
     let observedStationsFetchResultsRepository: LocalDatabaseFetchResultsRepository<StationsLocalDatabaseMapper>
+    let stationsLocalDatabaseMapper: any StationsLocalDatabaseMapperProtocol
+    let addObservedStationUseCase: AddObservedStationUseCaseProtocol
+    let deleteObservedStationUseCase: DeleteObservedStationUseCaseProtocol
+    let fetchAllStationsUseCase: FetchAllStationsUseCaseProtocol
+    let getObservedStationsUseCase: GetObservedStationsUseCaseProtocol
+    let cacheDataSource: CacheDataSourceProtocol
+    let locationRespository: LocationRespositoryProtocol
+    let notificationCenter: any NotificationCenterProtocol
+    let stationsNetworkMapper: any StationsNetworkMapperProtocol
+    let findTheNearestStationUseCase: FindTheNearestStationUseCaseProtocol
     
     @MainActor
     init() throws {
@@ -40,7 +51,11 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         let paramsRepository = try ParamsRepository(bundleDataSource: bundleDataSource)
         let uiApplication = UIApplication.shared
         
+        self.notificationCenter = NotificationCenter.default
+        
         let backgroundTasksManager = BackgroundTasksManager(uiApplication: uiApplication)
+        
+        self.stationsNetworkMapper = StationsNetworkMapper()
         
         self.giosApiV1Repository = GIOSApiV1Repository(httpDataSource: httpDataSource)
         self.giosApiRepository = GIOSApiRepository(
@@ -73,6 +88,30 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
             localDatabaseFetchResultsDataSource: observedStationLocalDatabaseFetchResultsDataSource,
             mapper: stationsLocalDatabaseMapper
         )
+        self.stationsLocalDatabaseMapper = stationsLocalDatabaseMapper
+        self.addObservedStationUseCase = AddObservedStationUseCase()
+        self.deleteObservedStationUseCase = DeleteObservedStationUseCase()
+        self.getObservedStationsUseCase = GetObservedStationsUseCase()
+                
+        self.cacheDataSource = CacheDataSource()
+        
+        let locationManager = CLLocationManager()
+        
+        let userLocationDataSource = UserLocationDataSource(locationManager: CLLocationManager())
+        self.locationRespository = LocationRespository(userLocationDataSource: userLocationDataSource)
+        
+#if targetEnvironment(simulator)
+        if ProcessInfo.isPreview {
+            self.fetchAllStationsUseCase = FetchAllStationsUseCasePreviewDummy()
+            self.findTheNearestStationUseCase = FindTheNearestStationUseCasePreviewDummy()
+        } else {
+            self.fetchAllStationsUseCase = FetchAllStationsUseCase()
+            self.findTheNearestStationUseCase = FindTheNearestStationUseCase()
+        }
+#else
+        self.getStationsUseCase = GetStationsUseCase()
+        self.findTheNearestStationUseCase = FindTheNearestStationUseCase()
+#endif
     }
     
     private static func createModelContainer() throws -> ModelContainer {

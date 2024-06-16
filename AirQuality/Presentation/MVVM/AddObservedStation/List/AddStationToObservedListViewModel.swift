@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-final class AddStationToObservedListViewModel: ObservableObject, @unchecked Sendable {
+final class AddStationToObservedListViewModel: BaseViewModel, @unchecked Sendable {
     
     typealias Model = AddStationToObservedListModel
     
@@ -16,38 +16,26 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
     
     @Published private(set) var sections: [Model.Section] = []
     
-    @MainActor
-    private(set) var isLoading = false
-    
-    @MainActor
-    var errorPublisher: AnyPublisher<Error, Never> {
-        errorSubject.eraseToAnyPublisher()
-    }
-    
     // MARK: Private properties
     
-    private let getStationsUseCase: GetStationsUseCaseProtocol
-    private let observeStationUseCase: ObserveStationUseCaseProtocol
-    private let deleteStationFromObservedListUseCase: DeleteStationFromObservedListUseCaseProtocol
-    private let getObservedStationsUseCase: GetObservedStationsUseCaseProtocol
-    private let errorSubject = PassthroughSubject<Error, Never>()
+    @Injected(\.addObservedStationUseCase) private var addObservedStationUseCase
+    @Injected(\.deleteObservedStationUseCase) private var deleteObservedStationUseCase
+    @Injected(\.getObservedStationsUseCase) private var getObservedStationsUseCase
+    @Injected(\.fetchAllStationsUseCase) private var fetchAllStationsUseCase
     
     @MainActor
     private var fetchedStations: [Station] = []
+    private var searchedText: String = ""
     
-    init(
-        getStationsUseCase: GetStationsUseCaseProtocol = GetStationsUseCase(),
-        observeStationUseCase: ObserveStationUseCaseProtocol = ObserveStationUseCase(),
-        deleteStationFromObservedListUseCase: DeleteStationFromObservedListUseCaseProtocol = DeleteStationFromObservedListUseCase(),
-        getObservedStationsUseCase: GetObservedStationsUseCaseProtocol = GetObservedStationsUseCase()
-    ) {
-        self.getStationsUseCase = getStationsUseCase
-        self.observeStationUseCase = observeStationUseCase
-        self.deleteStationFromObservedListUseCase = deleteStationFromObservedListUseCase
-        self.getObservedStationsUseCase = getObservedStationsUseCase
+    // MARK: Lifecycle
+    
+    override init() {
+        super.init()
         
         receiveObservedStationsStream()
     }
+    
+    // MARK: Methods
     
     func receiveObservedStationsStream() {
         Task { @MainActor [weak self] in
@@ -59,24 +47,28 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
                 }
             } catch {
                 Logger.error(error.localizedDescription)
-                errorSubject.send(error)
+                alertSubject.send(.somethigWentWrong())
             }
         }
     }
     
     func fetchStations() {
+        isLoading(true, objectWillChnage: true)
+        
         Task { @MainActor [weak self] in
             guard let self else { return }
             
             do {
-                let fetchedStations = try await getStationsUseCase.getStations()
+                let fetchedStations = try await fetchAllStationsUseCase.fetch()
                 let observedStations = try await getObservedStationsUseCase.fetchedStations()
+                
+                isLoading(false, objectWillChnage: false)
                 
                 createAndSortSections(fetchedStations, observedStations: observedStations)
                 self.fetchedStations = fetchedStations
             } catch {
                 Logger.error(error.localizedDescription)
-                errorSubject.send(error)
+                alertSubject.send(.somethigWentWrong())
             }
         }
     }
@@ -89,20 +81,42 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
                 let observedStations = try await getObservedStationsUseCase.fetchedStations()
                 
                 if observedStations.contains(station) {
-                    try await deleteStationFromObservedListUseCase.delete(station: station)
+                    try await deleteObservedStationUseCase.delete(station: station)
                 } else {
-                    try await observeStationUseCase.observe(station: station)
+                    try await addObservedStationUseCase.add(station: station)
                 }
             } catch {
                 Logger.error("Observing station faild with error: \(error.localizedDescription)")
-                errorSubject.send(error)
+                alertSubject.send(.somethigWentWrong())
             }
         }
     }
     
-    @MainActor
+    func searchedTextDidChange(_ text: String) {
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            
+            self.searchedText = text
+            
+            do {
+                let observedStations = try await self.getObservedStationsUseCase.fetchedStations()
+                
+                self.createAndSortSections(fetchedStations, observedStations: observedStations)
+            } catch {
+                Logger.error("Observing station faild with error: \(error.localizedDescription)")
+                self.alertSubject.send(.somethigWentWrong())
+            }
+        }
+    }
+    
+    // MARK: Private methods
+    
     private func createAndSortSections(_ stations: [Station], observedStations: [Station]) {
         var sections: [Model.Section] = stations.reduce(into: [Model.Section]()) { sections, station in
+            if !searchedText.isEmpty && !isStationMatchToSerachedText(station) {
+                return
+            }
+            
             let row = Model.Row(station: station, isStationObserved: observedStations.contains(station))
             
             if let sectionIndex = sections.firstIndex(where: { $0.name.lowercased() == station.province.lowercased() }) {
@@ -120,6 +134,8 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
         })
         
         self.sections = sections
+        
+        print("LL done", sections.count, stations)
     }
     
     private func sortRows(in sections: inout [Model.Section]) {
@@ -138,5 +154,13 @@ final class AddStationToObservedListViewModel: ObservableObject, @unchecked Send
                 }
             })
         }
+    }
+    
+    private func isStationMatchToSerachedText(_ station: Station) -> Bool {
+        if let stationStreet = station.street, stationStreet.contains(searchedText) {
+            return true
+        }
+        
+        return station.cityName.contains(searchedText)
     }
 }

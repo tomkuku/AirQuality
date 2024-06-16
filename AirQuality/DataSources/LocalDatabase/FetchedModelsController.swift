@@ -124,9 +124,9 @@ actor LocalDatabaseFetchResultsDataSource<T>: LocalDatabaseFetchResultsDataSourc
                 models.append(insertedModel)
             }
             
-            for (i, model) in models.enumerated() where deletedModels.contains(model) {
-                models.remove(at: i)
-            }
+            models.removeAll(where: {
+                deletedModels.contains($0)
+            })
             
             models.sort(using: sortDescriptors)
             

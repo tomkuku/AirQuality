@@ -11,6 +11,10 @@ extension View {
     func taskOnFirstAppear(_ action: @escaping () async -> ()) -> some View {
         modifier(FirstAppear(action: action))
     }
+    
+    func dimissToolbarButton(_ action: @escaping () -> ()) -> some View {
+        modifier(DismissToolbarButton(action: action))
+    }
 }
 
 struct FirstAppear: ViewModifier {
@@ -27,6 +31,25 @@ struct FirstAppear: ViewModifier {
     }
     
     init(action: @escaping () async -> ()) {
+        self.action = action
+    }
+}
+
+struct DismissToolbarButton: ViewModifier {
+    private typealias L10n = Localizable.NavigationToolbar.DismissButton
+    
+    private let action: () -> ()
+    
+    func body(content: Content) -> some View {
+        content
+            .toolbar {
+                Button(action: action, label: {
+                    Text(L10n.title)
+                })
+            }
+    }
+    
+    init(action: @escaping () -> ()) {
         self.action = action
     }
 }

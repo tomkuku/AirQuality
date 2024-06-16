@@ -7,6 +7,10 @@
 
 import Foundation
 
+protocol HasNotificationCenter {
+    var notificationCenter: NotificationCenterProtocol { get }
+}
+
 protocol NotificationCenterProtocol: Sendable {
     func post(name aName: NSNotification.Name, object anObject: Any?)
     func notifications(named name: Notification.Name, object: AnyObject?) -> NotificationCenter.Notifications

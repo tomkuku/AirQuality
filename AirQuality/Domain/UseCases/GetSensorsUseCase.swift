@@ -12,7 +12,7 @@ protocol GetSensorsUseCaseProtocol: Sendable {
     func getSensors(for stationId: Int) async throws -> [Sensor]
 }
 
-final class GetSensorsUseCase: GetSensorsUseCaseProtocol, @unchecked Sendable {
+final class GetSensorsUseCase: GetSensorsUseCaseProtocol {
     @Injected(\.giosApiRepository) private var giosApiRepository
     
     func getSensors(for stationId: Int) async throws -> [Sensor] {

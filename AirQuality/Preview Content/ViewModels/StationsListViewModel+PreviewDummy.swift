@@ -8,11 +8,5 @@
 import Foundation
 
 extension StationsListViewModel {
-    private struct GetStationsUseCase: GetStationsUseCaseProtocol {
-        func getStations() async throws -> [Station] {
-            [Station.previewDummy()]
-        }
-    }
-    
-    nonisolated(unsafe) static let previewDummy = StationsListViewModel(getStationsUseCase: GetStationsUseCase())
+//    nonisolated(unsafe) static let previewDummy = StationsListViewModel(getStationsUseCase: GetStationsUseCase())
 }

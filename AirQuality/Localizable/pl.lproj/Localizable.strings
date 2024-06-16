@@ -42,12 +42,27 @@
 "Alert.Button.Ok.title" = "Ok";
 "Alert.Button.Cancel.title" = "Anuluj";
 
-// MARK: AddStationToObservedListView
+// MARK: AddObservedStationContainerView
 
-"AddStationToObservedListView.title" = "Lista Stacji";
+"AddObservedStationContainerView.MapItem.itemTitle" = "Mapa";
+"AddObservedStationContainerView.ListItem.itemTitle" = "Lista";
+"AddObservedStationContainerView.closeButton" = "Zamknij";
 
-// MAKR: AddStationToObservedListView
+// MARK: AddObservedStationMapView
 
-"AddStationToObservedListView.ShrinkButton.shrink" = "Zwiń";
-"AddStationToObservedListView.ShrinkButton.expand" = "Rozwiń";
-"AddStationToObservedListView.noStations" = "Brak stacji";
+"AddObservedStationMapView.navigationTitle" = "Mapa stacji";
+"AddObservedStationMapView.findTheNearestStationButton" = "Znajdź najbliższą stację";
+"AddObservedStationMapView.AnnotationView.addObservedStation" = "Przestań obserwować";
+"AddObservedStationMapView.AnnotationView.deleteObservedStation" = "Dodaj do obserwowanych";
+
+// MARK: AddObservedStationListView
+
+"AddObservedStationListView.navigationTitle" = "Lista stacji";
+"AddObservedStationListView.ShrinkButton.shrink" = "Zwiń";
+"AddObservedStationListView.ShrinkButton.expand" = "Rozwiń";
+"AddObservedStationListView.noStations" = "Brak stacji";
+"AddObservedStationListView.seach" = "Szukaj stacji";
+
+// MARK: DismissButton
+
+"NavigationToolbar.DismissButton.title" = "Zamknij";

@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import class Combine.AnyCancellable
 
 @testable import AirQuality
 
@@ -15,10 +16,13 @@ class BaseTestCase: XCTestCase {
     var expectation: XCTestExpectation!
     var appDependencies: DependenciesContainerProtocol!
     var tasks: [Task<Void, Error>]!
+    var cancellables: Set<AnyCancellable>!
     // swiftlint:enable test_case_accessibility
     
     override func setUp() {
         super.setUp()
+        
+        cancellables = .init()
         
         appDependencies = DependenciesContainerManager.container
         

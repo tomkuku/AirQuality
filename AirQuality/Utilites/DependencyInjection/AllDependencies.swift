@@ -8,7 +8,21 @@
 import Foundation
 
 typealias AllDependencies =
+// UseCases
+HasFetchAllStationsUseCase &
+HasAddObservedStationUseCase &
+HasDeleteObservedStationUseCase &
+HasGetObservedStationsUseCase &
+HasFindTheNearestStationUseCase &
+// DataSources
+HasCacheDataSource &
+HasNotificationCenter &
+// Repositories
 HasGIOSApiV1Repository &
 HasGIOSApiRepository &
 HasLocalDatabaseRepository &
-HasObservedStationsFetchResultsRepository
+HasObservedStationsFetchResultsRepository &
+HasLocationRespository &
+// Mappers
+HasStationsNetworkMapper &
+HasStationsLocalDatabaseMapper

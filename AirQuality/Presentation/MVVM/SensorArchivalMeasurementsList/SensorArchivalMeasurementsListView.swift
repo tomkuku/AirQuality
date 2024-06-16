@@ -12,7 +12,7 @@ struct SensorArchivalMeasurementsListView: View {
     @StateObject private var viewModel: SensorArchivalMeasurementsListViewModel
     
     var body: some View {
-        BaseView(isLoading: Binding(projectedValue: .constant(viewModel.idLoading))) {
+//        BaseView(isLoading: viewModel.idLoading) {
             ScrollView {
                 ForEach(0..<viewModel.rows.count, id: \.self) { index in
                     let row = viewModel.rows[index]
@@ -38,7 +38,7 @@ struct SensorArchivalMeasurementsListView: View {
                         Divider()
                     }
                 }
-            }
+//            }
         }
         .taskOnFirstAppear {
             await viewModel.fetchArchivalMeasurements()
@@ -53,36 +53,4 @@ struct SensorArchivalMeasurementsListView: View {
 #Preview {
     let viewModel = SensorArchivalMeasurementsListViewModel.previewDummy
     return SensorArchivalMeasurementsListView(viewModel: viewModel)
-}
-
-struct BaseView<T>: View where T: View {
-    
-    @Binding private var isLoading: Bool
-    
-    private var contentView: T
-    
-    var body: some View {
-        VStack {
-            if isLoading {
-                HStack {
-                    Spacer()
-                    
-                    ProgressView()
-                        .progressViewStyle(.circular)
-                    
-                    Spacer()
-                }
-            } else {
-                contentView
-            }
-        }
-    }
-    
-    init(
-        isLoading: Binding<Bool>,
-        contentView: @escaping () -> T
-    ) {
-        self._isLoading = isLoading
-        self.contentView = contentView()
-    }
 }
