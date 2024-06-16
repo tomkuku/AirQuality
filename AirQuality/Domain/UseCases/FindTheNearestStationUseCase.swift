@@ -21,48 +21,33 @@ actor FindTheNearestStationUseCase: FindTheNearestStationUseCaseProtocol {
     @Injected(\.giosApiRepository) private var giosApiRepository
     @Injected(\.stationsNetworkMapper) private var stationsNetworkMapper
     
-    @HandlerActor
     func find() async throws -> (station: Station, distance: Double)? {
-        async let fetchedStations = giosApiRepository.fetch(
+        async let fetchedStations =  giosApiRepository.fetch(
             mapper: stationsNetworkMapper,
             endpoint: Endpoint.Stations.get,
             source: .cacheIfPossible
         )
         
-        guard let userLocation = try await getUserLocation() else {
-            Logger.error("User location nil!")
-            return nil
-        }
+        async let userLocation = locationRespository.requestLocationOnce()
         
         var theNearestStation: Station?
         var minDistance: Double = .greatestFiniteMagnitude
         
         for station in try await fetchedStations {
             let stationLocation = CLLocation(latitude: station.latitude, longitude: station.longitude)
+            let distance = try await userLocation?.distance(from: stationLocation)
             
-            let distance = userLocation.distance(from: stationLocation)
-            
-            if distance < minDistance {
-                minDistance = distance
+            if (distance ?? .infinity) < minDistance {
+                minDistance = distance ?? .infinity
                 theNearestStation = station
             }
         }
         
         guard let theNearestStation else {
-            Logger.error("The nearest station not found!")
+            Logger.error("The nearest station is nil!")
             return nil
         }
         
         return (theNearestStation, minDistance)
-    }
-    
-    private func getUserLocation() async throws -> CLLocation? {
-        locationRespository.requestLocation()
-        
-        for try await coordinates in locationRespository.createLocationStream() {
-            return CLLocation(latitude: coordinates.latitude, longitude: coordinates.longitude)
-        }
-        
-        return nil
     }
 }

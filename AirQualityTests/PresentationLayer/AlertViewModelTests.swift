@@ -17,8 +17,6 @@ final class AlertViewModelTests: BaseTestCase {
     
     private var alertSubject: PassthroughSubject<AlertModel, Never>!
     
-    private var cancellables: Set<AnyCancellable>!
-    
     override func setUp() {
         super.setUp()
         
@@ -27,8 +25,6 @@ final class AlertViewModelTests: BaseTestCase {
         alertSubject = PassthroughSubject<AlertModel, Never>()
         
         sut = AlertViewModel(alertSubject)
-        
-        cancellables = Set<AnyCancellable>()
     }
     
     @MainActor

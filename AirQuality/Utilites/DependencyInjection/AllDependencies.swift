@@ -19,7 +19,6 @@ HasDeleteObservedStationUseCase &
 HasGetObservedStationsUseCase &
 HasCacheDataSource &
 HasLocationRespository &
-HasLocationCoordinatesMapper &
 HasNotificationCenter &
 HasStationsNetworkMapper &
 HasFindTheNearestStationUseCase

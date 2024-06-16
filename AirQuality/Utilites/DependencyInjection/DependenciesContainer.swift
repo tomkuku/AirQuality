@@ -41,7 +41,6 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     let cacheDataSource: CacheDataSourceProtocol
     let locationRespository: LocationRespositoryProtocol
     let notificationCenter: any NotificationCenterProtocol
-    let locationCoordinatesMapper: any LocationCoordinatesMapperProtocol
     let stationsNetworkMapper: any StationsNetworkMapperProtocol
     let findTheNearestStationUseCase: FindTheNearestStationUseCaseProtocol
     
@@ -98,10 +97,8 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         
         let locationManager = CLLocationManager()
         
-        self.locationCoordinatesMapper = LocationCoordinatesMapper()
-        
-        let locationDataSource = LocationDataSource(locationManager: CLLocationManager())
-        self.locationRespository = LocationRespository(locationDataSource: locationDataSource)
+        let userLocationDataSource = UserLocationDataSource(locationManager: CLLocationManager())
+        self.locationRespository = LocationRespository(userLocationDataSource: userLocationDataSource)
         
 #if targetEnvironment(simulator)
         if ProcessInfo.isPreview {

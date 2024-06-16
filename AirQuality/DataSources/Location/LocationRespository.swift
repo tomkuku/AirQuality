@@ -14,87 +14,71 @@ protocol HasLocationRespository {
 }
 
 protocol LocationRespositoryProtocol: AnyObject, Sendable {
-    func isLocationServicesAvailble() -> Bool
-    func requestLocation()
-    func createLocationStream() -> AsyncThrowingStream<LocationCoordinates, Error>
+    var isLocationServicesEnabled: Bool { get async }
+    
+    func requestLocationOnce() async throws -> Location?
 }
 
-final class LocationRespository: LocationRespositoryProtocol, Sendable {
+actor LocationRespository: LocationRespositoryProtocol {
+    
+    // MARK: Properties
+    
+    var isLocationServicesEnabled: Bool {
+        get async {
+            userLocationDataSource.locationServicesEnabled
+        }
+    }
     
     // MARK: Private properties
     
-    private let locationDataSource: LocationDataSourceProtocol
-    
-    @Injected(\.notificationCenter) private var notificationCenter
-    @Injected(\.locationCoordinatesMapper) private var locationCoordinatesMapper
+    private let userLocationDataSource: UserLocationDataSourceProtocol
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: Lifecycle
     
-    init(locationDataSource: LocationDataSourceProtocol) {
-        self.locationDataSource = locationDataSource
-        
-        self.observeLocationAuthorizationDidChange()
+    init(userLocationDataSource: UserLocationDataSourceProtocol) {
+        self.userLocationDataSource = userLocationDataSource
     }
     
     // MARK: Methods
     
-    func isLocationServicesAvailble() -> Bool {
-        guard locationDataSource.isLocationServicesEnabled() else {
-            return false
-        }
+    func requestLocationOnce() async throws -> Location? {
+        var continuation: CheckedContinuation<Location, Error>?
         
-        return switch locationDataSource.getAuthorizationStatus() {
-        case .authorizedAlways, .authorizedWhenInUse, .notDetermined:
-            true
-        default:
-            false
-        }
-    }
-    
-    func requestLocation() {
-        switch locationDataSource.getAuthorizationStatus() {
-        case .notDetermined:
-            locationDataSource.requestWhenInUseAuthorization()
-        case .authorizedWhenInUse:
-            locationDataSource.requestLocation()
-        case .denied, .restricted:
-            let error = NSError(domain: "LocationRespository", code: -1, userInfo: [
-                NSLocalizedDescriptionKey: "Location services permission denied!"
-            ])
-        default:
-            break
-        }
-    }
-    
-    func createLocationStream() -> AsyncThrowingStream<LocationCoordinates, Error> {
-        AsyncThrowingStream { [weak self] continuation in
-            Task { [weak self] in
-                guard let self else {
-                    continuation.finish()
-                    return
-                }
+        userLocationDataSource
+            .authorizationStatusPublisher
+            .asyncSink(receiveValue: { [weak self] _ in
+                await self?.requestLocation()
+            })
+            .store(in: &cancellables)
+        
+        userLocationDataSource
+            .locationPublisher
+            .sink {
+                guard case .failure(let error) = $0 else { return }
                 
-                do {
-                    for try await location in self.locationDataSource.getLocationAsyncPublisher() {
-                        let locationCoordinates = try self.locationCoordinatesMapper.map(location.coordinate)
-                        continuation.yield(locationCoordinates)
-                    }
-                } catch {
-                    continuation.finish(throwing: error)
-                }
+                continuation?.resume(throwing: error)
+            } receiveValue: { location in
+                continuation?.resume(returning: location)
             }
+            .store(in: &cancellables)
+        
+        return try await withCheckedThrowingContinuation { checkedContinuation in
+            continuation = checkedContinuation
+            requestLocation()
         }
     }
     
     // MARK: Private methods
     
-    private func observeLocationAuthorizationDidChange() {
-        Task { [weak self] in
-            guard let self else { return }
-            
-            for await _ in NotificationCenter.default.notifications(named: .locationDataSourceDidChangeAuthorization, object: self.locationDataSource).map({ $0.name }) {
-                self.requestLocation()
-            }
+    private func requestLocation() {
+        switch userLocationDataSource.authorizationStatus {
+        case .authorizedAlways, .authorizedWhenInUse:
+            userLocationDataSource.requestLocation()
+        case .notDetermined:
+            userLocationDataSource.requestWhenInUseAuthorization()
+        default:
+            break
         }
     }
 }

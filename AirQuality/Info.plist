@@ -18,12 +18,7 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
-	<key>UILaunchScreen</key>
-	<dict>
-		<key>UIImageName</key>
-		<string>LaunchImage</string>
-	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Zapytanie</string>
+	<string>Pozwolenie</string>
 </dict>
 </plist>
