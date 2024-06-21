@@ -1,25 +1,22 @@
 //
-//  AddObservedStationMapViewModel.swift
+//  AddStationToObservedListViewModelTests.swift
 //  AirQualityTests
 //
-//  Created by Tomasz Kukułka on 18/06/2024.
+//  Created by Tomasz Kukułka on 16/06/2024.
 //
 
 import XCTest
 
 @testable import AirQuality
 
-final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendable {
+final class AddStationToObservedListViewModelTests: BaseTestCase, @unchecked Sendable {
     
-    private typealias AnnotationModel = AddObservedStationMapModel.StationAnnotation
-    
-    private var sut: AddObservedStationMapViewModel!
+    private var sut: AddStationToObservedListViewModel!
     
     private var addObservedStationUseCaseSpy: AddObservedStationUseCaseSpy!
     private var deleteObservedStationUseCaseSpy: DeleteObservedStationUseCaseSpy!
     private var getObservedStationsUseCaseSpy: GetObservedStationsUseCaseSpy!
     private var fetchAllStationsUseCaseSpy: FetchAllStationsUseCaseSpy!
-    private var findTheNearestStationUseCaseSpy: FindTheNearestStationUseCaseSpy!
     
     private var station1: Station!
     private var station2: Station!
@@ -35,13 +32,11 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         deleteObservedStationUseCaseSpy = DeleteObservedStationUseCaseSpy()
         getObservedStationsUseCaseSpy = GetObservedStationsUseCaseSpy()
         fetchAllStationsUseCaseSpy = FetchAllStationsUseCaseSpy()
-        findTheNearestStationUseCaseSpy = FindTheNearestStationUseCaseSpy()
         
         dependenciesContainerDummy[\.addObservedStationUseCase] = addObservedStationUseCaseSpy
         dependenciesContainerDummy[\.deleteObservedStationUseCase] = deleteObservedStationUseCaseSpy
         dependenciesContainerDummy[\.getObservedStationsUseCase] = getObservedStationsUseCaseSpy
         dependenciesContainerDummy[\.fetchAllStationsUseCase] = fetchAllStationsUseCaseSpy
-        dependenciesContainerDummy[\.findTheNearestStationUseCase] = findTheNearestStationUseCaseSpy
         
         station1 = Station.dummy(id: 1, cityName: "Cracow", province: "Malopolska", street: "Bujaka")
         station2 = Station.dummy(id: 2, cityName: "Plock", province: "Mazowieckie", street: "Reja")
@@ -51,7 +46,7 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         station6 = Station.dummy(id: 6, cityName: "Warszawa", province: "Mazowieckie", street: "Wokalna")
         
         await MainActor.run {
-            sut = AddObservedStationMapViewModel()
+            sut = AddStationToObservedListViewModel()
         }
     }
     
@@ -60,8 +55,6 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
     @MainActor
     func testFetchStations() {
         // Given
-        var annotations: [AddObservedStationMapModel.StationAnnotation]?
-        
         fetchAllStationsUseCaseSpy.fetchStationsResult = .success([
             station1, station2, station3, station4, station5, station6
         ])
@@ -70,7 +63,9 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
             station2, station5
         ])
         
-        expectation.expectedFulfillmentCount = 2
+        var sections: [AddStationToObservedListModel.Section]?
+        
+        expectation.expectedFulfillmentCount = 3
         
         sut.objectWillChange
             .sink { _ in
@@ -78,10 +73,10 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
             }
             .store(in: &cancellables)
         
-        sut.$annotations
+        sut.$sections
             .dropFirst()
             .sink {
-                annotations = $0
+                sections = $0
                 self.expectation.fulfill()
             }
             .store(in: &cancellables)
@@ -92,31 +87,34 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         // Then
         wait(for: [expectation], timeout: 2.0)
         
-        XCTAssertEqual(annotations, [
-            AnnotationModel(station: station1, isStationObserved: false),
-            AnnotationModel(station: station2, isStationObserved: true),
-            AnnotationModel(station: station3, isStationObserved: false),
-            AnnotationModel(station: station4, isStationObserved: false),
-            AnnotationModel(station: station5, isStationObserved: true),
-            AnnotationModel(station: station6, isStationObserved: false)
+        XCTAssertEqual(sections, [
+            .init(name: "Malopolska", rows: [
+                .init(station: station1, isStationObserved: false),
+                .init(station: station3, isStationObserved: false),
+                .init(station: station5, isStationObserved: true)
+            ]),
+            .init(name: "Mazowieckie", rows: [
+                .init(station: station2, isStationObserved: true),
+                .init(station: station4, isStationObserved: false),
+                .init(station: station6, isStationObserved: false)
+            ])
         ])
         XCTAssertEqual(getObservedStationsUseCaseSpy.events, [.createNewStream, .fetchedStations])
         XCTAssertEqual(fetchAllStationsUseCaseSpy.events, [.fetch])
-        XCTAssertFalse(sut.isLoading)
     }
     
     @MainActor
     func testFetchStationsWhenNoObservedStations() {
         // Given
-        var annotations: [AddObservedStationMapModel.StationAnnotation]?
-        
         fetchAllStationsUseCaseSpy.fetchStationsResult = .success([
             station1, station2, station3, station4, station5, station6
         ])
         
         getObservedStationsUseCaseSpy.fetchStationsResult = .success([])
         
-        expectation.expectedFulfillmentCount = 2
+        var sections: [AddStationToObservedListModel.Section]?
+        
+        expectation.expectedFulfillmentCount = 3
         
         sut.objectWillChange
             .sink { _ in
@@ -124,10 +122,10 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
             }
             .store(in: &cancellables)
         
-        sut.$annotations
+        sut.$sections
             .dropFirst()
             .sink {
-                annotations = $0
+                sections = $0
                 self.expectation.fulfill()
             }
             .store(in: &cancellables)
@@ -138,24 +136,25 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         // Then
         wait(for: [expectation], timeout: 2.0)
         
-        XCTAssertEqual(annotations, [
-            AnnotationModel(station: station1, isStationObserved: false),
-            AnnotationModel(station: station2, isStationObserved: false),
-            AnnotationModel(station: station3, isStationObserved: false),
-            AnnotationModel(station: station4, isStationObserved: false),
-            AnnotationModel(station: station5, isStationObserved: false),
-            AnnotationModel(station: station6, isStationObserved: false)
+        XCTAssertEqual(sections, [
+            .init(name: "Malopolska", rows: [
+                .init(station: station1, isStationObserved: false),
+                .init(station: station3, isStationObserved: false),
+                .init(station: station5, isStationObserved: false)
+            ]),
+            .init(name: "Mazowieckie", rows: [
+                .init(station: station2, isStationObserved: false),
+                .init(station: station4, isStationObserved: false),
+                .init(station: station6, isStationObserved: false)
+            ])
         ])
         XCTAssertEqual(getObservedStationsUseCaseSpy.events, [.createNewStream, .fetchedStations])
         XCTAssertEqual(fetchAllStationsUseCaseSpy.events, [.fetch])
-        XCTAssertFalse(sut.isLoading)
     }
     
     @MainActor
     func testFetchStationsWhenObservedStationsDidChange() {
         // Given
-        var annotations: [AddObservedStationMapModel.StationAnnotation]?
-        
         fetchAllStationsUseCaseSpy.fetchStationsResult = .success([
             station1, station2, station3, station4, station5, station6
         ])
@@ -164,10 +163,20 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
             station2, station5
         ])
         
-        sut.$annotations
+        var sections: [AddStationToObservedListModel.Section]?
+        
+        expectation.expectedFulfillmentCount = 3
+        
+        sut.objectWillChange
+            .sink { _ in
+                self.expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        sut.$sections
             .dropFirst()
             .sink {
-                annotations = $0
+                sections = $0
                 self.expectation.fulfill()
             }
             .store(in: &cancellables)
@@ -178,13 +187,17 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         // Then
         wait(for: [expectation], timeout: 2.0)
         
-        XCTAssertEqual(annotations, [
-            AnnotationModel(station: station1, isStationObserved: false),
-            AnnotationModel(station: station2, isStationObserved: true),
-            AnnotationModel(station: station3, isStationObserved: false),
-            AnnotationModel(station: station4, isStationObserved: false),
-            AnnotationModel(station: station5, isStationObserved: true),
-            AnnotationModel(station: station6, isStationObserved: false)
+        XCTAssertEqual(sections, [
+            .init(name: "Malopolska", rows: [
+                .init(station: station1, isStationObserved: false),
+                .init(station: station3, isStationObserved: false),
+                .init(station: station5, isStationObserved: true)
+            ]),
+            .init(name: "Mazowieckie", rows: [
+                .init(station: station2, isStationObserved: true),
+                .init(station: station4, isStationObserved: false),
+                .init(station: station6, isStationObserved: false)
+            ])
         ])
         XCTAssertEqual(getObservedStationsUseCaseSpy.events, [.createNewStream, .fetchedStations])
         XCTAssertEqual(fetchAllStationsUseCaseSpy.events, [.fetch])
@@ -198,16 +211,19 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         // Then
         wait(for: [expectation], timeout: 2.0)
         
-        XCTAssertEqual(annotations, [
-            AnnotationModel(station: station1, isStationObserved: true),
-            AnnotationModel(station: station2, isStationObserved: true),
-            AnnotationModel(station: station3, isStationObserved: false),
-            AnnotationModel(station: station4, isStationObserved: false),
-            AnnotationModel(station: station5, isStationObserved: true),
-            AnnotationModel(station: station6, isStationObserved: false)
+        XCTAssertEqual(sections, [
+            .init(name: "Malopolska", rows: [
+                .init(station: station1, isStationObserved: true),
+                .init(station: station3, isStationObserved: false),
+                .init(station: station5, isStationObserved: true)
+            ]),
+            .init(name: "Mazowieckie", rows: [
+                .init(station: station2, isStationObserved: true),
+                .init(station: station4, isStationObserved: false),
+                .init(station: station6, isStationObserved: false)
+            ])
         ])
         XCTAssertEqual(getObservedStationsUseCaseSpy.events, [.createNewStream, .fetchedStations])
-        XCTAssertEqual(fetchAllStationsUseCaseSpy.events, [.fetch])
     }
     
     @MainActor
@@ -225,7 +241,7 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
             }
             .store(in: &cancellables)
         
-        sut.$annotations
+        sut.$sections
             .dropFirst()
             .sink { _ in
                 XCTFail("Sections publisher should not have pubslihed!")
@@ -238,7 +254,7 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         // Then
         wait(for: [expectation], timeout: 2.0)
         
-        XCTAssertEqual(getObservedStationsUseCaseSpy.events, [.createNewStream, .fetchedStations])
+        XCTAssertEqual(getObservedStationsUseCaseSpy.events, [.createNewStream])
         XCTAssertEqual(fetchAllStationsUseCaseSpy.events, [.fetch])
         XCTAssertEqual(alert, .somethigWentWrong())
     }
@@ -258,7 +274,7 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
             }
             .store(in: &cancellables)
         
-        sut.$annotations
+        sut.$sections
             .dropFirst()
             .sink { _ in
                 XCTFail("Sections publisher should not have pubslihed!")
@@ -276,40 +292,53 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         XCTAssertEqual(alert, .somethigWentWrong())
     }
     
-    // MARK: addObservedStation
+    // MARK: stationDidSelect
     
     @MainActor
     func testStationDidSelectWhenStationIsNotObserved() {
         // Given
-        expectation.expectedFulfillmentCount = 2
+        fetchAllStationsUseCaseSpy.fetchStationsResult = .success([
+            station1, station2, station3, station4, station5, station6
+        ])
         
-        var toast: Toast?
+        getObservedStationsUseCaseSpy.fetchStationsResult = .success([
+            station2, station5
+        ])
         
-        sut.toastSubject
-            .sink {
-                toast = $0
+        sut.$sections
+            .dropFirst()
+            .sink { _ in
                 self.expectation.fulfill()
             }
             .store(in: &cancellables)
+        
+        sut.fetchStations()
+        
+        wait(for: [expectation], timeout: 2.0)
+        
+        expectation = XCTestExpectation()
         
         addObservedStationUseCaseSpy.expectation = expectation
         deleteObservedStationUseCaseSpy.expectation = expectation
         
         // When
-        sut.addObservedStation(station1)
+        sut.stationDidSelect(station1)
         
         // Then
         wait(for: [expectation], timeout: 2.0)
         
-        XCTAssertEqual(getObservedStationsUseCaseSpy.events, [.createNewStream])
+        XCTAssertEqual(getObservedStationsUseCaseSpy.events, [.createNewStream, .fetchedStations, .fetchedStations])
         XCTAssertEqual(addObservedStationUseCaseSpy.events, [.add(station1)])
         XCTAssertTrue(deleteObservedStationUseCaseSpy.events.isEmpty)
-        XCTAssertNotNil(toast)
     }
     
     @MainActor
     func testStationDidSelectWhenStationIsNotObservedAndAddingStationFailed() {
         // Given
+        fetchAllStationsUseCaseSpy.fetchStationsResult = .success([station1])
+        
+        getObservedStationsUseCaseSpy.fetchStationsResult = .success([])
+        
         var alert: AlertModel?
         
         sut.alertSubject
@@ -322,7 +351,7 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         addObservedStationUseCaseSpy.addStationThrowError = ErrorDummy()
         
         // When
-        sut.addObservedStation(station1)
+        sut.stationDidSelect(station1)
         
         // Then
         wait(for: [expectation], timeout: 2.0)
@@ -332,40 +361,51 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         XCTAssertEqual(alert, .somethigWentWrong())
     }
     
-    // MARK: deletedObservedStation
-    
     @MainActor
     func testStationDidSelectWhenStationIsObserved() {
         // Given
-        expectation.expectedFulfillmentCount = 2
+        fetchAllStationsUseCaseSpy.fetchStationsResult = .success([
+            station1, station2, station3, station4, station5, station6
+        ])
         
-        var toast: Toast?
+        getObservedStationsUseCaseSpy.fetchStationsResult = .success([
+            station2, station5
+        ])
         
-        sut.toastSubject
-            .sink {
-                toast = $0
+        sut.$sections
+            .dropFirst()
+            .sink { _ in
                 self.expectation.fulfill()
             }
             .store(in: &cancellables)
+        
+        sut.fetchStations()
+        
+        wait(for: [expectation], timeout: 2.0)
+        
+        expectation = XCTestExpectation()
         
         addObservedStationUseCaseSpy.expectation = expectation
         deleteObservedStationUseCaseSpy.expectation = expectation
         
         // When
-        sut.deletedObservedStation(station1)
+        sut.stationDidSelect(station2)
         
         // Then
         wait(for: [expectation], timeout: 2.0)
         
-        XCTAssertEqual(getObservedStationsUseCaseSpy.events, [.createNewStream])
+        XCTAssertEqual(getObservedStationsUseCaseSpy.events, [.createNewStream, .fetchedStations, .fetchedStations])
+        XCTAssertEqual(deleteObservedStationUseCaseSpy.events, [.delete(station2)])
         XCTAssertTrue(addObservedStationUseCaseSpy.events.isEmpty)
-        XCTAssertEqual(deleteObservedStationUseCaseSpy.events, [.delete(station1)])
-        XCTAssertNotNil(toast)
     }
     
     @MainActor
     func testStationDidSelectWhenStationIsObservedAndDeletingStationFailed() {
         // Given
+        fetchAllStationsUseCaseSpy.fetchStationsResult = .success([station1])
+        
+        getObservedStationsUseCaseSpy.fetchStationsResult = .success([station1])
+        
         var alert: AlertModel?
         
         sut.alertSubject
@@ -378,7 +418,7 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         deleteObservedStationUseCaseSpy.deleteStationThrowError = ErrorDummy()
         
         // When
-        sut.deletedObservedStation(station1)
+        sut.stationDidSelect(station1)
         
         // Then
         wait(for: [expectation], timeout: 2.0)
@@ -388,69 +428,98 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         XCTAssertEqual(alert, .somethigWentWrong())
     }
     
-    // MARK: findTheNearestStation
+    // MARK: testSearchedTextDidChange
     
     @MainActor
-    func testFindTheNearestStation() {
+    func testSearchedTextDidChange() {
         // Given
-        let station = Station.dummy()
+        fetchAllStationsUseCaseSpy.fetchStationsResult = .success([
+            station1, station2, station3, station4, station5, station6
+        ])
         
-        findTheNearestStationUseCaseSpy.findStationsResult = .success((station, 12))
+        getObservedStationsUseCaseSpy.fetchStationsResult = .success([
+            station2, station3
+        ])
         
-        var foundTheNearestStation: Station?
+        var sections: [AddStationToObservedListModel.Section]?
         
-        sut.theNearestStationPublisher
+        sut.$sections
+            .dropFirst()
             .sink {
-                foundTheNearestStation = $0
+                sections = $0
                 self.expectation.fulfill()
             }
             .store(in: &cancellables)
         
+        sut.fetchStations()
+        
+        wait(for: [expectation], timeout: 2.0)
+        
+        // Given
+        expectation = XCTestExpectation()
+        
         // When
-        sut.findTheNearestStation()
+        sut.searchedTextDidChange("Cracow")
         
         // Then
         wait(for: [expectation], timeout: 2.0)
         
-        XCTAssertEqual(foundTheNearestStation, station)
+        XCTAssertEqual(sections, [
+            .init(name: "Malopolska", rows: [
+                .init(station: station1, isStationObserved: false),
+                .init(station: station3, isStationObserved: true)
+            ])
+        ])
+        XCTAssertEqual(getObservedStationsUseCaseSpy.events, [.createNewStream, .fetchedStations, .fetchedStations])
     }
     
     @MainActor
-    func testFindTheNearestStationWhenFailure() {
+    func testSearchedTextDidChangeWhenAnyStationDoNotMatchToIt() {
         // Given
-        findTheNearestStationUseCaseSpy.findStationsResult = .failure(ErrorDummy())
+        fetchAllStationsUseCaseSpy.fetchStationsResult = .success([
+            station1, station2, station3, station4, station5, station6
+        ])
         
-        var alert: AlertModel?
+        getObservedStationsUseCaseSpy.fetchStationsResult = .success([
+            station2, station3
+        ])
         
-        sut.alertSubject
+        var sections: [AddStationToObservedListModel.Section]?
+        
+        sut.$sections
+            .dropFirst()
             .sink {
-                alert = $0
+                sections = $0
                 self.expectation.fulfill()
             }
             .store(in: &cancellables)
         
-        sut.theNearestStationPublisher
-            .sink { _ in
-                XCTFail("theNearestStationPublisher should not publish any value!")
-            }
-            .store(in: &cancellables)
+        sut.fetchStations()
+        
+        wait(for: [expectation], timeout: 2.0)
+        
+        // Given
+        expectation = XCTestExpectation()
         
         // When
-        sut.findTheNearestStation()
+        sut.searchedTextDidChange("Szczecin")
         
         // Then
         wait(for: [expectation], timeout: 2.0)
         
-        XCTAssertNotNil(alert)
+        XCTAssertEqual(sections?.isEmpty, true)
+        XCTAssertEqual(getObservedStationsUseCaseSpy.events, [.createNewStream, .fetchedStations, .fetchedStations])
     }
 }
 
-extension AddObservedStationMapModel.StationAnnotation: Equatable, Hashable {
+extension AddStationToObservedListModel.Section: Equatable {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.name == rhs.name && lhs.rows == rhs.rows
+    }
+}
+
+extension AddStationToObservedListModel.Row: Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.station == rhs.station && lhs.isStationObserved == rhs.isStationObserved
-    }
-    
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(station.id)
     }
 }

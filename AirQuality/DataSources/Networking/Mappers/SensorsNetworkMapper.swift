@@ -7,6 +7,10 @@
 
 import Foundation
 
+protocol HasSensorsNetworkMapper {
+    var sensorsNetworkMapper: any SensorsNetworkMapperProtocol { get }
+}
+
 protocol SensorsNetworkMapperProtocol: MapperProtocol
 where DTOModel == (SensorNetworkModel, Param, [Measurement]), DomainModel == Sensor {
     func map(_ input: (SensorNetworkModel, Param, [Measurement])) throws -> Sensor

@@ -8,8 +8,6 @@
 import Foundation
 import Combine
 import CoreLocation
-import MapKit
-import _MapKit_SwiftUI
 
 @MainActor
 final class AddObservedStationMapViewModel: BaseViewModel {
@@ -84,7 +82,7 @@ final class AddObservedStationMapViewModel: BaseViewModel {
         }
     }
     
-    func addStationToObserved(_ station: Station) {
+    func addObservedStation(_ station: Station) {
         Task { [weak self] in
             guard let self else { return }
             
@@ -98,7 +96,7 @@ final class AddObservedStationMapViewModel: BaseViewModel {
         }
     }
     
-    func deletedStationFromObservedList(_ station: Station) {
+    func deletedObservedStation(_ station: Station) {
         Task { [weak self] in
             guard let self else { return }
             

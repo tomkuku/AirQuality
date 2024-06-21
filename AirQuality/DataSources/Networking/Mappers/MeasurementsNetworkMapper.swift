@@ -7,6 +7,10 @@
 
 import Foundation
 
+protocol HasMeasurementsNetworkMapper {
+    var measurementsNetworkMapper: any MeasurementsNetworkMapperProtocol { get }
+}
+
 protocol MeasurementsNetworkMapperProtocol: NetworkMapperProtocol
 where DTOModel == [MeasurementNetworkModel], DomainModel == [AirQuality.Measurement] { }
 

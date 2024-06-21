@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Alamofire
 
 final class SelectedStationViewModel: BaseViewModel, @unchecked Sendable {
     
@@ -17,14 +16,14 @@ final class SelectedStationViewModel: BaseViewModel, @unchecked Sendable {
     @Published private(set) var sensors: [Model.Sensor] = []
     
     var fomattedStationAddress: String {
-        station.cityName + " " + (station.street ?? "")
+        station.cityName + ", " + (station.street ?? "")
     }
     
     let station: Station
     
     // MARK: Private properties
     
-    private let getSensorsUseCase: GetSensorsUseCaseProtocol
+    @Injected(\.getSensorsUseCase) private var getSensorsUseCase
     
     private let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -34,20 +33,16 @@ final class SelectedStationViewModel: BaseViewModel, @unchecked Sendable {
     
     // MARK: Lifecycle
     
-    init(
-        station: Station,
-        getSensorsUseCase: GetSensorsUseCaseProtocol = GetSensorsUseCase()
-    ) {
+    init(station: Station) {
         self.station = station
-        self.getSensorsUseCase = getSensorsUseCase
+        super.init()
     }
     
     // MARK: Methods
     
     @MainActor
     func fetchSensorsForStation() async {
-        isLoading = true
-        objectWillChange.send()
+        isLoading(true, objectWillChnage: true)
         
         do {
             let sensors = try await getSensorsUseCase.getSensors(for: station.id)
@@ -59,9 +54,19 @@ final class SelectedStationViewModel: BaseViewModel, @unchecked Sendable {
                     )
                 }
                 .sorted {
-                    $0.lastMeasurement.percentageValue ?? 0 > $1.lastMeasurement.percentageValue ?? 0
+                    let currentSensorLastMeasurementPercentageValue = $0.lastMeasurement.percentageValue
+                    let nextSensorLastMeasurementPercentageValue = $1.lastMeasurement.percentageValue
+                    let currentSensorLastMeasurementAqi = $0.domainModel.param.getAqi(for: $0.lastMeasurement.measurement?.value)
+                    let nextSensorLastMeasurementAqi = $1.domainModel.param.getAqi(for: $1.lastMeasurement.measurement?.value)
+                    
+                    return if currentSensorLastMeasurementAqi == nextSensorLastMeasurementAqi {
+                        currentSensorLastMeasurementPercentageValue ?? 0 > nextSensorLastMeasurementPercentageValue ?? 0
+                    } else {
+                        currentSensorLastMeasurementAqi > nextSensorLastMeasurementAqi
+                    }
                 }
-            isLoading = false
+            
+            isLoading(false, objectWillChnage: false)
             
             self.sensors = sensors
         } catch {

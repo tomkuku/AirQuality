@@ -75,4 +75,3 @@ final class CLLocationManagerSpy: CLLocationManagerProtocol {
         return locationServicesEnabledReturnValue
     }
 }
-

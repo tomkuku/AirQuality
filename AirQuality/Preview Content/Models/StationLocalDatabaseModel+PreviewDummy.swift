@@ -1,27 +1,24 @@
 //
-//  StationDummy.swift
-//  AirQualityTests
+//  StationLocalDatabaseModel+PreviewDummy.swift
+//  AirQuality
 //
-//  Created by Tomasz Kukułka on 12/05/2024.
+//  Created by Tomasz Kukułka on 21/06/2024.
 //
 
 import Foundation
 
-@testable import AirQuality
-
-extension Station {
-    static func dummy(
-        id: Int = 1,
-        name: String = "AlKraKrak",
+extension StationLocalDatabaseModel {
+    static func previewDummy(
+        identifier: Int = 1,
         latitude: Double = 11,
         longitude: Double = 12,
         cityName: String = "Kraków",
-        commune: String = "",
+        commune: String = "Kraków",
         province: String = "Małopolskie",
         street: String? = "al Krasińskiego 1"
     ) -> Self {
         Self(
-            id: id,
+            identifier: identifier,
             latitude: latitude,
             longitude: longitude,
             cityName: cityName,

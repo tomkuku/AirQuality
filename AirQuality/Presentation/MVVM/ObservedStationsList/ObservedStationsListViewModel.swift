@@ -1,5 +1,5 @@
 //
-//  StationsListViewModel.swift
+//  ObservedStationsListViewModel.swift
 //  AirQuality
 //
 //  Created by Tomasz Kukułka on 08/05/2024.
@@ -8,7 +8,7 @@
 import Foundation
 import CoreLocation
 
-final class StationsListViewModel: BaseViewModel {
+final class ObservedStationsListViewModel: BaseViewModel {
     
     // MARK: Properties
     
@@ -18,7 +18,6 @@ final class StationsListViewModel: BaseViewModel {
     
     @Injected(\.getObservedStationsUseCase) private var getObservedStationsUseCase
     @Injected(\.deleteObservedStationUseCase) private var deleteObservedStationUseCase
-    @Injected(\.locationRespository) private var locationRespository
     
     // MARK: Lifecycle
     
@@ -34,7 +33,7 @@ final class StationsListViewModel: BaseViewModel {
             
             do {
                 try await self.deleteObservedStationUseCase.delete(station: station)
-                self.toastSubject.send(Toast(body: "Stacja została usunięta z listy obserwowanych"))
+                self.toastSubject.send(.observedStationWasDeleted())
             } catch {
                 Logger.error("Observing station faild with error: \(error.localizedDescription)")
                 alertSubject.send(.somethigWentWrong())

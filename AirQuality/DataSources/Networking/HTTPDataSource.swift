@@ -7,14 +7,16 @@
 
 import Foundation
 import Alamofire
+import Combine
 
-protocol HTTPDataSourceProtocol: Sendable {
-    func requestData<T>(_ urlRequest: T) async throws -> Data where T: URLRequestConvertible
+protocol HTTPDataSourceProtocol {
+    func requestData<T>(_ urlRequest: T) -> AnyPublisher<Data, Error> where T: URLRequestConvertible
 }
 
-final class HTTPDataSource: HTTPDataSourceProtocol, @unchecked Sendable {
+final class HTTPDataSource: HTTPDataSourceProtocol {
     private let session: Session
     private let queue = DispatchQueue(label: "com.http.data.source")
+    private var cancellables = Set<AnyCancellable>()
     
     init(sessionConfiguration: URLSessionConfiguration = .af.default) {
         var eventMonitors: [EventMonitor] = []
@@ -33,27 +35,20 @@ final class HTTPDataSource: HTTPDataSourceProtocol, @unchecked Sendable {
         )
     }
     
-    func requestData<T>(_ urlRequest: T) async throws -> Data where T: URLRequestConvertible {
-        try await withCheckedThrowingContinuation { [weak self] continuation in
-            guard let self else { return }
-            
-            session
-                .request(urlRequest)
-                .validate()
-                .response(queue: queue) { response in
-                    switch response.result {
-                    case .success(let data):
-                        guard let data else {
-                            continuation.resume(throwing: AFError.responseSerializationFailed(reason: .inputDataNilOrZeroLength))
-                            return
-                        }
-                        
-                        continuation.resume(returning: data)
-                    case .failure(let error):
-                        continuation.resume(throwing: error)
-                    }
+    func requestData<T>(_ urlRequest: T) -> AnyPublisher<Data, Error> where T: URLRequestConvertible {
+        session
+            .request(urlRequest)
+            .validate()
+            .publishData(queue: self.queue)
+            .tryMap {
+                switch $0.result {
+                case .success(let data):
+                    return data
+                case .failure(let error):
+                    throw error
                 }
-        }
+            }
+            .eraseToAnyPublisher()
     }
 }
 
@@ -71,7 +66,7 @@ final class EventMonitorLogger: EventMonitor {
         
         if let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
            let data = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) {
-            body = String(data: data, encoding: .utf8) ?? "Body is empty"
+            body = String(decoding: data, as: UTF8.self)
         } else {
             body = "Body is empty"
         }

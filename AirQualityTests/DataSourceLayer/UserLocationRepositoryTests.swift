@@ -101,7 +101,8 @@ final class UserLocationRepositoryTests: BaseTestCase, @unchecked Sendable {
         
         do {
             // When
-            let locationCoordiates = try await sut.requestLocationOnce()
+            _ = try await sut.requestLocationOnce()
+            XCTFail("requestLocationOnce should have thrown error!")
         } catch {
             // Then
             XCTAssertTrue(error is ErrorDummy)

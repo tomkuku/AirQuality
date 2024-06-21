@@ -35,19 +35,15 @@ final class BundleDataSource: BundleDataSourceProtocol {
     // MARK: Private methods
     
     private func loadDataOfAllBundleFilesToMemory() throws {
-        filesData = try BundleFile.allCases.reduce([BundleFile: Data]()) {
+        filesData = try BundleFile.allCases.reduce(into: [BundleFile: Data]()) {
             guard let url = bundle.url(forResource: $1.name, withExtension: $1.extension) else {
                 throw NSError(domain: "BundleRepository", code: -1, userInfo: [
                     NSLocalizedDescriptionKey: "File \($1.name).\($1.extension) not found!"
                 ])
             }
             
-            let data = try Data(contentsOf: url)
-            
-            var dictionary = $0
-            dictionary[$1] = data
-            
-            return dictionary
+            // swiftlint:disable:next shorthand_argument
+            $0[$1] = try Data(contentsOf: url)
         }
     }
 }

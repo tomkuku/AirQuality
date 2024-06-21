@@ -33,7 +33,6 @@ final class ParamsRepository: ParamsRepositoryProtocol, @unchecked Sendable {
     
     private func loadAllParams() throws {
         let data = try bundleDataSource.getData(of: .paramsInfo)
-        
         let params = try jsonDecoder.decode([ParamBundleModel].self, from: data)
         self.params = try ParamBundleMapper().map(params)
     }

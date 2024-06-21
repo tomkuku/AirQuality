@@ -43,9 +43,9 @@ struct StationMapAnnotationView: MapContent {
                     
                     Button(action: {
                         if stationAnnotation.isStationObserved {
-                            viewModel.deletedStationFromObservedList(station)
+                            viewModel.deletedObservedStation(station)
                         } else {
-                            viewModel.addStationToObserved(station)
+                            viewModel.addObservedStation(station)
                         }
                     }, label: {
                         let text: String = if stationAnnotation.isStationObserved {
@@ -95,5 +95,5 @@ struct StationMapAnnotationView: MapContent {
     )
     
     return AddObservedStationMapView()
-                .environmentObject(coordinator)
+        .environmentObject(coordinator)
 }

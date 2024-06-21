@@ -94,7 +94,8 @@ final class LocalDatabaseFetchResultsRepositoryTests: BaseTestCase, @unchecked S
     }
 }
 
-final class LocalDatabaseFetchResultsDataSourceSpy<T>: LocalDatabaseFetchResultsDataSourceProtocol, @unchecked Sendable where T: LocalDatabaseModel {
+private final class LocalDatabaseFetchResultsDataSourceSpy<T>: LocalDatabaseFetchResultsDataSourceProtocol, @unchecked Sendable 
+where T: LocalDatabaseModel {
     typealias FetchModel = T
     
     var fetchedModelsReturnValue: [T] = []

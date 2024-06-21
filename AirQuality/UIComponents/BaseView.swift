@@ -64,7 +64,7 @@ where C: CoordinatorBase & CoordinatorProtocol, V: View, VM: BaseViewModel {
     
     private var contentView: V
     
-    init(viewModel: VM, coordinator: C, contentView: @escaping () -> V) {
+    init(viewModel: VM, coordinator: C, @ViewBuilder contentView: @escaping () -> V) {
         self.viewModel = viewModel
         self.coordinator = coordinator
         self.contentView = contentView()

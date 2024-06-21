@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import struct SwiftUI.Color
 
 enum ParamType: Int, Equatable {
     case c6h6 = 10
@@ -16,35 +15,6 @@ enum ParamType: Int, Equatable {
     case no2 = 6
     case so2 = 1
     case co = 8
-}
-
-enum AQI {
-    case good
-    case moderate
-    case unhealthyForSensitiveGroup
-    case unhealthy
-    case veryUnhealthy
-    case hazardus
-    case undefined
-    
-    var color: Color {
-        switch self {
-        case .good:
-            Color("good")
-        case .moderate:
-            Color("moderate")
-        case .unhealthyForSensitiveGroup:
-            Color("unhealthyForSensitiveGroup")
-        case .unhealthy:
-            Color("unhealthy")
-        case .veryUnhealthy:
-            Color("veryUnhealthy")
-        case .hazardus:
-            Color("hazardus")
-        case .undefined:
-            Color("undefined")
-        }
-    }
 }
 
 struct Param: Sendable, Equatable {

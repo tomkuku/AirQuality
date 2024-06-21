@@ -14,11 +14,21 @@ enum Logger {
     private nonisolated(unsafe) static let logger = os.Logger(subsystem: subsystem, category: "statistics")
     
     static func info(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {
+#if targetEnvironment(simulator)
+        /// Do not log when tests
+        guard !ProcessInfo.isTest else { return }
+#endif
+        
         let logMessage: String = "⚙️ \(file.fileName):\(function):\(line)\n\(message)"
         logger.info("\(logMessage)")
     }
     
     static func error(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {
+#if targetEnvironment(simulator)
+        /// Do not log when tests
+        guard !ProcessInfo.isTest else { return }
+#endif
+        
         let logMessage: String = "🚨 \(file.fileName):\(function):\(line)\n\(message)"
         logger.error("\(logMessage)")
     }

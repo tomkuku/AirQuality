@@ -6,51 +6,73 @@
 //
 
 import Foundation
+import Combine
 
 protocol HasGIOSApiV1Repository {
     var giosApiV1Repository: GIOSApiV1RepositoryProtocol { get }
 }
 
 protocol GIOSApiV1RepositoryProtocol: Sendable {
-    func fetch<T, R>(
+    func fetch<T>(
         mapper: T,
-        endpoint: R,
+        endpoint: any HTTPRequest,
         contentContainerName: String
-    ) async throws -> T.DomainModel where T: NetworkMapperProtocol, R: HTTPRequest
+    ) async throws -> T.DomainModel where T: NetworkMapperProtocol
 }
 
-final class GIOSApiV1Repository: GIOSApiV1RepositoryProtocol {
+actor GIOSApiV1Repository: GIOSApiV1RepositoryProtocol {
     
     // MARK: Private Properties
     
-    private let decoder = JSONDecoder()
+    private let jsonDecoder: JSONDecoder
     private let httpDataSource: HTTPDataSourceProtocol
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: Lifecycle
     
     init(
-        httpDataSource: HTTPDataSourceProtocol
+        httpDataSource: HTTPDataSourceProtocol,
+        jsonDecoder: JSONDecoder = .init()
     ) {
         self.httpDataSource = httpDataSource
+        self.jsonDecoder = jsonDecoder
     }
     
     // MARK: Methods
     
-    func fetch<T, R>(
+    func fetch<T>(
         mapper: T,
-        endpoint: R,
+        endpoint: any HTTPRequest,
         contentContainerName: String
-    ) async throws -> T.DomainModel where T: NetworkMapperProtocol, R: HTTPRequest {
-        let request = try endpoint.asURLRequest()
+    ) async throws -> T.DomainModel where T: NetworkMapperProtocol {
+        /// This code must be a closure because it must be called after continuation has been initialised.
+        /// Otherwise, `requestData` may return data before withCheckedThrowingContinuation will be executed.
+        let requestClosure: (@Sendable (isolated GIOSApiV1Repository, CheckedContinuation<T.DomainModel, Error>) -> ()) = { actorSelf, continuation in
+            let cancellable = actorSelf
+                .httpDataSource
+                .requestData(endpoint)
+                .tryCompactMap {
+                    let container = try actorSelf.jsonDecoder.decode(GIOSApiV1Response.self, from: $0)
+                    let networkModelObjects: T.DTOModel = try container.getValue(for: contentContainerName)
+                    return try mapper.map(networkModelObjects)
+                }
+                .sink {
+                    guard case .failure(let error) = $0 else { return }
+                    
+                    continuation.resume(throwing: error)
+                } receiveValue: {
+                    continuation.resume(returning: $0)
+                }
+            
+            actorSelf.cancellables.insert(cancellable)
+        }
         
-        let data = try await httpDataSource.requestData(request)
-        
-        do {
-            let container = try decoder.decode(GIOSApiV1Response.self, from: data)
-            let networkModelObjects: T.DTOModel = try container.getValue(for: contentContainerName)
-            return try mapper.map(networkModelObjects)
-        } catch {
-            throw error
+        return try await withCheckedThrowingContinuation { continuation in
+            Task { [weak self] in
+                guard let self else { return }
+                
+                await requestClosure(self, continuation)
+            }
         }
     }
 }

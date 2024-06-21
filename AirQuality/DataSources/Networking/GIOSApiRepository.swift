@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import Combine
+import Alamofire
 
 protocol HasGIOSApiRepository {
     var giosApiRepository: GIOSApiRepositoryProtocol { get }
@@ -18,93 +20,83 @@ enum SourceType {
     case remote
 }
 
-protocol GIOSApiRepositoryProtocol: Sendable {
-    func fetch<T, R>(
+protocol GIOSApiRepositoryProtocol {
+    func fetch<T>(
         mapper: T,
-        endpoint: R,
+        endpoint: any HTTPRequest,
         source: SourceType
-    ) async throws -> T.DomainModel where T: NetworkMapperProtocol, R: HTTPRequest
+    ) async throws -> T.DomainModel where T: NetworkMapperProtocol
     
     func fetchSensors(for stationId: Int) async throws -> [Sensor]
 }
 
 extension GIOSApiRepositoryProtocol {
-    func fetch<T, R>(
+    func fetch<T>(
         mapper: T,
-        endpoint: R,
+        endpoint: any HTTPRequest,
         source: SourceType = .remote
-    ) async throws -> T.DomainModel where T: NetworkMapperProtocol, R: HTTPRequest {
+    ) async throws -> T.DomainModel where T: NetworkMapperProtocol {
         try await self.fetch(mapper: mapper, endpoint: endpoint, source: source)
     }
 }
 
-final class GIOSApiRepository: GIOSApiRepositoryProtocol, Sendable {
+actor GIOSApiRepository: GIOSApiRepositoryProtocol {
     
     // MARK: Private Properties
     
     @Injected(\.cacheDataSource) private var cacheDataSource
+    @Injected(\.giosApiV1Repository) private var giosApiV1Repository
+    @Injected(\.paramsRepository) private var paramsRepository
+    @Injected(\.sensorsNetworkMapper) private var sensorsNetworkMapper
+    @Injected(\.measurementsNetworkMapper) private var measurementsNetworkMapper
     
-    private let decoder = JSONDecoder()
     private let httpDataSource: HTTPDataSourceProtocol
-    private let giosV1Repository: GIOSApiV1RepositoryProtocol
-    private let paramsRepository: ParamsRepositoryProtocol
-    private let sensorsNetworkMapper: any SensorsNetworkMapperProtocol
-    private let measurementsNetworkMapper: any MeasurementsNetworkMapperProtocol
+    private var cancellables = Set<AnyCancellable>()
+    private let decoder: JSONDecoder
     
     // MARK: Lifecycle
     
     init(
         httpDataSource: HTTPDataSourceProtocol,
-        paramsRepository: ParamsRepositoryProtocol,
-        giosV1Repository: GIOSApiV1RepositoryProtocol,
-        sensorsNetworkMapper: any SensorsNetworkMapperProtocol,
-        measurementsNetworkMapper: any MeasurementsNetworkMapperProtocol
+        decoder: JSONDecoder = .init()
     ) {
         self.httpDataSource = httpDataSource
-        self.paramsRepository = paramsRepository
-        self.giosV1Repository = giosV1Repository
-        self.sensorsNetworkMapper = sensorsNetworkMapper
-        self.measurementsNetworkMapper = measurementsNetworkMapper
+        self.decoder = decoder
     }
     
     // MARK: Methods
     
-    func fetch<T, R>(
+    func fetch<T>(
         mapper: T,
-        endpoint: R,
+        endpoint: any HTTPRequest,
         source: SourceType
-    ) async throws -> T.DomainModel where T: NetworkMapperProtocol, R: HTTPRequest {
-        switch source {
-        case .cacheIfPossible:
-            let url = endpoint.urlRequest?.url
-            
-            if source == .cacheIfPossible, let value: T.DomainModel = await cacheDataSource.get(url: url) {
-                return value
-            }
-            
-            let value = try await handleFetchRemote(mapper: mapper, endpoint: endpoint)
-            
-            await cacheDataSource.set(url: url, value: value)
-            
+    ) async throws -> T.DomainModel where T: NetworkMapperProtocol {
+        let url = endpoint.urlRequest?.url
+        
+        if source == .cacheIfPossible, let value: T.DomainModel = await cacheDataSource.get(url: url) {
             return value
-        case .remote:
-            return try await handleFetchRemote(mapper: mapper, endpoint: endpoint)
         }
+        
+        let netwokModel: T.DTOModel = try await handleFetch(endpoint: endpoint)
+        let domainModel = try mapper.map(netwokModel)
+        
+        if source == .cacheIfPossible {
+            await cacheDataSource.set(url: url, value: domainModel)
+        }
+        
+        return domainModel
     }
     
     func fetchSensors(for stationId: Int) async throws -> [Sensor] {
-        let sensorNetworkModels = try await handleFetchSensors(for: stationId)
-        
-        return try await withThrowingTaskGroup(of: (SensorNetworkModel, Param, [Measurement]).self) { [weak self] group in
+        try await withThrowingTaskGroup(of: (SensorNetworkModel, Param, [Measurement])?.self) { [weak self] group in
             guard let self else {
                 Logger.error("\(String(describing: Self.self)) is nil")
                 return []
             }
             
-            sensorNetworkModels.forEach { sensorNetworkModel in
-                guard let param = self.paramsRepository.getParam(withId: sensorNetworkModel.param.idParam) else { return }
-                
+            try await handleFetchSensors(for: stationId).forEach { sensorNetworkModel in
                 group.addTask {
+                    guard let param = await self.paramsRepository.getParam(withId: sensorNetworkModel.param.idParam) else { return nil }
                     let measurements = try await self.handleFetchMeasurements(forSensorId: sensorNetworkModel.id)
                     return (sensorNetworkModel, param, measurements)
                 }
@@ -113,7 +105,12 @@ final class GIOSApiRepository: GIOSApiRepositoryProtocol, Sendable {
             var sensors = [Sensor]()
             
             for try await value in group {
-                let sensor = try sensorsNetworkMapper.map(value)
+                guard let value else {
+                    Logger.error("Sensor value is nil!")
+                    continue
+                }
+                
+                let sensor = try await self.sensorsNetworkMapper.map(value)
                 sensors.append(sensor)
             }
             
@@ -124,7 +121,7 @@ final class GIOSApiRepository: GIOSApiRepositoryProtocol, Sendable {
     // MARK: Private methods
     
     private func handleFetchMeasurements(forSensorId sensorId: Int) async throws -> [Measurement] {
-        try await giosV1Repository.fetch(
+        try await giosApiV1Repository.fetch(
             mapper: measurementsNetworkMapper,
             endpoint: Endpoint.Measurements.get(sensorId),
             contentContainerName: "Lista danych pomiarowych"
@@ -132,25 +129,38 @@ final class GIOSApiRepository: GIOSApiRepositoryProtocol, Sendable {
     }
     
     private func handleFetchSensors(for stationId: Int) async throws -> [SensorNetworkModel] {
-        let request = try Endpoint.Sensors.get(stationId).asURLRequest()
-        let data = try await httpDataSource.requestData(request)
-        
-        return try decoder.decode([SensorNetworkModel].self, from: data)
+        try await handleFetch(endpoint: Endpoint.Sensors.get(stationId))
     }
     
-    private func handleFetchRemote<T, R>(
-        mapper: T,
-        endpoint: R
-    ) async throws -> T.DomainModel where T: NetworkMapperProtocol, R: HTTPRequest {
-        let request = try endpoint.asURLRequest()
+    private func handleFetch<T>(
+        endpoint: any HTTPRequest
+    ) async throws -> T where T: Decodable {
+        /// This code must be a closure because it must be called after continuation has been initialised.
+        /// Otherwise, `requestData` may return data before withCheckedThrowingContinuation will be executed.
+        let requestClosure: (@Sendable (isolated GIOSApiRepository, CheckedContinuation<T, Error>) -> ()) = { actorSelf, continuation in
+            let cancellable = actorSelf
+                .httpDataSource
+                .requestData(endpoint)
+                .tryCompactMap {
+                    try actorSelf.decoder.decode(T.self, from: $0)
+                }
+                .sink {
+                    guard case .failure(let error) = $0 else { return }
+                    
+                    continuation.resume(throwing: error)
+                } receiveValue: {
+                    continuation.resume(returning: $0)
+                }
+            
+            actorSelf.cancellables.insert(cancellable)
+        }
         
-        let data = try await httpDataSource.requestData(request)
-        
-        do {
-            let dto = try decoder.decode(T.DTOModel.self, from: data)
-            return try mapper.map(dto)
-        } catch {
-            throw error
+        return try await withCheckedThrowingContinuation { continuation in
+            Task { [weak self] in
+                guard let self else { return }
+                
+                await requestClosure(self, continuation)
+            }
         }
     }
 }

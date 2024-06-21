@@ -31,11 +31,11 @@ final class GIOSApiRepositorySpy: GIOSApiRepositoryProtocol, @unchecked Sendable
     var fetchResult: Result<Any, Error>?
     var fetchSensorsResult: Result<[Sensor], Error>?
     
-    func fetch<T, R>(
+    func fetch<T>(
         mapper: T,
-        endpoint: R,
+        endpoint: any HTTPRequest,
         source: SourceType
-    ) async throws -> T.DomainModel where T: NetworkMapperProtocol, R: HTTPRequest {
+    ) async throws -> T.DomainModel where T: NetworkMapperProtocol {
         events.append(.fetch(String(describing: T.DomainModel.self), try! endpoint.asURLRequest(), source))
         
         return try await withCheckedThrowingContinuation { continuation in

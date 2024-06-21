@@ -9,19 +9,19 @@ import Foundation
 import Alamofire
 
 enum Endpoint {
-    enum Stations {
+    enum Stations: Sendable {
         case get
     }
     
-    enum Sensors {
+    enum Sensors: Sendable {
         case get(Int)
     }
     
-    enum Measurements {
+    enum Measurements: Sendable {
         case get(Int)
     }
     
-    enum ArchivalMeasurements {
+    enum ArchivalMeasurements: Sendable {
         case get(Int)
     }
 }

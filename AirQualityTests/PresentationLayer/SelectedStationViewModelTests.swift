@@ -11,60 +11,56 @@ import Alamofire
 
 @testable import AirQuality
 
-final class SelectedStationViewModelTests: BaseTestCase {
-//    
-//    private var sut: SelectedStationViewModel!
-//    
-//    private var getSensorsUseCaseSpy: GetSensorsUseCaseSpy!
-//    private var getSensorMeasurementsUseCaseSpy: GetSensorMeasurementsUseCaseSpy!
-//    
-//    private var stationDummy: Station!
-//    private var cancellables: Set<AnyCancellable>!
-//    private var dateFormatter: DateFormatter!
-//    
-//    override func setUp() {
-//        super.setUp()
-//        
-//        DependenciesContainerManager.container = appDependencies
-//        
-//        stationDummy = .dummy()
-//        cancellables = Set<AnyCancellable>()
-//        dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
-//        
-//        getSensorsUseCaseSpy = GetSensorsUseCaseSpy()
-//        getSensorMeasurementsUseCaseSpy = GetSensorMeasurementsUseCaseSpy()
-//        
-//        sut = SelectedStationViewModel(
-//            station: stationDummy,
-//            getSensorsUseCase: getSensorsUseCaseSpy
-//        )
-//    }
-//    
-//    func testFomattedStationAddress() {
-//        // When
-//        let fomattedStationAddress = sut.fomattedStationAddress
-//        
-//        // Then
-//        XCTAssertEqual(fomattedStationAddress, stationDummy.cityName + " " + stationDummy.street!)
-//    }
-//    
-//    func testFomattedStationAddressWhenStationsAddressHasNoStreet() {
-//        // Given
-//        stationDummy = .dummy(street: nil)
-//        
-//        sut = SelectedStationViewModel(
-//            station: stationDummy,
-//            getSensorsUseCase: getSensorsUseCaseSpy
-//        )
-//        
-//        // When
-//        let fomattedStationAddress = sut.fomattedStationAddress
-//        
-//        // Then
-//        XCTAssertEqual(fomattedStationAddress, stationDummy.cityName + " ")
-//    }
-//    
+final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
+    
+    private var sut: SelectedStationViewModel!
+    
+    private var getSensorsUseCaseSpy: GetSensorsUseCaseSpy!
+    
+    private var stationDummy: Station!
+    private var dateFormatter: DateFormatter!
+    
+    override func setUp() async throws {
+        try await super.setUp()
+        
+        DependenciesContainerManager.container = appDependencies
+        
+        stationDummy = .dummy()
+        cancellables = Set<AnyCancellable>()
+        dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+        
+        getSensorsUseCaseSpy = GetSensorsUseCaseSpy()
+        
+        await MainActor.run {
+            sut = SelectedStationViewModel(station: stationDummy)
+        }
+    }
+    
+    func testFomattedStationAddress() {
+        // When
+        let fomattedStationAddress = sut.fomattedStationAddress
+        
+        // Then
+        XCTAssertEqual(fomattedStationAddress, stationDummy.cityName + " " + stationDummy.street!)
+    }
+    
+    func testFomattedStationAddressWhenStationsAddressHasNoStreet() {
+        // Given
+        stationDummy = .dummy(street: nil)
+        
+        sut = SelectedStationViewModel(
+            station: stationDummy,
+            getSensorsUseCase: getSensorsUseCaseSpy
+        )
+        
+        // When
+        let fomattedStationAddress = sut.fomattedStationAddress
+        
+        // Then
+        XCTAssertEqual(fomattedStationAddress, stationDummy.cityName + " ")
+    }
+    
 //    func testFetchSensorsForStationWhenSuccess() async throws {
 //        // Given
 //        let expectedMeasuremntDateString = "2024-06-23 15:20"

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MeasurementNetworkModel: Decodable {
+struct MeasurementNetworkModel: Decodable, Equatable {
     enum CodingKeys: String, CodingKey {
         case date = "Data"
         case value = "Wartość"

@@ -8,6 +8,7 @@
 import XCTest
 import Foundation
 import Alamofire
+import Combine
 
 @testable import AirQuality
 
@@ -24,9 +25,9 @@ final class HTTPDataStoreTests: BaseTestCase {
         sut = HTTPDataSource(sessionConfiguration: configuration)
     }
     
-    func testRequestDataWhenResponseIsSuccess() async throws {
+    func testRequestDataWhenResponseIsSuccess() {
         // Given
-        let data = "test".data(using: .utf8)!
+        let responseData = "test".data(using: .utf8)!
         
         let url = URL(string: "https://www.test.com")!
         
@@ -37,18 +38,30 @@ final class HTTPDataStoreTests: BaseTestCase {
             headerFields: nil
         )!
         
-        URLProtocolMock.result = .success((response, data))
+        URLProtocolMock.result = .success((response, responseData))
+        
+        var data: Data?
         
         // When
-        let responseData = try await sut.requestData(EndpointFake())
+        sut.requestData(EndpointFake())
+            .sink {
+                guard case .failure = $0 else { return }
+                XCTFail("requestData should not have published any error!")
+            } receiveValue: {
+                data = $0
+                self.expectation.fulfill()
+            }
+            .store(in: &cancellables)
         
         // Then
+        wait(for: [expectation], timeout: 2.0)
+        
         XCTAssertEqual(responseData, data)
     }
     
-    func testRequestDataWhenResponseStatusCodeIsUnacceptable() async throws {
+    func testRequestDataWhenResponseStatusCodeIsUnacceptable() {
         // Given
-        let data = "test".data(using: .utf8)!
+        let responseData = "test".data(using: .utf8)!
         
         let url = URL(string: "https://www.test.com")!
         
@@ -59,63 +72,79 @@ final class HTTPDataStoreTests: BaseTestCase {
             headerFields: nil
         )!
         
-        URLProtocolMock.result = .success((response, data))
+        URLProtocolMock.result = .success((response, responseData))
+        
+        var error: Error?
         
         // When
-        do {
-            _ = try await sut.requestData(EndpointFake())
-            XCTFail("requestData should have throw!")
-        } catch {
-            // Then
-            guard
-                let afError = error as? AFError,
-                case .responseValidationFailed(let reason) = afError,
-                case .unacceptableStatusCode(let code) = reason,
-                code == 404
-            else {
-                XCTFail("Error should have been unacceptableStatusCode 404!")
-                return
+        sut.requestData(EndpointFake())
+            .sink {
+                guard case .failure(let failureError) = $0 else { return }
+                
+                error = failureError
+                self.expectation.fulfill()
+            } receiveValue: { _ in
+                XCTFail("requestData should not have published any value!")
             }
+            .store(in: &cancellables)
+        
+        // Then
+        wait(for: [expectation], timeout: 2.0)
+        
+        guard
+            let afError = error as? AFError,
+            case .responseValidationFailed(let reason) = afError,
+            case .unacceptableStatusCode(let code) = reason,
+            code == 404
+        else {
+            XCTFail("Error should have been unacceptableStatusCode 404!")
+            return
         }
     }
     
-    // "API-ERR-100003" // 429
-    func testRequestDataWhenResponseIsFailure() async {
+    func testRequestDataWhenResponseIsFailure() {
         // Given
         URLProtocolMock.result = .failure(ErrorDummy())
         
-        do {
-            // When
-            _ = try await sut.requestData(EndpointFake())
-            XCTFail("requestData should have throw!")
-        } catch {
-            // Then
-            print(error)
-            guard
-                let afError = error as? AFError,
-                case .sessionTaskFailed(let sessionTaskError) = afError,
-                (sessionTaskError as NSError).domain == "AirQualityTests.ErrorDummy"
-            else {
-                XCTFail("Error should have been equal to sessionTaskFailed")
-                return
+        var error: Error?
+        
+        // When
+        sut.requestData(EndpointFake())
+            .sink {
+                guard case .failure(let failureError) = $0 else { return }
+                
+                error = failureError
+                self.expectation.fulfill()
+            } receiveValue: { _ in
+                XCTFail("requestData should not have published any value!")
             }
-            
-            XCTAssertTrue(true)
+            .store(in: &cancellables)
+        
+        // Then
+        wait(for: [expectation], timeout: 2.0)
+        
+        guard
+            let afError = error as? AFError,
+            case .sessionTaskFailed(let sessionTaskError) = afError,
+            (sessionTaskError as NSError).domain == "AirQualityTests.ErrorDummy"
+        else {
+            XCTFail("Error should be equal to AFError.sessionTaskFailed with NSError!")
+            return
         }
     }
     
     private final class URLProtocolMock: URLProtocol, @unchecked Sendable {
         nonisolated(unsafe) static var result: Result<(HTTPURLResponse, Data), Error> = .failure(ErrorDummy())
         
-        final override class func canInit(with request: URLRequest) -> Bool {
+        override static func canInit(with request: URLRequest) -> Bool {
             true
         }
         
-        final override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+        override static func canonicalRequest(for request: URLRequest) -> URLRequest {
             request
         }
         
-        final override func startLoading() {
+        override func startLoading() {
             switch Self.result {
             case .success(let (response, data)):
                 client?.urlProtocol(self, didLoad: data)
@@ -127,6 +156,6 @@ final class HTTPDataStoreTests: BaseTestCase {
             client?.urlProtocolDidFinishLoading(self)
         }
         
-        final override func stopLoading() { }
+        override func stopLoading() { }
     }
 }

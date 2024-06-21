@@ -40,31 +40,33 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     let getObservedStationsUseCase: GetObservedStationsUseCaseProtocol
     let cacheDataSource: CacheDataSourceProtocol
     let locationRespository: LocationRespositoryProtocol
-    let notificationCenter: any NotificationCenterProtocol
+    let notificationCenter: NotificationCenterProtocol
     let stationsNetworkMapper: any StationsNetworkMapperProtocol
     let findTheNearestStationUseCase: FindTheNearestStationUseCaseProtocol
+    let paramsRepository: ParamsRepositoryProtocol
+    let sensorsNetworkMapper: any SensorsNetworkMapperProtocol
+    let measurementsNetworkMapper: any MeasurementsNetworkMapperProtocol
+    let getSensorsUseCase: GetSensorsUseCaseProtocol
     
     @MainActor
     init() throws {
         let httpDataSource = HTTPDataSource()
         let bundleDataSource = try BundleDataSource()
-        let paramsRepository = try ParamsRepository(bundleDataSource: bundleDataSource)
-        let uiApplication = UIApplication.shared
         
         self.notificationCenter = NotificationCenter.default
         
-        let backgroundTasksManager = BackgroundTasksManager(uiApplication: uiApplication)
+        let backgroundTasksManager = BackgroundTasksManager(uiApplication: UIApplication.shared)
         
         self.stationsNetworkMapper = StationsNetworkMapper()
         
         self.giosApiV1Repository = GIOSApiV1Repository(httpDataSource: httpDataSource)
-        self.giosApiRepository = GIOSApiRepository(
-            httpDataSource: httpDataSource,
-            paramsRepository: paramsRepository,
-            giosV1Repository: giosApiV1Repository,
-            sensorsNetworkMapper: SensorsNetworkMapper(),
-            measurementsNetworkMapper: MeasurementsNetworkMapper()
-        )
+        
+        self.paramsRepository = try ParamsRepository(bundleDataSource: bundleDataSource)
+        
+        self.sensorsNetworkMapper = SensorsNetworkMapper()
+        self.measurementsNetworkMapper = MeasurementsNetworkMapper()
+        
+        self.giosApiRepository = GIOSApiRepository(httpDataSource: httpDataSource)
         
         let modelContainer = try Self.createModelContainer()
         
@@ -95,22 +97,24 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
                 
         self.cacheDataSource = CacheDataSource()
         
-        let locationManager = CLLocationManager()
-        
         let userLocationDataSource = UserLocationDataSource(locationManager: CLLocationManager())
         self.locationRespository = LocationRespository(userLocationDataSource: userLocationDataSource)
         
 #if targetEnvironment(simulator)
         if ProcessInfo.isPreview {
+            SwiftDataPreviewAccessor.shared = .init(modelContainer: modelContainer)
             self.fetchAllStationsUseCase = FetchAllStationsUseCasePreviewDummy()
             self.findTheNearestStationUseCase = FindTheNearestStationUseCasePreviewDummy()
+            self.getSensorsUseCase = GetSensorsUseCasePreviewDummy()
         } else {
             self.fetchAllStationsUseCase = FetchAllStationsUseCase()
             self.findTheNearestStationUseCase = FindTheNearestStationUseCase()
+            self.getSensorsUseCase = GetSensorsUseCase()
         }
 #else
         self.getStationsUseCase = GetStationsUseCase()
         self.findTheNearestStationUseCase = FindTheNearestStationUseCase()
+        self.getSensorsUseCase = GetSensorsUseCase()
 #endif
     }
     

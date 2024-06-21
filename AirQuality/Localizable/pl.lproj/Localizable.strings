@@ -42,6 +42,10 @@
 "Alert.Button.Ok.title" = "Ok";
 "Alert.Button.Cancel.title" = "Anuluj";
 
+// MARK: Toast
+
+"Toast.observedStationWasDeleted" = "Stacja została usunięta z listy obserwowanych";
+
 // MARK: AddObservedStationContainerView
 
 "AddObservedStationContainerView.MapItem.itemTitle" = "Mapa";
@@ -66,3 +70,10 @@
 // MARK: DismissButton
 
 "NavigationToolbar.DismissButton.title" = "Zamknij";
+
+// MARK: ObservedStationsListView
+
+"ObservedStationsListView.title" = "Lista obserwowanych stacji";
+"ObservedStationsListView.addStation" = "Dodaj stacje";
+"ObservedStationsListView.noObservedStations" = "Brak obserwowanych stacji";
+"ObservedStationsListView.delete" = "Usuń stacje";

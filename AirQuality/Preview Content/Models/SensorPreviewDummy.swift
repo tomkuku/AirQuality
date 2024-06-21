@@ -9,35 +9,17 @@ import Foundation
 
 extension Sensor {
     static func previewDummy(
-        id: Int = 12,
-        name: String = "Benzene",
-        formula: String = "C6H6",
-        code: String = "c6h6"
+        id: Int = 1,
+        param: Param = .c6h6
     ) -> Self {
-        let paramIndexLevels = Param.IndexLevels(
-            veryGood: 10,
-            good: 20,
-            moderate: 30,
-            sufficient: 40,
-            bad: 50
-        )
-        
-        let param = Param(
-            type: .c6h6,
-            code: "c6h6",
-            formula: "C6H6",
-            quota: 25,
-            indexLevels: paramIndexLevels
-        )
-        
         let measurements: [Measurement] = [
-            Measurement(date: Date(), value: 12),
-            Measurement(date: Date(), value: 24),
-            Measurement(date: Date(), value: nil)
+            Measurement(date: Date(), value: Double.random(in: 0...100)),
+            Measurement(date: Date(), value: Double.random(in: 0...100)),
+            Measurement(date: Date(), value: Double.random(in: 0...100))
         ]
         
         return Self(
-            id: 11,
+            id: id,
             param: param,
             measurements: measurements
         )
