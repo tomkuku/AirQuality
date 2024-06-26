@@ -26,6 +26,7 @@ settings:
     GENERATE_INFOPLIST_FILE: YES
     SWIFT_STRICT_CONCURRENCY: complete
     CODE_SIGN_STYLE: NO
+    INFOPLIST_FILE: "Info.plist"
 
   configs:
     Development_Debug:

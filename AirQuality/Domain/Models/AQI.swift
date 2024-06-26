@@ -51,6 +51,6 @@ extension AQI: Comparable {
     }
     
     static func < (lhs: Self, rhs: Self) -> Bool {
-        return lhs.priority < rhs.priority
+        lhs.priority < rhs.priority
     }
 }

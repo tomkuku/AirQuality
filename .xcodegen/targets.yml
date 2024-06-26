@@ -10,11 +10,6 @@ targetTemplates:
       TARGETED_DEVICE_FAMILY: 1
     dependencies:
       - package: Alamofire
-    info:
-      path: ../AirQuality/Info.plist
-      properties:
-        UILaunchScreen:
-          UIImageName: LaunchImage
     preBuildScripts:
       - name: "SwiftGen"
         basedOnDependencyAnalysis: no

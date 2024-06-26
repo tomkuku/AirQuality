@@ -31,11 +31,11 @@ struct ObservedStationsListView: View {
                 }
                 .listStyle(.sidebar)
                 .background(.white)
-                .safeAreaInset(edge: .bottom) {
-                    addObservedStationsButton
-                        .frame(height: 50)
-                }
             }
+        }
+        .safeAreaInset(edge: .bottom) {
+            addObservedStationsButton
+                .frame(height: 50)
         }
         .navigationTitle(L10n.title)
         .navigationBarTitleDisplayMode(.inline)
