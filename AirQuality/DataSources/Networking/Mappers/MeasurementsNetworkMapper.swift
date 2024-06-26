@@ -7,34 +7,33 @@
 
 import Foundation
 
-protocol HasMeasurementsNetworkMapper {
-    var measurementsNetworkMapper: any MeasurementsNetworkMapperProtocol { get }
+protocol HasSensorMeasurementNetworkMapper {
+    var sensorMeasurementsNetworkMapper: any SensorMeasurementNetworkMapperProtocol { get }
 }
 
-protocol MeasurementsNetworkMapperProtocol: NetworkMapperProtocol
-where DTOModel == [MeasurementNetworkModel], DomainModel == [AirQuality.Measurement] { }
+protocol SensorMeasurementNetworkMapperProtocol: NetworkMapperProtocol
+where DTOModel == [MeasurementNetworkModel], DomainModel == [SensorMeasurement] { }
 
-struct MeasurementsNetworkMapper: MeasurementsNetworkMapperProtocol {
-    private let dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        return dateFormatter
-    }()
+final class SensorMeasurementNetworkMapper: SensorMeasurementNetworkMapperProtocol {
+    @Injected(\.sensorMeasurementDataFormatter) private var sensorMeasurementDataFormatter
     
-    func map(_ input: [MeasurementNetworkModel]) throws -> [AirQuality.Measurement] {
-        try input.compactMap {
-            guard let date = dateFormatter.date(from: $0.date) else {
+    func map(_ input: [MeasurementNetworkModel]) throws -> [SensorMeasurement] {
+        let sensorMeasurementDataFormatter = sensorMeasurementDataFormatter
+        
+        return try input.compactMap {
+            guard let date = sensorMeasurementDataFormatter.date(from: $0.date) else {
                 throw NSError(domain: "MeasurementsNetworkMapper", code: -1, userInfo: [
                     NSLocalizedDescriptionKey: "Formatting date: \($0.date) failed!"
                 ])
             }
             
-            guard let value = $0.value else { return nil }
+            var measuremnt: Foundation.Measurement<UnitConcentrationMass>?
             
-            return Measurement(
-                date: date,
-                value: value
-            )
+            if let value = $0.value {
+                measuremnt = .init(value: value, unit: .microgramsPerCubicMeter)
+            }
+            
+            return SensorMeasurement(date: date, measurement: measuremnt)
         }
     }
 }

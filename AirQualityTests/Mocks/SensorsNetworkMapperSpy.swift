@@ -11,7 +11,7 @@ import Foundation
 
 final class SensorsNetworkMapperSpy: SensorsNetworkMapperProtocol, @unchecked Sendable {
     enum Event: Equatable, Hashable {
-        case map(SensorNetworkModel, Param, [AirQuality.Measurement])
+        case map(SensorNetworkModel, Param, [SensorMeasurement])
         
         static func == (lhs: Self, rhs: Self) -> Bool {
             switch (lhs, rhs) {
@@ -33,7 +33,7 @@ final class SensorsNetworkMapperSpy: SensorsNetworkMapperProtocol, @unchecked Se
     
     var events: [Event] = []
     
-    func map(_ input: (SensorNetworkModel, Param, [AirQuality.Measurement])) throws -> Sensor {
+    func map(_ input: (SensorNetworkModel, Param, [SensorMeasurement])) throws -> Sensor {
         events.append(.map(input.0, input.1, input.2))
         
         return Sensor(id: input.0.id, param: input.1, measurements: input.2)

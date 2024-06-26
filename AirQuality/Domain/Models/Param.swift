@@ -22,24 +22,25 @@ struct Param: Sendable, Equatable {
     let code: String
     let formula: String
     let quota: Double
+    let unit: String
     let indexLevels: IndexLevels
     
     func getAqi(for value: Double?) -> AQI {
         switch Int(value ?? -1) {
-        case 0...indexLevels.veryGood:
-            return .good
-        case indexLevels.veryGood...indexLevels.good:
-            return .moderate
+        case 0...indexLevels.good:
+            .good
         case indexLevels.good...indexLevels.moderate:
-            return .unhealthyForSensitiveGroup
-        case indexLevels.moderate...indexLevels.sufficient:
-            return .unhealthy
-        case indexLevels.sufficient...indexLevels.bad:
-            return .veryUnhealthy
-        case indexLevels.bad...:
-            return .hazardus
+            .moderate
+        case indexLevels.moderate...indexLevels.unhealthyForSensitiveGroup:
+            .unhealthyForSensitiveGroup
+        case indexLevels.unhealthyForSensitiveGroup...indexLevels.unhealthy:
+            .unhealthy
+        case indexLevels.unhealthy...indexLevels.veryUnhealthy:
+            .veryUnhealthy
+        case indexLevels.veryUnhealthy...:
+            .hazardus
         default:
-            return .undefined
+            .undefined
         }
     }
     
@@ -63,14 +64,51 @@ struct Param: Sendable, Equatable {
             Strings.Co.name
         }
     }
+    
+    init?(id: Int) {
+        switch id {
+        case ParamType.pm10.rawValue:
+            self = .pm10
+        case ParamType.pm25.rawValue:
+            self = .pm25
+        case ParamType.c6h6.rawValue:
+            self = .c6h6
+        case ParamType.o3.rawValue:
+            self = .o3
+        case ParamType.no2.rawValue:
+            self = .no2
+        case ParamType.so2.rawValue:
+            self = .so2
+        case ParamType.co.rawValue:
+            self = .co
+        default:
+            return nil
+        }
+    }
+    
+    init(
+        type: ParamType,
+        code: String,
+        formula: String,
+        quota: Double,
+        unit: String,
+        indexLevels: IndexLevels
+    ) {
+        self.type = type
+        self.code = code
+        self.formula = formula
+        self.quota = quota
+        self.unit = unit
+        self.indexLevels = indexLevels
+    }
 }
 
 extension Param {
     struct IndexLevels: Sendable, Equatable {
-        let veryGood: Int
         let good: Int
         let moderate: Int
-        let sufficient: Int
-        let bad: Int
+        let unhealthyForSensitiveGroup: Int
+        let unhealthy: Int
+        let veryUnhealthy: Int
     }
 }

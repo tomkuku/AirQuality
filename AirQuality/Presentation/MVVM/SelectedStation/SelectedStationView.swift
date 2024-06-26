@@ -8,23 +8,21 @@
 import SwiftUI
 
 struct SelectedStationView: View {
+    private typealias L10n = Localizable.SelectedStationView
+    
     @EnvironmentObject private var appCoordinator: AppCoordinator
     @StateObject private var viewModel: SelectedStationViewModel
     
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 8) {
-                ForEach(0..<viewModel.sensors.count, id: \.self) { index in
-                    let sensor = viewModel.sensors[index]
-                    let value = sensor.lastMeasurement.measurement?.value
-                    let aqi = sensor.domainModel.param.getAqi(for: value)
-                    
+                ForEach(viewModel.sensors) { sensor in
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(sensor.domainModel.param.formula)
+                            Text(sensor.paramFormula)
                                 .font(.system(size: 18, weight: .semibold))
                             
-                            Text(sensor.domainModel.param.name)
+                            Text(sensor.paramName)
                                 .font(.system(size: 14, weight: .regular))
                             
                             Spacer()
@@ -33,19 +31,24 @@ struct SelectedStationView: View {
                         
                         Spacer()
                         
-                        createLastMeasurementView(for: sensor.lastMeasurement)
+                        createSensorView(for: sensor)
                     }
-                    .foregroundStyle(getForegroundColor(for: aqi))
-                    .background(sensor.domainModel.param.getAqi(for: sensor.lastMeasurement.measurement?.value).color)
+                    .foregroundStyle(getForegroundColor(for: sensor.lastMeasurementAqi))
+                    .background(sensor.lastMeasurementAqi.color)
                     .cornerRadius(10)
                     .gesture(TapGesture().onEnded({ _ in
-                        appCoordinator.goTo(.sensorsDetails(sensor.domainModel))
+                        guard let sensor = viewModel.getSensor(for: sensor.id) else {
+                            Logger.error("No station for id: \(sensor.id)")
+                            return
+                        }
+                        
+                        appCoordinator.goTo(.sensorsDetails(sensor))
                     }))
                     .accessibilityAddTraits(.isButton)
                 }
                 
                 HStack {
-                    Text("Dostawcą danych jest Główny Inspektorat Ochrony Środowiska")
+                    Text(L10n.dataProvider)
                         .font(.system(size: 14))
                         .foregroundStyle(.gray)
                         .multilineTextAlignment(.center)
@@ -68,15 +71,15 @@ struct SelectedStationView: View {
     }
     
     @ViewBuilder
-    func createLastMeasurementView(for lastMeasurement: SelectedStationModel.LastMeasurement) -> some View {
+    func createSensorView(for sensorRow: SelectedStationModel.SensorRow) -> some View {
         VStack(alignment: .trailing, spacing: 8) {
-            Text(lastMeasurement.formattedPercentageValue + "%")
+            Text(sensorRow.lastMeasurementFormattedPercentageValue)
                 .font(.system(size: 18, weight: .bold))
             
-            Text(lastMeasurement.formattedValue + " µg/m³")
+            Text(sensorRow.lastMeasurementFormattedValue)
                 .font(.system(size: 12, weight: .semibold))
             
-            Text(lastMeasurement.formattedDate)
+            Text(sensorRow.lastMeasurementFormattedDate)
                 .font(.system(size: 12, weight: .regular))
         }
         .padding(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 8))

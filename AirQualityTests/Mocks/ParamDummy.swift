@@ -11,18 +11,18 @@ import Foundation
 
 extension Param.IndexLevels {
     static func dummy(
-        veryGood: Int = 10,
-        good: Int = 20,
-        moderate: Int = 30,
-        sufficient: Int = 40,
-        bad: Int = 50
+        good: Int = 10,
+        moderate: Int = 20,
+        unhealthyForSensitiveGroup: Int = 30,
+        unhealthy: Int = 40,
+        veryUnhealthy: Int = 50
     ) -> Self {
         Self(
-            veryGood: veryGood,
             good: good,
             moderate: moderate,
-            sufficient: sufficient,
-            bad: bad
+            unhealthyForSensitiveGroup: unhealthyForSensitiveGroup,
+            unhealthy: unhealthy,
+            veryUnhealthy: veryUnhealthy
         )
     }
 }
@@ -33,6 +33,7 @@ extension Param {
         code: String = "c6h6",
         formula: String = "C6H6",
         quota: Double = 10,
+        unit: String = "",
         indexLevels: IndexLevels = .dummy()
     ) -> Self {
         Self(
@@ -40,6 +41,7 @@ extension Param {
             code: code,
             formula: formula,
             quota: quota,
+            unit: unit,
             indexLevels: indexLevels
         )
     }

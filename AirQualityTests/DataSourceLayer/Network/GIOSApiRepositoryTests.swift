@@ -18,9 +18,8 @@ final class GIOSApiRepositoryTest: BaseTestCase {
     private var httpDataSourceMock: HTTPDataSourceMock!
     private var cacheDataSourceSpy: CacheDataSourceSpy!
     private var giosApiV1RepositorySpy: GIOSApiV1RepositorySpy!
-    private var paramsRepositorySpy: ParamsRepositorySpy!
     private var sensorsNetworkMapperSpy: SensorsNetworkMapperSpy!
-    private var measurementsNetworkMapperSpy: MeasurementsNetworkMapperSpy!
+    private var measurementsNetworkMapperSpy: SensorMeasurementNetworkMapperSpy!
     
     private var dateFormatter: DateFormatter!
     
@@ -31,15 +30,13 @@ final class GIOSApiRepositoryTest: BaseTestCase {
         httpDataSourceMock = HTTPDataSourceMock()
         cacheDataSourceSpy = CacheDataSourceSpy()
         giosApiV1RepositorySpy = GIOSApiV1RepositorySpy()
-        paramsRepositorySpy = ParamsRepositorySpy()
         
         sensorsNetworkMapperSpy = SensorsNetworkMapperSpy()
-        measurementsNetworkMapperSpy = MeasurementsNetworkMapperSpy()
+        measurementsNetworkMapperSpy = SensorMeasurementNetworkMapperSpy()
         
         dependenciesContainerDummy[\.giosApiV1Repository] = giosApiV1RepositorySpy
         dependenciesContainerDummy[\.cacheDataSource] = cacheDataSourceSpy
-        dependenciesContainerDummy[\.paramsRepository] = paramsRepositorySpy
-        dependenciesContainerDummy[\.measurementsNetworkMapper] = measurementsNetworkMapperSpy
+        dependenciesContainerDummy[\.sensorMeasurementsNetworkMapper] = measurementsNetworkMapperSpy
         dependenciesContainerDummy[\.sensorsNetworkMapper] = sensorsNetworkMapperSpy
         
         sut = GIOSApiRepository(httpDataSource: httpDataSourceMock)
@@ -138,13 +135,13 @@ final class GIOSApiRepositoryTest: BaseTestCase {
             {
                 "id": 1,
                 "param": {
-                    "idParam": 11
+                    "idParam": 3
                 }
             },
             {
                 "id": 2,
                 "param": {
-                    "idParam": 22
+                    "idParam": 69
                 }
             }
         ]
@@ -154,19 +151,19 @@ final class GIOSApiRepositoryTest: BaseTestCase {
         
         let expectedFirstSensor = Sensor(
             id: 1,
-            param: Param(type: .c6h6, code: "c6h6", formula: "C6H6", quota: 50, indexLevels: .dummy()),
+            param: .pm10,
             measurements: [
-                Measurement(date: dateFormatter.date(from: "2024-06-17 15:00:00")!, value: 1.1),
-                Measurement(date: dateFormatter.date(from: "2024-06-17 14:00:00")!, value: 1.2)
+                SensorMeasurement(value: 1.1, date: dateFormatter.date(from: "2024-06-17 15:00:00")!),
+                SensorMeasurement(value: 1.2, date: dateFormatter.date(from: "2024-06-17 14:00:00")!)
             ]
         )
         
         let expectedSecondSensor = Sensor(
             id: 2,
-            param: Param(type: .pm10, code: "pm10", formula: "PM10", quota: 25, indexLevels: .dummy()),
+            param: .pm25,
             measurements: [
-                Measurement(date: dateFormatter.date(from: "2024-06-17 15:00:00")!, value: 2.1),
-                Measurement(date: dateFormatter.date(from: "2024-06-17 14:00:00")!, value: 2.2)
+                SensorMeasurement(value: 2.1, date: dateFormatter.date(from: "2024-06-17 15:00:00")!),
+                SensorMeasurement(value: 2.2, date: dateFormatter.date(from: "2024-06-17 14:00:00")!)
             ]
         )
         
@@ -187,17 +184,6 @@ final class GIOSApiRepositoryTest: BaseTestCase {
             return nil
         }
         
-        paramsRepositorySpy.getParamReturnValueClosure = { paramId in
-            if paramId == 11 {
-                return expectedFirstSensor.param
-            } else if paramId == 22 {
-                return expectedSecondSensor.param
-            }
-            
-            XCTFail("Unhandled param id!")
-            return nil
-        }
-        
         // When
         let sensors = try await sut.fetchSensors(for: 1)
         
@@ -209,13 +195,12 @@ final class GIOSApiRepositoryTest: BaseTestCase {
         XCTAssertEqual(firstSensor, expectedFirstSensor)
         XCTAssertEqual(secondSensor, expectedSecondSensor)
         XCTAssertEqual(httpDataSourceMock.events, [.requestData(Endpoint.Sensors.get(1))])
-        XCTAssertEqual(Set(paramsRepositorySpy.events), Set([.getParam(11), .getParam(22)]))
         XCTAssertEqual(Set(giosApiV1RepositorySpy.events), Set([
             .fetch(SensorsNetworkMapper(), Endpoint.Measurements.get(1), "Lista danych pomiarowych"),
             .fetch(SensorsNetworkMapper(), Endpoint.Measurements.get(2), "Lista danych pomiarowych")
         ]))
         XCTAssertEqual(Set(sensorsNetworkMapperSpy.events), Set([
-            .map(SensorNetworkModel(id: 1, param: .init(idParam: 11)), expectedFirstSensor.param, expectedFirstSensor.measurements),
+            .map(SensorNetworkModel(id: 1, param: .init(idParam: 3)), expectedFirstSensor.param, expectedFirstSensor.measurements),
             .map(SensorNetworkModel(id: 2, param: .init(idParam: 2)), expectedSecondSensor.param, expectedSecondSensor.measurements)
         ]))
         XCTAssertEqual(Set(measurementsNetworkMapperSpy.events), Set([
@@ -245,17 +230,6 @@ final class GIOSApiRepositoryTest: BaseTestCase {
             return nil
         }
         
-        paramsRepositorySpy.getParamReturnValueClosure = { paramId in
-            if paramId == 11 {
-                return Param(type: .c6h6, code: "c6h6", formula: "C6H6", quota: 50, indexLevels: .dummy())
-            } else if paramId == 22 {
-                return Param(type: .pm10, code: "pm10", formula: "PM10", quota: 25, indexLevels: .dummy())
-            }
-            
-            XCTFail("Unhandled param id!")
-            return nil
-        }
-        
         do {
             // When
             _ = try await sut.fetchSensors(for: 1)
@@ -264,7 +238,6 @@ final class GIOSApiRepositoryTest: BaseTestCase {
             // Then
             XCTAssertTrue(error is ErrorDummy)
             XCTAssertEqual(httpDataSourceMock.events, [.requestData(Endpoint.Sensors.get(1))])
-            XCTAssertTrue(paramsRepositorySpy.events.isEmpty)
             XCTAssertTrue(giosApiV1RepositorySpy.events.isEmpty)
             XCTAssertTrue(sensorsNetworkMapperSpy.events.isEmpty)
             XCTAssertTrue(measurementsNetworkMapperSpy.events.isEmpty)
@@ -278,13 +251,13 @@ final class GIOSApiRepositoryTest: BaseTestCase {
             {
                 "id": 1,
                 "param": {
-                    "idParam": 11
+                    "idParam": 3
                 }
             },
             {
                 "id": 2,
                 "param": {
-                    "idParam": 22
+                    "idParam": 69
                 }
             }
         ]
@@ -306,17 +279,6 @@ final class GIOSApiRepositoryTest: BaseTestCase {
             return nil
         }
         
-        paramsRepositorySpy.getParamReturnValueClosure = { paramId in
-            if paramId == 11 {
-                return Param(type: .c6h6, code: "c6h6", formula: "C6H6", quota: 50, indexLevels: .dummy())
-            } else if paramId == 22 {
-                return Param(type: .pm10, code: "pm10", formula: "PM10", quota: 25, indexLevels: .dummy())
-            }
-            
-            XCTFail("Unhandled param id!")
-            return nil
-        }
-        
         do {
             // When
             _ = try await sut.fetchSensors(for: 1)
@@ -325,7 +287,6 @@ final class GIOSApiRepositoryTest: BaseTestCase {
             // Then
             XCTAssertTrue(error is ErrorDummy)
             XCTAssertEqual(httpDataSourceMock.events, [.requestData(Endpoint.Sensors.get(1))])
-            XCTAssertTrue(paramsRepositorySpy.events.contains(where: { $0 == .getParam(11) }))
             XCTAssertTrue(giosApiV1RepositorySpy.events.contains(
                 .fetch(SensorsNetworkMapper(), Endpoint.Measurements.get(1), "Lista danych pomiarowych")
             ))
@@ -343,7 +304,7 @@ final class GIOSApiRepositoryTest: BaseTestCase {
             {
                 "id": 1,
                 "param": {
-                    "idParam": 11
+                    "idParam": 3
                 }
             },
             {
@@ -357,10 +318,10 @@ final class GIOSApiRepositoryTest: BaseTestCase {
         
         let expectedSensor = Sensor(
             id: 1,
-            param: Param(type: .c6h6, code: "c6h6", formula: "C6H6", quota: 50, indexLevels: .dummy()),
+            param: .pm10,
             measurements: [
-                Measurement(date: dateFormatter.date(from: "2024-06-17 15:00:00")!, value: 1.1),
-                Measurement(date: dateFormatter.date(from: "2024-06-17 14:00:00")!, value: 1.2)
+                SensorMeasurement(value: 1.1, date: dateFormatter.date(from: "2024-06-17 15:00:00")!),
+                SensorMeasurement(value: 1.2, date: dateFormatter.date(from: "2024-06-17 14:00:00")!)
             ]
         )
         
@@ -383,17 +344,6 @@ final class GIOSApiRepositoryTest: BaseTestCase {
             return nil
         }
         
-        paramsRepositorySpy.getParamReturnValueClosure = { paramId in
-            if paramId == 11 {
-                return Param(type: .c6h6, code: "c6h6", formula: "C6H6", quota: 50, indexLevels: .dummy())
-            } else if paramId == 22 {
-                return nil
-            }
-            
-            XCTFail("Unhandled param id!")
-            return nil
-        }
-        
         // When
         let sensors = try await sut.fetchSensors(for: 1)
         
@@ -401,12 +351,11 @@ final class GIOSApiRepositoryTest: BaseTestCase {
         XCTAssertEqual(sensors.count, 1)
         XCTAssertEqual(sensors.first, expectedSensor)
         XCTAssertEqual(httpDataSourceMock.events, [.requestData(Endpoint.Sensors.get(1))])
-        XCTAssertEqual(Set(paramsRepositorySpy.events), Set([.getParam(11), .getParam(22)]))
         XCTAssertEqual(giosApiV1RepositorySpy.events, [
             .fetch(SensorsNetworkMapper(), Endpoint.Measurements.get(1), "Lista danych pomiarowych")
         ])
         XCTAssertEqual(sensorsNetworkMapperSpy.events, [
-            .map(SensorNetworkModel(id: 1, param: .init(idParam: 11)), expectedSensor.param, expectedSensor.measurements)
+            .map(SensorNetworkModel(id: 1, param: .init(idParam: 3)), expectedSensor.param, expectedSensor.measurements)
         ])
         XCTAssertEqual(Set(measurementsNetworkMapperSpy.events), Set([
             .map([.init(date: "2024-06-17 15:00:00", value: 1.1), .init(date: "2024-06-17 14:00:00", value: 1.2)])

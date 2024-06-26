@@ -46,9 +46,8 @@ actor GIOSApiRepository: GIOSApiRepositoryProtocol {
     
     @Injected(\.cacheDataSource) private var cacheDataSource
     @Injected(\.giosApiV1Repository) private var giosApiV1Repository
-    @Injected(\.paramsRepository) private var paramsRepository
     @Injected(\.sensorsNetworkMapper) private var sensorsNetworkMapper
-    @Injected(\.measurementsNetworkMapper) private var measurementsNetworkMapper
+    @Injected(\.sensorMeasurementsNetworkMapper) private var sensorMeasurementsNetworkMapper
     
     private let httpDataSource: HTTPDataSourceProtocol
     private var cancellables = Set<AnyCancellable>()
@@ -88,7 +87,7 @@ actor GIOSApiRepository: GIOSApiRepositoryProtocol {
     }
     
     func fetchSensors(for stationId: Int) async throws -> [Sensor] {
-        try await withThrowingTaskGroup(of: (SensorNetworkModel, Param, [Measurement])?.self) { [weak self] group in
+        try await withThrowingTaskGroup(of: (SensorNetworkModel, Param, [SensorMeasurement])?.self) { [weak self] group in
             guard let self else {
                 Logger.error("\(String(describing: Self.self)) is nil")
                 return []
@@ -96,7 +95,7 @@ actor GIOSApiRepository: GIOSApiRepositoryProtocol {
             
             try await handleFetchSensors(for: stationId).forEach { sensorNetworkModel in
                 group.addTask {
-                    guard let param = await self.paramsRepository.getParam(withId: sensorNetworkModel.param.idParam) else { return nil }
+                    guard let param = Param(id: sensorNetworkModel.param.idParam) else { return nil }
                     let measurements = try await self.handleFetchMeasurements(forSensorId: sensorNetworkModel.id)
                     return (sensorNetworkModel, param, measurements)
                 }
@@ -120,9 +119,9 @@ actor GIOSApiRepository: GIOSApiRepositoryProtocol {
     
     // MARK: Private methods
     
-    private func handleFetchMeasurements(forSensorId sensorId: Int) async throws -> [Measurement] {
+    private func handleFetchMeasurements(forSensorId sensorId: Int) async throws -> [SensorMeasurement] {
         try await giosApiV1Repository.fetch(
-            mapper: measurementsNetworkMapper,
+            mapper: sensorMeasurementsNetworkMapper,
             endpoint: Endpoint.Measurements.get(sensorId),
             contentContainerName: "Lista danych pomiarowych"
         )

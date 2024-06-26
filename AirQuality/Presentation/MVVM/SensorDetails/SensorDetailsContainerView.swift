@@ -8,6 +8,8 @@
 import SwiftUI
 
 enum SensorDetailsContainerSubview: CaseIterable {
+    private typealias L10n = Localizable.SensorDetailsContainerSubview
+    
     case paramDescription
     case measurementsList
     case measurementsChart
@@ -15,16 +17,18 @@ enum SensorDetailsContainerSubview: CaseIterable {
     var text: String {
         switch self {
         case .paramDescription:
-            "Opis parametru"
+            L10n.paramDescriptionSegementTitle
         case .measurementsList:
-            "Lista pomiarów"
+            L10n.measurementsListSegementTitle
         case .measurementsChart:
-            "Wykres pomiarów"
+            L10n.measurementsChartSegementTitle
         }
     }
 }
 
 struct SensorDetailsContainerView: View {
+    private typealias L10n = Localizable.SensorDetailsContainerSubview
+    
     @EnvironmentObject private var coordinator: SensorDetailsCoordinator
     @State private var selectedElementId: Int = 0
     
@@ -66,7 +70,7 @@ struct SensorDetailsContainerView: View {
         .navigationTitle(sensor.param.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            Button("Close") {
+            Button(L10n.close) {
                 coordinator.dismiss()
             }
         }

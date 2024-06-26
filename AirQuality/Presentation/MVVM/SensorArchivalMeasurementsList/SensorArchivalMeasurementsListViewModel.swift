@@ -26,7 +26,7 @@ final class SensorArchivalMeasurementsListViewModel: ObservableObject, @unchecke
     
     init(
         sensor: Sensor,
-        getArchivalMeasurementsUseCase: GetArchivalMeasurementsUseCaseProtocol = GetArchivalMeasurementsUseCase(measurementsNetworkMapper: MeasurementsNetworkMapper())
+        getArchivalMeasurementsUseCase: GetArchivalMeasurementsUseCaseProtocol = GetArchivalMeasurementsUseCase(sensorMeasurementNetworkMapper: SensorMeasurementNetworkMapper())
     ) {
         self.sensor = sensor
         self.getArchivalMeasurementsUseCase = getArchivalMeasurementsUseCase
@@ -42,7 +42,7 @@ final class SensorArchivalMeasurementsListViewModel: ObservableObject, @unchecke
                 let formattedPercentageValue: String
                 let formattedDate = dateFormatter.string(from: $0.date)
                 
-                if let value = $0.value {
+                if let value = $0.measurement?.value {
                     percentageValue = Double(((value / sensor.param.quota) * 100).rounded(.down))
                     formattedValue = String(format: "%.2f", value)
                     formattedPercentageValue = "\(percentageValue)"
@@ -56,7 +56,7 @@ final class SensorArchivalMeasurementsListViewModel: ObservableObject, @unchecke
                     formattedPercentageValue: formattedPercentageValue,
                     formattedValue: formattedValue,
                     formattedDate: formattedDate,
-                    value: $0.value ?? 0,
+                    value: $0.measurement?.value ?? 0,
                     percentageValue: percentageValue,
                     date: $0.date
                 )

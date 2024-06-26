@@ -15,7 +15,6 @@ protocol DependenciesContainerProtocol: AnyObject {
 }
 
 final class DependenciesContainer: AllDependencies, DependenciesContainerProtocol {
-    
     subscript<T>(_ keyPath: KeyPath<AllDependencies, T>) -> T {
         let mirror = Mirror(reflecting: self)
         
@@ -43,15 +42,16 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     let notificationCenter: NotificationCenterProtocol
     let stationsNetworkMapper: any StationsNetworkMapperProtocol
     let findTheNearestStationUseCase: FindTheNearestStationUseCaseProtocol
-    let paramsRepository: ParamsRepositoryProtocol
     let sensorsNetworkMapper: any SensorsNetworkMapperProtocol
-    let measurementsNetworkMapper: any MeasurementsNetworkMapperProtocol
+    var sensorMeasurementsNetworkMapper: any SensorMeasurementNetworkMapperProtocol
     let getSensorsUseCase: GetSensorsUseCaseProtocol
+    let sensorMeasurementDataFormatter: SensorMeasurementDataFormatterProtocol
     
     @MainActor
     init() throws {
         let httpDataSource = HTTPDataSource()
-        let bundleDataSource = try BundleDataSource()
+        
+        self.sensorMeasurementDataFormatter = SensorMeasurementDataFormatter()
         
         self.notificationCenter = NotificationCenter.default
         
@@ -61,10 +61,8 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         
         self.giosApiV1Repository = GIOSApiV1Repository(httpDataSource: httpDataSource)
         
-        self.paramsRepository = try ParamsRepository(bundleDataSource: bundleDataSource)
-        
         self.sensorsNetworkMapper = SensorsNetworkMapper()
-        self.measurementsNetworkMapper = MeasurementsNetworkMapper()
+        self.sensorMeasurementsNetworkMapper = SensorMeasurementNetworkMapper()
         
         self.giosApiRepository = GIOSApiRepository(httpDataSource: httpDataSource)
         

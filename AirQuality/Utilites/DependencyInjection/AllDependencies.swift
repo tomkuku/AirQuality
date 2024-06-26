@@ -25,9 +25,10 @@ HasLocalDatabaseRepository &
 HasObservedStationsFetchResultsRepository &
 HasLocationRespository &
 HasGIOSApiV1Repository &
-HasParamsRepository &
 // Mappers
 HasStationsNetworkMapper &
 HasSensorsNetworkMapper &
-HasMeasurementsNetworkMapper &
-HasStationsLocalDatabaseMapper
+HasSensorMeasurementNetworkMapper &
+HasStationsLocalDatabaseMapper &
+// Others
+HasSensorMeasurementDataFormatter

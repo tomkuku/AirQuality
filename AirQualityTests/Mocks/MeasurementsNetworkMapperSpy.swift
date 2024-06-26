@@ -9,7 +9,7 @@ import Foundation
 
 @testable import AirQuality
 
-final class MeasurementsNetworkMapperSpy: MeasurementsNetworkMapperProtocol, @unchecked Sendable {
+final class SensorMeasurementNetworkMapperSpy: SensorMeasurementNetworkMapperProtocol, @unchecked Sendable {
     enum Event: Equatable, Hashable {
         case map([MeasurementNetworkModel])
         
@@ -41,7 +41,7 @@ final class MeasurementsNetworkMapperSpy: MeasurementsNetworkMapperProtocol, @un
         return dateFormatter
     }()
     
-    func map(_ input: [MeasurementNetworkModel]) throws -> [AirQuality.Measurement] {
+    func map(_ input: [MeasurementNetworkModel]) throws -> [SensorMeasurement] {
         events.append(.map(input))
         
         return try input.compactMap {
@@ -51,12 +51,13 @@ final class MeasurementsNetworkMapperSpy: MeasurementsNetworkMapperProtocol, @un
                 ])
             }
             
-            guard let value = $0.value else { return nil }
+            var measurement: Measurement<UnitConcentrationMass>?
             
-            return Measurement(
-                date: date,
-                value: value
-            )
+            if let value = $0.value {
+                measurement = .init(value: value, unit: .microgramsPerCubicMeter)
+            }
+                
+            return SensorMeasurement(date: date, measurement: measurement)
         }
     }
 }

@@ -23,10 +23,9 @@ struct SectionView: View {
                 ForEach(section.rows) { row in
                     HStack {
                         ZStack {
-                            let imageName = row.isStationObserved ? "checkmark.circle.fill" : "circle"
                             let imageColor: Color = row.isStationObserved ? .blue : .gray
                             
-                            Image(systemName: imageName)
+                            (row.isStationObserved ? Image.checkmarkCircleFill : Image.circle)
                                 .resizable()
                                 .renderingMode(.template)
                                 .frame(width: 24, height: 24, alignment: .center)
@@ -66,7 +65,7 @@ struct SectionView: View {
                 }
             } label: {
                 HStack {
-                    Image(systemName: "chevron.down")
+                    Image.chevronDown
                         .accessibility(hidden: true)
                         .rotationEffect(.degrees(isShrunk ? 0 : 180))
                     

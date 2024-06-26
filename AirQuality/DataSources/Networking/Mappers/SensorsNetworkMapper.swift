@@ -12,12 +12,12 @@ protocol HasSensorsNetworkMapper {
 }
 
 protocol SensorsNetworkMapperProtocol: MapperProtocol
-where DTOModel == (SensorNetworkModel, Param, [Measurement]), DomainModel == Sensor {
-    func map(_ input: (SensorNetworkModel, Param, [Measurement])) throws -> Sensor
+where DTOModel == (SensorNetworkModel, Param, [SensorMeasurement]), DomainModel == Sensor {
+    func map(_ input: (SensorNetworkModel, Param, [SensorMeasurement])) throws -> Sensor
 }
 
 struct SensorsNetworkMapper: SensorsNetworkMapperProtocol {
-    func map(_ input: (SensorNetworkModel, Param, [Measurement])) throws -> Sensor {
+    func map(_ input: (SensorNetworkModel, Param, [SensorMeasurement])) throws -> Sensor {
         Sensor(id: input.0.id, param: input.1, measurements: input.2)
     }
 }

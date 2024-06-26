@@ -1,5 +1,6 @@
 excluded:
   - AirQuality/*
+  - GenerateSwiftFromJson
 
 opt_in_rules:
   - all

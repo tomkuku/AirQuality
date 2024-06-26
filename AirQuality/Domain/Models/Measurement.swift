@@ -7,7 +7,11 @@
 
 import Foundation
 
-struct Measurement: Equatable, Hashable {
+struct SensorMeasurement: Equatable, Hashable {
     let date: Date
-    let value: Double?
+    let measurement: Measurement<UnitConcentrationMass>?
+}
+
+extension UnitConcentrationMass {
+    static let microgramsPerCubicMeter = UnitConcentrationMass(symbol: "µg/m³", converter: UnitConverterLinear(coefficient: 1e-6))
 }

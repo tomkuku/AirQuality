@@ -21,7 +21,7 @@ struct StationMapAnnotationView: MapContent {
             VStack {
                 let imageColor: Color = stationAnnotation.isStationObserved ? .blue : .red
                 
-                Image(systemName: "mappin.circle.fill")
+                Image.mappinCircleFill
                     .foregroundColor(imageColor)
             }
             .onTapGesture {

@@ -1,6 +1,8 @@
 excluded:
   - AirQualityTests/*
   - AirQuality/Localizable/*
+  - AirQuality/Assets/*
+  - GenerateSwiftFromJson
 
 opt_in_rules:
   - all

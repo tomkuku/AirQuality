@@ -12,10 +12,11 @@ extension Sensor {
         id: Int = 1,
         param: Param = .c6h6
     ) -> Self {
-        let measurements: [Measurement] = [
-            Measurement(date: Date(), value: Double.random(in: 0...100)),
-            Measurement(date: Date(), value: Double.random(in: 0...100)),
-            Measurement(date: Date(), value: Double.random(in: 0...100))
+        let measurements: [SensorMeasurement] = [
+            SensorMeasurement(date: Date(), measurement: .init(value: Double.random(in: 0...100), unit: .microgramsPerCubicMeter)),
+            SensorMeasurement(date: Date(), measurement: .init(value: Double.random(in: 0...100), unit: .microgramsPerCubicMeter)),
+            SensorMeasurement(date: Date(), measurement: .init(value: Double.random(in: 0...100), unit: .microgramsPerCubicMeter)),
+            SensorMeasurement(date: Date(), measurement: .init(value: Double.random(in: 0...100), unit: .microgramsPerCubicMeter))
         ]
         
         return Self(
