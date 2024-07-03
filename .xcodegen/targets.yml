@@ -19,9 +19,9 @@ targetTemplates:
         basedOnDependencyAnalysis: no
         script: |
           GenerateSwiftFromJson/run \
-          --json-input /Users/tomaszkukulka/Developer/AirQuality/AirQuality/Assets/ParamsInfo.json \
-          --stencil-template /Users/tomaszkukulka/Developer/AirQuality/.stencil-templates/generate-params.stencil \
-          --swift-output /Users/tomaszkukulka/Developer/AirQuality/AirQuality/Assets/Params.swift
+          --json-input ./AirQuality/Assets/ParamsInfo.json \
+          --stencil-template .stencil-templates/generate-params.stencil \
+          --swift-output ./AirQuality/Assets/Params.swift
     postbuildScripts:
       - name: "Swiftlint"
         basedOnDependencyAnalysis: no
