@@ -11,6 +11,14 @@ import Combine
 @testable import AirQuality
 
 final class UserLocationDataSourceSpy: UserLocationDataSourceProtocol {
+    func startUpdatingLocation() {
+        
+    }
+    
+    func stopUpdatingLocation() {
+        
+    }
+    
     
     enum Event: Equatable {
         case getLocationServicesEnabled

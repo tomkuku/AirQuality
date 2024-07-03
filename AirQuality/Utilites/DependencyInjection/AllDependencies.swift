@@ -15,6 +15,8 @@ HasDeleteObservedStationUseCase &
 HasGetObservedStationsUseCase &
 HasFindTheNearestStationUseCase &
 HasGetSensorsUseCase &
+HasGetStationSensorsParamsUseCase &
+HasGetUserLocationUseCase &
 // DataSources
 HasCacheDataSource &
 HasNotificationCenter &
@@ -30,5 +32,7 @@ HasStationsNetworkMapper &
 HasSensorsNetworkMapper &
 HasSensorMeasurementNetworkMapper &
 HasStationsLocalDatabaseMapper &
+HasStationSensorsParamsNetworkMapper &
 // Others
-HasSensorMeasurementDataFormatter
+HasSensorMeasurementDataFormatter &
+HasUIApplication

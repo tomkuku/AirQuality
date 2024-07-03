@@ -11,11 +11,24 @@
 "Alert.SomethingWentWrong.title" = "Ups, coś poszło nie tak";
 "Alert.SomethingWentWrong.message" = "Spróbuj ponownie później";
 
-"Alert.Button.Ok.title" = "Ok";
-"Alert.Button.Cancel.title" = "Anuluj";
+"Alert.LocationServicesAuthorizationRestricted.title" = "Nie masz uprawnień do korzystania z usług lokalizacji";
+
+"Alert.LocationServicesAuthorizationDenied.title" = "Aplikacja nie ma dostępu do usług lokalizacji";
+"Alert.LocationServicesAuthorizationDenied.message" = "Przejdź do ustawień aplikacji aby to zmienić.";
+
+"Alert.LocationServicesDisabled.title" = "Usługi lokalizacji są wyłączone";
+"Alert.LocationServicesDisabled.message" = "Przejdź do ustawień urządzenia aby je włączyć.";
+
+"Alert.FindingTheNearestStationsFailed.title" = "Szukanie najbliższej stacji nie powiodło się";
+"Alert.FindingTheNearestStationsFailed.message" = "Spróbuj ponownie później.";
+
+"Alert.Button.ok" = "Ok";
+"Alert.Button.cancel" = "Anuluj";
+"Alert.Button.goToSettings" = "Przejdź do ustawień";
 
 // MARK: Toast
 
+"Toast.observedStationWasAdded" = "Stacja została dodany do listy obserwowanych";
 "Toast.observedStationWasDeleted" = "Stacja została usunięta z listy obserwowanych";
 
 // MARK: AddObservedStationContainerView
@@ -28,8 +41,17 @@
 
 "AddObservedStationMapView.navigationTitle" = "Mapa stacji";
 "AddObservedStationMapView.findTheNearestStationButton" = "Znajdź najbliższą stację";
+
+"AddObservedStationMapView.BottomMenu.showUserLocation" = "Lokalizacja użytkownika";
+"AddObservedStationMapView.BottomMenu.MapStyle.buttonTitle" = "Styl mapy";
+"AddObservedStationMapView.BottomMenu.MapStyle.standard" = "Standardowa";
+"AddObservedStationMapView.BottomMenu.MapStyle.satellite" = "Satelitarna";
+
 "AddObservedStationMapView.AnnotationView.addObservedStation" = "Przestań obserwować";
 "AddObservedStationMapView.AnnotationView.deleteObservedStation" = "Dodaj do obserwowanych";
+"AddObservedStationMapView.AnnotationView.station" = "Stacja:";
+"AddObservedStationMapView.AnnotationView.measuredParametres" = "Mierzone parametry:";
+"AddObservedStationMapView.AnnotationView.noParams" = "No parameters";
 
 // MARK: AddObservedStationListView
 

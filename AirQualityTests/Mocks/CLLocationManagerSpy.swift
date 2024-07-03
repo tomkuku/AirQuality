@@ -11,6 +11,14 @@ import CoreLocation
 @testable import AirQuality
 
 final class CLLocationManagerSpy: CLLocationManagerProtocol {
+    func startUpdatingLocation() {
+        
+    }
+    
+    func stopUpdatingLocation() {
+        
+    }
+    
     
     enum Event: Equatable {
         case requestLocation

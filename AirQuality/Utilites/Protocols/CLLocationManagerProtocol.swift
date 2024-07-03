@@ -17,6 +17,8 @@ protocol CLLocationManagerProtocol: AnyObject {
     
     func requestLocation()
     func requestWhenInUseAuthorization()
+    func startUpdatingLocation()
+    func stopUpdatingLocation()
 }
 
 extension CLLocationManagerProtocol {
@@ -25,4 +27,4 @@ extension CLLocationManagerProtocol {
     }
 }
 
-extension CLLocationManager: CLLocationManagerProtocol { }
+extension CLLocationManager: CLLocationManagerProtocol {}

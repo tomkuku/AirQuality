@@ -27,7 +27,7 @@ struct ToastView: View {
                     }
                     .background {
                         RoundedRectangle(cornerRadius: 15, style: .continuous)
-                            .fill(.black.opacity(0.8))
+                            .fill(.black.opacity(0.9))
                     }
                     .overlay {
                         RoundedRectangle(cornerRadius: 15, style: .continuous)

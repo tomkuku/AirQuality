@@ -30,7 +30,7 @@ final class AddObservedStationMapCoordinator: CoordinatorBase, CoordinatorProtoc
     }
     
     func createView(for navigationComponent: NavigationComponent) -> some View {
-        EmptyView()
+        Text("Empty view")
     }
     
     func goTo(_ navigationComponent: NavigationComponent) { }

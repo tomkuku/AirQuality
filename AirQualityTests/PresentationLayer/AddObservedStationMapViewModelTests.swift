@@ -15,8 +15,6 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
     
     private var sut: AddObservedStationMapViewModel!
     
-    private var addObservedStationUseCaseSpy: AddObservedStationUseCaseSpy!
-    private var deleteObservedStationUseCaseSpy: DeleteObservedStationUseCaseSpy!
     private var getObservedStationsUseCaseSpy: GetObservedStationsUseCaseSpy!
     private var fetchAllStationsUseCaseSpy: FetchAllStationsUseCaseSpy!
     private var findTheNearestStationUseCaseSpy: FindTheNearestStationUseCaseSpy!
@@ -31,14 +29,10 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
     override func setUp() async throws {
         try await super.setUp()
         
-        addObservedStationUseCaseSpy = AddObservedStationUseCaseSpy()
-        deleteObservedStationUseCaseSpy = DeleteObservedStationUseCaseSpy()
         getObservedStationsUseCaseSpy = GetObservedStationsUseCaseSpy()
         fetchAllStationsUseCaseSpy = FetchAllStationsUseCaseSpy()
         findTheNearestStationUseCaseSpy = FindTheNearestStationUseCaseSpy()
         
-        dependenciesContainerDummy[\.addObservedStationUseCase] = addObservedStationUseCaseSpy
-        dependenciesContainerDummy[\.deleteObservedStationUseCase] = deleteObservedStationUseCaseSpy
         dependenciesContainerDummy[\.getObservedStationsUseCase] = getObservedStationsUseCaseSpy
         dependenciesContainerDummy[\.fetchAllStationsUseCase] = fetchAllStationsUseCaseSpy
         dependenciesContainerDummy[\.findTheNearestStationUseCase] = findTheNearestStationUseCaseSpy
@@ -273,118 +267,6 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         
         XCTAssertEqual(getObservedStationsUseCaseSpy.events, [.createNewStream, .fetchedStations])
         XCTAssertEqual(fetchAllStationsUseCaseSpy.events, [.fetch])
-        XCTAssertEqual(alert, .somethigWentWrong())
-    }
-    
-    // MARK: addObservedStation
-    
-    @MainActor
-    func testStationDidSelectWhenStationIsNotObserved() {
-        // Given
-        expectation.expectedFulfillmentCount = 2
-        
-        var toast: Toast?
-        
-        sut.toastSubject
-            .sink {
-                toast = $0
-                self.expectation.fulfill()
-            }
-            .store(in: &cancellables)
-        
-        addObservedStationUseCaseSpy.expectation = expectation
-        deleteObservedStationUseCaseSpy.expectation = expectation
-        
-        // When
-        sut.addObservedStation(station1)
-        
-        // Then
-        wait(for: [expectation], timeout: 2.0)
-        
-        XCTAssertEqual(getObservedStationsUseCaseSpy.events, [.createNewStream])
-        XCTAssertEqual(addObservedStationUseCaseSpy.events, [.add(station1)])
-        XCTAssertTrue(deleteObservedStationUseCaseSpy.events.isEmpty)
-        XCTAssertNotNil(toast)
-    }
-    
-    @MainActor
-    func testStationDidSelectWhenStationIsNotObservedAndAddingStationFailed() {
-        // Given
-        var alert: AlertModel?
-        
-        sut.alertSubject
-            .sink {
-                alert = $0
-                self.expectation.fulfill()
-            }
-            .store(in: &cancellables)
-        
-        addObservedStationUseCaseSpy.addStationThrowError = ErrorDummy()
-        
-        // When
-        sut.addObservedStation(station1)
-        
-        // Then
-        wait(for: [expectation], timeout: 2.0)
-        
-        XCTAssertEqual(addObservedStationUseCaseSpy.events, [.add(station1)])
-        XCTAssertTrue(deleteObservedStationUseCaseSpy.events.isEmpty)
-        XCTAssertEqual(alert, .somethigWentWrong())
-    }
-    
-    // MARK: deletedObservedStation
-    
-    @MainActor
-    func testStationDidSelectWhenStationIsObserved() {
-        // Given
-        expectation.expectedFulfillmentCount = 2
-        
-        var toast: Toast?
-        
-        sut.toastSubject
-            .sink {
-                toast = $0
-                self.expectation.fulfill()
-            }
-            .store(in: &cancellables)
-        
-        addObservedStationUseCaseSpy.expectation = expectation
-        deleteObservedStationUseCaseSpy.expectation = expectation
-        
-        // When
-        sut.deletedObservedStation(station1)
-        
-        // Then
-        wait(for: [expectation], timeout: 2.0)
-        
-        XCTAssertEqual(getObservedStationsUseCaseSpy.events, [.createNewStream])
-        XCTAssertTrue(addObservedStationUseCaseSpy.events.isEmpty)
-        XCTAssertEqual(deleteObservedStationUseCaseSpy.events, [.delete(station1)])
-        XCTAssertNotNil(toast)
-    }
-    
-    @MainActor
-    func testStationDidSelectWhenStationIsObservedAndDeletingStationFailed() {
-        // Given
-        var alert: AlertModel?
-        
-        sut.alertSubject
-            .sink {
-                alert = $0
-                self.expectation.fulfill()
-            }
-            .store(in: &cancellables)
-        
-        deleteObservedStationUseCaseSpy.deleteStationThrowError = ErrorDummy()
-        
-        // When
-        sut.deletedObservedStation(station1)
-        
-        // Then
-        wait(for: [expectation], timeout: 2.0)
-        
-        XCTAssertTrue(addObservedStationUseCaseSpy.events.isEmpty)
-        XCTAssertEqual(deleteObservedStationUseCaseSpy.events, [.delete(station1)])
         XCTAssertEqual(alert, .somethigWentWrong())
     }
     

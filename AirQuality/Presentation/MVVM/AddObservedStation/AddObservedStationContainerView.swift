@@ -35,7 +35,7 @@ struct AddObservedStationContainerView: View {
                 .tabItem {
                     Label(
                         title: { Text(L10n.MapItem.itemTitle) },
-                        icon: { Image.map }
+                        icon: { Image.mapFill }
                     )
                 }
                 .tag(Item.map)

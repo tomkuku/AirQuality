@@ -14,9 +14,10 @@ class BaseViewModel: ObservableObject {
     // swiftlint:disable private_subject
     let alertSubject = PassthroughSubject<AlertModel, Never>()
     let toastSubject = PassthroughSubject<Toast, Never>()
+    let errorSubject = PassthroughSubject<Error, Never>()
     // swiftlint:enable private_subject
     
-    var isLoading = false
+    var isLoading = true
     
     func isLoading(_ isLoading: Bool, objectWillChnage: Bool) {
         guard self.isLoading != isLoading else { return }
@@ -26,6 +27,10 @@ class BaseViewModel: ObservableObject {
         if objectWillChnage {
             self.objectWillChange.send()
         }
+    }
+    
+    func sendError(_ error: Error) {
+        errorSubject.send(error)
     }
 }
 
@@ -60,13 +65,28 @@ where C: CoordinatorBase & CoordinatorProtocol, V: View, VM: BaseViewModel {
         .onReceive(viewModel.toastSubject.eraseToAnyPublisher()) { toast in
             coordinator.toastSubject.send(toast)
         }
+        .onReceive(viewModel.errorSubject.eraseToAnyPublisher()) { error in
+            guard let onReceiveError else {
+                coordinator.alertSubject.send(.somethigWentWrong())
+                return
+            }
+            
+            onReceiveError(error)
+        }
     }
     
     private var contentView: V
+    private var onReceiveError: ((Error) -> ())?
     
-    init(viewModel: VM, coordinator: C, @ViewBuilder contentView: @escaping () -> V) {
+    init(
+        viewModel: VM,
+        coordinator: C,
+        onReceiveError: ((Error) -> ())? = nil,
+        @ViewBuilder contentView: @escaping () -> V
+    ) {
         self.viewModel = viewModel
         self.coordinator = coordinator
+        self.onReceiveError = onReceiveError
         self.contentView = contentView()
     }
 }

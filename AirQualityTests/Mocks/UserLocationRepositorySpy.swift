@@ -12,6 +12,14 @@ import XCTest
 @testable import AirQuality
 
 actor UserLocationRepositorySpy: LocationRespositoryProtocol {
+    func streamLocation(finishClosure: inout (@Sendable () -> ())?) async -> AsyncThrowingStream<AirQuality.Location, any Error> {
+        fatalError()
+    }
+    
+    func checkLocationServicesAvailability() async throws {
+        
+    }
+    
     enum Event {
         case requestLocationOnce
         case isLocationServicesEnabled

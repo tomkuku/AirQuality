@@ -19,6 +19,10 @@ struct Toast: Identifiable, Equatable, Hashable {
 
 extension Toast {
     static func observedStationWasDeleted() -> Self {
-        .init(body: Localizable.Toast.observedStationWasDeleted)
+        Self(body: Localizable.Toast.observedStationWasDeleted)
+    }
+    
+    static func observedStationWasAdded() -> Self {
+        Self(body: Localizable.Toast.observedStationWasAdded)
     }
 }

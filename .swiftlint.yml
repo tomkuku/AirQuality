@@ -71,6 +71,7 @@ attributes:
   always_on_line_above:
     - "@MainActor"
     - "@discardableResult"
+    - "@ViewBuilder"
   always_on_same_line:
     - "@objc"
     - "@Injected"

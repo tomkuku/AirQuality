@@ -19,6 +19,7 @@ extension AddStationToObservedCoordinator {
     }
 }
 
+@MainActor
 final class AddStationToObservedCoordinator: CoordinatorBase, CoordinatorProtocol {
     
     // MARK: Properties

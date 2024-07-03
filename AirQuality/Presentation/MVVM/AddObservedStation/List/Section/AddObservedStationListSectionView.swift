@@ -12,40 +12,14 @@ struct SectionView: View {
     @ObservedObject private var viewModel: AddStationToObservedListViewModel
     
     private let section: AddStationToObservedListModel.Section
-    private let onSelectedStation: (Station) -> ()
     
     var body: some View {
         Section {
             if isShrunk {
                 EmptyView()
-                    .frame(width: .zero, height: .zero)
             } else {
                 ForEach(section.rows) { row in
-                    HStack {
-                        ZStack {
-                            let imageColor: Color = row.isStationObserved ? .blue : .gray
-                            
-                            (row.isStationObserved ? Image.checkmarkCircleFill : Image.circle)
-                                .resizable()
-                                .renderingMode(.template)
-                                .frame(width: 24, height: 24, alignment: .center)
-                                .foregroundStyle(imageColor)
-                                .accessibilityHidden(true)
-                        }
-                        .padding(.trailing, 16)
-                        .accessibility(addTraits: [.isButton])
-                        .gesture(TapGesture().onEnded {
-                            onSelectedStation(row.station)
-                        })
-                        
-                        HStack {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text(row.station.street ?? "")
-                                
-                                Text(row.station.cityName)
-                            }
-                        }
-                    }
+                    AllStationsListRowView(station: row.station, isStationObserved: row.isStationObserved)
                 }
             }
         } header: {
@@ -81,12 +55,18 @@ struct SectionView: View {
     
     init(
         section: AddStationToObservedListModel.Section,
-        viewModel: AddStationToObservedListViewModel,
-        onSelectedStation: @escaping (Station) -> ()
+        viewModel: AddStationToObservedListViewModel
     ) {
         self.section = section
         self._viewModel = ObservedObject(wrappedValue: viewModel)
-        self.onSelectedStation = onSelectedStation
+    }
+    
+    private func createRow(for station: Station) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(station.street ?? "")
+            
+            Text(station.cityName)
+        }
     }
 }
 
@@ -98,11 +78,13 @@ struct SectionView: View {
         .previewDummy(id: 4)
     ]
     
+    GetStationSensorsParamsUseCasePreviewDummy.getParamsResult = [.c6h6, .pm10, .pm25, .so2, .co, .no2, .o3]
+    
     @ObservedObject var viewModel = AddStationToObservedListViewModel()
     @ObservedObject var coordinator = AddObservedStationListCoordinator(
         coordinatorNavigationType: .presentation(dismissHandler: {})
     )
     
     return AddStationToObservedListView(viewModel: viewModel)
-                .environmentObject(coordinator)
+        .environmentObject(coordinator)
 }

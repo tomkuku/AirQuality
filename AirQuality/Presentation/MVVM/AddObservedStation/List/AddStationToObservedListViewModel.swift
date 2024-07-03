@@ -58,25 +58,6 @@ final class AddStationToObservedListViewModel: BaseViewModel, @unchecked Sendabl
         }
     }
     
-    func stationDidSelect(_ station: Station) {
-        Task { @MainActor [weak self] in
-            guard let self else { return }
-            
-            do {
-                let observedStations = try await getObservedStationsUseCase.fetchedStations()
-                
-                if observedStations.contains(station) {
-                    try await deleteObservedStationUseCase.delete(station: station)
-                } else {
-                    try await addObservedStationUseCase.add(station: station)
-                }
-            } catch {
-                Logger.error("Observing station faild with error: \(error.localizedDescription)")
-                alertSubject.send(.somethigWentWrong())
-            }
-        }
-    }
-    
     func searchedTextDidChange(_ text: String) {
         Task { @MainActor [weak self] in
             guard let self else { return }

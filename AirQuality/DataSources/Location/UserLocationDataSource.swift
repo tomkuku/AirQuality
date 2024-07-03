@@ -18,6 +18,9 @@ protocol UserLocationDataSourceProtocol: AnyObject {
     
     func requestLocation()
     func requestWhenInUseAuthorization()
+    
+    func startUpdatingLocation()
+    func stopUpdatingLocation()
 }
 
 final class UserLocationDataSource: NSObject, UserLocationDataSourceProtocol {
@@ -60,6 +63,14 @@ final class UserLocationDataSource: NSObject, UserLocationDataSourceProtocol {
     }
     
     // MARK: Methods
+    
+    func startUpdatingLocation() {
+        locationManager.startUpdatingLocation()
+    }
+    
+    func stopUpdatingLocation() {
+        locationManager.stopUpdatingLocation()
+    }
     
     func requestLocation() {
         locationManager.requestLocation()

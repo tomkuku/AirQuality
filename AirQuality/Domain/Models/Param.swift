@@ -17,13 +17,17 @@ enum ParamType: Int, Equatable {
     case co = 8
 }
 
-struct Param: Sendable, Equatable {
+struct Param: Sendable, Equatable, Hashable {
     let type: ParamType
     let code: String
     let formula: String
     let quota: Double
     let unit: String
     let indexLevels: IndexLevels
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(type.rawValue)
+    }
     
     func getAqi(for value: Double?) -> AQI {
         switch Int(value ?? -1) {

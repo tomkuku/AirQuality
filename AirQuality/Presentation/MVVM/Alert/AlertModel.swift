@@ -8,13 +8,13 @@
 import Foundation
 import SwiftUI
 
-struct AlertModel: Sendable, Equatable {
-    struct Button: Sendable, Equatable {
+struct AlertModel: Equatable {
+    struct Button: Equatable {
         let title: String
         let role: ButtonRole?
-        let action: (@Sendable () -> ())?
+        let action: (() -> ())?
         
-        init(title: String, role: ButtonRole? = nil, action: (@Sendable () -> ())? = nil) {
+        init(title: String, role: ButtonRole? = nil, action: (() -> ())? = nil) {
             self.title = title
             self.role = role
             self.action = action
@@ -29,13 +29,13 @@ struct AlertModel: Sendable, Equatable {
     let title: String
     let message: String?
     let buttons: [Button]
-    let dismissAction: (@Sendable () -> ())?
+    let dismissAction: (() -> ())?
     
     init(
         title: String,
         message: String? = nil,
         buttons: [Button],
-        dismissAction: (@Sendable () -> Void)? = nil
+        dismissAction: (() -> Void)? = nil
     ) {
         self.title = title
         self.message = message
@@ -51,21 +51,75 @@ struct AlertModel: Sendable, Equatable {
 }
 
 extension AlertModel.Button {
+    private typealias L10n = Localizable.Alert
+    
     static func ok() -> Self {
-        Self(title: Localizable.Alert.Button.Ok.title)
+        Self(title: L10n.Button.ok)
     }
     
     static func cancel() -> Self {
-        Self(title: Localizable.Alert.Button.Cancel.title)
+        Self(title: L10n.Button.cancel)
     }
 }
 
 extension AlertModel {
-    static func somethigWentWrong(dismiss: (@Sendable () -> ())? = nil) -> Self {
+    private typealias L10n = Localizable.Alert
+    
+    static func somethigWentWrong(dismiss: (() -> ())? = nil) -> Self {
         Self(
-            title: Localizable.Alert.SomethingWentWrong.title,
-            message: Localizable.Alert.SomethingWentWrong.message,
+            title: L10n.SomethingWentWrong.title,
+            message: L10n.SomethingWentWrong.message,
             buttons: [.ok()],
+            dismissAction: dismiss
+        )
+    }
+    
+    static func findingTheNearestStationsFailed() -> Self {
+        Self(
+            title: L10n.FindingTheNearestStationsFailed.title,
+            message: L10n.FindingTheNearestStationsFailed.message,
+            buttons: [.ok()]
+        )
+    }
+    
+    static func locationServicesAuthorizationRestricted(_ coordinator: CoordinatorBase) -> Self {
+        Self(title: L10n.LocationServicesAuthorizationRestricted.title, buttons: [.ok()])
+    }
+    
+    @MainActor
+    static func locationServicesAuthorizationDenied(_ coordinator: CoordinatorBase) -> Self {
+        goToSettings(
+            url: URL(string: UIApplication.openSettingsURLString),
+            title: L10n.LocationServicesAuthorizationDenied.title,
+            message: L10n.LocationServicesAuthorizationDenied.message,
+            coordinator: coordinator
+        )
+    }
+    
+    static func locationServicesDisabled(_ coordinator: CoordinatorBase) -> Self {
+        Self(
+            title: L10n.LocationServicesAuthorizationRestricted.title,
+            message: L10n.LocationServicesDisabled.message,
+            buttons: [.ok()]
+        )
+    }
+    
+    @MainActor
+    private static func goToSettings(
+        url: URL?,
+        title: String,
+        message: String? = nil,
+        coordinator: CoordinatorBase,
+        dismiss: (@Sendable () -> ())? = nil
+    ) -> Self {
+        let goToSettingsButton = AlertModel.Button(title: L10n.Button.goToSettings) {
+            coordinator.open(url: url)
+        }
+        
+        return Self(
+            title: title,
+            message: message,
+            buttons: [goToSettingsButton, .cancel()],
             dismissAction: dismiss
         )
     }

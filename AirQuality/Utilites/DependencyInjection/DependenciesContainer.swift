@@ -46,9 +46,15 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     var sensorMeasurementsNetworkMapper: any SensorMeasurementNetworkMapperProtocol
     let getSensorsUseCase: GetSensorsUseCaseProtocol
     let sensorMeasurementDataFormatter: SensorMeasurementDataFormatterProtocol
+    let getStationSensorsParamsUseCase: GetStationSensorsParamsUseCaseProtocol
+    let stationSensorsParamsNetworkMapper: any StationSensorsParamsNetworkMapperProtocol
+    let getUserLocationUseCase: GetUserLocationUseCaseProtocol
+    let uiApplication: UIApplicationProtocol
     
     @MainActor
     init() throws {
+        self.uiApplication = UIApplication.shared
+        
         let httpDataSource = HTTPDataSource()
         
         self.sensorMeasurementDataFormatter = SensorMeasurementDataFormatter()
@@ -98,21 +104,30 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         let userLocationDataSource = UserLocationDataSource(locationManager: CLLocationManager())
         self.locationRespository = LocationRespository(userLocationDataSource: userLocationDataSource)
         
+        self.stationSensorsParamsNetworkMapper = StationSensorsParamsNetworkMapper()
+        
 #if targetEnvironment(simulator)
         if ProcessInfo.isPreview {
             SwiftDataPreviewAccessor.shared = .init(modelContainer: modelContainer)
+            
             self.fetchAllStationsUseCase = FetchAllStationsUseCasePreviewDummy()
             self.findTheNearestStationUseCase = FindTheNearestStationUseCasePreviewDummy()
             self.getSensorsUseCase = GetSensorsUseCasePreviewDummy()
+            self.getUserLocationUseCase = GetUserLocationUseCasePreviewDummy()
+            self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCasePreviewDummy()
         } else {
             self.fetchAllStationsUseCase = FetchAllStationsUseCase()
             self.findTheNearestStationUseCase = FindTheNearestStationUseCase()
             self.getSensorsUseCase = GetSensorsUseCase()
+            self.getUserLocationUseCase = GetUserLocationUseCase()
+            self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCase()
         }
 #else
         self.getStationsUseCase = GetStationsUseCase()
         self.findTheNearestStationUseCase = FindTheNearestStationUseCase()
         self.getSensorsUseCase = GetSensorsUseCase()
+        self.getUserLocationUseCase = GetUserLocationUseCase()
+        self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCase()
 #endif
     }
     
