@@ -18,6 +18,7 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
     private var getObservedStationsUseCaseSpy: GetObservedStationsUseCaseSpy!
     private var fetchAllStationsUseCaseSpy: FetchAllStationsUseCaseSpy!
     private var findTheNearestStationUseCaseSpy: FindTheNearestStationUseCaseSpy!
+    private var getUserLocationUseCaseSpy: GetUserLocationUseCaseSpy!
     
     private var station1: Station!
     private var station2: Station!
@@ -32,10 +33,12 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         getObservedStationsUseCaseSpy = GetObservedStationsUseCaseSpy()
         fetchAllStationsUseCaseSpy = FetchAllStationsUseCaseSpy()
         findTheNearestStationUseCaseSpy = FindTheNearestStationUseCaseSpy()
+        getUserLocationUseCaseSpy = GetUserLocationUseCaseSpy()
         
         dependenciesContainerDummy[\.getObservedStationsUseCase] = getObservedStationsUseCaseSpy
         dependenciesContainerDummy[\.fetchAllStationsUseCase] = fetchAllStationsUseCaseSpy
         dependenciesContainerDummy[\.findTheNearestStationUseCase] = findTheNearestStationUseCaseSpy
+        dependenciesContainerDummy[\.getUserLocationUseCase] = getUserLocationUseCaseSpy
         
         station1 = Station.dummy(id: 1, cityName: "Cracow", province: "Malopolska", street: "Bujaka")
         station2 = Station.dummy(id: 2, cityName: "Plock", province: "Mazowieckie", street: "Reja")
@@ -210,11 +213,11 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         fetchAllStationsUseCaseSpy.fetchStationsResult = .failure(ErrorDummy())
         getObservedStationsUseCaseSpy.fetchStationsResult = .success([])
         
-        var alert: AlertModel?
+        var error: Error?
         
-        sut.alertSubject
+        sut.errorSubject
             .sink {
-                alert = $0
+                error = $0
                 self.expectation.fulfill()
             }
             .store(in: &cancellables)
@@ -234,7 +237,7 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         
         XCTAssertEqual(getObservedStationsUseCaseSpy.events, [.createNewStream, .fetchedStations])
         XCTAssertEqual(fetchAllStationsUseCaseSpy.events, [.fetch])
-        XCTAssertEqual(alert, .somethigWentWrong())
+        XCTAssertNotNil(error as? ErrorDummy)
     }
     
     @MainActor
@@ -243,11 +246,11 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         fetchAllStationsUseCaseSpy.fetchStationsResult = .success([])
         getObservedStationsUseCaseSpy.fetchStationsResult = .failure(ErrorDummy())
         
-        var alert: AlertModel?
+        var error: Error?
         
-        sut.alertSubject
+        sut.errorSubject
             .sink {
-                alert = $0
+                error = $0
                 self.expectation.fulfill()
             }
             .store(in: &cancellables)
@@ -267,7 +270,7 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         
         XCTAssertEqual(getObservedStationsUseCaseSpy.events, [.createNewStream, .fetchedStations])
         XCTAssertEqual(fetchAllStationsUseCaseSpy.events, [.fetch])
-        XCTAssertEqual(alert, .somethigWentWrong())
+        XCTAssertNotNil(error as? ErrorDummy)
     }
     
     // MARK: findTheNearestStation
@@ -298,15 +301,15 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
     }
     
     @MainActor
-    func testFindTheNearestStationWhenFailure() {
+    func testFindTheNearestStationWhenLocationServicesNotAvailable() {
         // Given
-        findTheNearestStationUseCaseSpy.findStationsResult = .failure(ErrorDummy())
+        getUserLocationUseCaseSpy.checkLocationServicesAvailabilityThrowError = .authorizationRestricted
         
-        var alert: AlertModel?
+        var error: Error?
         
-        sut.alertSubject
+        sut.errorSubject
             .sink {
-                alert = $0
+                error = $0
                 self.expectation.fulfill()
             }
             .store(in: &cancellables)
@@ -323,7 +326,156 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         // Then
         wait(for: [expectation], timeout: 2.0)
         
-        XCTAssertNotNil(alert)
+        XCTAssertEqual(error as? UserLocationServicesError, .authorizationRestricted)
+    }
+    
+    @MainActor
+    func testFindTheNearestStationWhenFailure() {
+        // Given
+        findTheNearestStationUseCaseSpy.findStationsResult = .failure(ErrorDummy())
+        
+        var error: Error?
+        
+        sut.errorSubject
+            .sink {
+                error = $0
+                self.expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        sut.theNearestStationPublisher
+            .sink { _ in
+                XCTFail("theNearestStationPublisher should not publish any value!")
+            }
+            .store(in: &cancellables)
+        
+        // When
+        sut.findTheNearestStation()
+        
+        // Then
+        wait(for: [expectation], timeout: 2.0)
+        
+        XCTAssertNotNil(error as? ErrorDummy)
+    }
+    
+    // MARK: track User Location
+    
+    @MainActor
+    func testStartTrackingUserLocation() {
+        // Given
+        let location1 = Location(latitude: 1, longitude: 1)
+        let location2 = Location(latitude: 2, longitude: 2)
+        
+        var userLocations: [Location] = []
+        
+        expectation.expectedFulfillmentCount = 2
+        
+        sut.$userLocation
+            .dropFirst()
+            .compactMap { $0 }
+            .sink {
+                userLocations.append($0)
+                self.expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        getUserLocationUseCaseSpy.streamLocationHandler = {
+            self.getUserLocationUseCaseSpy.locationStremSubject.send(location1)
+            self.getUserLocationUseCaseSpy.locationStremSubject.send(location2)
+        }
+        
+        // When
+        sut.startTrackingUserLocation()
+        
+        // Then
+        wait(for: [expectation], timeout: 2)
+        
+        XCTAssertEqual(userLocations, [location1, location2])
+        XCTAssertEqual(getUserLocationUseCaseSpy.events, [
+            .checkLocationServicesAvailability,
+            .streamLocation
+        ])
+        
+        // Given
+        expectation = XCTestExpectation()
+        getUserLocationUseCaseSpy.expectation = expectation
+        getUserLocationUseCaseSpy.events.removeAll()
+        
+        // When
+        sut.stopTrackingUserLocation()
+        
+        // Then
+        wait(for: [expectation], timeout: 2.0)
+        
+        XCTAssertEqual(getUserLocationUseCaseSpy.events, [
+            .streamLocationFinish
+        ])
+    }
+    
+    @MainActor
+    func testStartTrackingUserLocationWhenLocationServicesNotAvailable() {
+        // Given
+        getUserLocationUseCaseSpy.checkLocationServicesAvailabilityThrowError = .authorizationDenied
+        
+        var error: Error?
+        
+        sut.errorSubject
+            .sink {
+                error = $0
+                self.expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        // When
+        sut.startTrackingUserLocation()
+        
+        // Then
+        wait(for: [expectation], timeout: 2)
+        
+        XCTAssertEqual(error as? UserLocationServicesError, .authorizationDenied)
+        XCTAssertNil(sut.userLocation)
+        XCTAssertEqual(getUserLocationUseCaseSpy.events, [.checkLocationServicesAvailability])
+    }
+    
+    @MainActor
+    func testStartTrackingUserLocationWhenFailure() {
+        // Given
+        expectation.expectedFulfillmentCount = 2
+        
+        var location: Location?
+        var error: Error?
+        
+        sut.errorSubject
+            .sink {
+                error = $0
+                self.expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        sut.$userLocation
+            .dropFirst()
+            .sink {
+                location = $0
+                self.expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        getUserLocationUseCaseSpy.streamLocationHandler = {
+            self.getUserLocationUseCaseSpy.locationStremSubject.send(completion: .failure(ErrorDummy()))
+        }
+        
+        // When
+        sut.startTrackingUserLocation()
+        
+        // Then
+        wait(for: [expectation], timeout: 2)
+        
+        XCTAssertEqual(getUserLocationUseCaseSpy.events, [
+            .checkLocationServicesAvailability,
+            .streamLocation
+        ])
+        XCTAssertNil(location)
+        XCTAssertNotNil(error as? ErrorDummy)
     }
 }
 
@@ -334,5 +486,64 @@ extension AddObservedStationMapModel.StationAnnotation: Equatable, Hashable {
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(station.id)
+    }
+}
+
+import Combine
+
+final class GetUserLocationUseCaseSpy: GetUserLocationUseCaseProtocol, @unchecked Sendable {
+    enum Event {
+        case checkLocationServicesAvailability
+        case streamLocation
+        case streamLocationFinish
+    }
+    
+    var events: [Event] = []
+    
+    let locationStremSubject = PassthroughSubject<Location, Error>()
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    var expectation: XCTestExpectation?
+    var checkLocationServicesAvailabilityThrowError: UserLocationServicesError?
+    
+    func checkLocationServicesAvailability() async throws {
+        events.append(.checkLocationServicesAvailability)
+        
+        if let checkLocationServicesAvailabilityThrowError {
+            throw checkLocationServicesAvailabilityThrowError
+        }
+    }
+    
+    var streamLocationHandler: (() -> ())?
+    
+    func streamLocation(
+        finishClosure: inout (@Sendable () -> ())?
+    ) async -> AsyncThrowingStream<Location, Error> {
+        defer {
+            streamLocationHandler?()
+        }
+        
+        events.append(.streamLocation)
+        
+        finishClosure = {
+            self.events.append(.streamLocationFinish)
+            self.expectation?.fulfill()
+        }
+        
+        return AsyncThrowingStream { continuation in
+            locationStremSubject
+                .sink {
+                    switch $0 {
+                    case .finished:
+                        continuation.finish()
+                    case .failure(let error):
+                        continuation.finish(throwing: error)
+                    }
+                } receiveValue: {
+                    continuation.yield($0)
+                }
+                .store(in: &self.cancellables)
+        }
     }
 }

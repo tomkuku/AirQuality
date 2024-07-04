@@ -21,6 +21,10 @@ final class ParamsViewModelTests: BaseTestCase, @unchecked Sendable {
         
         station = .dummy()
         
+        getStationSensorsParamsUseCaseSpy = GetStationSensorsParamsUseCaseSpy()
+        
+        dependenciesContainerDummy[\.getStationSensorsParamsUseCase] = getStationSensorsParamsUseCaseSpy
+        
         await MainActor.run {
             sut = ParamsViewModel(station: station)
         }
@@ -29,13 +33,14 @@ final class ParamsViewModelTests: BaseTestCase, @unchecked Sendable {
     @MainActor
     func testFetchParamsMeasuredByStation() {
         // Given
-        var expectedParams: [Param] = [.c6h6, .pm10, .o3]
+        let expectedParams: [Param] = [.c6h6, .pm10, .o3]
         
         var params: [Param]?
         
         getStationSensorsParamsUseCaseSpy.getResult = .success(expectedParams)
         
         sut.$params
+            .dropFirst()
             .sink {
                 params = $0
                 self.expectation.fulfill()
@@ -61,6 +66,7 @@ final class ParamsViewModelTests: BaseTestCase, @unchecked Sendable {
         var error: Error?
         
         sut.$params
+            .dropFirst()
             .sink { _ in
                 XCTFail("Params should not publish any value!")
             }
@@ -80,10 +86,8 @@ final class ParamsViewModelTests: BaseTestCase, @unchecked Sendable {
         wait(for: [expectation], timeout: 2.0)
         
         XCTAssertEqual(getStationSensorsParamsUseCaseSpy.events, [.get(station.id)])
-        XCTAssertEqual(sut.params?.isEmpty, true)
+        XCTAssertNil(sut.params)
         XCTAssertTrue(sut.isLoading)
         XCTAssertNotNil(error as? ErrorDummy)
     }
 }
-
-

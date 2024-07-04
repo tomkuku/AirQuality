@@ -59,7 +59,7 @@ final class AddStationToObservedListViewModelTests: BaseTestCase, @unchecked Sen
         
         var sections: [AddStationToObservedListModel.Section]?
         
-        expectation.expectedFulfillmentCount = 3
+        expectation.expectedFulfillmentCount = 2
         
         sut.objectWillChange
             .sink { _ in
@@ -108,7 +108,7 @@ final class AddStationToObservedListViewModelTests: BaseTestCase, @unchecked Sen
         
         var sections: [AddStationToObservedListModel.Section]?
         
-        expectation.expectedFulfillmentCount = 3
+        expectation.expectedFulfillmentCount = 2
         
         sut.objectWillChange
             .sink { _ in
@@ -159,7 +159,7 @@ final class AddStationToObservedListViewModelTests: BaseTestCase, @unchecked Sen
         
         var sections: [AddStationToObservedListModel.Section]?
         
-        expectation.expectedFulfillmentCount = 3
+        expectation.expectedFulfillmentCount = 2
         
         sut.objectWillChange
             .sink { _ in

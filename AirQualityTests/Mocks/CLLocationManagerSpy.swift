@@ -11,14 +11,6 @@ import CoreLocation
 @testable import AirQuality
 
 final class CLLocationManagerSpy: CLLocationManagerProtocol {
-    func startUpdatingLocation() {
-        
-    }
-    
-    func stopUpdatingLocation() {
-        
-    }
-    
     
     enum Event: Equatable {
         case requestLocation
@@ -27,13 +19,17 @@ final class CLLocationManagerSpy: CLLocationManagerProtocol {
         case delegateDidSet((any CLLocationManagerDelegate)?)
         case desiredAccuracyDidSet(CLLocationAccuracy)
         case authorizationStatusDidGet
+        case startUpdatingLocation
+        case stopUpdatingLocation
         
         static func == (lhs: Self, rhs: Self) -> Bool {
             switch (lhs, rhs) {
             case
                 (.requestLocation, .requestLocation),
                 (.requestWhenInUseAuthorization, .requestWhenInUseAuthorization),
-                (.locationServicesEnabled, .locationServicesEnabled):
+                (.locationServicesEnabled, .locationServicesEnabled),
+                (.startUpdatingLocation, .startUpdatingLocation),
+                (.stopUpdatingLocation, .stopUpdatingLocation):
                 true
             case let (.delegateDidSet(lhsDelegate), .delegateDidSet(rhsDelegate)):
                 lhsDelegate === rhsDelegate
@@ -62,6 +58,14 @@ final class CLLocationManagerSpy: CLLocationManagerProtocol {
         didSet {
             events.append(.desiredAccuracyDidSet(desiredAccuracy))
         }
+    }
+    
+    func startUpdatingLocation() {
+        events.append(.startUpdatingLocation)
+    }
+    
+    func stopUpdatingLocation() {
+        events.append(.stopUpdatingLocation)
     }
     
     var authorizationStatus: CLAuthorizationStatus {

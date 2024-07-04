@@ -52,4 +52,21 @@ class BaseTestCase: XCTestCase {
         
         super.tearDown()
     }
+    
+    func newTask(operation: @escaping @Sendable () async throws -> ()) rethrows {
+        tasks.append(Task(operation: operation))
+    }
+    
+    func newTask(
+        operation: @escaping @Sendable () async throws -> (),
+        onError: @escaping @Sendable (Error) -> ()
+    ) {
+        tasks.append(Task {
+            do {
+                try await operation()
+            } catch {
+                onError(error)
+            }
+        })
+    }
 }

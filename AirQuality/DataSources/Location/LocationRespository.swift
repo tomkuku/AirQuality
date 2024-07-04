@@ -147,7 +147,7 @@ actor LocationRespository: LocationRespositoryProtocol {
             
             if wasStreamLocationCancellablesEmpty {
                 userLocationDataSource.startUpdatingLocation()
-                userLocationDataSource.requestWhenInUseAuthorization()
+                requestLocation()
             }
         }
     }

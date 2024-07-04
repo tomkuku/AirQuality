@@ -47,7 +47,7 @@ final class AddStationToObservedListViewModel: BaseViewModel, @unchecked Sendabl
                 let fetchedStations = try await fetchAllStationsUseCase.fetch()
                 let observedStations = try await getObservedStationsUseCase.fetchedStations()
                 
-                isLoading(false, objectWillChnage: false)
+                isLoading = false
                 
                 createAndSortSections(fetchedStations, observedStations: observedStations)
                 self.fetchedStations = fetchedStations

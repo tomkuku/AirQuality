@@ -45,7 +45,7 @@ final class ParamsViewModel: BaseViewModel {
                     self.params = params
                 }
             } catch {
-                Logger.error("Fetching params measured by station failed with error: \(error)")
+                Logger.error("Fetching params measured by station failed with error: \(error.localizedDescription)")
                 
                 await MainActor.run {
                     self.errorSubject.send(error)

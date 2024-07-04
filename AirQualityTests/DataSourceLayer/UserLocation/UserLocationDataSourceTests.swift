@@ -53,6 +53,22 @@ final class UserLocationDataSourceTests: BaseTestCase, @unchecked Sendable {
         XCTAssertEqual(locationManagerSpy.events, [.requestLocation])
     }
     
+    func testStartUpdatingLocation() {
+        // When
+        sut.startUpdatingLocation()
+        
+        // Then
+        XCTAssertEqual(locationManagerSpy.events, [.startUpdatingLocation])
+    }
+    
+    func testStopUpdatingLocation() {
+        // When
+        sut.stopUpdatingLocation()
+        
+        // Then
+        XCTAssertEqual(locationManagerSpy.events, [.stopUpdatingLocation])
+    }
+    
     func testRequestWhenInUseAuthorization() {
         // When
         sut.requestWhenInUseAuthorization()

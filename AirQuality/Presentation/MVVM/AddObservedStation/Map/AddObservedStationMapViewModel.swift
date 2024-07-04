@@ -64,7 +64,7 @@ final class AddObservedStationMapViewModel: BaseViewModel {
                 var finishTrackingUserLocationClosure: (@Sendable () -> ())?
                 
                 let stream = await self.getUserLocationUseCase.streamLocation(finishClosure: &finishTrackingUserLocationClosure)
-                
+
                 self.finishTrackingUserLocationClosure = consume finishTrackingUserLocationClosure
                 
                 for try await location in stream {
@@ -72,6 +72,7 @@ final class AddObservedStationMapViewModel: BaseViewModel {
                 }
             } catch {
                 Logger.error("Tracking user location failed: \(error.localizedDescription)")
+                self.userLocation = nil
                 self.errorSubject.send(error)
             }
         }
