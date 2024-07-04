@@ -81,7 +81,7 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
             paramFormula: sensor1.param.formula,
             lastMeasurementAqi: .moderate,
             lastMeasurementPercentageValue: 0.9,
-            lastMeasurementFormattedDate: "25 Jun 2024 at 15:00",
+            lastMeasurementFormattedDate: "Jun 25, 2024 at 15:00",
             lastMeasurementFormattedValue: "45 µg/m³",
             lastMeasurementFormattedPercentageValue: "90%"
         )
@@ -92,7 +92,7 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
             paramFormula: sensor2.param.formula,
             lastMeasurementAqi: .moderate,
             lastMeasurementPercentageValue: 1.36,
-            lastMeasurementFormattedDate: "25 Jun 2024 at 15:00",
+            lastMeasurementFormattedDate: "Jun 25, 2024 at 15:00",
             lastMeasurementFormattedValue: "34 µg/m³",
             lastMeasurementFormattedPercentageValue: "136%"
         )
@@ -103,7 +103,7 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
             paramFormula: sensor3.param.formula,
             lastMeasurementAqi: .good,
             lastMeasurementPercentageValue: 0.8,
-            lastMeasurementFormattedDate: "25 Jun 2024 at 15:00",
+            lastMeasurementFormattedDate: "Jun 25, 2024 at 15:00",
             lastMeasurementFormattedValue: "4 µg/m³",
             lastMeasurementFormattedPercentageValue: "80%"
         )
