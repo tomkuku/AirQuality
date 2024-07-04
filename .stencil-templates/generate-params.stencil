@@ -1,0 +1,23 @@
+// Generated using StencilSwiftKit — https://github.com/SwiftGen/StencilSwiftKit.git"
+// Do not modify!
+
+import Foundation
+
+extension Param {
+    {% for param in input %}
+    static let {{ param.code|removeSubstring:"." }} = Param(
+        type: .{{ param.code|removeSubstring:"." }},
+        code: "{{ param.code }}",
+        formula: "{{ param.formula }}",
+        quota: {{ param.quota }},
+        unit: "{{ param.unit }}",
+        indexLevels: Param.IndexLevels(
+            good: {{ param.indexLevels.good }},
+            moderate: {{ param.indexLevels.moderate }},
+            unhealthyForSensitiveGroup: {{ param.indexLevels.unhealthyForSensitiveGroup }},
+            unhealthy: {{ param.indexLevels.unhealthy }},
+            veryUnhealthy: {{ param.indexLevels.veryUnhealthy }}
+        )
+    )
+    {% endfor %}
+}

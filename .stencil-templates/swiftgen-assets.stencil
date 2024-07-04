@@ -1,0 +1,40 @@
+// Generated using SwiftGen — https://github.com/SwiftGen/SwiftGen
+
+{% if catalogs %}
+{% set colorType %}{{param.colorTypeName|default:"Color"}}{% endset %}
+{% set imageType %}{{param.imageTypeName|default:"Image"}}{% endset %}
+
+{% macro casesBlock assets assetType %}
+  {% for asset in assets %}
+  {% if asset.type == "color" and assetType == "color" %}
+  static let {{asset.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}} = {{colorType}}("{{asset.value}}")
+  {% elif asset.type == "image" and assetType == "image" %}
+  static let {{asset.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}} = {{imageType}}("{{asset.value}}")
+  {% endif %}
+  {% endfor %}
+{% endmacro %}
+
+import struct SwiftUI.Image
+import struct SwiftUI.Color
+
+extension Color {
+  {% if catalogs.count > 1 %}
+  {% for catalog in catalogs %}
+  {% filter indent:2 %}{% call casesBlock catalog.assets "color" %}{% endfilter %}
+  {% endfor %}
+  {% else %}
+  {% call enumBlock catalogs.first.assets %}
+  {% endif %}
+}
+
+extension Image {
+  {% if catalogs.count > 1 %}
+  {% for catalog in catalogs %}
+  {% filter indent:2 %}{% call casesBlock catalog.assets "image" %}{% endfilter %}
+  {% endfor %}
+  {% else %}
+  {% call enumBlock catalogs.first.assets %}
+  {% endif %}
+}
+
+{% endif %}

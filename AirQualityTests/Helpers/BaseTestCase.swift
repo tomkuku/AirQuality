@@ -10,6 +10,7 @@ import class Combine.AnyCancellable
 
 @testable import AirQuality
 
+// swiftlint:disable:next final_test_case
 class BaseTestCase: XCTestCase {
     // swiftlint:disable test_case_accessibility
     var dependenciesContainerDummy: DependenciesContainerDummy!
@@ -19,16 +20,16 @@ class BaseTestCase: XCTestCase {
     var cancellables: Set<AnyCancellable>!
     // swiftlint:enable test_case_accessibility
     
-    override func setUp() {
-        super.setUp()
-        
-        cancellables = .init()
+    override func setUp() async throws {
+        try await super.setUp()
         
         appDependencies = DependenciesContainerManager.container
         
         dependenciesContainerDummy = DependenciesContainerDummy()
         
         DependenciesContainerManager.container = dependenciesContainerDummy
+        
+        cancellables = .init()
         
         expectation = XCTestExpectation(description: String(describing: Self.self))
         
@@ -50,5 +51,22 @@ class BaseTestCase: XCTestCase {
         }
         
         super.tearDown()
+    }
+    
+    func newTask(operation: @escaping @Sendable () async throws -> ()) rethrows {
+        tasks.append(Task(operation: operation))
+    }
+    
+    func newTask(
+        operation: @escaping @Sendable () async throws -> (),
+        onError: @escaping @Sendable (Error) -> ()
+    ) {
+        tasks.append(Task {
+            do {
+                try await operation()
+            } catch {
+                onError(error)
+            }
+        })
     }
 }

@@ -9,16 +9,16 @@
 
 set -e
 
-if [ "$1" == "" ] ; then 
-    echo "Missing required dependency name argument!"
-    exit -1;
-fi 
-
-readonly isDependencyInstalled=`brew list | grep $1`
-
-if [ "$isDependencyInstalled" == "$1" ] ; then
-    echo "$1 is already installed"
-else 
-    echo "Installing $1"
-    brew install $1
+if [[ $# -eq 0 ]]; then 
+    echo "Missing required dependencies names arguments!"
+    exit 1
 fi
+
+for dependency in "$@"; do
+    if brew list --formula | grep -q "^${dependency}\$"; then
+        echo "$dependency is already installed"
+    else
+        echo "Installing $dependency"
+        brew install "$dependency"
+    fi
+done

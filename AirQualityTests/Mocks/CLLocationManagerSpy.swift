@@ -19,13 +19,17 @@ final class CLLocationManagerSpy: CLLocationManagerProtocol {
         case delegateDidSet((any CLLocationManagerDelegate)?)
         case desiredAccuracyDidSet(CLLocationAccuracy)
         case authorizationStatusDidGet
+        case startUpdatingLocation
+        case stopUpdatingLocation
         
         static func == (lhs: Self, rhs: Self) -> Bool {
             switch (lhs, rhs) {
             case
                 (.requestLocation, .requestLocation),
                 (.requestWhenInUseAuthorization, .requestWhenInUseAuthorization),
-                (.locationServicesEnabled, .locationServicesEnabled):
+                (.locationServicesEnabled, .locationServicesEnabled),
+                (.startUpdatingLocation, .startUpdatingLocation),
+                (.stopUpdatingLocation, .stopUpdatingLocation):
                 true
             case let (.delegateDidSet(lhsDelegate), .delegateDidSet(rhsDelegate)):
                 lhsDelegate === rhsDelegate
@@ -56,6 +60,14 @@ final class CLLocationManagerSpy: CLLocationManagerProtocol {
         }
     }
     
+    func startUpdatingLocation() {
+        events.append(.startUpdatingLocation)
+    }
+    
+    func stopUpdatingLocation() {
+        events.append(.stopUpdatingLocation)
+    }
+    
     var authorizationStatus: CLAuthorizationStatus {
         events.append(.authorizationStatusDidGet)
         return authorizationStatusReturnValue
@@ -75,4 +87,3 @@ final class CLLocationManagerSpy: CLLocationManagerProtocol {
         return locationServicesEnabledReturnValue
     }
 }
-

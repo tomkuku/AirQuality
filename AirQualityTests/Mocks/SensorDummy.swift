@@ -12,14 +12,13 @@ import Foundation
 extension Sensor {
     static func dummy(
         id: Int = 1,
-        name: String = "Particulate Matter PM10",
-        formula: String = "PM10",
-        code: String = "PM10"
+        param: Param = .pm10,
+        measurements: [SensorMeasurement] = [.dummy()]
     ) -> Self {
         Self(
             id: id,
-            param: .dummy(),
-            measurements: [.dummy(), .dummy()]
+            param: param,
+            measurements: measurements
         )
     }
 }

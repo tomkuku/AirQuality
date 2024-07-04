@@ -16,3 +16,13 @@ struct Toast: Identifiable, Equatable, Hashable {
         self.body = body
     }
 }
+
+extension Toast {
+    static func observedStationWasDeleted() -> Self {
+        Self(body: Localizable.Toast.observedStationWasDeleted)
+    }
+    
+    static func observedStationWasAdded() -> Self {
+        Self(body: Localizable.Toast.observedStationWasAdded)
+    }
+}

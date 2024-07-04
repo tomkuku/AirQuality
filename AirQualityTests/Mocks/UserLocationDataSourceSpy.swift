@@ -7,6 +7,7 @@
 
 import CoreLocation
 import Combine
+import XCTest
 
 @testable import AirQuality
 
@@ -19,9 +20,13 @@ final class UserLocationDataSourceSpy: UserLocationDataSourceProtocol {
         case getAuthorizationStatusPublisher
         case requestLocation
         case requestWhenInUseAuthorization
+        case startUpdatingLocation
+        case stopUpdatingLocation
     }
     
     var events: [Event] = []
+    
+    var expectation: XCTestExpectation?
     
     var locationServicesEnabledReturnValue = false
     var authorizationStatusReturnValue: CLAuthorizationStatus = .denied
@@ -56,10 +61,22 @@ final class UserLocationDataSourceSpy: UserLocationDataSourceProtocol {
     func requestLocation() {
         events.append(.requestLocation)
         requestLocationHandler?()
+        expectation?.fulfill()
     }
     
     func requestWhenInUseAuthorization() {
         events.append(.requestWhenInUseAuthorization)
         requestWhenInUseAuthorizationHandler?()
+        expectation?.fulfill()
+    }
+    
+    func startUpdatingLocation() {
+        events.append(.startUpdatingLocation)
+        expectation?.fulfill()
+    }
+    
+    func stopUpdatingLocation() {
+        events.append(.stopUpdatingLocation)
+        expectation?.fulfill()
     }
 }

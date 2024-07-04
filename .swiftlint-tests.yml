@@ -1,5 +1,6 @@
 excluded:
   - AirQuality/*
+  - GenerateSwiftFromJson
 
 opt_in_rules:
   - all
@@ -36,6 +37,7 @@ disabled_rules:
   - no_extension_access_modifier
   - no_grouping_extension
   - no_magic_numbers
+  - non_optional_string_data_conversion
   - nslocalizedstring_key
   - prefer_nimble
   - prefixed_toplevel_constant

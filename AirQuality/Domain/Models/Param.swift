@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import struct SwiftUI.Color
 
 enum ParamType: Int, Equatable {
     case c6h6 = 10
@@ -18,58 +17,34 @@ enum ParamType: Int, Equatable {
     case co = 8
 }
 
-enum AQI {
-    case good
-    case moderate
-    case unhealthyForSensitiveGroup
-    case unhealthy
-    case veryUnhealthy
-    case hazardus
-    case undefined
-    
-    var color: Color {
-        switch self {
-        case .good:
-            Color("good")
-        case .moderate:
-            Color("moderate")
-        case .unhealthyForSensitiveGroup:
-            Color("unhealthyForSensitiveGroup")
-        case .unhealthy:
-            Color("unhealthy")
-        case .veryUnhealthy:
-            Color("veryUnhealthy")
-        case .hazardus:
-            Color("hazardus")
-        case .undefined:
-            Color("undefined")
-        }
-    }
-}
-
-struct Param: Sendable, Equatable {
+struct Param: Sendable, Equatable, Hashable {
     let type: ParamType
     let code: String
     let formula: String
     let quota: Double
+    let unit: String
     let indexLevels: IndexLevels
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(type.rawValue)
+    }
     
     func getAqi(for value: Double?) -> AQI {
         switch Int(value ?? -1) {
-        case 0...indexLevels.veryGood:
-            return .good
-        case indexLevels.veryGood...indexLevels.good:
-            return .moderate
+        case 0...indexLevels.good:
+            .good
         case indexLevels.good...indexLevels.moderate:
-            return .unhealthyForSensitiveGroup
-        case indexLevels.moderate...indexLevels.sufficient:
-            return .unhealthy
-        case indexLevels.sufficient...indexLevels.bad:
-            return .veryUnhealthy
-        case indexLevels.bad...:
-            return .hazardus
+            .moderate
+        case indexLevels.moderate...indexLevels.unhealthyForSensitiveGroup:
+            .unhealthyForSensitiveGroup
+        case indexLevels.unhealthyForSensitiveGroup...indexLevels.unhealthy:
+            .unhealthy
+        case indexLevels.unhealthy...indexLevels.veryUnhealthy:
+            .veryUnhealthy
+        case indexLevels.veryUnhealthy...:
+            .hazardus
         default:
-            return .undefined
+            .undefined
         }
     }
     
@@ -93,14 +68,51 @@ struct Param: Sendable, Equatable {
             Strings.Co.name
         }
     }
+    
+    init?(id: Int) {
+        switch id {
+        case ParamType.pm10.rawValue:
+            self = .pm10
+        case ParamType.pm25.rawValue:
+            self = .pm25
+        case ParamType.c6h6.rawValue:
+            self = .c6h6
+        case ParamType.o3.rawValue:
+            self = .o3
+        case ParamType.no2.rawValue:
+            self = .no2
+        case ParamType.so2.rawValue:
+            self = .so2
+        case ParamType.co.rawValue:
+            self = .co
+        default:
+            return nil
+        }
+    }
+    
+    init(
+        type: ParamType,
+        code: String,
+        formula: String,
+        quota: Double,
+        unit: String,
+        indexLevels: IndexLevels
+    ) {
+        self.type = type
+        self.code = code
+        self.formula = formula
+        self.quota = quota
+        self.unit = unit
+        self.indexLevels = indexLevels
+    }
 }
 
 extension Param {
     struct IndexLevels: Sendable, Equatable {
-        let veryGood: Int
         let good: Int
         let moderate: Int
-        let sufficient: Int
-        let bad: Int
+        let unhealthyForSensitiveGroup: Int
+        let unhealthy: Int
+        let veryUnhealthy: Int
     }
 }

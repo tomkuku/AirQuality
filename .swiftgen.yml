@@ -2,5 +2,13 @@ strings:
   inputs: AirQuality/Localizable/pl.lproj/Localizable.strings
   filter: .+\.strings$
   outputs:
-    - templatePath: .swiftgen-strings.stencil
+    - templatePath: .stencil-templates/swiftgen-strings.stencil
       output: AirQuality/Localizable/Localizable.swift
+
+xcassets:
+    inputs: 
+      - AirQuality/Assets/Colors.xcassets
+      - AirQuality/Assets/Images.xcassets
+    outputs:
+        output: AirQuality/Assets/Assets.swift
+        templatePath: .stencil-templates/swiftgen-assets.stencil

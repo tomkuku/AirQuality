@@ -3,3 +3,8 @@ AirQuality/AirQuality.xcodeproj/project.xcworkspace
 AirQuality/Localizable/Localizable.swift
 AirQuality.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
 AirQuality.xcodeproj
+AirQuality/Assets/Assets.swift
+GenerateSwiftFromJson/.build
+GenerateSwiftFromJson/Package.resolved
+AirQuality/Assets/Params.swift
+GenerateSwiftFromJson/.swiftpm

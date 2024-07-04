@@ -6,10 +6,82 @@
   
 */
 
-// MARK: AddStationListView
+// MARK: Alerts
 
-"AddStationListView.title" = "Lista Stacji";
-"AddStationListView.noData" = "Brak danych";
+"Alert.SomethingWentWrong.title" = "Ups, coś poszło nie tak";
+"Alert.SomethingWentWrong.message" = "Spróbuj ponownie później";
+
+"Alert.LocationServicesAuthorizationRestricted.title" = "Nie masz uprawnień do korzystania z usług lokalizacji";
+
+"Alert.LocationServicesAuthorizationDenied.title" = "Aplikacja nie ma dostępu do usług lokalizacji";
+"Alert.LocationServicesAuthorizationDenied.message" = "Przejdź do ustawień aplikacji aby to zmienić.";
+
+"Alert.LocationServicesDisabled.title" = "Usługi lokalizacji są wyłączone";
+"Alert.LocationServicesDisabled.message" = "Przejdź do ustawień urządzenia aby je włączyć.";
+
+"Alert.FindingTheNearestStationsFailed.title" = "Szukanie najbliższej stacji nie powiodło się";
+"Alert.FindingTheNearestStationsFailed.message" = "Spróbuj ponownie później.";
+
+"Alert.Button.ok" = "Ok";
+"Alert.Button.cancel" = "Anuluj";
+"Alert.Button.goToSettings" = "Przejdź do ustawień";
+
+// MARK: Toast
+
+"Toast.observedStationWasAdded" = "Stacja została dodany do listy obserwowanych";
+"Toast.observedStationWasDeleted" = "Stacja została usunięta z listy obserwowanych";
+
+// MARK: AddObservedStationContainerView
+
+"AddObservedStationContainerView.MapItem.itemTitle" = "Mapa";
+"AddObservedStationContainerView.ListItem.itemTitle" = "Lista";
+"AddObservedStationContainerView.closeButton" = "Zamknij";
+
+// MARK: AddObservedStationMapView
+
+"AddObservedStationMapView.navigationTitle" = "Mapa stacji";
+"AddObservedStationMapView.findTheNearestStationButton" = "Znajdź najbliższą stację";
+
+"AddObservedStationMapView.BottomMenu.showUserLocation" = "Lokalizacja użytkownika";
+"AddObservedStationMapView.BottomMenu.MapStyle.buttonTitle" = "Styl mapy";
+"AddObservedStationMapView.BottomMenu.MapStyle.standard" = "Standardowa";
+"AddObservedStationMapView.BottomMenu.MapStyle.satellite" = "Satelitarna";
+
+"AddObservedStationMapView.AnnotationView.addObservedStation" = "Przestań obserwować";
+"AddObservedStationMapView.AnnotationView.deleteObservedStation" = "Dodaj do obserwowanych";
+"AddObservedStationMapView.AnnotationView.station" = "Stacja:";
+"AddObservedStationMapView.AnnotationView.measuredParametres" = "Mierzone parametry:";
+"AddObservedStationMapView.AnnotationView.noParams" = "No parameters";
+
+// MARK: AddObservedStationListView
+
+"AddObservedStationListView.navigationTitle" = "Lista stacji";
+"AddObservedStationListView.ShrinkButton.shrink" = "Zwiń";
+"AddObservedStationListView.ShrinkButton.expand" = "Rozwiń";
+"AddObservedStationListView.noStations" = "Brak stacji";
+"AddObservedStationListView.seach" = "Szukaj stacji";
+
+// MARK: DismissButton
+
+"NavigationToolbar.DismissButton.title" = "Zamknij";
+
+// MARK: ObservedStationsListView
+
+"ObservedStationsListView.title" = "Lista obserwowanych stacji";
+"ObservedStationsListView.addStation" = "Dodaj stacje";
+"ObservedStationsListView.noObservedStations" = "Brak obserwowanych stacji";
+"ObservedStationsListView.delete" = "Usuń stacje";
+
+// MARK: SelectedStationView
+
+"SelectedStationView.dataProvider" = "Dostawcą danych jest Główny Inspektorat Ochrony Środowiska";
+
+// MARK: SensorDetailsContainerSubview
+
+"SensorDetailsContainerSubview.paramDescriptionSegementTitle" = "Opis parametru";
+"SensorDetailsContainerSubview.measurementsListSegementTitle" = "Lista pomiarów";
+"SensorDetailsContainerSubview.measurementsChartSegementTitle" = "Wykres pomiarów";
+"SensorDetailsContainerSubview.close" = "Zamknij";
 
 // MARK: Params
 
@@ -33,36 +105,3 @@
 
 "Param.so2.name" = "Dwutlenetk siarki";
 "Param.so2.description" = "Dwutlenek siarki to bezbarwny gaz o ostrym, gryzącym i duszącym zapachu, silnie drażniący drogi oddechowe. Wchłaniany jest do organizmu człowieka przez błonę śluzową nosa i górny odcinek dróg oddechowych. Jest trujący dla zwierząt i szkodliwy dla roślin. Gaz ten wchodzi w reakcję z parą wodną zawartą w powietrzu, w wyniku czego stanowi główna przyczynę powstawania kwaśnych deszczów. Stanowi także składnik smogu w wielkich aglomeracjach miejskich. Poziom dopuszczalny stężenia jednogodzinnego dla dwutlenku siarki wynosi 350 µg/m3 i może być przekraczany nie więcej niż 24 razy w ciągu roku. Poziom dopuszczalny stężenia średniodobowego wynosi 125 µg/m3 i może być przekraczany nie więcej niż 3 razy w ciągu roku. Poziom alarmowy stężenia jednogodzinnego dwutlenku siarki wynosi 500 µg/m3. Dwutlenek siarki powstaje w wyniku spalania paliw kopalnych zawierających siarkę - zarówno w zakładach przemysłowych, lokalnych kotłowniach, jak również w indywidualnych kotłach grzewczych. Dwutlenek siarki może powodować podrażnienie górnych dróg oddechowych, a także zaostrzenie schorzeń powodujących podrażnienie spojówek i skóry. Wysokie stężenia dwutlenku siarki mogą wywołać ostre choroby górnych dróg oddechowych. \nWażne! \n- używaj paliwa dobrej i sprawdzonej jakości - o niskiej zawartości siarki, \n- przejdź na ogrzewanie z sieci miejskiej lub gazowe, albo przynajmniej wymień swój piec węglowy na bardziej nowoczesny np. retortowy, \n- ograniczaj zużycie ciepła - ociepl swój dom, zużywaj mniej paliw i płać mniejsze rachunki.";
-
-// MARK: Alerts
-
-"Alert.SomethingWentWrong.title" = "Ups, coś poszło nie tak";
-"Alert.SomethingWentWrong.message" = "Spróbuj ponownie później";
-
-"Alert.Button.Ok.title" = "Ok";
-"Alert.Button.Cancel.title" = "Anuluj";
-
-// MARK: AddObservedStationContainerView
-
-"AddObservedStationContainerView.MapItem.itemTitle" = "Mapa";
-"AddObservedStationContainerView.ListItem.itemTitle" = "Lista";
-"AddObservedStationContainerView.closeButton" = "Zamknij";
-
-// MARK: AddObservedStationMapView
-
-"AddObservedStationMapView.navigationTitle" = "Mapa stacji";
-"AddObservedStationMapView.findTheNearestStationButton" = "Znajdź najbliższą stację";
-"AddObservedStationMapView.AnnotationView.addObservedStation" = "Przestań obserwować";
-"AddObservedStationMapView.AnnotationView.deleteObservedStation" = "Dodaj do obserwowanych";
-
-// MARK: AddObservedStationListView
-
-"AddObservedStationListView.navigationTitle" = "Lista stacji";
-"AddObservedStationListView.ShrinkButton.shrink" = "Zwiń";
-"AddObservedStationListView.ShrinkButton.expand" = "Rozwiń";
-"AddObservedStationListView.noStations" = "Brak stacji";
-"AddObservedStationListView.seach" = "Szukaj stacji";
-
-// MARK: DismissButton
-
-"NavigationToolbar.DismissButton.title" = "Zamknij";

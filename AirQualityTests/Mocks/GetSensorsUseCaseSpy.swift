@@ -16,13 +16,13 @@ final class GetSensorsUseCaseSpy: GetSensorsUseCaseProtocol, @unchecked Sendable
     
     private(set) var events: [Event] = []
     
-    var fetchResult: Result<[Sensor], Error>?
+    var getSensorsResultClosure: (() -> Result<[Sensor], Error>)?
     
     func getSensors(for stationId: Int) async throws -> [Sensor] {
         events.append(.getSensors(stationId))
         
         return try await withCheckedThrowingContinuation { continuation in
-            switch fetchResult {
+            switch getSensorsResultClosure?() {
             case .success(let sensors):
                 continuation.resume(returning: sensors)
             case .failure(let error):

@@ -10,16 +10,18 @@ targetTemplates:
       TARGETED_DEVICE_FAMILY: 1
     dependencies:
       - package: Alamofire
-    info:
-      path: ../AirQuality/Info.plist
-      properties:
-        UILaunchScreen:
-          UIImageName: LaunchImage
     preBuildScripts:
       - name: "SwiftGen"
         basedOnDependencyAnalysis: no
         script: |
           ./.scripts/swiftgen.sh
+      - name: "GenerateParams"
+        basedOnDependencyAnalysis: no
+        script: |
+          GenerateSwiftFromJson/run \
+          --json-input ./AirQuality/Assets/ParamsInfo.json \
+          --stencil-template .stencil-templates/generate-params.stencil \
+          --swift-output ./AirQuality/Assets/Params.swift
     postbuildScripts:
       - name: "Swiftlint"
         basedOnDependencyAnalysis: no
@@ -33,6 +35,8 @@ targets:
       - Application
     sources: 
       - ../AirQuality
+    excludes:
+      - AirQuality/Assets/ParamsInfo.json
     
   AirQualityTests:
     type: bundle.unit-test

@@ -33,9 +33,7 @@ struct AddStationToObservedListView: View, Sendable {
                 } else {
                     List {
                         ForEach(viewModel.sections) { section in
-                            SectionView(section: section, viewModel: viewModel) { station in
-                                viewModel.stationDidSelect(station)
-                            }
+                            SectionView(section: section, viewModel: viewModel)
                         }
                     }
                     .listStyle(.inset)

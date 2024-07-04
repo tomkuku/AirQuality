@@ -22,7 +22,7 @@ actor FindTheNearestStationUseCase: FindTheNearestStationUseCaseProtocol {
     @Injected(\.stationsNetworkMapper) private var stationsNetworkMapper
     
     func find() async throws -> (station: Station, distance: Double)? {
-        async let fetchedStations =  giosApiRepository.fetch(
+        async let fetchedStations = giosApiRepository.fetch(
             mapper: stationsNetworkMapper,
             endpoint: Endpoint.Stations.get,
             source: .cacheIfPossible

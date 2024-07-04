@@ -10,10 +10,10 @@ import Foundation
 struct Sensor: Sendable, Identifiable, Equatable {
     let id: Int
     let param: Param
-    let measurements: [AirQuality.Measurement]
+    let measurements: [SensorMeasurement]
     
     var precentValueOfLastMeasurement: Int? {
-        guard let value = measurements.last?.value else { return nil }
+        guard let value = measurements.last?.measurement?.value else { return nil }
         return Int((value / param.quota) * 100)
     }
 }

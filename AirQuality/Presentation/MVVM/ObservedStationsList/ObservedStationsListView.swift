@@ -9,36 +9,36 @@ import SwiftUI
 
 struct ObservedStationsListView: View {
     
-    private typealias L10n = Localizable
+    private typealias L10n = Localizable.ObservedStationsListView
     
     @EnvironmentObject private var coordinator: AppCoordinator
-    @StateObject private var viewModel: StationsListViewModel
-    
-    @Injected(\.locationRespository) private var locationRespository
+    @StateObject private var viewModel: ObservedStationsListViewModel
     
     var body: some View {
         BaseView(viewModel: viewModel, coordinator: coordinator) {
-            ZStack {
-                if viewModel.stations.isEmpty {
-                    Spacer()
-                    
-                    Text(L10n.AddStationListView.noData)
-                    
-                    Spacer()
-                } else {
-                    List {
-                        ForEach(viewModel.stations) { station in
-                            createStationRow(station)
-                        }
-                    }
-                    .listStyle(.sidebar)
-                    .background(.white)
-                }
+            if viewModel.stations.isEmpty {
+                Spacer()
                 
-                addObservedStationsButton
+                Text(L10n.noObservedStations)
+                
+                Spacer()
+            } else {
+                List {
+                    ForEach(viewModel.stations) { station in
+                        createStationRow(station)
+                            .frame(maxWidth: .infinity)
+                    }
+                }
+                .listStyle(.sidebar)
+                .background(.white)
             }
-            .navigationTitle(L10n.AddStationListView.title)
         }
+        .safeAreaInset(edge: .bottom) {
+            addObservedStationsButton
+                .frame(height: 50)
+        }
+        .navigationTitle(L10n.title)
+        .navigationBarTitleDisplayMode(.inline)
     }
     
     private var addObservedStationsButton: some View {
@@ -48,7 +48,7 @@ struct ObservedStationsListView: View {
             Button {
                 coordinator.goTo(.addNewObservedStation)
             } label: {
-                Text("Dodaj stacje")
+                Text(L10n.addStation)
                     .foregroundStyle(Color.white)
             }
             .frame(maxWidth: .infinity, minHeight: 50)
@@ -62,7 +62,7 @@ struct ObservedStationsListView: View {
         .padding(.bottom, 16)
     }
     
-    init(viewModel: @autoclosure @escaping () -> StationsListViewModel = .init()) {
+    init(viewModel: @autoclosure @escaping () -> ObservedStationsListViewModel = .init()) {
         self._viewModel = StateObject(wrappedValue: viewModel())
     }
     
@@ -75,8 +75,7 @@ struct ObservedStationsListView: View {
             }
             .padding(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
             
-            Rectangle()
-                .foregroundStyle(.clear)
+            Spacer()
         }
         .background(Color.white)
         .accessibility(addTraits: [.isButton])
@@ -84,31 +83,33 @@ struct ObservedStationsListView: View {
             coordinator.goTo(.slectedStation(station))
         })
         .swipeActions {
-            Button("Usuń", role: .destructive) {
+            Button(L10n.delete, role: .destructive) {
                 viewModel.deletedObservedStation(station)
             }
         }
     }
 }
 
-struct ObservedStationsListView_Previews: PreviewProvider {
-    static var previews: some View {
-        let appCoordinator = AppCoordinator(coordinatorNavigationType: .presentation(dismissHandler: {}))
-        @Injected(\.addObservedStationUseCase) var addObservedStationUseCase
-        
-        Task {
-            do {
-                try await addObservedStationUseCase.add(station: Station.previewDummy())
-            } catch {
-                
-            }
-        }
-        
-        return NavigationStack {
-            ObservedStationsListView()
-                .environmentObject(appCoordinator)
-                .navigationTitle("Lista Stacji")
-                .navigationBarTitleDisplayMode(.inline)
-        }
+#Preview {
+    let appCoordinator = AppCoordinator(coordinatorNavigationType: .presentation(dismissHandler: {}))
+    
+    @Injected(\.addObservedStationUseCase) var addObservedStationUseCase
+    
+    SwiftDataPreviewAccessor.shared.add(models: [
+        StationLocalDatabaseModel.previewDummy(identifier: 1, street: "al. Krasińskiego"),
+        StationLocalDatabaseModel.previewDummy(identifier: 2, street: "ul. Bujaka"),
+        StationLocalDatabaseModel.previewDummy(identifier: 3, street: "ul. Bulwarowa"),
+        StationLocalDatabaseModel.previewDummy(identifier: 4, street: "ul. Bulwarowa"),
+        StationLocalDatabaseModel.previewDummy(identifier: 5, street: "ul. Kamieńskiego"),
+        StationLocalDatabaseModel.previewDummy(identifier: 6, street: "os. Piastów"),
+        StationLocalDatabaseModel.previewDummy(identifier: 7, cityName: "Tarnów", street: "ul. Bitwy pod Studziankami"),
+        StationLocalDatabaseModel.previewDummy(identifier: 8, cityName: "Tarnów", street: "ul. Ks. Romana Sitko")
+    ])
+    
+    return NavigationStack {
+        ObservedStationsListView()
+            .environmentObject(appCoordinator)
+            .navigationTitle(Localizable.ObservedStationsListView.title)
+            .navigationBarTitleDisplayMode(.inline)
     }
 }

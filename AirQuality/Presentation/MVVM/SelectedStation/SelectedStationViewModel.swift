@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Alamofire
 
 final class SelectedStationViewModel: BaseViewModel, @unchecked Sendable {
     
@@ -14,55 +13,72 @@ final class SelectedStationViewModel: BaseViewModel, @unchecked Sendable {
     
     // MARK: Properties
     
-    @Published private(set) var sensors: [Model.Sensor] = []
+    @Published private(set) var sensors: [Model.SensorRow] = []
     
     var fomattedStationAddress: String {
-        station.cityName + " " + (station.street ?? "")
+        if let stationStreet = station.street {
+            return station.cityName + ", " + stationStreet
+        }
+        
+        return station.cityName
     }
+    
+    private let measurementValueMeasurementFormatter: MeasurementFormatter = {
+        let formatter = MeasurementFormatter()
+        formatter.unitStyle = .long
+        formatter.unitOptions = .providedUnit
+        formatter.numberFormatter.maximumFractionDigits = 2
+        return formatter
+    }()
+    
+    private let measurementPercentageValueNumberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.allowsFloats = false
+        formatter.numberStyle = .percent
+        formatter.maximumFractionDigits = 0
+        return formatter
+    }()
     
     let station: Station
     
+    private var fetchedSensors: [Sensor] = []
+    
     // MARK: Private properties
     
-    private let getSensorsUseCase: GetSensorsUseCaseProtocol
-    
-    private let dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
-        return dateFormatter
-    }()
+    @Injected(\.getSensorsUseCase) private var getSensorsUseCase
+    @Injected(\.sensorMeasurementDataFormatter) private var sensorMeasurementDataFormatter
     
     // MARK: Lifecycle
     
-    init(
-        station: Station,
-        getSensorsUseCase: GetSensorsUseCaseProtocol = GetSensorsUseCase()
-    ) {
+    init(station: Station) {
         self.station = station
-        self.getSensorsUseCase = getSensorsUseCase
+        super.init()
+        
+        isLoading = true
     }
     
     // MARK: Methods
     
     @MainActor
     func fetchSensorsForStation() async {
-        isLoading = true
-        objectWillChange.send()
+        isLoading(true, objectWillChnage: true)
         
         do {
-            let sensors = try await getSensorsUseCase.getSensors(for: station.id)
+            self.fetchedSensors = try await getSensorsUseCase.getSensors(for: station.id)
+            
+            let sensors = self.fetchedSensors
                 .map {
-                    Model.Sensor(
-                        id: $0.id,
-                        domainModel: $0,
-                        lastMeasurement: formatLastMeasurement(for: $0)
-                    )
+                    createSensorRow(from: $0)
                 }
                 .sorted {
-                    $0.lastMeasurement.percentageValue ?? 0 > $1.lastMeasurement.percentageValue ?? 0
+                    if $0.lastMeasurementAqi == $1.lastMeasurementAqi {
+                        $0.lastMeasurementPercentageValue ?? 0 > $1.lastMeasurementPercentageValue ?? 0
+                    } else {
+                        $0.lastMeasurementAqi > $1.lastMeasurementAqi
+                    }
                 }
-            isLoading = false
             
+            isLoading(false, objectWillChnage: false)
             self.sensors = sensors
         } catch {
             Logger.error(error.localizedDescription)
@@ -70,33 +86,48 @@ final class SelectedStationViewModel: BaseViewModel, @unchecked Sendable {
         }
     }
     
-    private func formatLastMeasurement(for sensor: Sensor) -> Model.LastMeasurement {
-        var measurement: Measurement?
-        var formattedDate = ""
-        var formattedValue = "-"
-        var percentageValue: Int?
-        var formattedPercentageValue = "-"
+    func getSensor(for id: Int) -> Sensor? {
+        fetchedSensors.first(where: { $0.id == id })
+    }
+    
+    // MARK: Private methods
+    
+    private func createSensorRow(from sensor: Sensor) -> SelectedStationModel.SensorRow {
+        var lastMeasurementAqi: AQI = .undefined
+        var lastMeasurementPercentageValue: Double?
+        var lastMeasurementFormattedDate: String = "-"
+        var lastMeasurementFormattedValue: String = "-"
+        var lastMeasurementFormattedPercentageValue: String = "-"
         
-        if let lastMeasuremnt = sensor.measurements.first {
-            measurement = lastMeasuremnt
-            formattedDate = dateFormatter.string(from: lastMeasuremnt.date)
+        if let lastMeasurement = sensor.measurements.first,
+           let lastMeasurementValue = lastMeasurement.measurement {
+            lastMeasurementAqi = sensor.param.getAqi(for: lastMeasurementValue.value)
             
-            if let value = lastMeasuremnt.value {
-                formattedValue = String(format: "%.2f", value)
-                percentageValue = Int((value / sensor.param.quota) * 100)
-                
-                if let percentageValue {
-                    formattedPercentageValue = "\(percentageValue)"
-                }
-            }
+            lastMeasurementFormattedValue = measurementValueMeasurementFormatter.string(from: lastMeasurementValue)
+            
+            let percentageValue = lastMeasurementValue.value / sensor.param.quota
+            
+            lastMeasurementPercentageValue = percentageValue
+            lastMeasurementFormattedPercentageValue = measurementPercentageValueNumberFormatter.string(from: percentageValue) ?? "-"
+            
+            lastMeasurementFormattedDate = sensorMeasurementDataFormatter.format(date: lastMeasurement.date)
         }
         
-        return Model.LastMeasurement(
-            measurement: measurement,
-            percentageValue: percentageValue,
-            formattedDate: formattedDate,
-            formattedValue: formattedValue,
-            formattedPercentageValue: formattedPercentageValue
+        return Model.SensorRow(
+            id: sensor.id,
+            paramName: sensor.param.name,
+            paramFormula: sensor.param.formula,
+            lastMeasurementAqi: lastMeasurementAqi,
+            lastMeasurementPercentageValue: lastMeasurementPercentageValue,
+            lastMeasurementFormattedDate: lastMeasurementFormattedDate,
+            lastMeasurementFormattedValue: lastMeasurementFormattedValue,
+            lastMeasurementFormattedPercentageValue: lastMeasurementFormattedPercentageValue
         )
+    }
+}
+
+extension NumberFormatter {
+    func string(from number: Double) -> String? {
+        string(from: NSNumber(floatLiteral: number)) // swiftlint:disable:this compiler_protocol_init
     }
 }

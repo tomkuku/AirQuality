@@ -49,9 +49,6 @@ struct CoordinatorInitialNavigationView<C>: View where C: CoordinatorBase & Coor
     }
     
     init(coordinator: C, showAlerts: Bool = true, showToasts: Bool = true) {
-        let alertViewModel = AlertViewModel(coordinator.alertPublisher)
-        let toastsViewModel = ToastsViewModel(coordinator.toastPublisher)
-        
         self.showAlerts = showAlerts
         self.showToasts = showToasts
         

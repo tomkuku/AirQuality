@@ -8,8 +8,6 @@
 import Foundation
 import Combine
 import CoreLocation
-import MapKit
-import _MapKit_SwiftUI
 
 @MainActor
 final class AddObservedStationMapViewModel: BaseViewModel {
@@ -19,11 +17,11 @@ final class AddObservedStationMapViewModel: BaseViewModel {
     // MARK: Properties
     
     @Published private(set) var annotations: [Model.StationAnnotation] = []
-    @Published private(set) var mapCenter: CLLocation?
+    @Published private(set) var userLocation: CLLocation?
     
-    var theNearestStationPublisher: AnyPublisher<Station, Never> {
-        theNearestStationSubject.eraseToAnyPublisher()
-    }
+    private(set) lazy var theNearestStationPublisher = theNearestStationSubject.eraseToAnyPublisher()
+    private(set) lazy var addedObservedStationPublisher = addedObservedStationSubject.eraseToAnyPublisher()
+    private(set) lazy var deletedObservedStationPublisher = deletedObservedStationSubject.eraseToAnyPublisher()
     
     // MARK: Private properties
     
@@ -32,9 +30,11 @@ final class AddObservedStationMapViewModel: BaseViewModel {
     @Injected(\.getObservedStationsUseCase) private var getObservedStationsUseCase
     @Injected(\.fetchAllStationsUseCase) private var fetchAllStationsUseCase
     @Injected(\.findTheNearestStationUseCase) private var findTheNearestStationUseCase
+    @Injected(\.getUserLocationUseCase) private var getUserLocationUseCase
     
     private var theNearestStationSubject = PassthroughSubject<Station, Never>()
-    
+    private var addedObservedStationSubject = PassthroughSubject<Void, Never>()
+    private var deletedObservedStationSubject = PassthroughSubject<Void, Never>()
     private var fetchedStations: [Station] = []
     
     // MARK: Lifecycle
@@ -46,7 +46,42 @@ final class AddObservedStationMapViewModel: BaseViewModel {
         receiveObservedStationsStream()
     }
     
+    deinit {
+        finishTrackingUserLocationClosure?()
+    }
+    
+    private var finishTrackingUserLocationClosure: (@Sendable () -> ())?
+    
     // MARK: Methods
+    
+    func startTrackingUserLocation() {
+        Task { [weak self] in
+            guard let self else { return }
+            
+            do {
+                try await self.getUserLocationUseCase.checkLocationServicesAvailability()
+                
+                var finishTrackingUserLocationClosure: (@Sendable () -> ())?
+                
+                let stream = await self.getUserLocationUseCase.streamLocation(finishClosure: &finishTrackingUserLocationClosure)
+
+                self.finishTrackingUserLocationClosure = consume finishTrackingUserLocationClosure
+                
+                for try await location in stream {
+                    userLocation = location
+                }
+            } catch {
+                Logger.error("Tracking user location failed: \(error.localizedDescription)")
+                self.userLocation = nil
+                self.errorSubject.send(error)
+            }
+        }
+    }
+    
+    func stopTrackingUserLocation() {
+        finishTrackingUserLocationClosure?()
+        finishTrackingUserLocationClosure = nil
+    }
     
     func fetchStations() {
         isLoading(true, objectWillChnage: true)
@@ -67,7 +102,7 @@ final class AddObservedStationMapViewModel: BaseViewModel {
                 createStationAnnotations(with: result.1)
             } catch {
                 Logger.error(error.localizedDescription)
-                alertSubject.send(.somethigWentWrong())
+                self.errorSubject.send(error)
             }
         }
     }
@@ -75,39 +110,14 @@ final class AddObservedStationMapViewModel: BaseViewModel {
     func findTheNearestStation() {
         Task { [weak self] in
             do {
+                try await self?.getUserLocationUseCase.checkLocationServicesAvailability()
+                
                 guard let theNearestStation = try await self?.findTheNearestStationUseCase.find() else { return }
+                
                 self?.theNearestStationSubject.send(theNearestStation.station)
             } catch {
                 Logger.error("Finding the nearest station failed with error: \(error)")
-                self?.alertSubject.send(.init(title: "Nie udalo sie znalezc najblizszej stacji", buttons: [.ok()]))
-            }
-        }
-    }
-    
-    func addStationToObserved(_ station: Station) {
-        Task { [weak self] in
-            guard let self else { return }
-            
-            do {
-                try await self.addObservedStationUseCase.add(station: station)
-                self.toastSubject.send(Toast(body: "Stacja została dodana do obserwowanych"))
-            } catch {
-                Logger.error("Observing station faild with error: \(error.localizedDescription)")
-                self.alertSubject.send(.somethigWentWrong())
-            }
-        }
-    }
-    
-    func deletedStationFromObservedList(_ station: Station) {
-        Task { [weak self] in
-            guard let self else { return }
-            
-            do {
-                try await self.deleteObservedStationUseCase.delete(station: station)
-                self.toastSubject.send(Toast(body: "Stacja została usunięta z listy obserwowanych"))
-            } catch {
-                Logger.error("Observing station faild with error: \(error.localizedDescription)")
-                self.alertSubject.send(.somethigWentWrong())
+                self?.errorSubject.send(error)
             }
         }
     }

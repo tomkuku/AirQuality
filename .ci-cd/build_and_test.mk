@@ -17,6 +17,8 @@ all: prepare_environemnt generate_xcodeproj build_and_test
 
 prepare_environemnt:
 	@touch AirQuality/Localizable/Localizable.swift
+	@touch AirQuality/Assets/Assets.swift
+	@touch AirQuality/Assets/Params.swift
 
 generate_xcodeproj:
 	@echo "ℹ️ Generating $(PROJECT)"

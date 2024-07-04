@@ -9,6 +9,10 @@ import Foundation
 import CoreLocation
 
 enum AddObservedStationMapModel {
+    enum ErrorType: Error {
+        case findingTheNearestStationsFailed
+    }
+    
     struct StationAnnotation: Identifiable {
         let station: Station
         let isStationObserved: Bool

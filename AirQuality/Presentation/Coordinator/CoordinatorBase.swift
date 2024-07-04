@@ -39,14 +39,16 @@ class CoordinatorBase: ObservableObject {
     
     var childCoordinator: (any ObservableObject)?
     
-    // MARK: Private properties
-    
     /// Closure which executes dismiss coordinator (self) if it's presented by sheet or fullScreenCover.
     let dismissHandler: (() -> ())?
     
+    // MARK: Private properties
+    
+    @Injected(\.uiApplication) private var uiApplication
+    
     // MARK: Lifecycle
     
-    init(
+    nonisolated init(
         coordinatorNavigationType: CoordinatorNavigationType
     ) {
         switch coordinatorNavigationType {
@@ -82,5 +84,17 @@ class CoordinatorBase: ObservableObject {
     
     func showToast(_ toast: Toast) {
         toastSubject.send(toast)
+    }
+    
+    @MainActor
+    func open(url: URL?) {
+        Task {
+            guard  let url, uiApplication.canOpenURL(url) else {
+                alertSubject.send(.somethigWentWrong())
+                return
+            }
+            
+            _ = await uiApplication.open(url, options: [:])
+        }
     }
 }

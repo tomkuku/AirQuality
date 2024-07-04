@@ -9,21 +9,21 @@ import Foundation
 import Alamofire
 
 protocol GetArchivalMeasurementsUseCaseProtocol: Sendable {
-    func getArchivalMeasurements(for sensorId: Int) async throws -> [Measurement]
+    func getArchivalMeasurements(for sensorId: Int) async throws -> [SensorMeasurement]
 }
 
 final class GetArchivalMeasurementsUseCase: GetArchivalMeasurementsUseCaseProtocol {
     @Injected(\.giosApiV1Repository) private var giosApiV1Repository
     
-    private let measurementsNetworkMapper: any MeasurementsNetworkMapperProtocol
+    private let sensorMeasurementNetworkMapper: any SensorMeasurementNetworkMapperProtocol
     
-    init(measurementsNetworkMapper: any MeasurementsNetworkMapperProtocol) {
-        self.measurementsNetworkMapper = measurementsNetworkMapper
+    init(sensorMeasurementNetworkMapper: any SensorMeasurementNetworkMapperProtocol) {
+        self.sensorMeasurementNetworkMapper = sensorMeasurementNetworkMapper
     }
     
-    func getArchivalMeasurements(for sensorId: Int) async throws -> [Measurement] {
+    func getArchivalMeasurements(for sensorId: Int) async throws -> [SensorMeasurement] {
         try await giosApiV1Repository.fetch(
-            mapper: measurementsNetworkMapper,
+            mapper: sensorMeasurementNetworkMapper,
             endpoint: Endpoint.ArchivalMeasurements.get(sensorId),
             contentContainerName: "Lista archiwalnych wyników pomiarów"
         )

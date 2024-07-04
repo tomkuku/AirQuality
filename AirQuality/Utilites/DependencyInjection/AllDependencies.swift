@@ -14,6 +14,9 @@ HasAddObservedStationUseCase &
 HasDeleteObservedStationUseCase &
 HasGetObservedStationsUseCase &
 HasFindTheNearestStationUseCase &
+HasGetSensorsUseCase &
+HasGetStationSensorsParamsUseCase &
+HasGetUserLocationUseCase &
 // DataSources
 HasCacheDataSource &
 HasNotificationCenter &
@@ -23,6 +26,13 @@ HasGIOSApiRepository &
 HasLocalDatabaseRepository &
 HasObservedStationsFetchResultsRepository &
 HasLocationRespository &
+HasGIOSApiV1Repository &
 // Mappers
 HasStationsNetworkMapper &
-HasStationsLocalDatabaseMapper
+HasSensorsNetworkMapper &
+HasSensorMeasurementNetworkMapper &
+HasStationsLocalDatabaseMapper &
+HasStationSensorsParamsNetworkMapper &
+// Others
+HasSensorMeasurementDataFormatter &
+HasUIApplication

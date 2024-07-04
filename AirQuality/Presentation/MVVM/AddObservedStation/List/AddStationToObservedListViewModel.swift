@@ -37,56 +37,22 @@ final class AddStationToObservedListViewModel: BaseViewModel, @unchecked Sendabl
     
     // MARK: Methods
     
-    func receiveObservedStationsStream() {
-        Task { @MainActor [weak self] in
-            guard let self else { return }
-            
-            do {
-                for try await observedSations in getObservedStationsUseCase.createNewStream() {
-                    self.createAndSortSections(fetchedStations, observedStations: observedSations)
-                }
-            } catch {
-                Logger.error(error.localizedDescription)
-                alertSubject.send(.somethigWentWrong())
-            }
-        }
-    }
-    
     func fetchStations() {
         isLoading(true, objectWillChnage: true)
         
-        Task { @MainActor [weak self] in
+        Task { [weak self] in
             guard let self else { return }
             
             do {
                 let fetchedStations = try await fetchAllStationsUseCase.fetch()
                 let observedStations = try await getObservedStationsUseCase.fetchedStations()
                 
-                isLoading(false, objectWillChnage: false)
+                isLoading = false
                 
                 createAndSortSections(fetchedStations, observedStations: observedStations)
                 self.fetchedStations = fetchedStations
             } catch {
                 Logger.error(error.localizedDescription)
-                alertSubject.send(.somethigWentWrong())
-            }
-        }
-    }
-    
-    func stationDidSelect(_ station: Station) {
-        Task { @MainActor [weak self] in
-            guard let self else { return }
-            
-            do {
-                let observedStations = try await getObservedStationsUseCase.fetchedStations()
-                
-                if observedStations.contains(station) {
-                    try await deleteObservedStationUseCase.delete(station: station)
-                } else {
-                    try await addObservedStationUseCase.add(station: station)
-                }
-            } catch {
-                Logger.error("Observing station faild with error: \(error.localizedDescription)")
                 alertSubject.send(.somethigWentWrong())
             }
         }
@@ -130,12 +96,25 @@ final class AddStationToObservedListViewModel: BaseViewModel, @unchecked Sendabl
         sortRows(in: &sections)
         
         sections.sort(by: {
-            $0.name > $1.name
+            $0.name < $1.name
         })
         
         self.sections = sections
-        
-        print("LL done", sections.count, stations)
+    }
+    
+    private func receiveObservedStationsStream() {
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            
+            do {
+                for try await observedSations in getObservedStationsUseCase.createNewStream() {
+                    self.createAndSortSections(fetchedStations, observedStations: observedSations)
+                }
+            } catch {
+                Logger.error(error.localizedDescription)
+                alertSubject.send(.somethigWentWrong())
+            }
+        }
     }
     
     private func sortRows(in sections: inout [Model.Section]) {
@@ -143,14 +122,14 @@ final class AddStationToObservedListViewModel: BaseViewModel, @unchecked Sendabl
             sections[i].rows.sort(by: {
                 if $0.station.cityName == $1.station.cityName {
                     if let lhsStreet = $0.station.street, let rhsSteet = $1.station.street {
-                        lhsStreet > rhsSteet
+                        lhsStreet < rhsSteet
                     } else if $0.station.street != nil {
                         true
                     } else {
                         false
                     }
                 } else {
-                    $0.station.cityName > $1.station.cityName
+                    $0.station.cityName < $1.station.cityName
                 }
             })
         }

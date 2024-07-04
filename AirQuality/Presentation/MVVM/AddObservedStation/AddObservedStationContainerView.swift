@@ -24,31 +24,28 @@ struct AddObservedStationContainerView: View {
         TabView(selection: $selctedTabItemIndex) {
             CoordinatorInitialNavigationView(coordinator: coordinator.addObservedStationListCoordinator, showAlerts: false, showToasts: false)
                 .tabItem {
-                    Label(L10n.ListItem.itemTitle, systemImage: "text.justify")
+                    Label(
+                        title: { Text(L10n.ListItem.itemTitle) },
+                        icon: { Image.textJustify }
+                    )
                 }
                 .tag(Item.list)
             
             CoordinatorInitialNavigationView(coordinator: coordinator.addObservedStationMapCoordinator, showAlerts: false, showToasts: false)
                 .tabItem {
-                    Label(L10n.MapItem.itemTitle, systemImage: "map")
+                    Label(
+                        title: { Text(L10n.MapItem.itemTitle) },
+                        icon: { Image.mapFill }
+                    )
                 }
                 .tag(Item.map)
         }
     }
 }
 
-//#Preview {
-//    // swiftslint:disable private_subject
-//    let alertSubject = PassthroughSubject<AlertModel, Never>()
-//    let toastSubject = PassthroughSubject<Toast, Never>()
-//    // swiftslint:enable private_subject
-//
-//    let coordinator = AddStationToObservedCoordinator(
-//        dimissHandler: {},
-//        alertSubject: alertSubject,
-//        toastSubject: toastSubject
-//    )
-//    
-//    return AddStationToObservedContainerView()
-//        .environmentObject(coordinator)
-//}
+#Preview {
+    @StateObject var addStationToObservedCoordinator = AddStationToObservedCoordinator(coordinatorNavigationType: .presentation(dismissHandler: {}))
+    
+    return AddObservedStationContainerView()
+        .environmentObject(addStationToObservedCoordinator)
+}

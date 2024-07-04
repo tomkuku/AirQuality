@@ -15,7 +15,6 @@ protocol DependenciesContainerProtocol: AnyObject {
 }
 
 final class DependenciesContainer: AllDependencies, DependenciesContainerProtocol {
-    
     subscript<T>(_ keyPath: KeyPath<AllDependencies, T>) -> T {
         let mirror = Mirror(reflecting: self)
         
@@ -40,31 +39,38 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     let getObservedStationsUseCase: GetObservedStationsUseCaseProtocol
     let cacheDataSource: CacheDataSourceProtocol
     let locationRespository: LocationRespositoryProtocol
-    let notificationCenter: any NotificationCenterProtocol
+    let notificationCenter: NotificationCenterProtocol
     let stationsNetworkMapper: any StationsNetworkMapperProtocol
     let findTheNearestStationUseCase: FindTheNearestStationUseCaseProtocol
+    let sensorsNetworkMapper: any SensorsNetworkMapperProtocol
+    var sensorMeasurementsNetworkMapper: any SensorMeasurementNetworkMapperProtocol
+    let getSensorsUseCase: GetSensorsUseCaseProtocol
+    let sensorMeasurementDataFormatter: SensorMeasurementDataFormatterProtocol
+    let getStationSensorsParamsUseCase: GetStationSensorsParamsUseCaseProtocol
+    let stationSensorsParamsNetworkMapper: any StationSensorsParamsNetworkMapperProtocol
+    let getUserLocationUseCase: GetUserLocationUseCaseProtocol
+    let uiApplication: UIApplicationProtocol
     
     @MainActor
     init() throws {
+        self.uiApplication = UIApplication.shared
+        
         let httpDataSource = HTTPDataSource()
-        let bundleDataSource = try BundleDataSource()
-        let paramsRepository = try ParamsRepository(bundleDataSource: bundleDataSource)
-        let uiApplication = UIApplication.shared
+        
+        self.sensorMeasurementDataFormatter = SensorMeasurementDataFormatter()
         
         self.notificationCenter = NotificationCenter.default
         
-        let backgroundTasksManager = BackgroundTasksManager(uiApplication: uiApplication)
+        let backgroundTasksManager = BackgroundTasksManager(uiApplication: UIApplication.shared)
         
         self.stationsNetworkMapper = StationsNetworkMapper()
         
         self.giosApiV1Repository = GIOSApiV1Repository(httpDataSource: httpDataSource)
-        self.giosApiRepository = GIOSApiRepository(
-            httpDataSource: httpDataSource,
-            paramsRepository: paramsRepository,
-            giosV1Repository: giosApiV1Repository,
-            sensorsNetworkMapper: SensorsNetworkMapper(),
-            measurementsNetworkMapper: MeasurementsNetworkMapper()
-        )
+        
+        self.sensorsNetworkMapper = SensorsNetworkMapper()
+        self.sensorMeasurementsNetworkMapper = SensorMeasurementNetworkMapper()
+        
+        self.giosApiRepository = GIOSApiRepository(httpDataSource: httpDataSource)
         
         let modelContainer = try Self.createModelContainer()
         
@@ -95,22 +101,33 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
                 
         self.cacheDataSource = CacheDataSource()
         
-        let locationManager = CLLocationManager()
-        
         let userLocationDataSource = UserLocationDataSource(locationManager: CLLocationManager())
         self.locationRespository = LocationRespository(userLocationDataSource: userLocationDataSource)
         
+        self.stationSensorsParamsNetworkMapper = StationSensorsParamsNetworkMapper()
+        
 #if targetEnvironment(simulator)
         if ProcessInfo.isPreview {
+            SwiftDataPreviewAccessor.shared = .init(modelContainer: modelContainer)
+            
             self.fetchAllStationsUseCase = FetchAllStationsUseCasePreviewDummy()
             self.findTheNearestStationUseCase = FindTheNearestStationUseCasePreviewDummy()
+            self.getSensorsUseCase = GetSensorsUseCasePreviewDummy()
+            self.getUserLocationUseCase = GetUserLocationUseCasePreviewDummy()
+            self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCasePreviewDummy()
         } else {
             self.fetchAllStationsUseCase = FetchAllStationsUseCase()
             self.findTheNearestStationUseCase = FindTheNearestStationUseCase()
+            self.getSensorsUseCase = GetSensorsUseCase()
+            self.getUserLocationUseCase = GetUserLocationUseCase()
+            self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCase()
         }
 #else
         self.getStationsUseCase = GetStationsUseCase()
         self.findTheNearestStationUseCase = FindTheNearestStationUseCase()
+        self.getSensorsUseCase = GetSensorsUseCase()
+        self.getUserLocationUseCase = GetUserLocationUseCase()
+        self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCase()
 #endif
     }
     

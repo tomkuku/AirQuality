@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  AirQuality
+
+  Created by Tomasz Kukułka on 26/06/2024.
+  
+*/
+
+"NSLocationWhenInUseUsageDescription" = "Aplikacja potrzebuje dostępu do Twojej lokalizacji w celu znalezienia najbliższej stacji pomiarowej.";

@@ -21,6 +21,7 @@ schemeTemplates:
       config: Tests
       gatherCoverageData: false
       language: en
+      region: en_US
       targets:
         - name: AirQualityTests
       environmentVariables:

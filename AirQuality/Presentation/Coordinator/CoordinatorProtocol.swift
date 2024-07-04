@@ -8,7 +8,8 @@
 import Foundation
 import SwiftUI
 
-protocol CoordinatorProtocol: ObservableObject {
+@MainActor
+protocol CoordinatorProtocol: ObservableObject, AnyObject {
     associatedtype NavigationComponentType: Identifiable, Hashable
     associatedtype StartViewType: View
     associatedtype CreateViewType: View

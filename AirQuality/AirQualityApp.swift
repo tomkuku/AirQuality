@@ -15,11 +15,12 @@ struct AirQualityApp: App {
     
     var body: some Scene {
         WindowGroup {
-            if ProcessInfo.isTest {
-                Text("Tests")
-            } else {
-                CoordinatorInitialNavigationView(coordinator: appCoordinator)
-            }
+                if ProcessInfo.isTest {
+                    Text("Tests")
+                } else {
+                    CoordinatorInitialNavigationView(coordinator: appCoordinator)
+                        .coordinateSpace(name: "Custom")
+                }
         }
     }
     
