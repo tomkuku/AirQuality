@@ -17,7 +17,7 @@ struct ParamsView: View {
         VStack(alignment: .leading) {
             HStack {
                 Text(L10n.measuredParametres)
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(Color.Text.secondary)
                     .padding(.bottom, 8)
                 
                 Spacer()
@@ -36,13 +36,13 @@ struct ParamsView: View {
                     Text(param.formula)
                         .font(.system(size: 14, weight: .medium))
                         .padding(.horizontal, 6)
-                        .padding(.vertical, .zero)
+                        .padding(.vertical, 0)
                         .foregroundStyle(.white)
                         .fixedSize()
                         .frame(height: 16)
                         .background {
                             RoundedRectangle(cornerRadius: 6)
-                                .foregroundStyle(.gray)
+                                .foregroundStyle(Color.Standard.grey)
                         }
                 }
             } else {
@@ -76,6 +76,6 @@ struct ParamsView: View {
             .foregroundStyle(.red)
         ParamsView(station: .previewDummy())
         Rectangle()
-            .foregroundStyle(.blue)
+             .foregroundStyle(.blue)
     }
 }

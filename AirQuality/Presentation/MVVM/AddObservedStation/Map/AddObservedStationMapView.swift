@@ -213,6 +213,7 @@ private extension AddObservedStationMapView {
         NavigationStack {
             AddObservedStationMapView()
                 .environmentObject(coordinator)
+                .preferredColorScheme(.dark)
         }
     }
 }

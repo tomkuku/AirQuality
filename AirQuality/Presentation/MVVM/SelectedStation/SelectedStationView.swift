@@ -50,7 +50,7 @@ struct SelectedStationView: View {
                 HStack {
                     Text(L10n.dataProvider)
                         .font(.system(size: 14))
-                        .foregroundStyle(.gray)
+                        .foregroundStyle(Color.Text.secondary)
                         .multilineTextAlignment(.center)
                         .padding(.top, 16)
                 }
@@ -58,7 +58,7 @@ struct SelectedStationView: View {
             }
             .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
         }
-        .background(Color(red: 242 / 255, green: 242 / 255, blue: 242 / 255))
+        .background(Color.Background.primary)
         .task {
             await viewModel.fetchSensorsForStation()
         }
@@ -111,5 +111,25 @@ struct SelectedStationView: View {
     return NavigationStack {
         SelectedStationView(viewModel: .init(station: station))
             .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+#Preview {
+    GetSensorsUseCasePreviewDummy.fetchReturnValue = [
+        .previewDummy(id: 1, param: .pm10),
+        .previewDummy(id: 2, param: .pm25),
+        .previewDummy(id: 3, param: .c6h6),
+        .previewDummy(id: 4, param: .co),
+        .previewDummy(id: 5, param: .no2),
+        .previewDummy(id: 6, param: .o3),
+        .previewDummy(id: 7, param: .so2)
+    ]
+    
+    let station = Station.previewDummy()
+    
+    return NavigationStack {
+        SelectedStationView(viewModel: .init(station: station))
+            .navigationBarTitleDisplayMode(.inline)
+            .preferredColorScheme(.dark)
     }
 }

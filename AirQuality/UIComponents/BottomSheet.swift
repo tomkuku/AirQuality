@@ -41,17 +41,19 @@ struct BottomSheet<Content: View>: View {
                     grabberImage
                         .resizable()
                         .aspectRatio(contentMode: .fit)
+                        .tint(.secondary)
                         .frame(width: 30, height: 10)
                         .padding(.top, 16)
                         .foregroundStyle(.gray)
                 }
+                .background(.clear)
                 
                 content
                 
                 Spacer()
             }
             .frame(height: geometry.size.height)
-            .background(Color.white)
+            .background(Color.Background.primary)
             .clipShape(.rect(topLeadingRadius: 16, topTrailingRadius: 16))
             .shadow(radius: 10)
             .offset(y: geometry.size.height - sheetOffset)
