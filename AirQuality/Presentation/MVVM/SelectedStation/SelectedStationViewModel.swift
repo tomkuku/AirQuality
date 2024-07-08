@@ -99,7 +99,7 @@ final class SelectedStationViewModel: BaseViewModel, @unchecked Sendable {
         var lastMeasurementFormattedValue: String = "-"
         var lastMeasurementFormattedPercentageValue: String = "-"
         
-        if let lastMeasurement = sensor.measurements.first,
+        if let lastMeasurement = sensor.measurements.first(where: { $0.measurement != nil }),
            let lastMeasurementValue = lastMeasurement.measurement {
             lastMeasurementAqi = sensor.param.getAqi(for: lastMeasurementValue.value)
             

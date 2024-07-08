@@ -15,6 +15,15 @@ struct AllStationsListRowView: View {
     private let isStationObserved: Bool
     
     var body: some View {
+        ZStack {
+            rowContent
+            paramsView
+        }
+        .padding(.vertical, 8)
+        .modifier(AnimatingHeight(height: isExpanded ? 160 : 80))
+    }
+    
+    private var rowContent: some View {
         VStack {
             HStack {
                 Button {
@@ -59,6 +68,14 @@ struct AllStationsListRowView: View {
                 )
             }
             
+            Spacer()
+        }
+    }
+    
+    private var paramsView: some View {
+        VStack {
+            Spacer()
+            
             if isExpanded {
                 ParamsView(station: station)
                     .padding(.leading, 48)
@@ -66,7 +83,6 @@ struct AllStationsListRowView: View {
                     .gesture(DragGesture().exclusively(before: TapGesture()))
             }
         }
-        .padding(.vertical, 8)
     }
     
     init(station: Station, isStationObserved: Bool) {
@@ -80,16 +96,13 @@ struct AllStationsListRowView: View {
 #Preview(traits: .sizeThatFitsLayout) {
     let station = Station.previewDummy()
     
-    let viewModel = AllStationStationViewModel(station: station)
-    
-    @Namespace var namespace
+    GetStationSensorsParamsUseCasePreviewDummy.getParamsResult = [.c6h6, .pm10, .pm25, .so2, .co, .no2, .o3]
     
     return VStack {
         Rectangle()
             .foregroundStyle(.blue)
         
         AllStationsListRowView(station: station, isStationObserved: true)
-        .previewLayout(PreviewLayout.sizeThatFits)
         
         Rectangle()
             .foregroundStyle(.red)

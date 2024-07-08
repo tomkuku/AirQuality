@@ -60,14 +60,6 @@ struct SectionView: View {
         self.section = section
         self._viewModel = ObservedObject(wrappedValue: viewModel)
     }
-    
-    private func createRow(for station: Station) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(station.street ?? "")
-            
-            Text(station.cityName)
-        }
-    }
 }
 
 #Preview {

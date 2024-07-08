@@ -69,7 +69,10 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
         // Given
         let sensor1 = Sensor.dummy(id: 1, param: .pm10, measurements: [.dummy(date: "2024-06-25 15:00", value: 45)])
         let sensor2 = Sensor.dummy(id: 2, param: .pm25, measurements: [.dummy(date: "2024-06-25 15:00", value: 34)])
-        let sensor3 = Sensor.dummy(id: 3, param: .c6h6, measurements: [.dummy(date: "2024-06-25 15:00", value: 4)])
+        let sensor3 = Sensor.dummy(id: 3, param: .c6h6, measurements: [
+            .dummy(date: "2024-06-25 14:00", value: nil),
+            .dummy(date: "2024-06-25 14:00", value: 4)
+        ])
         
         getSensorsUseCaseSpy.getSensorsResultClosure = {
             .success([sensor3, sensor1, sensor2])
@@ -103,7 +106,7 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
             paramFormula: sensor3.param.formula,
             lastMeasurementAqi: .good,
             lastMeasurementPercentageValue: 0.8,
-            lastMeasurementFormattedDate: "Jun 25, 2024 at 15:00",
+            lastMeasurementFormattedDate: "Jun 25, 2024 at 14:00",
             lastMeasurementFormattedValue: "4 µg/m³",
             lastMeasurementFormattedPercentageValue: "80%"
         )
@@ -127,7 +130,7 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
         XCTAssertEqual(getSensorsUseCaseSpy.events, [.getSensors(stationDummy.id)])
         XCTAssertEqual(sensorRows, [expectedSecondSensorRow, expectedFirstSensorRow, expectedThirdSensorRow])
         XCTAssertEqual(sensorMeasurementDataFormatterSpy.events, [
-            .format("2024-06-25 15:00"),
+            .format("2024-06-25 14:00"),
             .format("2024-06-25 15:00"),
             .format("2024-06-25 15:00")
         ])
