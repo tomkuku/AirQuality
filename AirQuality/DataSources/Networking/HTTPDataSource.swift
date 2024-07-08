@@ -9,11 +9,11 @@ import Foundation
 import Alamofire
 import Combine
 
-protocol HTTPDataSourceProtocol {
-    func requestData<T>(_ urlRequest: T) -> AnyPublisher<Data, Error> where T: URLRequestConvertible
+protocol HTTPDataSourceProtocol: Sendable {
+    func requestData<T>(_ urlRequest: T) async throws -> Data where T: HTTPRequest
 }
 
-final class HTTPDataSource: HTTPDataSourceProtocol {
+actor HTTPDataSource: HTTPDataSourceProtocol {
     private let session: Session
     private let queue = DispatchQueue(label: "com.http.data.source")
     private var cancellables = Set<AnyCancellable>()
@@ -35,20 +35,29 @@ final class HTTPDataSource: HTTPDataSourceProtocol {
         )
     }
     
-    func requestData<T>(_ urlRequest: T) -> AnyPublisher<Data, Error> where T: URLRequestConvertible {
-        session
-            .request(urlRequest)
-            .validate()
-            .publishData(queue: self.queue)
-            .tryMap {
-                switch $0.result {
-                case .success(let data):
-                    return data
-                case .failure(let error):
-                    throw error
+    func requestData<T>(_ urlRequest: T) async throws -> Data where T: HTTPRequest {
+        try await withCheckedThrowingContinuation { continuation in
+            session
+                .request(urlRequest)
+                .validate()
+                .publishData(queue: self.queue)
+                .tryMap {
+                    switch $0.result {
+                    case .success(let data):
+                        return data
+                    case .failure(let error):
+                        throw error
+                    }
                 }
-            }
-            .eraseToAnyPublisher()
+                .sink { completion in
+                    guard case .failure(let error) = completion else { return }
+                    continuation.resume(throwing: error)
+                    
+                } receiveValue: { data in
+                    continuation.resume(returning: data)
+                }
+                .store(in: &cancellables)
+        }
     }
 }
 

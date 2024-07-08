@@ -51,7 +51,7 @@ actor GIOSApiRepository: GIOSApiRepositoryProtocol {
     
     private let httpDataSource: HTTPDataSourceProtocol
     private var cancellables = Set<AnyCancellable>()
-    private let decoder: JSONDecoder
+    private let jsonDecoder: JSONDecoder
     
     // MARK: Lifecycle
     
@@ -60,7 +60,7 @@ actor GIOSApiRepository: GIOSApiRepositoryProtocol {
         decoder: JSONDecoder = .init()
     ) {
         self.httpDataSource = httpDataSource
-        self.decoder = decoder
+        self.jsonDecoder = decoder
     }
     
     // MARK: Methods
@@ -134,32 +134,7 @@ actor GIOSApiRepository: GIOSApiRepositoryProtocol {
     private func handleFetch<T>(
         endpoint: any HTTPRequest
     ) async throws -> T where T: Decodable {
-        /// This code must be a closure because it must be called after continuation has been initialised.
-        /// Otherwise, `requestData` may return data before withCheckedThrowingContinuation will be executed.
-        let requestClosure: (@Sendable (isolated GIOSApiRepository, CheckedContinuation<T, Error>) -> ()) = { actorSelf, continuation in
-            let cancellable = actorSelf
-                .httpDataSource
-                .requestData(endpoint)
-                .tryCompactMap {
-                    try actorSelf.decoder.decode(T.self, from: $0)
-                }
-                .sink {
-                    guard case .failure(let error) = $0 else { return }
-                    
-                    continuation.resume(throwing: error)
-                } receiveValue: {
-                    continuation.resume(returning: $0)
-                }
-            
-            actorSelf.cancellables.insert(cancellable)
-        }
-        
-        return try await withCheckedThrowingContinuation { continuation in
-            Task { [weak self] in
-                guard let self else { return }
-                
-                await requestClosure(self, continuation)
-            }
-        }
+        let data = try await httpDataSource.requestData(endpoint)
+        return try jsonDecoder.decode(T.self, from: data)
     }
 }
