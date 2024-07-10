@@ -81,8 +81,8 @@ final class SelectedStationViewModel: BaseViewModel, @unchecked Sendable {
             isLoading(false, objectWillChnage: false)
             self.sensors = sensors
         } catch {
-            Logger.error(error.localizedDescription)
-            alertSubject.send(.somethigWentWrong())
+            Logger.error("Fetching measurements for sensors with error \(error)")
+            errorSubject.send(error)
         }
     }
     

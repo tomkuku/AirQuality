@@ -46,7 +46,8 @@ actor GIOSApiV1Repository: GIOSApiV1RepositoryProtocol {
         contentContainerName: String
     ) async throws -> T.DomainModel where T: NetworkMapperProtocol {
         let data = try await httpDataSource.requestData(endpoint)
-        let decodableObject = try jsonDecoder.decode(T.DTOModel.self, from: data)
-        return try mapper.map(decodableObject)
+        let decodedResponse = try jsonDecoder.decode(GIOSApiV1Response.self, from: data)
+        let networkModelObjects: T.DTOModel = try decodedResponse.getValue(for: contentContainerName)
+        return try mapper.map(networkModelObjects)
     }
 }

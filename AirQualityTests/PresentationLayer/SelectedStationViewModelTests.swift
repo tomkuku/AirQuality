@@ -21,6 +21,7 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
     private var dateFormatter: DateFormatter!
     
     private var alert: AlertModel?
+    private var error: Error?
     private var sensorRows: [SelectedStationModel.SensorRow]?
     
     override func setUp() async throws {
@@ -150,9 +151,9 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
         }
         
         await MainActor.run {
-            sut.alertSubject
+            sut.errorSubject
                 .sink {
-                    self.alert = $0
+                    self.error = $0
                     self.expectation.fulfill()
                 }
                 .store(in: &cancellables)
@@ -164,7 +165,7 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
         // Then
         await fulfillment(of: [self.expectation], timeout: 2.0)
         
-        XCTAssertEqual(alert, .somethigWentWrong())
+        XCTAssertNotNil(error as? ErrorDummy)
         XCTAssertEqual(getSensorsUseCaseSpy.events, [.getSensors(stationDummy.id)])
     }
 }

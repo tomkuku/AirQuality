@@ -33,7 +33,7 @@ struct StationMapAnnotationView: MapContent {
                      arrowEdge: .bottom) {
                 expandedStationPopover
                     .presentationCompactAdaptation(.popover)
-                    .background(Color.Background.primary)
+                    .background(Color.Background.secondary)
             }
         }
     }
@@ -65,7 +65,7 @@ struct StationMapAnnotationView: MapContent {
             
             addObservedStationButton
         }
-        .background(Color.Background.primary)
+        .background(Color.Background.secondary)
         .padding(.all, 16)
         .frame(width: 250)
     }

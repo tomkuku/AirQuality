@@ -49,11 +49,12 @@ struct BottomSheet<Content: View>: View {
                 .background(.clear)
                 
                 content
+                    .background(Color.Background.secondary)
                 
                 Spacer()
             }
             .frame(height: geometry.size.height)
-            .background(Color.Background.primary)
+            .background(Color.Background.secondary)
             .clipShape(.rect(topLeadingRadius: 16, topTrailingRadius: 16))
             .shadow(radius: 10)
             .offset(y: geometry.size.height - sheetOffset)
