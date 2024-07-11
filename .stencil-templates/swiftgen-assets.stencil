@@ -6,11 +6,17 @@
 
 {% macro casesBlock assets assetType %}
   {% for asset in assets %}
-  {% if asset.type == "color" and assetType == "color" %}
-  static let {{asset.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}} = {{colorType}}("{{asset.value}}")
-  {% elif asset.type == "image" and assetType == "image" %}
-  static let {{asset.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}} = {{imageType}}("{{asset.value}}")
-  {% endif %}
+    {% if asset.type == "color" and assetType == "color" %}
+      static let {{asset.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}} = {{colorType}}("{{asset.value}}")
+    {% elif asset.type == "image" and assetType == "image" %}
+      static let {{asset.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}} = {{imageType}}("{{asset.value}}")
+    {% elif asset.items and (param.forceProvidesNamespaces == "true" or asset.isNamespaced == "true") %}
+      enum {{asset.name|swiftIdentifier:"pretty"|escapeReservedKeywords}} {
+        {% filter indent:2 %}{% call casesBlock asset.items assetType %}{% endfilter %}
+      }
+    {% elif asset.items %}
+      {% call casesBlock asset.items assetType %}
+    {% endif %}
   {% endfor %}
 {% endmacro %}
 
@@ -19,22 +25,21 @@ import struct SwiftUI.Color
 
 extension Color {
   {% if catalogs.count > 1 %}
-  {% for catalog in catalogs %}
-  {% filter indent:2 %}{% call casesBlock catalog.assets "color" %}{% endfilter %}
-  {% endfor %}
+    {% for catalog in catalogs %}
+      {% filter indent:2 %}{% call casesBlock catalog.assets "color" %}{% endfilter %}
+    {% endfor %}
   {% else %}
-  {% call enumBlock catalogs.first.assets %}
+    {% call casesBlock catalogs.first.assets "color" %}
   {% endif %}
 }
 
 extension Image {
   {% if catalogs.count > 1 %}
-  {% for catalog in catalogs %}
-  {% filter indent:2 %}{% call casesBlock catalog.assets "image" %}{% endfilter %}
-  {% endfor %}
+    {% for catalog in catalogs %}
+      {% filter indent:2 %}{% call casesBlock catalog.assets "image" %}{% endfilter %}
+    {% endfor %}
   {% else %}
-  {% call enumBlock catalogs.first.assets %}
+    {% call casesBlock catalogs.first.assets "image" %}
   {% endif %}
 }
-
 {% endif %}

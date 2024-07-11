@@ -26,10 +26,8 @@ extension SensorMeasurement {
     
     static func dummy(
         date: String = "2024-06-25 15:00",
-        value: Double = 10.52
+        value: Double? = 10.52
     ) -> Self {
-        let measurement = Measurement<UnitConcentrationMass>(value: value, unit: .microgramsPerCubicMeter)
-        
         let measurementDate: Date
         
         if let formattedDate = dateFormatter.date(from: date) {
@@ -37,6 +35,12 @@ extension SensorMeasurement {
         } else {
             XCTFail("Formatting string \(date) to date failed!")
             measurementDate = Date()
+        }
+        
+        var measurement: Measurement<UnitConcentrationMass>?
+        
+        if let value {
+            measurement = .init(value: value, unit: .microgramsPerCubicMeter)
         }
         
         return Self(date: measurementDate, measurement: measurement)

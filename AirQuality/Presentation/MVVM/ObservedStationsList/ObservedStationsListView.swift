@@ -30,7 +30,6 @@ struct ObservedStationsListView: View {
                     }
                 }
                 .listStyle(.sidebar)
-                .background(.white)
             }
         }
         .safeAreaInset(edge: .bottom) {
@@ -77,8 +76,9 @@ struct ObservedStationsListView: View {
             
             Spacer()
         }
-        .background(Color.white)
+        .background(.clear)
         .accessibility(addTraits: [.isButton])
+        .contentShape(Rectangle())
         .gesture(TapGesture().onEnded {
             coordinator.goTo(.slectedStation(station))
         })
@@ -93,17 +93,15 @@ struct ObservedStationsListView: View {
 #Preview {
     let appCoordinator = AppCoordinator(coordinatorNavigationType: .presentation(dismissHandler: {}))
     
-    @Injected(\.addObservedStationUseCase) var addObservedStationUseCase
-    
-    SwiftDataPreviewAccessor.shared.add(models: [
-        StationLocalDatabaseModel.previewDummy(identifier: 1, street: "al. Krasińskiego"),
-        StationLocalDatabaseModel.previewDummy(identifier: 2, street: "ul. Bujaka"),
-        StationLocalDatabaseModel.previewDummy(identifier: 3, street: "ul. Bulwarowa"),
-        StationLocalDatabaseModel.previewDummy(identifier: 4, street: "ul. Bulwarowa"),
-        StationLocalDatabaseModel.previewDummy(identifier: 5, street: "ul. Kamieńskiego"),
-        StationLocalDatabaseModel.previewDummy(identifier: 6, street: "os. Piastów"),
-        StationLocalDatabaseModel.previewDummy(identifier: 7, cityName: "Tarnów", street: "ul. Bitwy pod Studziankami"),
-        StationLocalDatabaseModel.previewDummy(identifier: 8, cityName: "Tarnów", street: "ul. Ks. Romana Sitko")
+    GetObservedStationsUseCasePreviewDummy.createNewStreamStations = .success([
+        .previewDummy(id: 1, street: "al. Krasińskiego"),
+        .previewDummy(id: 2, street: "ul. Bujaka"),
+        .previewDummy(id: 3, street: "ul. Bulwarowa"),
+        .previewDummy(id: 4, street: "ul. Bulwarowa"),
+        .previewDummy(id: 5, street: "ul. Kamieńskiego"),
+        .previewDummy(id: 6, street: "os. Piastów"),
+        .previewDummy(id: 7, cityName: "Tarnów", street: "ul. Bitwy pod Studziankami"),
+        .previewDummy(id: 8, cityName: "Tarnów", street: "ul. Ks. Romana Sitko")
     ])
     
     return NavigationStack {

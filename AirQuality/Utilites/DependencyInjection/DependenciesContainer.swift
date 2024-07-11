@@ -97,7 +97,6 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         self.stationsLocalDatabaseMapper = stationsLocalDatabaseMapper
         self.addObservedStationUseCase = AddObservedStationUseCase()
         self.deleteObservedStationUseCase = DeleteObservedStationUseCase()
-        self.getObservedStationsUseCase = GetObservedStationsUseCase()
                 
         self.cacheDataSource = CacheDataSource()
         
@@ -115,12 +114,14 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
             self.getSensorsUseCase = GetSensorsUseCasePreviewDummy()
             self.getUserLocationUseCase = GetUserLocationUseCasePreviewDummy()
             self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCasePreviewDummy()
+            self.getObservedStationsUseCase = GetObservedStationsUseCasePreviewDummy()
         } else {
             self.fetchAllStationsUseCase = FetchAllStationsUseCase()
             self.findTheNearestStationUseCase = FindTheNearestStationUseCase()
             self.getSensorsUseCase = GetSensorsUseCase()
             self.getUserLocationUseCase = GetUserLocationUseCase()
             self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCase()
+            self.getObservedStationsUseCase = GetObservedStationsUseCase()
         }
 #else
         self.getStationsUseCase = GetStationsUseCase()
@@ -128,6 +129,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         self.getSensorsUseCase = GetSensorsUseCase()
         self.getUserLocationUseCase = GetUserLocationUseCase()
         self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCase()
+        self.getObservedStationsUseCase = GetObservedStationsUseCase()
 #endif
     }
     

@@ -25,7 +25,7 @@ final class HTTPDataStoreTests: BaseTestCase {
         sut = HTTPDataSource(sessionConfiguration: configuration)
     }
     
-    func testRequestDataWhenResponseIsSuccess() {
+    func testRequestDataWhenResponseIsSuccess() async throws {
         // Given
         let responseData = "test".data(using: .utf8)!
         
@@ -40,26 +40,14 @@ final class HTTPDataStoreTests: BaseTestCase {
         
         URLProtocolMock.result = .success((response, responseData))
         
-        var data: Data?
-        
         // When
-        sut.requestData(EndpointFake())
-            .sink {
-                guard case .failure = $0 else { return }
-                XCTFail("requestData should not have published any error!")
-            } receiveValue: {
-                data = $0
-                self.expectation.fulfill()
-            }
-            .store(in: &cancellables)
+        let data = try await sut.requestData(EndpointFake())
         
         // Then
-        wait(for: [expectation], timeout: 2.0)
-        
         XCTAssertEqual(responseData, data)
     }
     
-    func testRequestDataWhenResponseStatusCodeIsUnacceptable() {
+    func testRequestDataWhenResponseStatusCodeIsUnacceptable() async {
         // Given
         let responseData = "test".data(using: .utf8)!
         
@@ -74,62 +62,42 @@ final class HTTPDataStoreTests: BaseTestCase {
         
         URLProtocolMock.result = .success((response, responseData))
         
-        var error: Error?
-        
-        // When
-        sut.requestData(EndpointFake())
-            .sink {
-                guard case .failure(let failureError) = $0 else { return }
-                
-                error = failureError
-                self.expectation.fulfill()
-            } receiveValue: { _ in
-                XCTFail("requestData should not have published any value!")
+        do {
+            // When
+            _ = try await sut.requestData(EndpointFake())
+            XCTFail("RequestData should thrown error!")
+        } catch {
+            // Then
+            guard
+                let afError = error as? AFError,
+                case .responseValidationFailed(let reason) = afError,
+                case .unacceptableStatusCode(let code) = reason,
+                code == 404
+            else {
+                XCTFail("Error should have been unacceptableStatusCode 404!")
+                return
             }
-            .store(in: &cancellables)
-        
-        // Then
-        wait(for: [expectation], timeout: 2.0)
-        
-        guard
-            let afError = error as? AFError,
-            case .responseValidationFailed(let reason) = afError,
-            case .unacceptableStatusCode(let code) = reason,
-            code == 404
-        else {
-            XCTFail("Error should have been unacceptableStatusCode 404!")
-            return
         }
     }
     
-    func testRequestDataWhenResponseIsFailure() {
+    func testRequestDataWhenResponseIsFailure() async {
         // Given
         URLProtocolMock.result = .failure(ErrorDummy())
         
-        var error: Error?
-        
-        // When
-        sut.requestData(EndpointFake())
-            .sink {
-                guard case .failure(let failureError) = $0 else { return }
-                
-                error = failureError
-                self.expectation.fulfill()
-            } receiveValue: { _ in
-                XCTFail("requestData should not have published any value!")
+        do {
+            // When
+            _ = try await sut.requestData(EndpointFake())
+            XCTFail("RequestData should thrown error!")
+        } catch {
+            // Then
+            guard
+                let afError = error as? AFError,
+                case .sessionTaskFailed(let sessionTaskError) = afError,
+                (sessionTaskError as NSError).domain == "AirQualityTests.ErrorDummy"
+            else {
+                XCTFail("Error should be equal to AFError.sessionTaskFailed with NSError!")
+                return
             }
-            .store(in: &cancellables)
-        
-        // Then
-        wait(for: [expectation], timeout: 2.0)
-        
-        guard
-            let afError = error as? AFError,
-            case .sessionTaskFailed(let sessionTaskError) = afError,
-            (sessionTaskError as NSError).domain == "AirQualityTests.ErrorDummy"
-        else {
-            XCTFail("Error should be equal to AFError.sessionTaskFailed with NSError!")
-            return
         }
     }
     

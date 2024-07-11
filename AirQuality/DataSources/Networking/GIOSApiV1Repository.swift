@@ -45,34 +45,9 @@ actor GIOSApiV1Repository: GIOSApiV1RepositoryProtocol {
         endpoint: any HTTPRequest,
         contentContainerName: String
     ) async throws -> T.DomainModel where T: NetworkMapperProtocol {
-        /// This code must be a closure because it must be called after continuation has been initialised.
-        /// Otherwise, `requestData` may return data before withCheckedThrowingContinuation will be executed.
-        let requestClosure: (@Sendable (isolated GIOSApiV1Repository, CheckedContinuation<T.DomainModel, Error>) -> ()) = { actorSelf, continuation in
-            let cancellable = actorSelf
-                .httpDataSource
-                .requestData(endpoint)
-                .tryCompactMap {
-                    let container = try actorSelf.jsonDecoder.decode(GIOSApiV1Response.self, from: $0)
-                    let networkModelObjects: T.DTOModel = try container.getValue(for: contentContainerName)
-                    return try mapper.map(networkModelObjects)
-                }
-                .sink {
-                    guard case .failure(let error) = $0 else { return }
-                    
-                    continuation.resume(throwing: error)
-                } receiveValue: {
-                    continuation.resume(returning: $0)
-                }
-            
-            actorSelf.cancellables.insert(cancellable)
-        }
-        
-        return try await withCheckedThrowingContinuation { continuation in
-            Task { [weak self] in
-                guard let self else { return }
-                
-                await requestClosure(self, continuation)
-            }
-        }
+        let data = try await httpDataSource.requestData(endpoint)
+        let decodedResponse = try jsonDecoder.decode(GIOSApiV1Response.self, from: data)
+        let networkModelObjects: T.DTOModel = try decodedResponse.getValue(for: contentContainerName)
+        return try mapper.map(networkModelObjects)
     }
 }

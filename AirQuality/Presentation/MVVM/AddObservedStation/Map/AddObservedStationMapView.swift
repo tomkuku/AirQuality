@@ -40,6 +40,7 @@ struct AddObservedStationMapView: View {
                 
                 BottomSheet(minHeight: 50, maxHeight: 250) {
                     bottomMenu
+                        .background(Color.Background.secondary)
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
@@ -102,22 +103,26 @@ struct AddObservedStationMapView: View {
     
     private var bottomMenu: some View {
         List {
-            Section {
-                Toggle(isOn: $showUserLocation) {
-                    Text(L10n.BottomMenu.showUserLocation)
+            Group {
+                Section {
+                    Toggle(isOn: $showUserLocation) {
+                        Text(L10n.BottomMenu.showUserLocation)
+                    }
+                    
+                    Picker(L10n.BottomMenu.MapStyle.buttonTitle, selection: $selectedMapStyle) {
+                        Text(MapStyle.hybrid.text).tag(MapStyle.hybrid)
+                        Text(MapStyle.standard.text).tag(MapStyle.standard)
+                    }
+                    .pickerStyle(.menu)
                 }
                 
-                Picker(L10n.BottomMenu.MapStyle.buttonTitle, selection: $selectedMapStyle) {
-                    Text(MapStyle.hybrid.text).tag(MapStyle.hybrid)
-                    Text(MapStyle.standard.text).tag(MapStyle.standard)
-                }
-                .pickerStyle(.menu)
+                findTheNearestStationButton
+                    .listRowSeparator(.hidden)
             }
-            
-            findTheNearestStationButton
-                .listRowSeparator(.hidden)
+            .listRowBackground(Color.Background.secondary)
         }
-        .listStyle(.inset)
+        .listStyle(.plain)
+        .background(Color.Background.secondary)
         .scrollDisabled(true)
         .padding(.top, 16)
         .onChange(of: showUserLocation) {
@@ -213,6 +218,7 @@ private extension AddObservedStationMapView {
         NavigationStack {
             AddObservedStationMapView()
                 .environmentObject(coordinator)
+                .preferredColorScheme(.dark)
         }
     }
 }

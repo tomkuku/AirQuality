@@ -24,6 +24,8 @@ final class ObservedStationsListViewModel: BaseViewModel {
     override init() {
         super.init()
         
+        isLoading = false
+        
         observeStations()
     }
     

@@ -81,8 +81,8 @@ final class SelectedStationViewModel: BaseViewModel, @unchecked Sendable {
             isLoading(false, objectWillChnage: false)
             self.sensors = sensors
         } catch {
-            Logger.error(error.localizedDescription)
-            alertSubject.send(.somethigWentWrong())
+            Logger.error("Fetching measurements for sensors with error \(error)")
+            errorSubject.send(error)
         }
     }
     
@@ -99,7 +99,7 @@ final class SelectedStationViewModel: BaseViewModel, @unchecked Sendable {
         var lastMeasurementFormattedValue: String = "-"
         var lastMeasurementFormattedPercentageValue: String = "-"
         
-        if let lastMeasurement = sensor.measurements.first,
+        if let lastMeasurement = sensor.measurements.first(where: { $0.measurement != nil }),
            let lastMeasurementValue = lastMeasurement.measurement {
             lastMeasurementAqi = sensor.param.getAqi(for: lastMeasurementValue.value)
             

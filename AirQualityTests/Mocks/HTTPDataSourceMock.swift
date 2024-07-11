@@ -13,6 +13,7 @@ import XCTest
 @testable import AirQuality
 
 final class HTTPDataSourceMock: HTTPDataSourceProtocol, @unchecked Sendable {
+    
     enum Event: Equatable {
         case requestData((any URLRequestConvertible)?)
         
@@ -32,21 +33,18 @@ final class HTTPDataSourceMock: HTTPDataSourceProtocol, @unchecked Sendable {
     
     var requestDataResult: Result<Data, Error>?
     
-    func requestData<T>(_ urlRequest: T) -> AnyPublisher<Data, Error> where T: URLRequestConvertible {
+    func requestData<T>(_ urlRequest: T) async throws -> Data where T: HTTPRequest {
         events.append(.requestData(urlRequest))
         
-        return Deferred {
-            Future<Data, Error> { promise in
-                switch self.requestDataResult {
-                case .success(let data):
-                    promise(.success(data))
-                case .failure(let error):
-                    promise(.failure(error))
-                case .none:
-                    XCTFail("Unhandled requestDataResult!")
-                }
+        return try await withCheckedThrowingContinuation { continuation in
+            switch self.requestDataResult {
+            case .success(let data):
+                continuation.resume(returning: data)
+            case .failure(let error):
+                continuation.resume(throwing: error)
+            case .none:
+                XCTFail("Unhandled requestDataResult!")
             }
         }
-        .eraseToAnyPublisher()
     }
 }

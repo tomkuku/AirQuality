@@ -33,6 +33,7 @@ struct StationMapAnnotationView: MapContent {
                      arrowEdge: .bottom) {
                 expandedStationPopover
                     .presentationCompactAdaptation(.popover)
+                    .background(Color.Background.secondary)
             }
         }
     }
@@ -44,7 +45,7 @@ struct StationMapAnnotationView: MapContent {
                 
                 VStack(alignment: .leading, spacing: 0) {
                     Text(L10n.station)
-                        .foregroundStyle(.gray)
+                        .foregroundStyle(Color.Text.secondary)
                         .padding(.bottom, 4)
                     
                     Group {
@@ -64,7 +65,7 @@ struct StationMapAnnotationView: MapContent {
             
             addObservedStationButton
         }
-        .background(.white)
+        .background(Color.Background.secondary)
         .padding(.all, 16)
         .frame(width: 250)
     }
@@ -122,4 +123,5 @@ struct StationMapAnnotationView: MapContent {
     
     return AddObservedStationMapView()
         .environmentObject(coordinator)
+        .preferredColorScheme(.dark)
 }
