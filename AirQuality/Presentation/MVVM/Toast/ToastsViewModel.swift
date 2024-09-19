@@ -12,10 +12,17 @@ final class ToastsViewModel: ObservableObject, @unchecked Sendable {
     @Published var toasts: [Toast] = []
     @Published var presentedToasts: [Toast] = []
     
-    private let toastsPublisher: any Publisher<Toast, Never>
+    private let toastsPublisher: AnyPublisher<Toast, Never>
     private var cancellables = Set<AnyCancellable>()
     
-    init(_ toastsPublisher: any Publisher<Toast, Never>) {
+    private let operationQueue: OperationQueue = {
+        let operationQueue = OperationQueue()
+        operationQueue.maxConcurrentOperationCount = 1
+        operationQueue.underlyingQueue = .main
+        return operationQueue
+    }()
+    
+    init(_ toastsPublisher: AnyPublisher<Toast, Never>) {
         self.toastsPublisher = toastsPublisher
         
         self.subscribeToasts()
@@ -23,18 +30,16 @@ final class ToastsViewModel: ObservableObject, @unchecked Sendable {
         
     private func subscribeToasts() {
         toastsPublisher
-            .asyncSink { @MainActor [weak self] toast in
+            .receive(on: operationQueue)
+            .sink { [weak self] toast in
                 self?.toasts.append(toast)
-                self?.addDismissToastAction()
             }
             .store(in: &cancellables)
     }
     
-    private func addDismissToastAction() {
-        Task { @MainActor [weak self] in
-            try? await Task.sleep(nanoseconds: 2 * 1_000_000_000)
-            
-            self?.toasts.removeFirst()
+    func removeToast(_ toast: Toast) {
+        operationQueue.addOperation { [weak self] in
+            self?.toasts.removeAll(where: { toast.id == $0.id })
         }
     }
 }
