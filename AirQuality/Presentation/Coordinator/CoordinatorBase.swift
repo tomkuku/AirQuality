@@ -26,15 +26,13 @@ class CoordinatorBase: ObservableObject {
     
     @Published var navigationPath: NavigationPath
     
-    var alertPublisher: AnyPublisher<AlertModel, Never> {
-        alertSubject.eraseToAnyPublisher()
-    }
-    
     var toastPublisher: AnyPublisher<Toast, Never> {
         toastSubject.eraseToAnyPublisher()
     }
     
-    let alertSubject: any Subject<AlertModel, Never>
+    /// Subject used to present an alert. There is one subject which reference is passed into each coordinator.
+    let alertSubject: PassthroughSubject<AlertModel, Never>
+    
     let toastSubject: any Subject<Toast, Never>
     
     var childCoordinator: (any ObservableObject)?
@@ -49,19 +47,20 @@ class CoordinatorBase: ObservableObject {
     // MARK: Lifecycle
     
     nonisolated init(
-        coordinatorNavigationType: CoordinatorNavigationType
+        coordinatorNavigationType: CoordinatorNavigationType,
+        alertSubject: PassthroughSubject<AlertModel, Never>
     ) {
+        self.alertSubject = alertSubject
+        
         switch coordinatorNavigationType {
         case .presentation(let dimissHandler):
             self.navigationPath = .init()
             self.dismissHandler = dimissHandler
-            self.alertSubject = PassthroughSubject<AlertModel, Never>()
             self.toastSubject = PassthroughSubject<Toast, Never>()
             
-        case .push(let navigationPath, let dismissHandler, let alertSubject, let toastSubject):
+        case .push(let navigationPath, let dismissHandler, _, let toastSubject):
             self.navigationPath = navigationPath
             self.dismissHandler = dismissHandler
-            self.alertSubject = alertSubject
             self.toastSubject = toastSubject
         }
     }
@@ -78,6 +77,7 @@ class CoordinatorBase: ObservableObject {
         childCoordinator = nil
     }
     
+    /// Method which can be used to present an alert in views. It's make subject unvisibale for views.
     func showAlert(_ alert: AlertModel) {
         alertSubject.send(alert)
     }

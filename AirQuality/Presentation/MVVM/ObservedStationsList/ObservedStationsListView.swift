@@ -90,24 +90,24 @@ struct ObservedStationsListView: View {
     }
 }
 
-#Preview {
-    let appCoordinator = AppCoordinator(coordinatorNavigationType: .presentation(dismissHandler: {}))
-    
-    GetObservedStationsUseCasePreviewDummy.createNewStreamStations = .success([
-        .previewDummy(id: 1, street: "al. Krasińskiego"),
-        .previewDummy(id: 2, street: "ul. Bujaka"),
-        .previewDummy(id: 3, street: "ul. Bulwarowa"),
-        .previewDummy(id: 4, street: "ul. Bulwarowa"),
-        .previewDummy(id: 5, street: "ul. Kamieńskiego"),
-        .previewDummy(id: 6, street: "os. Piastów"),
-        .previewDummy(id: 7, cityName: "Tarnów", street: "ul. Bitwy pod Studziankami"),
-        .previewDummy(id: 8, cityName: "Tarnów", street: "ul. Ks. Romana Sitko")
-    ])
-    
-    return NavigationStack {
-        ObservedStationsListView()
-            .environmentObject(appCoordinator)
-            .navigationTitle(Localizable.ObservedStationsListView.title)
-            .navigationBarTitleDisplayMode(.inline)
-    }
-}
+//#Preview {
+//    let appCoordinator = AppCoordinator(coordinatorNavigationType: .presentation(dismissHandler: {}))
+//    
+//    GetObservedStationsUseCasePreviewDummy.createNewStreamStations = .success([
+//        .previewDummy(id: 1, street: "al. Krasińskiego"),
+//        .previewDummy(id: 2, street: "ul. Bujaka"),
+//        .previewDummy(id: 3, street: "ul. Bulwarowa"),
+//        .previewDummy(id: 4, street: "ul. Bulwarowa"),
+//        .previewDummy(id: 5, street: "ul. Kamieńskiego"),
+//        .previewDummy(id: 6, street: "os. Piastów"),
+//        .previewDummy(id: 7, cityName: "Tarnów", street: "ul. Bitwy pod Studziankami"),
+//        .previewDummy(id: 8, cityName: "Tarnów", street: "ul. Ks. Romana Sitko")
+//    ])
+//    
+//    return NavigationStack {
+//        ObservedStationsListView()
+//            .environmentObject(appCoordinator)
+//            .navigationTitle(Localizable.ObservedStationsListView.title)
+//            .navigationBarTitleDisplayMode(.inline)
+//    }
+//}

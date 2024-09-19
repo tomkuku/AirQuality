@@ -44,7 +44,12 @@ struct AddObservedStationContainerView: View {
 }
 
 #Preview {
-    @StateObject var addStationToObservedCoordinator = AddStationToObservedCoordinator(coordinatorNavigationType: .presentation(dismissHandler: {}))
+    let passthroughSubject = PassthroughSubject<AlertModel, Never>()
+    
+    @StateObject var addStationToObservedCoordinator = AddStationToObservedCoordinator(
+        coordinatorNavigationType: .presentation(dismissHandler: {}),
+        alertSubject: passthroughSubject
+    )
     
     return AddObservedStationContainerView()
         .environmentObject(addStationToObservedCoordinator)

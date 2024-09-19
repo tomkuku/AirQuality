@@ -99,6 +99,10 @@ where C: CoordinatorBase & CoordinatorProtocol, V: View, VM: BaseViewModel {
         
         var fullScreenCover: NavigationComponent?
         
+        convenience init() {
+            self.init(coordinatorNavigationType: .presentation(dismissHandler: {}), alertSubject: .init())
+        }
+        
         func startView() -> some View {
             Rectangle()
         }
@@ -114,7 +118,7 @@ where C: CoordinatorBase & CoordinatorProtocol, V: View, VM: BaseViewModel {
     baseViewModel.isLoading = true
     
     @StateObject var viewModel = baseViewModel
-    @StateObject var coordinator = CoordinatorPreviewDummy(coordinatorNavigationType: .presentation(dismissHandler: {}))
+    @StateObject var coordinator = CoordinatorPreviewDummy()
     
     return BaseView(viewModel: viewModel, coordinator: coordinator) {
         EmptyView()

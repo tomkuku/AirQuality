@@ -76,7 +76,7 @@ final class AppCoordinator: CoordinatorBase, CoordinatorProtocol {
             self?.fullScreenCover = nil
         }
         
-        let coordinator = AddStationToObservedCoordinator(coordinatorNavigationType: .presentation(dismissHandler: dismissHandler))
+        let coordinator = AddStationToObservedCoordinator(coordinatorNavigationType: .presentation(dismissHandler: dismissHandler), alertSubject: alertSubject)
         
         childCoordinator = coordinator
         
@@ -92,7 +92,7 @@ final class AppCoordinator: CoordinatorBase, CoordinatorProtocol {
             self?.fullScreenCover = nil
         }
         
-        let coordinator = SensorDetailsCoordinator(coordinatorNavigationType: .presentation(dismissHandler: dismissHandler), sensor: sensor)
+        let coordinator = SensorDetailsCoordinator(coordinatorNavigationType: .presentation(dismissHandler: dismissHandler), sensor: sensor, alertSubject: alertSubject)
         
         childCoordinator = coordinator
         

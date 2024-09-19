@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct AlertModel: Equatable {
+struct AlertModel: Equatable, Sendable {
     struct Button: Equatable {
         let title: String
         let role: ButtonRole?

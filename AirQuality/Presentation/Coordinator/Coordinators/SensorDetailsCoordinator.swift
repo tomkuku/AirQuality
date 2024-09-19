@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 extension SensorDetailsCoordinator {
     enum NavigationComponent: CoordinatorNavigationComponentProtocol {
@@ -21,11 +22,12 @@ final class SensorDetailsCoordinator: CoordinatorBase, CoordinatorProtocol {
     
     init(
         coordinatorNavigationType: CoordinatorNavigationType,
-        sensor: Sensor
+        sensor: Sensor,
+        alertSubject: PassthroughSubject<AlertModel, Never>
     ) {
         self.sensor = sensor
         
-        super.init(coordinatorNavigationType: coordinatorNavigationType)
+        super.init(coordinatorNavigationType: coordinatorNavigationType, alertSubject: alertSubject)
     }
     
     @ViewBuilder

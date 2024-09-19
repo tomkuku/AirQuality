@@ -11,39 +11,39 @@ struct AlertView: View {
     @StateObject private var viewModel: AlertViewModel
     
     var body: some View {
-        if let alert = viewModel.alerts.first {
-            Rectangle()
-                .background(.clear)
-                .foregroundStyle(.clear)
-                .frame(width: .zero, height: .zero)
-                .padding(.all, .zero)
-                .alert(alert.title, isPresented: $viewModel.isAnyAlertPresented) {
-                    Group {
-                        ForEach(0..<alert.buttons.count, id: \.self) { index in
-                            let button = alert.buttons[index]
-                            
-                            Button(role: button.role) {
-                                button.action?()
-                            } label: {
-                                Text(button.title)
+        ZStack {
+            if let alert = viewModel.alerts.first {
+                Rectangle()
+                    .background(.clear)
+                    .foregroundStyle(.clear)
+                    .frame(width: .zero, height: .zero)
+                    .padding(.all, .zero)
+                    .alert(alert.title, isPresented: $viewModel.isAnyAlertPresented) {
+                        Group {
+                            ForEach(0..<alert.buttons.count, id: \.self) { index in
+                                let button = alert.buttons[index]
+                                
+                                Button(role: button.role) {
+                                    button.action?()
+                                } label: {
+                                    Text(button.title)
+                                }
                             }
                         }
-                    }
-                    .onChange(of: viewModel.isAnyAlertPresented) { _, newValue in
-                        if !newValue {
-                            alert.dismissAction?()
+                    } message: {
+                        if let message = alert.message {
+                            Text(message)
+                        } else {
+                            EmptyView()
                         }
                     }
-                } message: {
-                    if let message = alert.message {
-                        Text(message)
-                    } else {
-                        EmptyView()
-                    }
-                }
-        } else {
-            EmptyView()
+            } else {
+                EmptyView()
+            }
         }
+//        .onChange(of: viewModel.isAnyAlertPresented) { oldValue, newValue in
+//            if oldValue
+//        }
     }
     
     init(viewModel: @autoclosure @escaping () -> AlertViewModel) {
@@ -57,7 +57,7 @@ import Combine
     // swiftlint:disable:next private_subject
     let publisher = PassthroughSubject<AlertModel, Never>()
     
-    let viewModel = AlertViewModel(publisher)
+    let viewModel = AlertViewModel(publisher.eraseToAnyPublisher())
     
     let alert = AlertModel(
         title: "Title",

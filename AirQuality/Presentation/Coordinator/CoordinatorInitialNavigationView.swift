@@ -39,12 +39,12 @@ struct CoordinatorInitialNavigationView<C>: View where C: CoordinatorBase & Coor
                     .background(.clear)
             }
             
-            if showAlerts {
-                AlertView(viewModel: AlertViewModel(coordinator.alertPublisher))
-                    .allowsHitTesting(false)
-                    .background(.clear)
-                    .frame(width: .zero, height: .zero)
-            }
+//            if showAlerts {
+//                AlertView(viewModel: AlertViewModel(coordinator.alertPublisher))
+//                    .allowsHitTesting(false)
+//                    .background(.clear)
+//                    .frame(width: .zero, height: .zero)
+//            }
         }
     }
     

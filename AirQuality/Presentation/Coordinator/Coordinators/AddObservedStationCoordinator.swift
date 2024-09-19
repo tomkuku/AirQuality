@@ -31,14 +31,14 @@ final class AddStationToObservedCoordinator: CoordinatorBase, CoordinatorProtoco
         dismissHandler: dismissHandler,
         alertSubject: alertSubject,
         toastSubject: toastSubject
-    ))
+    ), alertSubject: alertSubject)
     
     private(set) lazy var addObservedStationMapCoordinator = AddObservedStationMapCoordinator(coordinatorNavigationType: .push(
         navigationPath: .init(),
         dismissHandler: dismissHandler,
         alertSubject: alertSubject,
         toastSubject: toastSubject
-    ))
+    ), alertSubject: alertSubject)
     
     // MARK: Methods
     
