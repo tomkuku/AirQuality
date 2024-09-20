@@ -26,19 +26,15 @@ final class AddStationToObservedCoordinator: CoordinatorBase, CoordinatorProtoco
     
     @Published var fullScreenCover: NavigationComponent?
     
-    private(set) lazy var addObservedStationListCoordinator = AddObservedStationListCoordinator(coordinatorNavigationType: .push(
-        navigationPath: .init(),
-        dismissHandler: dismissHandler,
-        alertSubject: alertSubject,
-        toastSubject: toastSubject
-    ), alertSubject: alertSubject)
+    private(set) lazy var addObservedStationListCoordinator = AddObservedStationListCoordinator(
+        childOf: self,
+        navigationType: .push(navigationPath: .init(), dismissHandler: dismissHandler)
+    )
     
-    private(set) lazy var addObservedStationMapCoordinator = AddObservedStationMapCoordinator(coordinatorNavigationType: .push(
-        navigationPath: .init(),
-        dismissHandler: dismissHandler,
-        alertSubject: alertSubject,
-        toastSubject: toastSubject
-    ), alertSubject: alertSubject)
+    private(set) lazy var addObservedStationMapCoordinator = AddObservedStationMapCoordinator(
+        childOf: self,
+        navigationType: .push(navigationPath: .init(), dismissHandler: dismissHandler)
+    )
     
     // MARK: Methods
     

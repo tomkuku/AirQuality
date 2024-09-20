@@ -38,13 +38,7 @@ final class AlertsCoordinator: ObservableObject {
             .sink { [weak self] _ in
                 guard let self else { return }
                 
-                let windowScene = UIApplication.shared
-                    .connectedScenes
-                    .filter { $0.activationState == .foregroundActive && $0 is UIWindowScene }
-                    .compactMap({ $0 as? UIWindowScene })
-                    .first
-                
-                guard let windowScene else {
+                guard let windowScene = UIApplication.shared.keyWindowScene else {
                     assertionFailure("No windowScene!")
                     return
                 }

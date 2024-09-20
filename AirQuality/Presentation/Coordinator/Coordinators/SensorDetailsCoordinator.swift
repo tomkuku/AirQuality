@@ -20,14 +20,14 @@ final class SensorDetailsCoordinator: CoordinatorBase, CoordinatorProtocol {
     var fullScreenCover: NavigationComponent?
     let sensor: Sensor
     
-    init(
-        coordinatorNavigationType: CoordinatorNavigationType,
-        sensor: Sensor,
-        alertSubject: PassthroughSubject<AlertModel, Never>
-    ) {
+    init<C>(
+        childOf parentCoordinator: C,
+        navigationType: CoordinatorNavigationType,
+        sensor: Sensor
+    ) where C: CoordinatorBase & CoordinatorProtocol {
         self.sensor = sensor
         
-        super.init(coordinatorNavigationType: coordinatorNavigationType, alertSubject: alertSubject)
+        super.init(childOf: parentCoordinator, navigationType: navigationType)
     }
     
     @ViewBuilder

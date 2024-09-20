@@ -213,7 +213,7 @@ private extension AddObservedStationMapView {
     
     GetUserLocationUseCasePreviewDummy.checkLocationServicesAvailabilityError = .authorizationDenied
     
-    @ObservedObject var coordinator = AddObservedStationMapCoordinator.previewDummy
+    @ObservedObject var coordinator = AddObservedStationMapCoordinator(coordinatorNavigationType: .presentation(dismissHandler: {}), alertSubject: .init(), toastSubject: .init())
     
     return TabView {
         NavigationStack {

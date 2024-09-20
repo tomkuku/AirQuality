@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import Network
 
 extension AppCoordinator {
     enum NavigationComponent: Hashable, Identifiable {
@@ -27,9 +28,24 @@ extension AppCoordinator {
 }
 
 final class AppCoordinator: CoordinatorBase, CoordinatorProtocol {
+    
     // MARK: Lifecycle
     
     @Published var fullScreenCover: NavigationComponent?
+    
+    override init(
+        coordinatorNavigationType: CoordinatorNavigationType,
+        alertSubject: PassthroughSubject<AlertModel, Never>,
+        toastSubject: PassthroughSubject<ToastModel, Never>
+    ) {
+        super.init(
+            coordinatorNavigationType: coordinatorNavigationType,
+            alertSubject: alertSubject,
+            toastSubject: toastSubject
+        )
+        
+        monitorInternetConnection()
+    }
     
     // MARK: Methods
     
@@ -76,7 +92,10 @@ final class AppCoordinator: CoordinatorBase, CoordinatorProtocol {
             self?.fullScreenCover = nil
         }
         
-        let coordinator = AddStationToObservedCoordinator(coordinatorNavigationType: .presentation(dismissHandler: dismissHandler), alertSubject: alertSubject)
+        let coordinator = AddStationToObservedCoordinator(
+            childOf: self,
+            navigationType: .presentation(dismissHandler: dismissHandler)
+        )
         
         childCoordinator = coordinator
         
@@ -92,10 +111,24 @@ final class AppCoordinator: CoordinatorBase, CoordinatorProtocol {
             self?.fullScreenCover = nil
         }
         
-        let coordinator = SensorDetailsCoordinator(coordinatorNavigationType: .presentation(dismissHandler: dismissHandler), sensor: sensor, alertSubject: alertSubject)
+        let coordinator = SensorDetailsCoordinator(
+            childOf: self,
+            navigationType: .presentation(dismissHandler: dismissHandler),
+            sensor: sensor
+        )
         
         childCoordinator = coordinator
         
         return coordinator
+    }
+    
+    let monitorNetworkConnectionUseCase = NetworkConnectionMonitorUseCase(networkConnectionMonitorRepository: NetworkConnectionMonitorRepository())
+    
+    private nonisolated func monitorInternetConnection() {
+        monitorNetworkConnectionUseCase.startMonitor {
+            DispatchQueue.main.async { [weak self] in
+                self?.showToast(.noInternetConnection())
+            }
+        }
     }
 }

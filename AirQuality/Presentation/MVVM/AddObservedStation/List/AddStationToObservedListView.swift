@@ -68,7 +68,7 @@ struct AddStationToObservedListView: View, Sendable {
     ]
     
     @ObservedObject var viewModel = AddStationToObservedListViewModel()
-    @ObservedObject var coordinator = AddObservedStationListCoordinator.previewDummy
+    @ObservedObject var coordinator = AddObservedStationListCoordinator(coordinatorNavigationType: .presentation(dismissHandler: {}), alertSubject: .init(), toastSubject: .init())
     
     return TabView {
         NavigationStack {

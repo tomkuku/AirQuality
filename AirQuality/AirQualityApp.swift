@@ -14,6 +14,7 @@ struct AirQualityApp: App {
     
     @StateObject private var appCoordinator: AppCoordinator
     @StateObject private var alertsCoordinator: AlertsCoordinator
+    @StateObject private var toastsCoordinator: ToastsCoordinator
     
     var body: some Scene {
         WindowGroup {
@@ -28,21 +29,27 @@ struct AirQualityApp: App {
     
     init() {
         let alertsSubject = PassthroughSubject<AlertModel, Never>()
+        let toastsSubject = PassthroughSubject<ToastModel, Never>()
         
+        let toastsCoordinator = ToastsCoordinator(toastsPublisher: toastsSubject.eraseToAnyPublisher())
         let alertsCoordinator = AlertsCoordinator(alertsPublisher: alertsSubject.eraseToAnyPublisher())
-        let appCoordinator = AppCoordinator(coordinatorNavigationType: .presentation(dismissHandler: { }), alertSubject: alertsSubject)
+        let appCoordinator = AppCoordinator(
+            coordinatorNavigationType: .presentation(dismissHandler: {}),
+            alertSubject: alertsSubject,
+            toastSubject: toastsSubject
+        )
         
         self._appCoordinator = StateObject(wrappedValue: appCoordinator)
         self._alertsCoordinator = StateObject(wrappedValue: alertsCoordinator)
+        self._toastsCoordinator = StateObject(wrappedValue: toastsCoordinator)
     }
 }
 
 extension UIApplication {
     var keyWindowScene: UIWindowScene? {
         self
-        .connectedScenes
-        .filter { $0.activationState == .foregroundActive }
-        .first(where: { $0 is UIWindowScene })
-        .flatMap({ $0 as? UIWindowScene })
+            .connectedScenes
+            .first(where: { $0.activationState == .foregroundActive && $0 is UIWindowScene })
+            .flatMap({ $0 as? UIWindowScene })
     }
 }

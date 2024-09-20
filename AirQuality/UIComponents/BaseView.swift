@@ -13,7 +13,7 @@ import Combine
 class BaseViewModel: ObservableObject {
     // swiftlint:disable private_subject
     let alertSubject = PassthroughSubject<AlertModel, Never>()
-    let toastSubject = PassthroughSubject<Toast, Never>()
+    let toastSubject = PassthroughSubject<ToastModel, Never>()
     let errorSubject = PassthroughSubject<Error, Never>()
     // swiftlint:enable private_subject
     
@@ -34,7 +34,7 @@ class BaseViewModel: ObservableObject {
     }
 }
 
-struct BaseView<C, V, VM>: View 
+struct BaseView<C, V, VM>: View
 where C: CoordinatorBase & CoordinatorProtocol, V: View, VM: BaseViewModel {
     
     @ObservedObject private var coordinator: C
@@ -60,14 +60,14 @@ where C: CoordinatorBase & CoordinatorProtocol, V: View, VM: BaseViewModel {
             }
         }
         .onReceive(viewModel.alertSubject.eraseToAnyPublisher()) { alert in
-            coordinator.alertSubject.send(alert)
+            coordinator.showAlert(alert)
         }
         .onReceive(viewModel.toastSubject.eraseToAnyPublisher()) { toast in
-            coordinator.toastSubject.send(toast)
+            coordinator.showToast(toast)
         }
         .onReceive(viewModel.errorSubject.eraseToAnyPublisher()) { error in
             guard let onReceiveError else {
-                coordinator.alertSubject.send(.somethigWentWrong())
+                coordinator.showAlert(.somethigWentWrong())
                 return
             }
             
@@ -100,7 +100,11 @@ where C: CoordinatorBase & CoordinatorProtocol, V: View, VM: BaseViewModel {
         var fullScreenCover: NavigationComponent?
         
         convenience init() {
-            self.init(coordinatorNavigationType: .presentation(dismissHandler: {}), alertSubject: .init())
+            self.init(
+                coordinatorNavigationType: .presentation(dismissHandler: {}),
+                alertSubject: .init(),
+                toastSubject: .init()
+            )
         }
         
         func startView() -> some View {

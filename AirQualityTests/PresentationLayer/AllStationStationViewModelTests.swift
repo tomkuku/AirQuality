@@ -42,7 +42,7 @@ final class AllStationStationViewModelTests: BaseTestCase, @unchecked Sendable {
         // Given
         expectation.expectedFulfillmentCount = 2
         
-        var toast: Toast?
+        var toast: ToastModel?
         
         sut.toastSubject
             .sink {
@@ -97,7 +97,7 @@ final class AllStationStationViewModelTests: BaseTestCase, @unchecked Sendable {
         // Given
         expectation.expectedFulfillmentCount = 2
         
-        var toast: Toast?
+        var toast: ToastModel?
         
         sut.toastSubject
             .sink {

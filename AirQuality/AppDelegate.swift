@@ -12,7 +12,7 @@ import Combine
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
     
-    private let dependenciesContainer: DependenciesContainer
+    let dependenciesContainer: DependenciesContainer
     
     override init() {
         do {

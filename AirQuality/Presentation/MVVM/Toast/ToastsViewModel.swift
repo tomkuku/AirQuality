@@ -9,10 +9,12 @@ import Foundation
 import Combine
 
 final class ToastsViewModel: ObservableObject, @unchecked Sendable {
-    @Published var toasts: [Toast] = []
-    @Published var presentedToasts: [Toast] = []
     
-    private let toastsPublisher: AnyPublisher<Toast, Never>
+    // MARK: Properties
+    
+    @Published var toasts: [ToastModel] = []
+    
+    private let toastsPublisher: AnyPublisher<ToastModel, Never>
     private var cancellables = Set<AnyCancellable>()
     
     private let operationQueue: OperationQueue = {
@@ -22,12 +24,24 @@ final class ToastsViewModel: ObservableObject, @unchecked Sendable {
         return operationQueue
     }()
     
-    init(_ toastsPublisher: AnyPublisher<Toast, Never>) {
+    // MARK: Lifecycle
+    
+    init(_ toastsPublisher: AnyPublisher<ToastModel, Never>) {
         self.toastsPublisher = toastsPublisher
         
         self.subscribeToasts()
     }
-        
+    
+    // MARK: Methods
+    
+    func removeToast(_ toast: ToastModel) {
+        operationQueue.addOperation { [weak self] in
+            self?.toasts.removeAll(where: { toast.id == $0.id })
+        }
+    }
+    
+    // MARK: Private methods
+    
     private func subscribeToasts() {
         toastsPublisher
             .receive(on: operationQueue)
@@ -35,11 +49,5 @@ final class ToastsViewModel: ObservableObject, @unchecked Sendable {
                 self?.toasts.append(toast)
             }
             .store(in: &cancellables)
-    }
-    
-    func removeToast(_ toast: Toast) {
-        operationQueue.addOperation { [weak self] in
-            self?.toasts.removeAll(where: { toast.id == $0.id })
-        }
     }
 }

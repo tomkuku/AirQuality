@@ -8,14 +8,11 @@
 import Foundation
 import Combine
 
-extension CoordinatorBase {
-    nonisolated(unsafe) static let previewDummy = CoordinatorBase(
-        coordinatorNavigationType: .presentation(dismissHandler: {}),
-        alertSubject: PassthroughSubject<AlertModel, Never>()
-    )
-    
-//    convenience init() {
-//        let alertSubject =
-//        self.init(coordinatorNavigationType: .presentation(dismissHandler: {}), alertSubject: alertSubject)
+//extension CoordinatorBase {
+//    nonisolated(unsafe) static func previewDummy() -> CoordinatorBase {
+//        CoordinatorBase.init(coordinatorNavigationType: .presentation(dismissHandler: {}), alertSubject: .init(), toastSubject: .init())
 //    }
-}
+//    
+//}
+
+

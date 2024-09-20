@@ -73,7 +73,7 @@ struct SectionView: View {
     GetStationSensorsParamsUseCasePreviewDummy.getParamsResult = [.c6h6, .pm10, .pm25, .so2, .co, .no2, .o3]
     
     @ObservedObject var viewModel = AddStationToObservedListViewModel()
-    @ObservedObject var coordinator = AddObservedStationListCoordinator.previewDummy
+    @ObservedObject var coordinator = AddObservedStationListCoordinator(coordinatorNavigationType: .presentation(dismissHandler: {}), alertSubject: .init(), toastSubject: .init())
     
     return AddStationToObservedListView(viewModel: viewModel)
         .environmentObject(coordinator)
