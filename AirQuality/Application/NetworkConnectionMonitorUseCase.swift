@@ -6,25 +6,43 @@
 //
 
 import Foundation
+import Network
+
+protocol NWPathMonitorProtocol: Sendable, AnyObject {
+    @preconcurrency var pathUpdateHandler: (@Sendable (_ newPath: NWPath) -> Void)? { get set }
+    
+    func start(queue: DispatchQueue)
+    func cancel()
+}
+
+extension NWPathMonitor: NWPathMonitorProtocol { }
 
 final class NetworkConnectionMonitorUseCase: Sendable {
     
-    private let networkConnectionMonitorRepository: NetworkConnectionMonitorRepositoryProtocol
+    // MARK: Private properties
     
-    init(
-        networkConnectionMonitorRepository: NetworkConnectionMonitorRepositoryProtocol
-    ) {
-        self.networkConnectionMonitorRepository = networkConnectionMonitorRepository
+    private let queue = DispatchQueue(label: "com.NetworkConnectionMonitorUseCase")
+    private let pathMonitor: NWPathMonitorProtocol
+    
+    // MARK: Lifecycle
+    
+    init(pathMonitor: NWPathMonitorProtocol = NWPathMonitor()) {
+        self.pathMonitor = pathMonitor
     }
     
+    deinit {
+        pathMonitor.cancel()
+    }
+    
+    // MARK: Methods
+    
     func startMonitor(noConnectionBlock: @Sendable @escaping () -> ()) {
-        Task { [weak self] in
-            guard let self else { return }
-            
-            for await connection in self.networkConnectionMonitorRepository.startMonitoring()
-            where !connection {
+        pathMonitor.pathUpdateHandler = { path in
+            if path.status != .satisfied {
                 noConnectionBlock()
             }
         }
+        
+        pathMonitor.start(queue: self.queue)
     }
 }

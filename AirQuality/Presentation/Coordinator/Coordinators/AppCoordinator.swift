@@ -29,9 +29,15 @@ extension AppCoordinator {
 
 final class AppCoordinator: CoordinatorBase, CoordinatorProtocol {
     
-    // MARK: Lifecycle
+    // MARK: Properties
     
     @Published var fullScreenCover: NavigationComponent?
+    
+    // MARK: Private properties
+    
+    private let networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCase()
+    
+    // MARK: Lifecycle
     
     override init(
         coordinatorNavigationType: CoordinatorNavigationType,
@@ -122,10 +128,8 @@ final class AppCoordinator: CoordinatorBase, CoordinatorProtocol {
         return coordinator
     }
     
-    let monitorNetworkConnectionUseCase = NetworkConnectionMonitorUseCase(networkConnectionMonitorRepository: NetworkConnectionMonitorRepository())
-    
     private nonisolated func monitorInternetConnection() {
-        monitorNetworkConnectionUseCase.startMonitor {
+        networkConnectionMonitorUseCase.startMonitor {
             DispatchQueue.main.async { [weak self] in
                 self?.showToast(.noInternetConnection())
             }

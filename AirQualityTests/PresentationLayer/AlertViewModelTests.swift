@@ -7,7 +7,6 @@
 
 import XCTest
 import Combine
-import Alamofire
 
 @testable import AirQuality
 
