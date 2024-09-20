@@ -35,11 +35,6 @@ final class NetworkConnectionMonitorRepository: NetworkConnectionMonitorReposito
         AsyncStream { [weak self] continuation in
             guard let self else { return }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) {
-                print("No connection")
-                continuation.yield(false)
-            }
-            
             self.pathMonitor.pathUpdateHandler = { path in
                 if path.status == .satisfied {
                     continuation.yield(true)

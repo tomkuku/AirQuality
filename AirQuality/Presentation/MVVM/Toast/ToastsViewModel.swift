@@ -17,12 +17,15 @@ final class ToastsViewModel: ObservableObject, @unchecked Sendable {
     private let toastsPublisher: AnyPublisher<ToastModel, Never>
     private var cancellables = Set<AnyCancellable>()
     
-    private let operationQueue: OperationQueue = {
+    let operationQueue: OperationQueue = {
         let operationQueue = OperationQueue()
         operationQueue.maxConcurrentOperationCount = 1
         operationQueue.underlyingQueue = .main
         return operationQueue
     }()
+    
+    /// Required to wait until a toast animation complete to make sure toasts are presented in FIFO.
+    private var presentationAnimationOperationCompletion: CompletableOperation.Completion?
     
     // MARK: Lifecycle
     
@@ -35,18 +38,25 @@ final class ToastsViewModel: ObservableObject, @unchecked Sendable {
     // MARK: Methods
     
     func removeToast(_ toast: ToastModel) {
-        operationQueue.addOperation { [weak self] in
-            self?.toasts.removeAll(where: { toast.id == $0.id })
-        }
+        toasts.removeAll(where: { toast.id == $0.id })
+    }
+    
+    func presentationAnimationDidComplete() {
+        presentationAnimationOperationCompletion?()
     }
     
     // MARK: Private methods
     
     private func subscribeToasts() {
         toastsPublisher
-            .receive(on: operationQueue)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] toast in
-                self?.toasts.append(toast)
+                let operation = CompletableOperation(priority: .normal) { [weak self] completion in
+                    self?.presentationAnimationOperationCompletion = completion
+                    self?.toasts.append(toast)
+                }
+                
+                self?.operationQueue.addOperation(operation)
             }
             .store(in: &cancellables)
     }

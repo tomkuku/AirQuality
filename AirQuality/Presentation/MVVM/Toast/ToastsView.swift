@@ -59,18 +59,25 @@ struct ToastView: View {
         .onAppear {
             withAnimation(.interpolatingSpring(stiffness: 100, damping: 13)) {
                 isVisiable = true
+            } completion: {
+                viewModel.presentationAnimationDidComplete()
             }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
-                withAnimation(.easeIn(duration: 0.3)) {
-                    isVisiable = false
-                } completion: {
-                    viewModel.removeToast(toast)
+                let operation = CompletableOperation(priority: .high) { [weak viewModel] completion in
+                    withAnimation(.easeIn(duration: 0.3)) {
+                        isVisiable = false
+                    } completion: {
+                        viewModel?.removeToast(toast)
+                        completion()
+                    }
                 }
+                
+                viewModel.operationQueue.addOperation(operation)
             }
         }
     }
-
+    
     init(toast: ToastModel, viewModel: ToastsViewModel) {
         self.toast = toast
         self.viewModel = viewModel
@@ -94,13 +101,11 @@ struct ToastView: View {
     let subject = PassthroughSubject<ToastModel, Never>()
     
     @StateObject var toastsViewModel = ToastsViewModel(subject.eraseToAnyPublisher())
-        
-    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-        subject.send(ToastModel(body: "1 ToastModel body text"))
-    }
     
-    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
-        subject.send(ToastModel(body: "2 ToastModel body text"))
+    for i in 1...10 {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .microseconds(i * 200)) {
+            subject.send(ToastModel(body: "\(i) Toast preview body text"))
+        }
     }
     
     return VStack {
