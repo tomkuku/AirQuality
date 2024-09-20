@@ -6,7 +6,13 @@
 //
 
 import Foundation
+import Combine
 
-extension CoordinatorBase {
-    nonisolated(unsafe) static let previewDummy = CoordinatorBase(coordinatorNavigationType: .presentation(dismissHandler: {}))
-}
+//extension CoordinatorBase {
+//    nonisolated(unsafe) static func previewDummy() -> CoordinatorBase {
+//        CoordinatorBase.init(coordinatorNavigationType: .presentation(dismissHandler: {}), alertSubject: .init(), toastSubject: .init())
+//    }
+//    
+//}
+
+

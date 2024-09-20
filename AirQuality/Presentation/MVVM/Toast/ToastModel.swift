@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Toast: Identifiable, Equatable, Hashable {
+struct ToastModel: Identifiable, Equatable, Hashable {
     let id: UUID
     let body: String
     
@@ -17,12 +17,16 @@ struct Toast: Identifiable, Equatable, Hashable {
     }
 }
 
-extension Toast {
+extension ToastModel {
     static func observedStationWasDeleted() -> Self {
-        Self(body: Localizable.Toast.observedStationWasDeleted)
+        Self(body: Localizable.ToastModel.observedStationWasDeleted)
     }
     
     static func observedStationWasAdded() -> Self {
-        Self(body: Localizable.Toast.observedStationWasAdded)
+        Self(body: Localizable.ToastModel.observedStationWasAdded)
+    }
+    
+    static func noInternetConnection() -> Self {
+        Self(body: Localizable.ToastModel.noInternetConnection)
     }
 }

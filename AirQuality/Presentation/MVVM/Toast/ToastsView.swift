@@ -1,5 +1,5 @@
 //
-//  ToastView.swift
+//  ToastsView.swift
 //  AirQuality
 //
 //  Created by Tomasz Kukułka on 29/05/2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-struct ToastView: View {
+struct ToastsView: View {
     @ObservedObject private var viewModel: ToastsViewModel
     
     var body: some View {
@@ -17,59 +17,98 @@ struct ToastView: View {
             
             VStack(spacing: 8) {
                 ForEach(viewModel.toasts) { toast in
-                    HStack {
-                        Text(toast.body)
-                            .foregroundStyle(Color.white)
-                            .padding(.leading, 16)
-                            .padding(.vertical, 16)
-                        
-                        Spacer()
-                    }
-                    .background {
-                        RoundedRectangle(cornerRadius: 15, style: .continuous)
-                            .fill(.black.opacity(0.9))
-                    }
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 15, style: .continuous)
-                            .strokeBorder(Color.gray, lineWidth: 2)
-                    }
-                    .opacity(isToastPresnted(toast) ? 1 : 0)
-                    .frame(height: isToastPresnted(toast) ? nil : 0)
-                    .padding(.horizontal, 16)
-                    .onAppear {
-                        if !isToastPresnted(toast) {
-                            withAnimation(.easeOut(duration: 0.4)) {
-                                viewModel.presentedToasts.append(toast)
-                            }
-                        }
-                    }
+                    ToastView(toast: toast, viewModel: viewModel)
                 }
             }
+            .animation(.smooth, value: viewModel.toasts)
         }
     }
     
     init(toastsViewModel: @autoclosure @escaping () -> ToastsViewModel) {
         self._viewModel = ObservedObject(wrappedValue: toastsViewModel())
     }
+}
+
+struct ToastView: View {
+    @State private var isVisiable = false
     
-    private func isToastPresnted(_ toast: Toast) -> Bool {
-        viewModel.presentedToasts.contains(toast)
+    private let viewModel: ToastsViewModel
+    private let toast: ToastModel
+    
+    var body: some View {
+        HStack {
+            Text(toast.body)
+                .foregroundStyle(Color.white)
+                .padding(.leading, 16)
+                .padding(.vertical, 16)
+            
+            Spacer()
+        }
+        .background {
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(.black.opacity(0.9))
+        }
+        .overlay {
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .strokeBorder(Color.gray, lineWidth: 2)
+        }
+        .opacity(isVisiable ? 1 : 0)
+        .offset(y: getOffset())
+        .scaleEffect(isVisiable ? 1.0 : 0.9)
+        .padding(.horizontal, 16)
+        .onAppear {
+            withAnimation(.interpolatingSpring(stiffness: 100, damping: 13)) {
+                isVisiable = true
+            } completion: {
+                viewModel.presentationAnimationDidComplete()
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
+                let operation = CompletableOperation(priority: .high) { [weak viewModel] completion in
+                    withAnimation(.easeIn(duration: 0.3)) {
+                        isVisiable = false
+                    } completion: {
+                        viewModel?.removeToast(toast)
+                        completion()
+                    }
+                }
+                
+                viewModel.operationQueue.addOperation(operation)
+            }
+        }
+    }
+    
+    init(toast: ToastModel, viewModel: ToastsViewModel) {
+        self.toast = toast
+        self.viewModel = viewModel
+    }
+    
+    private func getOffset() -> CGFloat {
+        if viewModel.toasts.count == 1 {
+            if isVisiable {
+                return 0 // show
+            } else {
+                return 100 // hide
+            }
+        } else {
+            return 0
+        }
     }
 }
 
 #Preview {
     // swiftlint:disable:next private_subject
-    let subject = PassthroughSubject<Toast, Never>()
+    let subject = PassthroughSubject<ToastModel, Never>()
     
-    @StateObject var toastsViewModel = ToastsViewModel(subject)
+    @StateObject var toastsViewModel = ToastsViewModel(subject.eraseToAnyPublisher())
     
-    Task {
-        for i in 0..<Int.max {
-            try? await Task.sleep(nanoseconds: UInt64(i) * 250_000_000)
-            
-            subject.send(Toast(body: "\(i) Toast body text"))
+    for i in 1...10 {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .microseconds(i * 200)) {
+            subject.send(ToastModel(body: "\(i) Toast preview body text"))
         }
     }
     
-    return ToastView(toastsViewModel: toastsViewModel)
+    return VStack {
+        ToastsView(toastsViewModel: toastsViewModel)
+    }
 }

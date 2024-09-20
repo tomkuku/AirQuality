@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 extension SensorDetailsCoordinator {
     enum NavigationComponent: CoordinatorNavigationComponentProtocol {
@@ -19,13 +20,14 @@ final class SensorDetailsCoordinator: CoordinatorBase, CoordinatorProtocol {
     var fullScreenCover: NavigationComponent?
     let sensor: Sensor
     
-    init(
-        coordinatorNavigationType: CoordinatorNavigationType,
+    init<C>(
+        childOf parentCoordinator: C,
+        navigationType: CoordinatorNavigationType,
         sensor: Sensor
-    ) {
+    ) where C: CoordinatorBase & CoordinatorProtocol {
         self.sensor = sensor
         
-        super.init(coordinatorNavigationType: coordinatorNavigationType)
+        super.init(childOf: parentCoordinator, navigationType: navigationType)
     }
     
     @ViewBuilder

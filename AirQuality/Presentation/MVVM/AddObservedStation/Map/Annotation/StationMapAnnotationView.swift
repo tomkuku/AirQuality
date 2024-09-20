@@ -116,10 +116,8 @@ struct StationMapAnnotationView: MapContent {
     ]
     
     GetStationSensorsParamsUseCasePreviewDummy.getParamsResult = [.c6h6, .pm10, .pm25, .so2, .co, .no2, .o3]
-    
-    @ObservedObject var coordinator = AddObservedStationMapCoordinator(
-        coordinatorNavigationType: .presentation(dismissHandler: {})
-    )
+        
+    @ObservedObject var coordinator = AddObservedStationMapCoordinator.init(coordinatorNavigationType: .presentation(dismissHandler: {}), alertSubject: .init(), toastSubject: .init())
     
     return AddObservedStationMapView()
         .environmentObject(coordinator)

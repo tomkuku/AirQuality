@@ -9,58 +9,65 @@ import Foundation
 import SwiftUI
 import Combine
 
-final class AlertViewModel: ObservableObject, @unchecked Sendable {
+@MainActor
+final class AlertViewModel: ObservableObject {
     
-    @MainActor
-    @Published var isAnyAlertPresented = false
+    typealias AlertPublisher = AnyPublisher<AlertModel, Never>
     
-    @MainActor
-    var alerts: [AlertModel] = []
-    
-    private var cancellables = Set<AnyCancellable>()
-    
-    init<T>(
-        _ alertPublisher: T
-    ) where T: Publisher, T.Output == AlertModel, T.Failure == Never {
-        observeIsAnyAlertPresented()
-        subscribeAlertPublisher(alertPublisher)
-    }
-    
-    // MARK: Private methods
-    
-    private func observeIsAnyAlertPresented() {
-        $isAnyAlertPresented
-            .dropFirst()
-            .filter { !$0 }
-            .asyncSink { @MainActor [weak self] _ in
-                guard let self else { return }
+    /// It only store a state of presented alert.
+    /// Publishs false if alert is dismissed.
+    /// Publishs true if alerts is not empty.
+    var isAnyAlertPresented = false {
+        didSet {
+            DispatchQueue.main.async { [weak self] in
+                guard
+                    let self,
+                    isAnyAlertPresented != oldValue,
+                    !isAnyAlertPresented
+                else {
+                    return
+                }
                 
                 alerts.first?.dismissAction?()
                 
                 if !alerts.isEmpty {
                     alerts.removeFirst()
                 }
-                
-                checkIsAnyAlertLeftToPresent()
             }
-            .store(in: &cancellables)
+        }
     }
     
-    private func subscribeAlertPublisher<T>(
-        _ alertPublisher: T
-    ) where T: Publisher, T.Output == AlertModel, T.Failure == Never {
+    private(set) var alerts: [AlertModel] = [] {
+        didSet {
+            if oldValue.isEmpty && !alerts.isEmpty { /// Array is not empty now.
+                delegate?.alertsViewModelReceivedAlert()
+            } else if !oldValue.isEmpty && alerts.isEmpty { /// Array is empty now.
+                delegate?.alertsViewModelHaveNoAlertsInQueue()
+            }
+            
+            if !alerts.isEmpty, !isAnyAlertPresented {
+                isAnyAlertPresented = true
+                objectWillChange.send()
+            }
+        }
+    }
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    /// Delegate required to control the visibility of `AlertView` by widnow on `AlertsCoordinator`.
+    weak var delegate: AlertsCoordinatorViewModelDelegate?
+    
+    init(_ alertPublisher: AlertPublisher) {
+        subscribeAlertPublisher(alertPublisher)
+    }
+    
+    // MARK: Private methods
+    
+    private func subscribeAlertPublisher(_ alertPublisher: AlertPublisher) {
         alertPublisher
-            .asyncSink { @MainActor [weak self] alert in
+            .sink { [weak self] alert in
                 self?.alerts.append(alert)
-                self?.checkIsAnyAlertLeftToPresent()
             }
             .store(in: &cancellables)
-    }
-    
-    @MainActor
-    private func checkIsAnyAlertLeftToPresent() {
-        guard !alerts.isEmpty else { return }
-        
-        isAnyAlertPresented = true
     }
 }

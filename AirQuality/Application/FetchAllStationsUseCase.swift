@@ -7,6 +7,7 @@
 
 import Foundation
 import Alamofire
+import UIKit
 
 protocol HasFetchAllStationsUseCase {
     var fetchAllStationsUseCase: FetchAllStationsUseCaseProtocol { get }
@@ -19,6 +20,8 @@ protocol FetchAllStationsUseCaseProtocol: Sendable {
 final class FetchAllStationsUseCase: FetchAllStationsUseCaseProtocol {
     @Injected(\.giosApiRepository) private var giosApiRepository
     @Injected(\.stationsNetworkMapper) private var stationsNetworkMapper
+    
+    let giosApiRepository2 = (UIApplication.shared.delegate as? AppDelegate)?.dependenciesContainer
     
     init() { }
     

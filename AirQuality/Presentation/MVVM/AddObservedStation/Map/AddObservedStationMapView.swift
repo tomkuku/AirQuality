@@ -78,8 +78,11 @@ struct AddObservedStationMapView: View {
     
     private var findTheNearestStationButton: some View {
         Button {
-            findingTheNearestStation = true
-            viewModel.findTheNearestStation()
+//            findingTheNearestStation = true
+//            viewModel.findTheNearestStation()
+            coordinator.showAlert(.somethigWentWrong())
+            coordinator.showAlert(.findingTheNearestStationsFailed())
+            coordinator.showAlert(.locationServicesDisabled(coordinator))
         } label: {
             if findingTheNearestStation {
                 ProgressView()
@@ -210,9 +213,7 @@ private extension AddObservedStationMapView {
     
     GetUserLocationUseCasePreviewDummy.checkLocationServicesAvailabilityError = .authorizationDenied
     
-    @ObservedObject var coordinator = AddObservedStationMapCoordinator(
-        coordinatorNavigationType: .presentation(dismissHandler: {})
-    )
+    @ObservedObject var coordinator = AddObservedStationMapCoordinator(coordinatorNavigationType: .presentation(dismissHandler: {}), alertSubject: .init(), toastSubject: .init())
     
     return TabView {
         NavigationStack {

@@ -30,21 +30,6 @@ struct CoordinatorInitialNavigationView<C>: View where C: CoordinatorBase & Coor
                 coordinator.createView(for: navigationComponent)
                     .environmentObject(coordinator)
             })
-            
-            if showToasts {
-                Spacer()
-                
-                ToastView(toastsViewModel: ToastsViewModel(coordinator.toastPublisher))
-                    .allowsHitTesting(false)
-                    .background(.clear)
-            }
-            
-            if showAlerts {
-                AlertView(viewModel: AlertViewModel(coordinator.alertPublisher))
-                    .allowsHitTesting(false)
-                    .background(.clear)
-                    .frame(width: .zero, height: .zero)
-            }
         }
     }
     

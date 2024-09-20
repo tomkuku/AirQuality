@@ -10,32 +10,27 @@ import SwiftUI
 import Combine
 
 enum CoordinatorNavigationType {
+    /// Use when the new coordinator's start view is being presented modally and it begins navigation path.
     case presentation(dismissHandler: () -> ())
     
+    /// Use when the new coordinator's start view is being pushed and navigation path will be continued.
     case push(
         navigationPath: NavigationPath,
-        dismissHandler: (() -> ())? = nil,
-        alertSubject: any Subject<AlertModel, Never>,
-        toastSubject: any Subject<Toast, Never>
+        dismissHandler: (() -> ())? = nil
     )
 }
 
+@MainActor
 class CoordinatorBase: ObservableObject {
     
     // MARK: Properties
     
     @Published var navigationPath: NavigationPath
     
-    var alertPublisher: AnyPublisher<AlertModel, Never> {
-        alertSubject.eraseToAnyPublisher()
-    }
-    
-    var toastPublisher: AnyPublisher<Toast, Never> {
-        toastSubject.eraseToAnyPublisher()
-    }
-    
-    let alertSubject: any Subject<AlertModel, Never>
-    let toastSubject: any Subject<Toast, Never>
+    /// Subjects used to present and alert or toasts.
+    /// These subject' references are passed into every new coordinator.
+    private let alertSubject: PassthroughSubject<AlertModel, Never>
+    private let toastSubject: PassthroughSubject<ToastModel, Never>
     
     var childCoordinator: (any ObservableObject)?
     
@@ -48,21 +43,40 @@ class CoordinatorBase: ObservableObject {
     
     // MARK: Lifecycle
     
-    nonisolated init(
-        coordinatorNavigationType: CoordinatorNavigationType
+    init<C>(
+        childOf parentCoordinator: C,
+        navigationType: CoordinatorNavigationType
+    ) where C: CoordinatorBase & CoordinatorProtocol {
+        self.alertSubject = parentCoordinator.alertSubject
+        self.toastSubject = parentCoordinator.toastSubject
+        
+        switch navigationType {
+        case .presentation(let dimissHandler):
+            self.navigationPath = .init()
+            self.dismissHandler = dimissHandler
+            
+        case .push(let navigationPath, let dismissHandler):
+            self.navigationPath = navigationPath
+            self.dismissHandler = dismissHandler
+        }
+    }
+    
+    init(
+        coordinatorNavigationType: CoordinatorNavigationType,
+        alertSubject: PassthroughSubject<AlertModel, Never>,
+        toastSubject: PassthroughSubject<ToastModel, Never>
     ) {
+        self.alertSubject = alertSubject
+        self.toastSubject = toastSubject
+        
         switch coordinatorNavigationType {
         case .presentation(let dimissHandler):
             self.navigationPath = .init()
             self.dismissHandler = dimissHandler
-            self.alertSubject = PassthroughSubject<AlertModel, Never>()
-            self.toastSubject = PassthroughSubject<Toast, Never>()
             
-        case .push(let navigationPath, let dismissHandler, let alertSubject, let toastSubject):
+        case .push(let navigationPath, let dismissHandler):
             self.navigationPath = navigationPath
             self.dismissHandler = dismissHandler
-            self.alertSubject = alertSubject
-            self.toastSubject = toastSubject
         }
     }
     
@@ -78,11 +92,13 @@ class CoordinatorBase: ObservableObject {
         childCoordinator = nil
     }
     
+    /// Method which can be used to present an alert in views. It makes subject unvisibale for views.
     func showAlert(_ alert: AlertModel) {
         alertSubject.send(alert)
     }
     
-    func showToast(_ toast: Toast) {
+    /// Method which can be used to present a toast in views. It makes subject unvisibale for views.
+    func showToast(_ toast: ToastModel) {
         toastSubject.send(toast)
     }
     

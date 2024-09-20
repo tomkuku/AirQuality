@@ -12,7 +12,7 @@ import Combine
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
     
-    private let dependenciesContainer: DependenciesContainer
+    let dependenciesContainer: DependenciesContainer
     
     override init() {
         do {
@@ -32,5 +32,15 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         true
+    }
+    
+    func application(
+        _ application: UIApplication,
+        configurationForConnecting connectingSceneSession: UISceneSession,
+        options: UIScene.ConnectionOptions
+    ) -> UISceneConfiguration {
+        let sceneConfig = UISceneConfiguration(name: nil, sessionRole: connectingSceneSession.role)
+        sceneConfig.delegateClass = SceneDelegate.self
+        return sceneConfig
     }
 }

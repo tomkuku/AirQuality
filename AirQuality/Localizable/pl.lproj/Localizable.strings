@@ -26,10 +26,11 @@
 "Alert.Button.cancel" = "Anuluj";
 "Alert.Button.goToSettings" = "Przejdź do ustawień";
 
-// MARK: Toast
+// MARK: ToastModel
 
-"Toast.observedStationWasAdded" = "Stacja została dodany do listy obserwowanych";
-"Toast.observedStationWasDeleted" = "Stacja została usunięta z listy obserwowanych";
+"ToastModel.observedStationWasAdded" = "Stacja została dodany do listy obserwowanych";
+"ToastModel.observedStationWasDeleted" = "Stacja została usunięta z listy obserwowanych";
+"ToastModel.noInternetConnection" = "Brak połączenia z internetem";
 
 // MARK: AddObservedStationContainerView
 

@@ -7,37 +7,45 @@
 
 import XCTest
 import Combine
-import Alamofire
 
 @testable import AirQuality
 
-final class AlertViewModelTests: BaseTestCase {
+final class AlertViewModelTests: BaseTestCase, @unchecked Sendable {
 
     private var sut: AlertViewModel!
     
-    private var alertSubject: PassthroughSubject<AlertModel, Never>!
+    private var coordinatorDelegateMock: CoordinatorDelegateMock!
     
-    override func setUp() {
-        super.setUp()
+    private var alertSubject: PassthroughSubject<AlertModel, Never>!
+    private var coordinatorExpectation: XCTestExpectation!
+    
+    override func setUp() async throws {
+        try await super.setUp()
         
         DependenciesContainerManager.container = appDependencies
         
-        alertSubject = PassthroughSubject<AlertModel, Never>()
-        
-        sut = AlertViewModel(alertSubject)
+        await MainActor.run {
+            let alertSubject = PassthroughSubject<AlertModel, Never>()
+            let coordinatorExpectation = XCTestExpectation(description: "com.coordinator.expectation")
+            
+            self.coordinatorDelegateMock = CoordinatorDelegateMock()
+            self.coordinatorDelegateMock.expectation = coordinatorExpectation
+            
+            self.sut = AlertViewModel(alertSubject.eraseToAnyPublisher())
+            self.sut.delegate = self.coordinatorDelegateMock
+            
+            self.alertSubject = alertSubject
+            self.coordinatorExpectation = coordinatorExpectation
+        }
     }
     
     @MainActor
-    func testIsAnyAlertPresentedWhenAlertOneWasPublished() {
+    func testWhenOneAlertWasPublished() {
         // Given
         let alert = AlertModel(title: "Title", buttons: [.ok()])
         
-        var isAnyAlertPresented: Bool?
-        
-        sut.$isAnyAlertPresented
-            .dropFirst()
-            .sink { value in
-                isAnyAlertPresented = value
+        sut.objectWillChange
+            .sink { _ in
                 self.expectation.fulfill()
             }
             .store(in: &cancellables)
@@ -46,23 +54,24 @@ final class AlertViewModelTests: BaseTestCase {
         alertSubject.send(alert)
 
         // Then
-        wait(for: [expectation], timeout: 2)
+        wait(for: [expectation, coordinatorExpectation], timeout: 2)
         
-        XCTAssertEqual(isAnyAlertPresented, true)
+        XCTAssertEqual(coordinatorDelegateMock.events, [.receivedAlert])
         XCTAssertEqual(sut.alerts, [alert])
+        XCTAssertTrue(sut.isAnyAlertPresented)
     }
     
     @MainActor
-    func testWhenIsAnyAlertPresentedChangedToFalseAndNoAlertsLeftToPresent() {
+    func testWhenAlertWasDimissedAndNoAlertsLeftToPresent() {
         // Given
-        let alert = AlertModel(title: "Title", buttons: [.ok()])
+        let alertDismissExpectation = XCTestExpectation(description: "alert.dismiss.expectation")
         
-        var isAnyAlertPresented: Bool?
+        let alert = AlertModel(title: "Title", buttons: [.ok()], dismissAction: {
+            alertDismissExpectation.fulfill()
+        })
         
-        sut.$isAnyAlertPresented
-            .dropFirst()
-            .sink { value in
-                isAnyAlertPresented = value
+        sut.objectWillChange
+            .sink { _ in
                 self.expectation.fulfill()
             }
             .store(in: &cancellables)
@@ -74,35 +83,35 @@ final class AlertViewModelTests: BaseTestCase {
         wait(for: [expectation], timeout: 2)
         
         // Given
-        expectation = XCTestExpectation()
+        coordinatorExpectation = XCTestExpectation(description: "com.coordinator.expectation")
+        coordinatorDelegateMock.expectation = coordinatorExpectation
         
         // When
         sut.isAnyAlertPresented = false
         
         // Then
-        wait(for: [expectation], timeout: 2)
+        wait(for: [coordinatorExpectation, alertDismissExpectation], timeout: 2)
         
-        XCTAssertEqual(isAnyAlertPresented, false)
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
-        
+        XCTAssertEqual(coordinatorDelegateMock.events, [.receivedAlert, .haveNoAlertsInQueue])
         XCTAssertTrue(sut.alerts.isEmpty)
+        XCTAssertFalse(sut.isAnyAlertPresented)
     }
     
     @MainActor
-    func testWhenIsAnyAlertPresentedChangedToFalseAndOneAlertLeftToPresent() {
+    func testWhenAlertWasDismissedAndOneAlertLeftToPresent() {
         // Given
-        let alert1 = AlertModel(title: "Title 1", buttons: [.ok()])
-        let alert2 = AlertModel(title: "Title 2", buttons: [.ok()])
+        let alertDismissExpectation = XCTestExpectation(description: "alert.dismiss.expectation")
         
-        var isAnyAlertPresented: Bool?
+        let alert1 = AlertModel(title: "Title 1", buttons: [.ok()], dismissAction: {
+            alertDismissExpectation.fulfill()
+        })
         
-        expectation.expectedFulfillmentCount = 2
+        let alert2 = AlertModel(title: "Title 2", buttons: [.ok()], dismissAction: {
+            XCTFail("Dismiss action should not be called!")
+        })
         
-        sut.$isAnyAlertPresented
-            .dropFirst()
-            .sink { value in
-                isAnyAlertPresented = value
+        sut.objectWillChange
+            .sink { _ in
                 self.expectation.fulfill()
             }
             .store(in: &cancellables)
@@ -112,19 +121,41 @@ final class AlertViewModelTests: BaseTestCase {
         alertSubject.send(alert2)
 
         // Then
-        wait(for: [expectation])
+        wait(for: [expectation, coordinatorExpectation], timeout: 2)
         
         // Given
         expectation = XCTestExpectation()
-        expectation.expectedFulfillmentCount = 2
         
         // When
         sut.isAnyAlertPresented = false
         
         // Then
-        wait(for: [expectation])
+        wait(for: [expectation, alertDismissExpectation], timeout: 2)
         
-        XCTAssertEqual(isAnyAlertPresented, true)
+        XCTAssertEqual(coordinatorDelegateMock.events, [.receivedAlert])
         XCTAssertEqual(sut.alerts, [alert2])
+        XCTAssertTrue(sut.isAnyAlertPresented)
+    }
+    
+    // MARK: CoordinatorDelegateMock
+    
+    private final class CoordinatorDelegateMock: AlertsCoordinatorViewModelDelegate {
+        enum Event: Equatable {
+            case haveNoAlertsInQueue
+            case receivedAlert
+        }
+        
+        var events: [Event] = []
+        var expectation: XCTestExpectation?
+        
+        func alertsViewModelHaveNoAlertsInQueue() {
+            events.append(.haveNoAlertsInQueue)
+            expectation?.fulfill()
+        }
+        
+        func alertsViewModelReceivedAlert() {
+            events.append(.receivedAlert)
+            expectation?.fulfill()
+        }
     }
 }
