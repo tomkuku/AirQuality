@@ -41,7 +41,6 @@ struct AllStationsListProvindesView: View {
                 }
             }
         }
-        .searchable(text: $searchedText, placement: .navigationBarDrawer(displayMode: .always), prompt: L10n.seach)
         .refreshable {
             viewModel.fetchStations()
         }

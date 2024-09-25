@@ -27,6 +27,9 @@ struct AllStationsListProvinceStationsView: View {
         .doneToolbarButton {
             coordinator.dismiss()
         }
+        .taskOnFirstAppear {
+            viewModel.fetchStations()
+        }
     }
     
     // MARK: Private properties

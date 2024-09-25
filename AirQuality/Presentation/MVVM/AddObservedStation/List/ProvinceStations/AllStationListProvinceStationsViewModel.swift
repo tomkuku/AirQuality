@@ -17,7 +17,7 @@ final class AllStationListProvinceStationsViewModel: BaseViewModel {
     
     // MARK: Private properties
     
-    @Injected(\.observedStationsFetchResultsRepository) private var observedStationsFetchResultsRepository
+    @Injected(\.getObservedStationsUseCase) private var getObservedStationsUseCase
     
     private let allStationsInProvicne: [Station]
     private var task: Task<Void, Never>?
@@ -29,7 +29,7 @@ final class AllStationListProvinceStationsViewModel: BaseViewModel {
         
         super.init()
         
-        fetchStations()
+        streamObservedStations()
     }
     
     deinit {
@@ -39,9 +39,24 @@ final class AllStationListProvinceStationsViewModel: BaseViewModel {
     // MARK: Methods
     
     func fetchStations() {
+        Task { [weak self] in
+            do {
+                let observedStations = try await self?.getObservedStationsUseCase.fetchedStations()
+                
+                await MainActor.run { [weak self] in
+                    self?.prepareStations(observedStations: observedStations ?? [])
+                }
+            } catch {
+                Logger.error(error.localizedDescription)
+                self?.alertSubject.send(.somethigWentWrong())
+            }
+        }
+    }
+    
+    func streamObservedStations() {
         task = Task {
             do {
-                for try await observedStations in observedStationsFetchResultsRepository.ceateNewStrem() {
+                for try await observedStations in getObservedStationsUseCase.createNewStream() {
                     await MainActor.run {
                         prepareStations(observedStations: observedStations)
                     }
