@@ -29,4 +29,8 @@ extension ToastModel {
     static func noInternetConnection() -> Self {
         Self(body: Localizable.ToastModel.noInternetConnection)
     }
+    
+    static func changesHaveBeenSaved() -> Self {
+        Self(body: Localizable.ToastModel.changesHaveBeenSaved)
+    }
 }

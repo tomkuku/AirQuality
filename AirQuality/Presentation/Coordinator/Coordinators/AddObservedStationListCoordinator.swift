@@ -9,7 +9,9 @@ import Foundation
 import SwiftUI
 
 extension AddObservedStationListCoordinator {
-    enum NavigationComponent: CoordinatorNavigationComponentProtocol { }
+    enum NavigationComponent: CoordinatorNavigationComponentProtocol { 
+        case provinceStations(provinceName: String, stations: [Station])
+    }
 }
 
 final class AddObservedStationListCoordinator: CoordinatorBase, CoordinatorProtocol {
@@ -19,15 +21,23 @@ final class AddObservedStationListCoordinator: CoordinatorBase, CoordinatorProto
     @ViewBuilder
     @MainActor
     func startView() -> some View {
-        AddStationToObservedListView()
+        AllStationsListProvindesView()
             .environmentObject(self)
     }
     
     @ViewBuilder
     @MainActor
     func createView(for navigationComponent: NavigationComponent) -> some View {
-        EmptyView()
+        switch navigationComponent {
+        case .provinceStations(let provinceName, let stations):
+            AllStationsListProvinceStationsView(provinceName: provinceName, stations: stations)
+        }
     }
     
-    func goTo(_ navigationComponent: NavigationComponent) { }
+    func goTo(_ navigationComponent: NavigationComponent) { 
+        switch navigationComponent {
+        case .provinceStations:
+            navigationPath.append(navigationComponent)
+        }
+    }
 }

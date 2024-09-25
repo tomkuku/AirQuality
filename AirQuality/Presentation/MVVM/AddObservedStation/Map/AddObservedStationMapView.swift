@@ -61,7 +61,7 @@ struct AddObservedStationMapView: View {
                     mapCameraPosition = MapCameraPosition.region(coordinateRegion)
                 }
             }
-            .dimissToolbarButton {
+            .doneToolbarButton {
                 coordinator.dismiss()
             }
         }

@@ -9,9 +9,9 @@ import Foundation
 import SwiftUI
 
 struct AnimatingHeight: AnimatableModifier {
-    var height: CGFloat = 0
+    var height: CGFloat? = 0
 
-    var animatableData: CGFloat {
+    var animatableData: CGFloat? {
         get { height }
         set { height = newValue }
     }
