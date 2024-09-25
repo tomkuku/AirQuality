@@ -28,12 +28,16 @@ final class AddStationToObservedCoordinator: CoordinatorBase, CoordinatorProtoco
     
     private(set) lazy var addObservedStationListCoordinator = AddObservedStationListCoordinator(
         childOf: self,
-        navigationType: .push(navigationPath: .init(), dismissHandler: dismissHandler)
+        navigationType: .push(navigationPath: .init(), dismissHandler: { [weak self] in
+            self?.dismiss()
+        })
     )
     
     private(set) lazy var addObservedStationMapCoordinator = AddObservedStationMapCoordinator(
         childOf: self,
-        navigationType: .push(navigationPath: .init(), dismissHandler: dismissHandler)
+        navigationType: .push(navigationPath: .init(), dismissHandler: { [weak self] in
+            self?.dismiss()
+        })
     )
     
     // MARK: Methods
@@ -53,5 +57,11 @@ final class AddStationToObservedCoordinator: CoordinatorBase, CoordinatorProtoco
     
     func goTo(_ navigationComponent: NavigationComponent) { 
         assertionFailure("No navigation for navigationComponent: \(navigationComponent)!")
+    }
+    
+    override func dismiss() {
+        super.dismiss()
+        
+        showToast(.changesHaveBeenSaved())
     }
 }

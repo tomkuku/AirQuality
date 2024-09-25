@@ -10,23 +10,16 @@ import Foundation
 @MainActor
 final class AllStationStationViewModel: BaseViewModel {
     
-    @Published private(set) var params: [Param]?
-    
     // MARK: Private properties
     
     @Injected(\.addObservedStationUseCase) private var addObservedStationUseCase
     @Injected(\.deleteObservedStationUseCase) private var deleteObservedStationUseCase
     
     private let station: Station
-    private var task: Task<Void, Never>?
     
     init(station: Station) {
         self.station = station
         super.init()
-    }
-    
-    deinit {
-        task?.cancel()
     }
     
     // MARK: Methods

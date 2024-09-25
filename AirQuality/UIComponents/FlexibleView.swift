@@ -5,6 +5,8 @@
 //  Created by Tomasz Kukułka on 03/07/2024.
 //
 
+// https://github.com/FiveStarsBlog/CodeSamples/tree/48e493a2b4acd7196c176689a8f3038936f0ed41/Flexible-SwiftUI
+
 import SwiftUI
 
 struct FlexibleView<Data: Collection, Content: View>: View where Data.Element: Hashable {

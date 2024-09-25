@@ -26,11 +26,12 @@
 "Alert.Button.cancel" = "Anuluj";
 "Alert.Button.goToSettings" = "Przejdź do ustawień";
 
-// MARK: ToastModel
+// MARK: Toasts
 
 "ToastModel.observedStationWasAdded" = "Stacja została dodany do listy obserwowanych";
 "ToastModel.observedStationWasDeleted" = "Stacja została usunięta z listy obserwowanych";
 "ToastModel.noInternetConnection" = "Brak połączenia z internetem";
+"ToastModel.changesHaveBeenSaved" = "Zmiany zostały zapisane";
 
 // MARK: AddObservedStationContainerView
 
@@ -64,7 +65,7 @@
 
 // MARK: DismissButton
 
-"NavigationToolbar.DismissButton.title" = "Zamknij";
+"NavigationToolbar.DoneButton.title" = "Gotowe";
 
 // MARK: ObservedStationsListView
 

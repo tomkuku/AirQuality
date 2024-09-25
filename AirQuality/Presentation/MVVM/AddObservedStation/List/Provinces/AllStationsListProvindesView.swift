@@ -1,25 +1,25 @@
 //
-//  AddStationToObservedListView.swift
+//  AllStationsListProvindesView.swift
 //  AirQuality
 //
-//  Created by Tomasz Kukułka on 25/05/2024.
+//  Created by Tomasz Kukułka on 25/09/2024.
 //
 
 import SwiftUI
 import Combine
 
-struct AddStationToObservedListView: View, Sendable {
+struct AllStationsListProvindesView: View {
     
     private typealias L10n = Localizable.AddObservedStationListView
     
     @EnvironmentObject private var coordinator: AddObservedStationListCoordinator
-    @StateObject private var viewModel: AddStationToObservedListViewModel
+    @StateObject private var viewModel: AllStationsListProvincesViewModel
     @State private var searchedText = ""
     
     var body: some View {
         BaseView(viewModel: viewModel, coordinator: coordinator) {
             VStack(alignment: .leading, spacing: 8) {
-                if viewModel.sections.isEmpty {
+                if viewModel.provinces.isEmpty {
                     Spacer()
                     
                     if viewModel.isLoading {
@@ -32,21 +32,21 @@ struct AddStationToObservedListView: View, Sendable {
                     Spacer()
                 } else {
                     List {
-                        ForEach(viewModel.sections) { section in
-                            SectionView(section: section, viewModel: viewModel)
+                        ForEach(viewModel.provinces) { province in
+                            AllStationsListProvindesRowView(province: province)
+                                .environmentObject(coordinator)
                         }
                     }
                     .listStyle(.inset)
                 }
             }
         }
-        .onChange(of: searchedText) {
-            viewModel.searchedTextDidChange(searchedText)
+        .refreshable {
+            viewModel.fetchStations()
         }
-        .searchable(text: $searchedText, placement: .navigationBarDrawer(displayMode: .always), prompt: L10n.seach)
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(L10n.navigationTitle)
-        .dimissToolbarButton {
+        .doneToolbarButton {
             coordinator.dismiss()
         }
         .taskOnFirstAppear {
@@ -54,25 +54,25 @@ struct AddStationToObservedListView: View, Sendable {
         }
     }
     
-    init(viewModel: @autoclosure @escaping () -> AddStationToObservedListViewModel = .init()) {
+    init(viewModel: @autoclosure @escaping () -> AllStationsListProvincesViewModel = .init()) {
         self._viewModel = StateObject(wrappedValue: viewModel())
     }
 }
 
 #Preview {
     FetchAllStationsUseCasePreviewDummy.fetchReturnValue = [
-        .previewDummy(id: 1),
-        .previewDummy(id: 2),
-        .previewDummy(id: 3),
-        .previewDummy(id: 4)
+        .previewDummy(id: 1, province: "Małopolskie"),
+        .previewDummy(id: 2, province: "zachodniopomorskie"),
+        .previewDummy(id: 3, province: "Mazowieckie"),
+        .previewDummy(id: 4, province: "Opolskie")
     ]
     
-    @ObservedObject var viewModel = AddStationToObservedListViewModel()
+    @ObservedObject var viewModel = AllStationsListProvincesViewModel()
     @ObservedObject var coordinator = AddObservedStationListCoordinator(coordinatorNavigationType: .presentation(dismissHandler: {}), alertSubject: .init(), toastSubject: .init())
     
     return TabView {
         NavigationStack {
-            AddStationToObservedListView(viewModel: viewModel)
+            AllStationsListProvindesView(viewModel: viewModel)
                 .environmentObject(coordinator)
         }
     }

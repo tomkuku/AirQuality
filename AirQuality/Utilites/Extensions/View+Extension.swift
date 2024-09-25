@@ -12,8 +12,8 @@ extension View {
         modifier(FirstAppear(action: action))
     }
     
-    func dimissToolbarButton(_ action: @escaping () -> ()) -> some View {
-        modifier(DismissToolbarButton(action: action))
+    func doneToolbarButton(_ action: @escaping () -> ()) -> some View {
+        modifier(DoneToolbarButton(action: action))
     }
 }
 
@@ -35,8 +35,8 @@ struct FirstAppear: ViewModifier {
     }
 }
 
-struct DismissToolbarButton: ViewModifier {
-    private typealias L10n = Localizable.NavigationToolbar.DismissButton
+struct DoneToolbarButton: ViewModifier {
+    private typealias L10n = Localizable.NavigationToolbar.DoneButton
     
     private let action: () -> ()
     
