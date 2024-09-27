@@ -78,11 +78,8 @@ struct AddObservedStationMapView: View {
     
     private var findTheNearestStationButton: some View {
         Button {
-//            findingTheNearestStation = true
-//            viewModel.findTheNearestStation()
-            coordinator.showAlert(.somethigWentWrong())
-            coordinator.showAlert(.findingTheNearestStationsFailed())
-            coordinator.showAlert(.locationServicesDisabled(coordinator))
+            findingTheNearestStation = true
+            viewModel.findTheNearestStation()
         } label: {
             if findingTheNearestStation {
                 ProgressView()

@@ -14,15 +14,18 @@ final class NetworkConnectionMonitorUseCaseTests: BaseTestCase, @unchecked Senda
     
     private var sut: NetworkConnectionMonitorUseCase!
     private var pathMonitorSpy: PathMonitorSpy!
+    private var numberOfCalls: Int!
     
     override func setUp() {
         super.setUp()
         
         pathMonitorSpy = PathMonitorSpy()
         sut = NetworkConnectionMonitorUseCase(pathMonitor: pathMonitorSpy)
+        
+        numberOfCalls = 0
     }
     
-    func testWhenNetworkStatusIsSatisfied() {
+    func testWhenNetworkStatusIsSatisfied() async {
         // Given
         let pathMonitorMock = PathMonitorSpy()
         
@@ -30,7 +33,7 @@ final class NetworkConnectionMonitorUseCaseTests: BaseTestCase, @unchecked Senda
         
         let path = createNWPath(with: .satisfied)
         
-        sut.startMonitor {
+        await sut.startMonitor {
             XCTFail("Network connection should be available!")
         }
         
@@ -38,20 +41,18 @@ final class NetworkConnectionMonitorUseCaseTests: BaseTestCase, @unchecked Senda
         pathMonitorMock.pathUpdateHandler?(path)
         
         // Then
-        XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        _ = await XCTWaiter().fulfillment(of: [.init()], timeout: 0.2)
         
         XCTAssertEqual(pathMonitorMock.events, [.start])
     }
     
-    func testWhenNetworkStatusIsUnsatisfied() {
+    func testWhenNetworkStatusIsUnsatisfied() async {
         // Given
         let pathMonitorMock = PathMonitorSpy()
-        
         let sut = NetworkConnectionMonitorUseCase(pathMonitor: pathMonitorMock)
-        
         let path = createNWPath(with: .unsatisfied)
         
-        sut.startMonitor {
+        await sut.startMonitor {
             self.expectation.fulfill()
         }
         
@@ -59,20 +60,18 @@ final class NetworkConnectionMonitorUseCaseTests: BaseTestCase, @unchecked Senda
         pathMonitorMock.pathUpdateHandler?(path)
         
         // Then
-        wait(for: [expectation], timeout: 2.0)
+        await fulfillment(of: [expectation], timeout: 2.0)
         
         XCTAssertEqual(pathMonitorMock.events, [.start])
     }
     
-    func testWhenNetworkStatusIsRequiresConnection() {
+    func testWhenNetworkStatusIsRequiresConnection() async {
         // Given
         let pathMonitorMock = PathMonitorSpy()
-        
         let sut = NetworkConnectionMonitorUseCase(pathMonitor: pathMonitorMock)
-        
         let path = createNWPath(with: .requiresConnection)
         
-        sut.startMonitor {
+        await sut.startMonitor {
             self.expectation.fulfill()
         }
         
@@ -80,7 +79,83 @@ final class NetworkConnectionMonitorUseCaseTests: BaseTestCase, @unchecked Senda
         pathMonitorMock.pathUpdateHandler?(path)
         
         // Then
-        wait(for: [expectation], timeout: 2.0)
+        await fulfillment(of: [expectation], timeout: 2.0)
+        
+        XCTAssertEqual(pathMonitorMock.events, [.start])
+    }
+    
+    func testWhenStatusChangesFromUnsatisfiedToRequiresConnection() async {
+        // Given
+        let pathMonitorMock = PathMonitorSpy()
+        let sut = NetworkConnectionMonitorUseCase(pathMonitor: pathMonitorMock)
+        
+        let unsatisfiedStatusPath = createNWPath(with: .unsatisfied)
+        let requiresConnectionStatusPath = createNWPath(with: .requiresConnection)
+        
+        await sut.startMonitor {
+            if self.numberOfCalls >= 1 {
+                XCTFail("Call should be only once!")
+            }
+            
+            self.numberOfCalls += 1
+            self.expectation.fulfill()
+        }
+        
+        // When
+        pathMonitorMock.pathUpdateHandler?(requiresConnectionStatusPath)
+        _ = await XCTWaiter().fulfillment(of: [.init()], timeout: 0.2)
+        pathMonitorMock.pathUpdateHandler?(unsatisfiedStatusPath)
+        
+        // Then
+        await fulfillment(of: [expectation], timeout: 2.0)
+        
+        XCTAssertEqual(pathMonitorMock.events, [.start])
+    }
+    
+    func testWhenStatusChangesFromSatisfiedToSatisfied() async {
+        // Given
+        let pathMonitorMock = PathMonitorSpy()
+        let sut = NetworkConnectionMonitorUseCase(pathMonitor: pathMonitorMock)
+        
+        let path = createNWPath(with: .satisfied)
+        
+        await sut.startMonitor {
+            XCTFail("Closure should not be called at all!")
+        }
+        
+        // When
+        pathMonitorMock.pathUpdateHandler?(path)
+        _ = await XCTWaiter().fulfillment(of: [.init()], timeout: 0.2)
+        pathMonitorMock.pathUpdateHandler?(path)
+        
+        // Then
+        XCTAssertEqual(pathMonitorMock.events, [.start])
+    }
+    
+    func testWhenStatusChangesFromUnsatisfiedToSatisfied() async {
+        // Given
+        let pathMonitorMock = PathMonitorSpy()
+        let sut = NetworkConnectionMonitorUseCase(pathMonitor: pathMonitorMock)
+        
+        let unsatisfiedStatusPath = createNWPath(with: .unsatisfied)
+        let satisfiedStatusPath = createNWPath(with: .satisfied)
+        
+        await sut.startMonitor {
+            if self.numberOfCalls >= 1 {
+                XCTFail("Call should be only once!")
+            }
+            
+            self.numberOfCalls += 1
+            self.expectation.fulfill()
+        }
+        
+        // When
+        pathMonitorMock.pathUpdateHandler?(unsatisfiedStatusPath)
+        _ = await XCTWaiter().fulfillment(of: [.init()], timeout: 0.2)
+        pathMonitorMock.pathUpdateHandler?(satisfiedStatusPath)
+        
+        // Then
+        await fulfillment(of: [expectation], timeout: 2.0)
         
         XCTAssertEqual(pathMonitorMock.events, [.start])
     }
@@ -95,6 +170,8 @@ final class NetworkConnectionMonitorUseCaseTests: BaseTestCase, @unchecked Senda
     
     // MARK: Private methods
     
+    /// Any constructor of `NWPath` is not available, there is necessary to get `NWPathMonitor` using `currentPath`.
+    /// Then because of status of `NWPath` is constant (`let`), the value must be changed using `UnsafeMutablePointer`.
     private func createNWPath(with status: NWPath.Status) -> NWPath {
         let nwPathMonitor = NWPathMonitor()
         

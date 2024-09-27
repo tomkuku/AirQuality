@@ -17,12 +17,13 @@ protocol NWPathMonitorProtocol: Sendable, AnyObject {
 
 extension NWPathMonitor: NWPathMonitorProtocol { }
 
-final class NetworkConnectionMonitorUseCase: Sendable {
+actor NetworkConnectionMonitorUseCase {
     
     // MARK: Private properties
     
     private let queue = DispatchQueue(label: "com.NetworkConnectionMonitorUseCase")
     private let pathMonitor: NWPathMonitorProtocol
+    private var currentStatus: NWPath.Status?
     
     // MARK: Lifecycle
     
@@ -38,11 +39,28 @@ final class NetworkConnectionMonitorUseCase: Sendable {
     
     func startMonitor(noConnectionBlock: @Sendable @escaping () -> ()) {
         pathMonitor.pathUpdateHandler = { path in
-            if path.status != .satisfied {
+            Task { [weak self] in
+                guard  let self, await self.checkIsStatusChangedToUnsatisfied(path.status) else { return }
+                
                 noConnectionBlock()
             }
         }
         
         pathMonitor.start(queue: self.queue)
+    }
+    
+    private func checkIsStatusChangedToUnsatisfied(_ newPathStatus: NWPath.Status) -> Bool {
+        defer {
+            currentStatus = newPathStatus
+        }
+        
+        if let currentStatus, currentStatus == .satisfied && newPathStatus != .satisfied {
+            /// Ignore situation when unsatisfied status changes to other `unsatisfied` (e.g. `requiresConnection`).
+            return true
+        } else if currentStatus == nil && newPathStatus != .satisfied {
+            return true
+        }
+        
+        return false
     }
 }

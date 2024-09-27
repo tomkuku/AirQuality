@@ -17,7 +17,11 @@ extension CoordinatorNavigationComponentProtocol {
 }
 
 extension AddObservedStationMapCoordinator {
-    enum NavigationComponent: CoordinatorNavigationComponentProtocol { }
+    enum NavigationComponent: CoordinatorNavigationComponentProtocol {
+        /// Delete this case when applay some navigation.
+        /// This is only to avoid warning: 'navigationComponent' is of type 'AddObservedStationMapCoordinator.NavigationComponent' which cannot be constructed because it is an enum with no cases
+        case `default`
+    }
 }
 
 final class AddObservedStationMapCoordinator: CoordinatorBase, CoordinatorProtocol {
@@ -30,7 +34,8 @@ final class AddObservedStationMapCoordinator: CoordinatorBase, CoordinatorProtoc
     }
     
     func createView(for navigationComponent: NavigationComponent) -> some View {
-        Text("Empty view")
+        assertionFailure("This method should be override!")
+        return Rectangle()
     }
     
     func goTo(_ navigationComponent: NavigationComponent) { }

@@ -14,8 +14,8 @@ protocol HasSwiftDataPreviewAccessor {
 
 @MainActor
 final class SwiftDataPreviewAccessor {
-    
-    static var shared: SwiftDataPreviewAccessor!
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    nonisolated(unsafe) static var shared: SwiftDataPreviewAccessor!
     
     private let mainContext: ModelContext
     
