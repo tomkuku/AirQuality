@@ -115,8 +115,7 @@ final class SelectedStationViewModel: BaseViewModel, @unchecked Sendable {
         
         return Model.SensorRow(
             id: sensor.id,
-            paramName: sensor.param.name,
-            paramFormula: sensor.param.formula,
+            param: sensor.param,
             lastMeasurementAqi: lastMeasurementAqi,
             lastMeasurementPercentageValue: lastMeasurementPercentageValue,
             lastMeasurementFormattedDate: lastMeasurementFormattedDate,

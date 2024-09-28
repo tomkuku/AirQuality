@@ -21,6 +21,7 @@ struct Param: Sendable, Equatable, Hashable {
     let type: ParamType
     let code: String
     let formula: String
+    let formulaNumbersInBottomBaseline: Bool
     let quota: Double
     let unit: String
     let indexLevels: IndexLevels
@@ -94,6 +95,7 @@ struct Param: Sendable, Equatable, Hashable {
         type: ParamType,
         code: String,
         formula: String,
+        formulaNumbersInBottomBaseline: Bool,
         quota: Double,
         unit: String,
         indexLevels: IndexLevels
@@ -101,6 +103,7 @@ struct Param: Sendable, Equatable, Hashable {
         self.type = type
         self.code = code
         self.formula = formula
+        self.formulaNumbersInBottomBaseline = formulaNumbersInBottomBaseline
         self.quota = quota
         self.unit = unit
         self.indexLevels = indexLevels

@@ -3,6 +3,7 @@
        "id":3,
        "code":"pm10",
        "formula":"PM10",
+       "formulaNumbersInBottomBaseline": false,
        "quota":50,
        "unit":"µg/m³",
        "indexLevels":{
@@ -17,6 +18,7 @@
        "id":69,
        "code":"pm2.5",
        "formula":"PM2.5",
+       "formulaNumbersInBottomBaseline": false,
        "quota":25,
        "unit":"µg/m³",
        "indexLevels":{
@@ -31,6 +33,7 @@
        "id":16,
        "code":"no2",
        "formula":"NO2",
+       "formulaNumbersInBottomBaseline": true,
        "quota":200,
        "unit":"µg/m³",
        "indexLevels":{
@@ -45,6 +48,7 @@
        "id":8,
        "code":"co",
        "formula":"CO",
+       "formulaNumbersInBottomBaseline": true,
        "quota":10000,
        "unit":"µg/m³",
        "indexLevels":{
@@ -59,6 +63,7 @@
        "id":10,
        "code":"c6h6",
        "formula":"C6H6",
+       "formulaNumbersInBottomBaseline": true,
        "quota":5,
        "unit":"µg/m³",
        "indexLevels":{
@@ -73,6 +78,7 @@
        "id":5,
        "code":"o3",
        "formula":"O3",
+       "formulaNumbersInBottomBaseline": true,
        "quota":120,
        "unit":"µg/m³",
        "indexLevels":{
@@ -87,6 +93,7 @@
        "id":1,
        "code":"so2",
        "formula":"SO2",
+       "formulaNumbersInBottomBaseline": true,
        "quota":125,
        "unit":"µg/m³",
        "indexLevels":{

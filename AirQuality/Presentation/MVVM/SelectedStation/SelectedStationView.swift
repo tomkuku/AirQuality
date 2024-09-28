@@ -19,10 +19,9 @@ struct SelectedStationView: View {
                 ForEach(viewModel.sensors) { sensor in
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(sensor.paramFormula)
-                                .font(.system(size: 18, weight: .semibold))
+                            createFormulaText(sensor.param)
                             
-                            Text(sensor.paramName)
+                            Text(sensor.param.name)
                                 .font(.system(size: 14, weight: .regular))
                             
                             Spacer()
@@ -70,7 +69,6 @@ struct SelectedStationView: View {
         self._viewModel = StateObject(wrappedValue: viewModel())
     }
     
-    @ViewBuilder
     func createSensorView(for sensorRow: SelectedStationModel.SensorRow) -> some View {
         VStack(alignment: .trailing, spacing: 8) {
             Text(sensorRow.lastMeasurementFormattedPercentageValue)
@@ -91,6 +89,29 @@ struct SelectedStationView: View {
             Color.white
         case .moderate, .undefined:
             Color.black
+        }
+    }
+    
+    @ViewBuilder
+    private func createFormulaText(_ param: Param) -> some View {
+        if param.formulaNumbersInBottomBaseline {
+            let characters: [String] = param.formula.map { String($0) }
+            
+            HStack(spacing: 0) {
+                ForEach(characters, id: \.self) { character in
+                    if character.isNumber {
+                        Text(character)
+                            .baselineOffset(-10)
+                            .font(.system(size: 16, weight: .medium))
+                    } else {
+                        Text(character)
+                            .font(.system(size: 18, weight: .semibold))
+                    }
+                }
+            }
+        } else {
+            Text(param.formula)
+                .font(.system(size: 18, weight: .semibold))
         }
     }
 }
@@ -131,5 +152,12 @@ struct SelectedStationView: View {
         SelectedStationView(viewModel: .init(station: station))
             .navigationBarTitleDisplayMode(.inline)
             .preferredColorScheme(.dark)
+    }
+}
+
+extension String {
+    var isNumber: Bool {
+        let digitsCharacters = CharacterSet.decimalDigits
+        return CharacterSet(charactersIn: self).isSubset(of: digitsCharacters)
     }
 }

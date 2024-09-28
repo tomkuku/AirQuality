@@ -9,6 +9,7 @@ extension Param {
         type: .{{ param.code|removeSubstring:"." }},
         code: "{{ param.code }}",
         formula: "{{ param.formula }}",
+        formulaNumbersInBottomBaseline: {{ param.formulaNumbersInBottomBaseline|boolConversion }},
         quota: {{ param.quota }},
         unit: "{{ param.unit }}",
         indexLevels: Param.IndexLevels(

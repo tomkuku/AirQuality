@@ -1,4 +1,4 @@
-This Swift script utilizes Stencil templates to generate Swift code from JSON input files.
+This **Swift** script utilizes **Stencil** templates to generate **Swift** code from **JSON** input files.
 
 ### Compilation
 

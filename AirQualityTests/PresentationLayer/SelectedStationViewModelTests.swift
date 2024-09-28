@@ -81,8 +81,7 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
         
         let expectedFirstSensorRow = SelectedStationModel.SensorRow(
             id: sensor1.id,
-            paramName: sensor1.param.name,
-            paramFormula: sensor1.param.formula,
+            param: sensor1.param,
             lastMeasurementAqi: .moderate,
             lastMeasurementPercentageValue: 0.9,
             lastMeasurementFormattedDate: "Jun 25, 2024 at 15:00",
@@ -92,8 +91,7 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
         
         let expectedSecondSensorRow = SelectedStationModel.SensorRow(
             id: sensor2.id,
-            paramName: sensor2.param.name,
-            paramFormula: sensor2.param.formula,
+            param: sensor2.param,
             lastMeasurementAqi: .moderate,
             lastMeasurementPercentageValue: 1.36,
             lastMeasurementFormattedDate: "Jun 25, 2024 at 15:00",
@@ -103,8 +101,7 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
         
         let expectedThirdSensorRow = SelectedStationModel.SensorRow(
             id: sensor3.id,
-            paramName: sensor3.param.name,
-            paramFormula: sensor3.param.formula,
+            param: sensor3.param,
             lastMeasurementAqi: .good,
             lastMeasurementPercentageValue: 0.8,
             lastMeasurementFormattedDate: "Jun 25, 2024 at 14:00",
@@ -174,8 +171,7 @@ extension SelectedStationModel.SensorRow: Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.id == rhs.id &&
         lhs.lastMeasurementAqi == rhs.lastMeasurementAqi &&
-        lhs.paramFormula == rhs.paramFormula &&
-        lhs.paramName == rhs.paramName &&
+        lhs.param == rhs.param &&
         lhs.lastMeasurementFormattedDate == rhs.lastMeasurementFormattedDate &&
         lhs.lastMeasurementFormattedPercentageValue == rhs.lastMeasurementFormattedPercentageValue &&
         lhs.lastMeasurementFormattedValue == rhs.lastMeasurementFormattedValue &&
