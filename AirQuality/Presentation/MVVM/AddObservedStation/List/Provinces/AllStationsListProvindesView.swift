@@ -12,14 +12,12 @@ struct AllStationsListProvindesView: View {
     
     private typealias L10n = Localizable.AddObservedStationListView
     
-    @EnvironmentObject private var coordinator: AddObservedStationListCoordinator
-    @StateObject private var viewModel: AllStationsListProvincesViewModel
-    @State private var searchedText = ""
+    // MARK: Body
     
     var body: some View {
         BaseView(viewModel: viewModel, coordinator: coordinator) {
-            VStack(alignment: .leading, spacing: 8) {
-                if viewModel.provinces.isEmpty {
+            if viewModel.provinces.isEmpty {
+                VStack(alignment: .leading, spacing: 8) {
                     Spacer()
                     
                     if viewModel.isLoading {
@@ -30,22 +28,26 @@ struct AllStationsListProvindesView: View {
                     }
                     
                     Spacer()
-                } else {
-                    List {
-                        ForEach(viewModel.provinces) { province in
-                            AllStationsListProvindesRowView(province: province)
-                                .environmentObject(coordinator)
-                        }
+                }
+            } else {
+                List {
+                    ForEach(viewModel.provinces) { province in
+                        AllStationsListProvindesRowView(province: province)
+                            .environmentObject(coordinator)
                     }
-                    .listStyle(.inset)
+                }
+                .listStyle(.inset)
+                .refreshable {
+                    try? await Task.sleep(for: .milliseconds(600))
+                    
+                    viewModel.fetchStations()
                 }
             }
         }
-        .refreshable {
-            viewModel.fetchStations()
-        }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(L10n.navigationTitle)
+        .transition(.opacity)
+        .animation(.linear(duration: 0.2), value: viewModel.isLoading)
         .doneToolbarButton {
             coordinator.dismiss()
         }
@@ -53,6 +55,14 @@ struct AllStationsListProvindesView: View {
             viewModel.fetchStations()
         }
     }
+    
+    // MARK: Private properties
+    
+    @EnvironmentObject private var coordinator: AddObservedStationListCoordinator
+    @StateObject private var viewModel: AllStationsListProvincesViewModel
+    @State private var searchedText = ""
+    
+    // MARK: Lifecycle
     
     init(viewModel: @autoclosure @escaping () -> AllStationsListProvincesViewModel = .init()) {
         self._viewModel = StateObject(wrappedValue: viewModel())
