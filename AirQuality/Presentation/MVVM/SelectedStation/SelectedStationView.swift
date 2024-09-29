@@ -12,108 +12,70 @@ struct SelectedStationView: View {
     
     @EnvironmentObject private var appCoordinator: AppCoordinator
     @StateObject private var viewModel: SelectedStationViewModel
+    @State private var dataProviderAnimate = false
     
     var body: some View {
-        ScrollView {
-            LazyVStack(alignment: .leading, spacing: 8) {
-                ForEach(viewModel.sensors) { sensor in
-                    HStack {
-                        VStack(alignment: .leading, spacing: 4) {
-                            createFormulaText(sensor.param)
-                            
-                            Text(sensor.param.name)
-                                .font(.system(size: 14, weight: .regular))
-                            
-                            Spacer()
+        BaseView(viewModel: viewModel, coordinator: appCoordinator) {
+            if !viewModel.isLoading {
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 8) {
+                        ForEach(0..<viewModel.sensors.count, id: \.self) { index in
+                            SelectedStationSensorRow(sensor: viewModel.sensors[index], index: index)
                         }
-                        .padding(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
                         
-                        Spacer()
-                        
-                        createSensorView(for: sensor)
+                        dataProvider
                     }
-                    .foregroundStyle(getForegroundColor(for: sensor.lastMeasurementAqi))
-                    .background(sensor.lastMeasurementAqi.color)
-                    .cornerRadius(10)
-                    .gesture(TapGesture().onEnded({ _ in
-                        guard let sensor = viewModel.getSensor(for: sensor.id) else {
-                            Logger.error("No station for id: \(sensor.id)")
-                            return
-                        }
-                        
-                        appCoordinator.goTo(.sensorsDetails(sensor))
-                    }))
-                    .accessibilityAddTraits(.isButton)
+                    .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
                 }
-                
-                HStack {
-                    Text(L10n.dataProvider)
-                        .font(.system(size: 14))
-                        .foregroundStyle(Color.Text.secondary)
-                        .multilineTextAlignment(.center)
-                        .padding(.top, 16)
+                .refreshable {
+                    /// Delay to avoid instacne switch between sensors list and loading indicator.
+                    try? await Task.sleep(for: .milliseconds(600))
+                    
+                    viewModel.refresh()
                 }
-                .frame(maxWidth: .infinity)
+            } else {
+                VStack(spacing: 12) {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .frame(maxWidth: .infinity)
+                        .controlSize(.regular)
+                    
+                    Text(Localizable.SelectedStationView.isLoading)
+                }
             }
-            .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
         }
         .background(Color.Background.primary)
+        .navigationTitle(viewModel.fomattedStationAddress)
+        .navigationBarTitleDisplayMode(.inline)
+        .onChange(of: viewModel.isLoading) { _, _ in
+            dataProviderAnimate = false
+        }
         .task {
             await viewModel.fetchSensorsForStation()
         }
-        .navigationTitle(viewModel.fomattedStationAddress)
-        .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    private var dataProvider: some View {
+        HStack {
+            Text(L10n.dataProvider)
+                .font(.system(size: 14))
+                .foregroundStyle(Color.Text.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.top, 16)
+        }
+        .frame(maxWidth: .infinity)
+        .opacity(dataProviderAnimate ? 1 : 0)
+        .onAppear {
+            let delay = 0.2 * TimeInterval(viewModel.sensors.count)
+            withAnimation(.linear(duration: 0.5).delay(delay)) {
+                dataProviderAnimate = true
+            }
+        }
     }
     
     init(viewModel: @autoclosure @escaping () -> SelectedStationViewModel) {
         self._viewModel = StateObject(wrappedValue: viewModel())
     }
-    
-    func createSensorView(for sensorRow: SelectedStationModel.SensorRow) -> some View {
-        VStack(alignment: .trailing, spacing: 8) {
-            Text(sensorRow.lastMeasurementFormattedPercentageValue)
-                .font(.system(size: 18, weight: .bold))
-            
-            Text(sensorRow.lastMeasurementFormattedValue)
-                .font(.system(size: 12, weight: .semibold))
-            
-            Text(sensorRow.lastMeasurementFormattedDate)
-                .font(.system(size: 12, weight: .regular))
-        }
-        .padding(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 8))
-    }
-    
-    private func getForegroundColor(for aqi: AQI) -> Color {
-        switch aqi {
-        case .good, .unhealthy, .unhealthyForSensitiveGroup, .veryUnhealthy, .hazardus:
-            Color.white
-        case .moderate, .undefined:
-            Color.black
-        }
-    }
-    
-    @ViewBuilder
-    private func createFormulaText(_ param: Param) -> some View {
-        if param.formulaNumbersInBottomBaseline {
-            let characters: [String] = param.formula.map { String($0) }
-            
-            HStack(spacing: 0) {
-                ForEach(characters, id: \.self) { character in
-                    if character.isNumber {
-                        Text(character)
-                            .baselineOffset(-10)
-                            .font(.system(size: 16, weight: .medium))
-                    } else {
-                        Text(character)
-                            .font(.system(size: 18, weight: .semibold))
-                    }
-                }
-            }
-        } else {
-            Text(param.formula)
-                .font(.system(size: 18, weight: .semibold))
-        }
-    }
 }
 
 #Preview {
@@ -128,10 +90,16 @@ struct SelectedStationView: View {
     ]
     
     let station = Station.previewDummy()
+    let appCoordinator = AppCoordinator(
+        coordinatorNavigationType: .presentation(dismissHandler: {}),
+        alertSubject: .init(),
+        toastSubject: .init()
+    )
     
     return NavigationStack {
         SelectedStationView(viewModel: .init(station: station))
             .navigationBarTitleDisplayMode(.inline)
+            .environmentObject(appCoordinator)
     }
 }
 
@@ -147,11 +115,17 @@ struct SelectedStationView: View {
     ]
     
     let station = Station.previewDummy()
+    let appCoordinator = AppCoordinator(
+        coordinatorNavigationType: .presentation(dismissHandler: {}),
+        alertSubject: .init(),
+        toastSubject: .init()
+    )
     
     return NavigationStack {
         SelectedStationView(viewModel: .init(station: station))
             .navigationBarTitleDisplayMode(.inline)
             .preferredColorScheme(.dark)
+            .environmentObject(appCoordinator)
     }
 }
 

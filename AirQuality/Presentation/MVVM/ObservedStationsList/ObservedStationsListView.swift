@@ -69,8 +69,12 @@ struct ObservedStationsListView: View {
         HStack {
             VStack(alignment: .leading, spacing: 8) {
                 Text(station.street ?? "")
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundStyle(Color.Text.primary)
                 
                 Text(station.cityName)
+                    .font(.system(size: 16, weight: .regular))
+                    .foregroundStyle(Color.Text.secondary)
             }
             .padding(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
             

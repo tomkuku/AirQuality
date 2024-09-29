@@ -66,6 +66,7 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
         XCTAssertEqual(fomattedStationAddress, stationDummy.cityName)
     }
     
+    @MainActor
     func testFetchSensorsForStationWhenSuccess() async throws {
         // Given
         let sensor1 = Sensor.dummy(id: 1, param: .pm10, measurements: [.dummy(date: "2024-06-25 15:00", value: 45)])
@@ -109,15 +110,13 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
             lastMeasurementFormattedPercentageValue: "80%"
         )
         
-        await MainActor.run {
-            sut.$sensors
-                .dropFirst()
-                .sink {
-                    self.sensorRows = $0
-                    self.expectation.fulfill()
-                }
-                .store(in: &cancellables)
-        }
+        sut.$sensors
+            .dropFirst()
+            .sink {
+                self.sensorRows = $0
+                self.expectation.fulfill()
+            }
+            .store(in: &cancellables)
         
         // When
         await sut.fetchSensorsForStation()
@@ -133,28 +132,25 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
             .format("2024-06-25 15:00")
         ])
         
-        await MainActor.run {
-            XCTAssertEqual(sut.getSensor(for: 1), sensor1)
-            XCTAssertEqual(sut.getSensor(for: 2), sensor2)
-            XCTAssertEqual(sut.getSensor(for: 3), sensor3)
-            XCTAssertFalse(sut.isLoading)
-        }
+        XCTAssertEqual(sut.getSensor(for: 1), sensor1)
+        XCTAssertEqual(sut.getSensor(for: 2), sensor2)
+        XCTAssertEqual(sut.getSensor(for: 3), sensor3)
+        XCTAssertFalse(sut.isLoading)
     }
     
+    @MainActor
     func testFetchSensorsForStationWhenFailure() async throws {
         // Given
         getSensorsUseCaseSpy.getSensorsResultClosure = {
             .failure(ErrorDummy())
         }
         
-        await MainActor.run {
-            sut.errorSubject
-                .sink {
-                    self.error = $0
-                    self.expectation.fulfill()
-                }
-                .store(in: &cancellables)
-        }
+        sut.errorSubject
+            .sink {
+                self.error = $0
+                self.expectation.fulfill()
+            }
+            .store(in: &cancellables)
         
         // When
         await sut.fetchSensorsForStation()
@@ -164,6 +160,30 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
         
         XCTAssertNotNil(error as? ErrorDummy)
         XCTAssertEqual(getSensorsUseCaseSpy.events, [.getSensors(stationDummy.id)])
+    }
+    
+    @MainActor
+    func testRefresh() {
+        // Given
+        getSensorsUseCaseSpy.getSensorsResultClosure = {
+            .success([])
+        }
+        
+        sut.$sensors
+            .dropFirst()
+            .sink { _ in
+                self.expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        // When
+        sut.refresh()
+        
+        // Then
+        wait(for: [expectation], timeout: 2.0)
+        
+        XCTAssertEqual(getSensorsUseCaseSpy.events, [.getSensors(stationDummy.id)])
+        XCTAssertFalse(sut.isLoading)
     }
 }
 

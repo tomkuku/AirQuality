@@ -26,28 +26,24 @@ final class AllStationStationViewModel: BaseViewModel {
     
     func addObservedStation(_ station: Station) {
         Task { [weak self] in
-            guard let self else { return }
-            
             do {
-                try await self.addObservedStationUseCase.add(station: station)
-                self.toastSubject.send(.observedStationWasAdded())
+                try await self?.addObservedStationUseCase.add(station: station)
+                self?.toastSubject.send(.observedStationWasAdded())
             } catch {
                 Logger.error("Observing station faild with error: \(error.localizedDescription)")
-                self.alertSubject.send(.somethigWentWrong())
+                self?.alertSubject.send(.somethigWentWrong())
             }
         }
     }
     
     func deletedObservedStation(_ station: Station) {
         Task { [weak self] in
-            guard let self else { return }
-            
             do {
-                try await self.deleteObservedStationUseCase.delete(station: station)
-                self.toastSubject.send(.observedStationWasDeleted())
+                try await self?.deleteObservedStationUseCase.delete(station: station)
+                self?.toastSubject.send(.observedStationWasDeleted())
             } catch {
                 Logger.error("Observing station faild with error: \(error.localizedDescription)")
-                self.alertSubject.send(.somethigWentWrong())
+                self?.alertSubject.send(.somethigWentWrong())
             }
         }
     }
