@@ -10,8 +10,7 @@ import Foundation
 enum SelectedStationModel {
     struct SensorRow: Identifiable {
         let id: Int
-        let paramName: String
-        let paramFormula: String
+        let param: Param
         
         let lastMeasurementAqi: AQI
         let lastMeasurementPercentageValue: Double?

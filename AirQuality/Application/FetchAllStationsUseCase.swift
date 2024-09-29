@@ -21,8 +21,6 @@ final class FetchAllStationsUseCase: FetchAllStationsUseCaseProtocol {
     @Injected(\.giosApiRepository) private var giosApiRepository
     @Injected(\.stationsNetworkMapper) private var stationsNetworkMapper
     
-    let giosApiRepository2 = (UIApplication.shared.delegate as? AppDelegate)?.dependenciesContainer
-    
     init() { }
     
     func fetch() async throws -> [Station] {

@@ -27,6 +27,7 @@ extension AppCoordinator {
     }
 }
 
+@MainActor
 final class AppCoordinator: CoordinatorBase, CoordinatorProtocol {
     
     // MARK: Properties
@@ -129,9 +130,11 @@ final class AppCoordinator: CoordinatorBase, CoordinatorProtocol {
     }
     
     private nonisolated func monitorInternetConnection() {
-        networkConnectionMonitorUseCase.startMonitor {
-            DispatchQueue.main.async { [weak self] in
-                self?.showToast(.noInternetConnection())
+        Task { @MainActor [weak self] in
+            await self?.networkConnectionMonitorUseCase.startMonitor { [weak self] in
+                DispatchQueue.main.async { [weak self] in
+                    self?.showToast(.noInternetConnection())
+                }
             }
         }
     }

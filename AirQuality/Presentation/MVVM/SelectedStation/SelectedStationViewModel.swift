@@ -7,7 +7,8 @@
 
 import Foundation
 
-final class SelectedStationViewModel: BaseViewModel, @unchecked Sendable {
+@MainActor
+final class SelectedStationViewModel: BaseViewModel {
     
     typealias Model = SelectedStationModel
     
@@ -59,7 +60,6 @@ final class SelectedStationViewModel: BaseViewModel, @unchecked Sendable {
     
     // MARK: Methods
     
-    @MainActor
     func fetchSensorsForStation() async {
         isLoading(true, objectWillChnage: true)
         
@@ -83,6 +83,12 @@ final class SelectedStationViewModel: BaseViewModel, @unchecked Sendable {
         } catch {
             Logger.error("Fetching measurements for sensors with error \(error)")
             errorSubject.send(error)
+        }
+    }
+    
+    nonisolated func refresh() {
+        Task { [weak self] in
+            await self?.fetchSensorsForStation()
         }
     }
     
@@ -115,8 +121,7 @@ final class SelectedStationViewModel: BaseViewModel, @unchecked Sendable {
         
         return Model.SensorRow(
             id: sensor.id,
-            paramName: sensor.param.name,
-            paramFormula: sensor.param.formula,
+            param: sensor.param,
             lastMeasurementAqi: lastMeasurementAqi,
             lastMeasurementPercentageValue: lastMeasurementPercentageValue,
             lastMeasurementFormattedDate: lastMeasurementFormattedDate,

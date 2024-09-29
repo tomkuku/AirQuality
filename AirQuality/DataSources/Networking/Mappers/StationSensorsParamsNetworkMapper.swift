@@ -12,8 +12,7 @@ protocol HasStationSensorsParamsNetworkMapper {
 }
 
 protocol StationSensorsParamsNetworkMapperProtocol: NetworkMapperProtocol
-where DTOModel == [SensorNetworkModel], DomainModel == [Param]
-{ }
+where DTOModel == [SensorNetworkModel], DomainModel == [Param] { }
 
 final class StationSensorsParamsNetworkMapper: StationSensorsParamsNetworkMapperProtocol {
     func map(_ input: [SensorNetworkModel]) throws -> [Param] {

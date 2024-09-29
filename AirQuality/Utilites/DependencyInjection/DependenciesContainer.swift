@@ -51,6 +51,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     let getUserLocationUseCase: GetUserLocationUseCaseProtocol
     let uiApplication: UIApplicationProtocol
     
+    // swiftlint:disable function_body_length
     @MainActor
     init() throws {
         self.uiApplication = UIApplication.shared
@@ -124,7 +125,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
             self.getObservedStationsUseCase = GetObservedStationsUseCase()
         }
 #else
-        self.getStationsUseCase = GetStationsUseCase()
+        self.fetchAllStationsUseCase = FetchAllStationsUseCase()
         self.findTheNearestStationUseCase = FindTheNearestStationUseCase()
         self.getSensorsUseCase = GetSensorsUseCase()
         self.getUserLocationUseCase = GetUserLocationUseCase()
@@ -132,6 +133,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         self.getObservedStationsUseCase = GetObservedStationsUseCase()
 #endif
     }
+    // swiftlint:enable function_body_length
     
     private static func createModelContainer() throws -> ModelContainer {
         let schema = Schema([StationLocalDatabaseModel.self])

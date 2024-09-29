@@ -12,33 +12,31 @@ struct SensorArchivalMeasurementsListView: View {
     @StateObject private var viewModel: SensorArchivalMeasurementsListViewModel
     
     var body: some View {
-//        BaseView(isLoading: viewModel.idLoading) {
-            ScrollView {
-                ForEach(0..<viewModel.rows.count, id: \.self) { index in
-                    let row = viewModel.rows[index]
+        ScrollView {
+            ForEach(0..<viewModel.rows.count, id: \.self) { index in
+                let row = viewModel.rows[index]
+                
+                HStack {
+                    Text(row.formattedDate)
+                        .font(.system(size: 16, weight: .regular))
                     
-                    HStack {
-                        Text(row.formattedDate)
+                    Spacer()
+                    
+                    VStack(alignment: .trailing, spacing: 8) {
+                        Text("\(row.formattedPercentageValue)%")
+                            .font(.system(size: 18, weight: .medium))
+                        
+                        Text("\(row.formattedValue) µg/m³")
                             .font(.system(size: 16, weight: .regular))
-                        
-                        Spacer()
-                        
-                        VStack(alignment: .trailing, spacing: 8) {
-                            Text("\(row.formattedPercentageValue)%")
-                                .font(.system(size: 18, weight: .medium))
-                            
-                            Text("\(row.formattedValue) µg/m³")
-                                .font(.system(size: 16, weight: .regular))
-                        }
-                    }
-                    .padding(.vertical, 6)
-                    .padding(.horizontal, 16)
-                    
-                    if index < viewModel.rows.count - 1 {
-                        Divider()
                     }
                 }
-//            }
+                .padding(.vertical, 6)
+                .padding(.horizontal, 16)
+                
+                if index < viewModel.rows.count - 1 {
+                    Divider()
+                }
+            }
         }
         .taskOnFirstAppear {
             await viewModel.fetchArchivalMeasurements()

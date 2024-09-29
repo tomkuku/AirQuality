@@ -52,7 +52,6 @@ actor HTTPDataSource: HTTPDataSourceProtocol {
                 .sink { completion in
                     guard case .failure(let error) = completion else { return }
                     continuation.resume(throwing: error)
-                    
                 } receiveValue: { data in
                     continuation.resume(returning: data)
                 }

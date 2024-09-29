@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-protocol HasLocalDatabaseRepository: Sendable {
+protocol HasLocalDatabaseRepository {
     var localDatabaseRepository: LocalDatabaseRepositoryProtocol { get }
 }
 

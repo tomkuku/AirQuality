@@ -39,7 +39,8 @@ extension Param {
         Self(
             type: .c6h6,
             code: code,
-            formula: formula,
+            formula: formula, 
+            formulaNumbersInBottomBaseline: false,
             quota: quota,
             unit: unit,
             indexLevels: indexLevels

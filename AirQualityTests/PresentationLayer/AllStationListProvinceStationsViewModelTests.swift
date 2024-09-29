@@ -9,7 +9,7 @@ import XCTest
 
 @testable import AirQuality
 
-final class AddStationToObservedListViewModelTests: BaseTestCase, @unchecked Sendable {
+final class AllStationListProvinceStationsViewModelTests: BaseTestCase, @unchecked Sendable {
     
     private var sut: AllStationListProvinceStationsViewModel!
     

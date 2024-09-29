@@ -103,6 +103,111 @@ final class AllStationsListProvincesViewModelTests: BaseTestCase, @unchecked Sen
         XCTAssertEqual(fetchAllStationsUseCaseSpy.events, [.fetch])
         XCTAssertEqual(alert, .somethigWentWrong())
     }
+    
+    // MARK: SearchedText DidChange
+    
+    @MainActor
+    func testSearchedTextDidChangeWhenStationCityNameIsSearched() {
+        // Given
+        fetchAllStationsUseCaseSpy.fetchStationsResult = .success([
+            station1, station2, station3, station4, station5, station6
+        ])
+        
+        var provinces: [AllStationsListProvindesModel.Province]?
+        
+        sut.$provinces
+            .dropFirst()
+            .sink {
+                provinces = $0
+                self.expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        sut.fetchStations()
+        
+        wait(for: [expectation], timeout: 2.0)
+        
+        // Given
+        expectation = XCTestExpectation()
+        
+        // When
+        sut.searchedText = "Cracow"
+        
+        // Then
+        wait(for: [expectation], timeout: 2.0)
+        
+        XCTAssertEqual(provinces, [
+            .init(name: "Malopolska", stations: [station1, station3])
+        ])
+    }
+    
+    @MainActor
+    func testSearchedTextDidChangeWhenStationStreetIsSearched() {
+        // Given
+        fetchAllStationsUseCaseSpy.fetchStationsResult = .success([
+            station1, station2, station3, station4, station5, station6
+        ])
+        
+        var provinces: [AllStationsListProvindesModel.Province]?
+        
+        sut.$provinces
+            .dropFirst()
+            .sink {
+                provinces = $0
+                self.expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        sut.fetchStations()
+        
+        wait(for: [expectation], timeout: 2.0)
+        
+        // Given
+        expectation = XCTestExpectation()
+        
+        // When
+        sut.searchedText = "Krasinskiego"
+        
+        // Then
+        wait(for: [expectation], timeout: 2.0)
+        
+        XCTAssertEqual(provinces, [
+            .init(name: "Malopolska", stations: [station3])
+        ])
+    }
+    
+    @MainActor
+    func testSearchedTextDidChangeWhenAnyStationDoesNotMatch() {
+        // Given
+        fetchAllStationsUseCaseSpy.fetchStationsResult = .success([
+            station1, station2, station3, station4, station5, station6
+        ])
+        
+        var provinces: [AllStationsListProvindesModel.Province]?
+        
+        sut.$provinces
+            .dropFirst()
+            .sink {
+                provinces = $0
+                self.expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        sut.fetchStations()
+        
+        wait(for: [expectation], timeout: 2.0)
+        
+        // Given
+        expectation = XCTestExpectation()
+        
+        // When
+        sut.searchedText = "New York"
+        
+        // Then
+        wait(for: [expectation], timeout: 2.0)
+        
+        XCTAssertEqual(provinces?.isEmpty, true)
+    }
 }
 
 extension AllStationsListProvindesModel.Province: Equatable {

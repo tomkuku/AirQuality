@@ -55,6 +55,18 @@ let removeSubstringExtension: Extension = {
     return ext
 }()
 
+let boolConversionExtension: Extension = {
+    let ext = Extension()
+    ext.registerFilter("boolConversion") { (value: Any?, arguments: [Any?]) in
+        guard let intValue = value as? Int else {
+            return value
+        }
+        
+        return intValue == 1 ? "true" : "false"
+    }
+    
+    return ext
+}()
 
 func generateSwiftFromJSONAndStencil(
     inputFilePath: String,
@@ -65,7 +77,7 @@ func generateSwiftFromJSONAndStencil(
         let input = try readJSON(from: inputFilePath)
         let templateString = try String(contentsOfFile: templateFilePath)
         
-        let environment = Environment(extensions: [removeSubstringExtension])
+        let environment = Environment(extensions: [boolConversionExtension, removeSubstringExtension])
         
         let rendered = try environment.renderTemplate(string: templateString, context: ["input": input])
         try rendered.write(toFile: outputFilePath, atomically: true, encoding: .utf8)
