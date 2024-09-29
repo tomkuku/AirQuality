@@ -9,9 +9,9 @@ opt_in_rules:
 
 disabled_rules:
   - anonymous_argument_in_multiline_closure
-  - anyobject_protocol # It's deprecated and will be removed in a future release.
   - class_delegate_protocol
   - conditional_returns_on_newline
+  - contrasted_opening_brace
   - discouraged_none_name
   - discouraged_optional_boolean
   - discouraged_optional_collection
@@ -33,12 +33,14 @@ disabled_rules:
   - local_doc_comment
   - missing_docs
   - multiline_arguments_brackets
+  - no_empty_block
   - no_extension_access_modifier
   - no_grouping_extension
   - no_magic_numbers
   - nslocalizedstring_key
   - one_declaration_per_file
   - pattern_matching_keywords
+  - prefer_key_path
   - prefer_nimble
   - prefer_self_in_static_references
   - prefixed_toplevel_constant
@@ -60,6 +62,7 @@ disabled_rules:
   - type_contents_order
   - unavailable_function
   - unused_capture_list # It's deprecated and will be removed in a future release.
+  - unused_parameter
   - vertical_whitespace_between_cases
   - vertical_whitespace_opening_braces
   - void_return
