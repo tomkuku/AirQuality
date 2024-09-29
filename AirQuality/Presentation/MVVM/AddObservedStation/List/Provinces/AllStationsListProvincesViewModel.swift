@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+@MainActor
 final class AllStationsListProvincesViewModel: BaseViewModel {
     
     typealias Model = AllStationsListProvindesModel
@@ -16,9 +17,18 @@ final class AllStationsListProvincesViewModel: BaseViewModel {
     
     @Published private(set) var provinces: [Model.Province] = []
     
+    var searchedText: String = "" {
+        didSet {
+            createAndSortSections(allStations)
+        }
+    }
+    
     // MARK: Private properties
     
     @Injected(\.fetchAllStationsUseCase) private var fetchAllStationsUseCase
+    @Injected(\.getObservedStationsUseCase) private var getObservedStationsUseCase
+    
+    private var allStations: [Station] = []
     
     // MARK: Lifecycle
     
@@ -35,11 +45,11 @@ final class AllStationsListProvincesViewModel: BaseViewModel {
             guard let self else { return }
             
             do {
-                let fetchedStations = try await fetchAllStationsUseCase.fetch()
+                allStations = try await fetchAllStationsUseCase.fetch()
                 
                 isLoading = false
                 
-                createAndSortSections(fetchedStations)
+                createAndSortSections(allStations)
             } catch {
                 Logger.error(error.localizedDescription)
                 alertSubject.send(.somethigWentWrong())
@@ -51,6 +61,8 @@ final class AllStationsListProvincesViewModel: BaseViewModel {
     
     private func createAndSortSections(_ stations: [Station]) {
         var sections: [Model.Province] = stations.reduce(into: [Model.Province]()) { provinces, station in
+            guard doesStationMatchToSerachedText(station) else { return }
+            
             if let provinceIndex = provinces.firstIndex(where: { $0.name.lowercased() == station.province.lowercased() }) {
                 provinces[provinceIndex].stations.append(station)
             } else {
@@ -84,5 +96,18 @@ final class AllStationsListProvincesViewModel: BaseViewModel {
                 }
             })
         }
+    }
+    
+    private func doesStationMatchToSerachedText(_ station: Station) -> Bool {
+        guard !searchedText.isEmpty else {
+            /// If `searchedText` is empty all stations match.
+            return true
+        }
+        
+        if let stationStreet = station.street, stationStreet.contains(searchedText) {
+            return true
+        }
+        
+        return station.cityName.contains(searchedText)
     }
 }

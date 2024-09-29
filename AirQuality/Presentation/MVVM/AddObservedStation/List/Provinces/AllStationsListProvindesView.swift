@@ -48,6 +48,11 @@ struct AllStationsListProvindesView: View {
         .navigationTitle(L10n.navigationTitle)
         .transition(.opacity)
         .animation(.linear(duration: 0.2), value: viewModel.isLoading)
+        .searchable(
+            text: $viewModel.searchedText,
+            placement: .navigationBarDrawer(displayMode: .always),
+            prompt: L10n.seach
+        )
         .doneToolbarButton {
             coordinator.dismiss()
         }
@@ -60,7 +65,6 @@ struct AllStationsListProvindesView: View {
     
     @EnvironmentObject private var coordinator: AddObservedStationListCoordinator
     @StateObject private var viewModel: AllStationsListProvincesViewModel
-    @State private var searchedText = ""
     
     // MARK: Lifecycle
     
@@ -68,6 +72,8 @@ struct AllStationsListProvindesView: View {
         self._viewModel = StateObject(wrappedValue: viewModel())
     }
 }
+
+// MARK: Preview
 
 #Preview {
     FetchAllStationsUseCasePreviewDummy.fetchReturnValue = [
