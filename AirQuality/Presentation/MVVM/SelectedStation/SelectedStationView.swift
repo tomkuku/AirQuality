@@ -45,7 +45,7 @@ struct SelectedStationView: View {
             }
         }
         .background(Color.Background.primary)
-        .navigationTitle(viewModel.fomattedStationAddress)
+        .navigationTitle(viewModel.formattedStationAddress)
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: viewModel.isLoading) { _, _ in
             dataProviderAnimate = false

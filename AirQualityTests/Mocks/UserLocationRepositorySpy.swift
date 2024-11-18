@@ -13,12 +13,10 @@ import XCTest
 
 actor UserLocationRepositorySpy: LocationRespositoryProtocol {
     func streamLocation(finishClosure: inout (@Sendable () -> ())?) async -> AsyncThrowingStream<AirQuality.Location, any Error> {
-        fatalError()
+        fatalError("streamLocation requires an implementation!")
     }
     
-    func checkLocationServicesAvailability() async throws {
-        
-    }
+    func checkLocationServicesAvailability() async throws { }
     
     enum Event {
         case requestLocationOnce

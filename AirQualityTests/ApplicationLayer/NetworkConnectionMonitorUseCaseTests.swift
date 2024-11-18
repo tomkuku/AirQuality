@@ -25,6 +25,34 @@ final class NetworkConnectionMonitorUseCaseTests: BaseTestCase, @unchecked Senda
         numberOfCalls = 0
     }
     
+    // MARK: isConnectionSatisfied
+    
+    func testIsConnectionSatisfiedWhenPathStatusIsSatisfied() async {
+        // Given
+        let path = createNWPath(with: .satisfied)
+        pathMonitorSpy.currentPathReturnValue = path
+        
+        // When
+        let result = await sut.isConnectionSatisfied
+        
+        // Then
+        XCTAssertTrue(result)
+    }
+    
+    func testIsConnectionSatisfiedWhenPathStatusIsUnsatisfied() async {
+        // Given
+        let path = createNWPath(with: .unsatisfied)
+        pathMonitorSpy.currentPathReturnValue = path
+        
+        // When
+        let result = await sut.isConnectionSatisfied
+        
+        // Then
+        XCTAssertFalse(result)
+    }
+    
+    // MARK: Monitor status changes
+    
     func testWhenNetworkStatusIsSatisfied() async {
         // Given
         let pathMonitorMock = PathMonitorSpy()
@@ -160,6 +188,8 @@ final class NetworkConnectionMonitorUseCaseTests: BaseTestCase, @unchecked Senda
         XCTAssertEqual(pathMonitorMock.events, [.start])
     }
     
+    // MARK: Cancel
+    
     func testCancel() {
         // When
         sut = nil
@@ -170,8 +200,8 @@ final class NetworkConnectionMonitorUseCaseTests: BaseTestCase, @unchecked Senda
     
     // MARK: Private methods
     
-    /// Any constructor of `NWPath` is not available, there is necessary to get `NWPathMonitor` using `currentPath`.
-    /// Then because of status of `NWPath` is constant (`let`), the value must be changed using `UnsafeMutablePointer`.
+    /// Any constructor of `NWPath` is not available publicly, therefore there is necessary to get `NWPath` using `currentPath`.
+    /// Because of `status` of `NWPath` is constant, the value must be changed using `UnsafeMutablePointer`.
     private func createNWPath(with status: NWPath.Status) -> NWPath {
         let nwPathMonitor = NWPathMonitor()
         

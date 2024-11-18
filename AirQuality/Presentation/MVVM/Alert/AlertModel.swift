@@ -105,6 +105,16 @@ extension AlertModel {
     }
     
     @MainActor
+    static func noInternetConnection(_ coordinator: CoordinatorBase) -> Self {
+        goToSettings(
+            url: URL(string: UIApplication.openSettingsURLString),
+            title: L10n.NoInternetConnection.title,
+            message: L10n.NoInternetConnection.message,
+            coordinator: coordinator
+        )
+    }
+    
+    @MainActor
     private static func goToSettings(
         url: URL?,
         title: String,

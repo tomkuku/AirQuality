@@ -16,6 +16,7 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
     
     private var getSensorsUseCaseSpy: GetSensorsUseCaseSpy!
     private var sensorMeasurementDataFormatterSpy: SensorMeasurementDataFormatterSpy!
+    private var networkConnectionMonitorUseCaseSpy: NetworkConnectionMonitorUseCaseSpy!
     
     private var stationDummy: Station!
     private var dateFormatter: DateFormatter!
@@ -34,9 +35,11 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
         
         getSensorsUseCaseSpy = GetSensorsUseCaseSpy()
         sensorMeasurementDataFormatterSpy = SensorMeasurementDataFormatterSpy()
+        networkConnectionMonitorUseCaseSpy = NetworkConnectionMonitorUseCaseSpy()
         
         dependenciesContainerDummy[\.getSensorsUseCase] = getSensorsUseCaseSpy
         dependenciesContainerDummy[\.sensorMeasurementDataFormatter] = sensorMeasurementDataFormatterSpy
+        dependenciesContainerDummy[\.networkConnectionMonitorUseCase] = networkConnectionMonitorUseCaseSpy
         
         await MainActor.run {
             sut = SelectedStationViewModel(station: stationDummy)
@@ -46,7 +49,7 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
     @MainActor
     func testFomattedStationAddress() {
         // When
-        let fomattedStationAddress = sut.fomattedStationAddress
+        let fomattedStationAddress = sut.formattedStationAddress
         
         // Then
         XCTAssertEqual(fomattedStationAddress, stationDummy.cityName + ", " + stationDummy.street!)
@@ -60,7 +63,7 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
         sut = SelectedStationViewModel(station: stationDummy)
         
         // When
-        let fomattedStationAddress = sut.fomattedStationAddress
+        let fomattedStationAddress = sut.formattedStationAddress
         
         // Then
         XCTAssertEqual(fomattedStationAddress, stationDummy.cityName)
@@ -69,6 +72,8 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
     @MainActor
     func testFetchSensorsForStationWhenSuccess() async throws {
         // Given
+        networkConnectionMonitorUseCaseSpy.isConnectionSatisfiedReturnValue = true
+        
         let sensor1 = Sensor.dummy(id: 1, param: .pm10, measurements: [.dummy(date: "2024-06-25 15:00", value: 45)])
         let sensor2 = Sensor.dummy(id: 2, param: .pm25, measurements: [.dummy(date: "2024-06-25 15:00", value: 34)])
         let sensor3 = Sensor.dummy(id: 3, param: .c6h6, measurements: [
@@ -141,6 +146,8 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
     @MainActor
     func testFetchSensorsForStationWhenFailure() async throws {
         // Given
+        networkConnectionMonitorUseCaseSpy.isConnectionSatisfiedReturnValue = true
+        
         getSensorsUseCaseSpy.getSensorsResultClosure = {
             .failure(ErrorDummy())
         }
@@ -163,8 +170,36 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
     }
     
     @MainActor
+    func testFetchSensorsForStationWhenNoInternetConnection() async throws {
+        // Given
+        networkConnectionMonitorUseCaseSpy.isConnectionSatisfiedReturnValue = false
+        
+        getSensorsUseCaseSpy.getSensorsResultClosure = {
+            .failure(ErrorDummy())
+        }
+        
+        sut.errorSubject
+            .sink {
+                self.error = $0
+                self.expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        // When
+        await sut.fetchSensorsForStation()
+        
+        // Then
+        await fulfillment(of: [self.expectation], timeout: 2.0)
+        
+        XCTAssertEqual(error as? AppError, .noInternetConnection)
+        XCTAssertTrue(getSensorsUseCaseSpy.events.isEmpty)
+    }
+    
+    @MainActor
     func testRefresh() {
         // Given
+        networkConnectionMonitorUseCaseSpy.isConnectionSatisfiedReturnValue = true
+        
         getSensorsUseCaseSpy.getSensorsResultClosure = {
             .success([])
         }

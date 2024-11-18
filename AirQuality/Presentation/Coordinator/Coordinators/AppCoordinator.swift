@@ -36,7 +36,7 @@ final class AppCoordinator: CoordinatorBase, CoordinatorProtocol {
     
     // MARK: Private properties
     
-    private let networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCase()
+    @Injected(\.networkConnectionMonitorUseCase) private var networkConnectionMonitorUseCase
     
     // MARK: Lifecycle
     
@@ -50,8 +50,6 @@ final class AppCoordinator: CoordinatorBase, CoordinatorProtocol {
             alertSubject: alertSubject,
             toastSubject: toastSubject
         )
-        
-        monitorInternetConnection()
     }
     
     // MARK: Methods
@@ -129,7 +127,7 @@ final class AppCoordinator: CoordinatorBase, CoordinatorProtocol {
         return coordinator
     }
     
-    private nonisolated func monitorInternetConnection() {
+    nonisolated func monitorInternetConnection() {
         Task { @MainActor [weak self] in
             await self?.networkConnectionMonitorUseCase.startMonitor { [weak self] in
                 DispatchQueue.main.async { [weak self] in

@@ -102,6 +102,18 @@ class CoordinatorBase: ObservableObject {
         toastSubject.send(toast)
     }
     
+    func handleError(_ error: Error) {
+        guard let appError = error as? AppError else {
+            showAlert(.somethigWentWrong())
+            return
+        }
+        
+        switch appError {
+        case .noInternetConnection:
+            showAlert(.noInternetConnection(self))
+        }
+    }
+    
     @MainActor
     func open(url: URL?) {
         Task {

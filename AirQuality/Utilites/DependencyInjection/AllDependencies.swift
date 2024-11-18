@@ -17,6 +17,7 @@ HasFindTheNearestStationUseCase &
 HasGetSensorsUseCase &
 HasGetStationSensorsParamsUseCase &
 HasGetUserLocationUseCase &
+HasNetworkConnectionMonitorUseCase &
 // DataSources
 HasCacheDataSource &
 HasNotificationCenter &

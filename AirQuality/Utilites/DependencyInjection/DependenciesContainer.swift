@@ -50,11 +50,13 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     let stationSensorsParamsNetworkMapper: any StationSensorsParamsNetworkMapperProtocol
     let getUserLocationUseCase: GetUserLocationUseCaseProtocol
     let uiApplication: UIApplicationProtocol
+    let networkConnectionMonitorUseCase: NetworkConnectionMonitorUseCaseProtocol
     
     // swiftlint:disable function_body_length
     @MainActor
     init() throws {
         self.uiApplication = UIApplication.shared
+        self.networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCase()
         
         let httpDataSource = HTTPDataSource()
         

@@ -40,7 +40,7 @@ final class UIApplicationSpy: UIApplicationProtocol {
         false
     }
     
-    func open(_ url: URL, options: [UIApplication.OpenExternalURLOptionsKey : Any]) async -> Bool {
+    func open(_ url: URL, options: [UIApplication.OpenExternalURLOptionsKey: Any]) async -> Bool {
         false
     }
 }

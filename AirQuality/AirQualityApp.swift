@@ -22,7 +22,9 @@ struct AirQualityApp: App {
                 Text("Tests")
             } else {
                 CoordinatorInitialNavigationView(coordinator: appCoordinator)
-                    .coordinateSpace(name: "Custom")
+                    .taskOnFirstAppear {
+                        appCoordinator.monitorInternetConnection()
+                    }
             }
         }
     }

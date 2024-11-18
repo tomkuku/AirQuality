@@ -19,6 +19,8 @@ class BaseViewModel: ObservableObject {
     
     var isLoading = true
     
+    @Injected(\.networkConnectionMonitorUseCase) private var networkConnectionMonitorUseCase
+    
     func isLoading(_ isLoading: Bool, objectWillChnage: Bool) {
         guard self.isLoading != isLoading else { return }
         
@@ -31,6 +33,12 @@ class BaseViewModel: ObservableObject {
     
     func sendError(_ error: Error) {
         errorSubject.send(error)
+    }
+    
+    func checkIsInternetConnected() async throws {
+        if await !networkConnectionMonitorUseCase.isConnectionSatisfied {
+            throw AppError.noInternetConnection
+        }
     }
 }
 
@@ -66,12 +74,12 @@ where C: CoordinatorBase & CoordinatorProtocol, V: View, VM: BaseViewModel {
             coordinator.showToast(toast)
         }
         .onReceive(viewModel.errorSubject.eraseToAnyPublisher()) { error in
-            guard let onReceiveError else {
-                coordinator.showAlert(.somethigWentWrong())
+            if let onReceiveError {
+                onReceiveError(error)
                 return
             }
             
-            onReceiveError(error)
+            coordinator.handleError(error)
         }
     }
     

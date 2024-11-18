@@ -7,8 +7,8 @@ opt_in_rules:
 
 disabled_rules:
   - anonymous_argument_in_multiline_closure
-  - anyobject_protocol # It's deprecated and will be removed in a future release.
   - conditional_returns_on_newline
+  - contrasted_opening_brace
   - cyclomatic_complexity
   - discouraged_none_name
   - discouraged_optional_boolean
@@ -34,11 +34,14 @@ disabled_rules:
   - legacy_objc_type
   - local_doc_comment
   - missing_docs
+  - no_empty_block
   - no_extension_access_modifier
   - no_grouping_extension
   - no_magic_numbers
   - non_optional_string_data_conversion
   - nslocalizedstring_key
+  - one_declaration_per_file
+  - prefer_key_path
   - prefer_nimble
   - prefixed_toplevel_constant
   - private_subject
@@ -54,6 +57,7 @@ disabled_rules:
   - type_body_length
   - unavailable_function
   - unused_capture_list # It's deprecated and will be removed in a future release.
+  - unused_parameter
   - vertical_whitespace_between_cases
   - vertical_whitespace_opening_braces
   - void_return
