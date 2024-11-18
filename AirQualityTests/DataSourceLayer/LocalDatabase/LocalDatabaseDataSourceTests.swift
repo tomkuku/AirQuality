@@ -136,14 +136,17 @@ final class LocalDatabaseDataSourceTests: BaseTestCase, @unchecked Sendable {
         // Then
         await fulfillment(of: [expectation], timeout: 2.0)
         
-        let deletedModels: [LocalDatabaseModelDummy] = await sut.getDeletedModels()
-        let insertedModels: [LocalDatabaseModelDummy] = await sut.getInsertedModels()
-        
-//        XCTAssertTrue(deletedModels.isEmpty)
-//        XCTAssertTrue(insertedModels.isEmpty)
-//        
-//        XCTAssertEqual(modelContextSpy?.deletedModelsArray.isEmpty, true)
-//        XCTAssertEqual(modelContextSpy?.insertedModelsArray.isEmpty, true)
+        /*
+         FIXME: Check why deletedModels and insertedModels are not empty
+         let deletedModels: [LocalDatabaseModelDummy] = await sut.getDeletedModels()
+         let insertedModels: [LocalDatabaseModelDummy] = await sut.getInsertedModels()
+         
+         XCTAssertTrue(deletedModels.isEmpty)
+         XCTAssertTrue(insertedModels.isEmpty)
+         
+         XCTAssertEqual(modelContextSpy?.deletedModelsArray.isEmpty, true)
+         XCTAssertEqual(modelContextSpy?.insertedModelsArray.isEmpty, true)
+         */
     }
     
     func testDeleteModelWhenModelHasBeenNotInserted() async {

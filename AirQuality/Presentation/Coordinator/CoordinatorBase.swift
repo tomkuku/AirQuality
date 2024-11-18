@@ -111,6 +111,15 @@ class CoordinatorBase: ObservableObject {
         switch appError {
         case .noInternetConnection:
             showAlert(.noInternetConnection(self))
+        case .locationServices(let userLocationServicesError):
+            switch userLocationServicesError {
+            case .disabled:
+                showAlert(.locationServicesDisabled(self))
+            case .authorizationRestricted:
+                showAlert(.locationServicesAuthorizationRestricted(self))
+            case .authorizationDenied:
+                showAlert(.locationServicesAuthorizationDenied(self))
+            }
         }
     }
     

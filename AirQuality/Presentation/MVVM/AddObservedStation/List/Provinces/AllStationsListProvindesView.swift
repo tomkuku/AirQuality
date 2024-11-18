@@ -50,7 +50,6 @@ struct AllStationsListProvindesView: View {
         .animation(.linear(duration: 0.2), value: viewModel.isLoading)
         .searchable(
             text: $viewModel.searchedText,
-            placement: .navigationBarDrawer(displayMode: .always),
             prompt: L10n.seach
         )
         .doneToolbarButton {
@@ -78,7 +77,7 @@ struct AllStationsListProvindesView: View {
 #Preview {
     FetchAllStationsUseCasePreviewDummy.fetchReturnValue = [
         .previewDummy(id: 1, province: "Małopolskie"),
-        .previewDummy(id: 2, province: "zachodniopomorskie"),
+        .previewDummy(id: 2, province: "Zachodniopomorskie"),
         .previewDummy(id: 3, province: "Mazowieckie"),
         .previewDummy(id: 4, province: "Opolskie")
     ]

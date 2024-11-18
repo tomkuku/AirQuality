@@ -39,4 +39,15 @@ final class AddObservedStationMapCoordinator: CoordinatorBase, CoordinatorProtoc
     }
     
     func goTo(_ navigationComponent: NavigationComponent) { }
+    
+    override func handleError(_ error: Error) {
+        if let viewModelError = error as? AddObservedStationMapModel.ErrorType {
+            switch viewModelError {
+            case .findingTheNearestStationsFailed:
+                showAlert(.findingTheNearestStationsFailed())
+            }
+        }
+        
+        super.handleError(error)
+    }
 }

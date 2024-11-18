@@ -7,6 +7,8 @@
 
 import Foundation
 
+/// Contains errors which can occour and be presented on every view on the app.
 enum AppError: Error, Sendable, Equatable {
     case noInternetConnection
+    case locationServices(UserLocationServicesError)
 }

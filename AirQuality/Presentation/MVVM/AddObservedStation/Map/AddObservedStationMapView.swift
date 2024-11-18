@@ -22,7 +22,7 @@ struct AddObservedStationMapView: View {
     
     var body: some View {
         BaseView(viewModel: viewModel, coordinator: coordinator) { error in
-            handleError(error)
+            coordinator.handleError(error)
         } contentView: {
             ZStack {
                 Map(position: $mapCameraPosition) {
@@ -43,27 +43,27 @@ struct AddObservedStationMapView: View {
                         .background(Color.Background.secondary)
                 }
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle(L10n.navigationTitle)
-            .onReceive(viewModel.theNearestStationPublisher) { station in
-                let stationLocationCoordinate = CLLocationCoordinate2D(
-                    latitude: station.latitude,
-                    longitude: station.longitude
-                )
-                
-                let coordinateRegion = MKCoordinateRegion(
-                    center: stationLocationCoordinate,
-                    latitudinalMeters: 500,
-                    longitudinalMeters: 500
-                )
-                withAnimation {
-                    findingTheNearestStation = false
-                    mapCameraPosition = MapCameraPosition.region(coordinateRegion)
-                }
+        }
+        .navigationTitle(L10n.navigationTitle)
+        .navigationBarTitleDisplayMode(.inline)
+        .onReceive(viewModel.theNearestStationPublisher) { station in
+            let stationLocationCoordinate = CLLocationCoordinate2D(
+                latitude: station.latitude,
+                longitude: station.longitude
+            )
+            
+            let coordinateRegion = MKCoordinateRegion(
+                center: stationLocationCoordinate,
+                latitudinalMeters: 500,
+                longitudinalMeters: 500
+            )
+            withAnimation {
+                findingTheNearestStation = false
+                mapCameraPosition = MapCameraPosition.region(coordinateRegion)
             }
-            .doneToolbarButton {
-                coordinator.dismiss()
-            }
+        }
+        .doneToolbarButton {
+            coordinator.dismiss()
         }
         .onReceive(viewModel.deletedObservedStationPublisher) { _ in
             coordinator.showToast(.observedStationWasDeleted())
@@ -136,28 +136,6 @@ struct AddObservedStationMapView: View {
     
     init(viewModel: @autoclosure @escaping () -> AddObservedStationMapViewModel = .init()) {
         self._viewModel = StateObject(wrappedValue: viewModel())
-    }
-    
-    private func handleError(_ error: Error) {
-        if let viewModelError = error as? AddObservedStationMapModel.ErrorType {
-            switch viewModelError {
-            case .findingTheNearestStationsFailed:
-                coordinator.showAlert(.findingTheNearestStationsFailed())
-            }
-        }
-        
-        if let locationServicesError = error as? UserLocationServicesError {
-            switch locationServicesError {
-            case .disabled:
-                coordinator.showAlert(.locationServicesDisabled(coordinator))
-            case .authorizationRestricted:
-                coordinator.showAlert(.locationServicesAuthorizationRestricted(coordinator))
-            case .authorizationDenied:
-                coordinator.showAlert(.locationServicesAuthorizationDenied(coordinator))
-            }
-        }
-        
-        coordinator.showAlert(.somethigWentWrong())
     }
 }
 

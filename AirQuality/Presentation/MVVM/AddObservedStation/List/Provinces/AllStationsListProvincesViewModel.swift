@@ -45,6 +45,8 @@ final class AllStationsListProvincesViewModel: BaseViewModel {
             guard let self else { return }
             
             do {
+                try await checkIsInternetConnected()
+                
                 allStations = try await fetchAllStationsUseCase.fetch()
                 
                 isLoading = false
@@ -52,7 +54,7 @@ final class AllStationsListProvincesViewModel: BaseViewModel {
                 createAndSortSections(allStations)
             } catch {
                 Logger.error(error.localizedDescription)
-                alertSubject.send(.somethigWentWrong())
+                errorSubject.send(error)
             }
         }
     }
