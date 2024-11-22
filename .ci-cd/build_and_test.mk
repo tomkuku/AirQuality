@@ -42,5 +42,5 @@ ui_tests:
 	-project $(PROJECT) \
 	-scheme $(UI_TEST_SCHEME) \
 	-destination platform=$(PLATFORM),name=$(DEVICE),OS=$(OS_VERSION) \
-	-resultBundlePath $(XCRESULT_PATH) \
+	-resultBundlePath danger2.xcresult \
 	| xcbeautify
