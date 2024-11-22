@@ -26,6 +26,7 @@ settings:
     GENERATE_INFOPLIST_FILE: NO
     SWIFT_STRICT_CONCURRENCY: complete
     CODE_SIGN_STYLE: NO
+    SWIFT_VERSION: 5.10
     INFOPLIST_FILE: "AirQuality/Info.plist"
 
   configs:
