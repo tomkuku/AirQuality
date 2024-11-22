@@ -33,6 +33,7 @@ struct SelectedStationView: View {
                     
                     viewModel.refresh()
                 }
+                .accessibilityIdentifier(AccessibilityIdentifiers.SelectedStationView.sensorsList.rawValue)
             } else {
                 VStack(spacing: 12) {
                     ProgressView()

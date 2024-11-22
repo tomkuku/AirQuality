@@ -28,6 +28,7 @@ struct AddObservedStationContainerView: View {
                         title: { Text(L10n.ListItem.itemTitle) },
                         icon: { Image.textJustify }
                     )
+                    .accessibilityIdentifier(AccessibilityIdentifiers.AddObservedStationContainerView.tabViewList.rawValue)
                 }
                 .tag(Item.list)
             
@@ -37,6 +38,7 @@ struct AddObservedStationContainerView: View {
                         title: { Text(L10n.MapItem.itemTitle) },
                         icon: { Image.mapFill }
                     )
+                    .accessibilityIdentifier(AccessibilityIdentifiers.AddObservedStationContainerView.tabViewMap.rawValue)
                 }
                 .tag(Item.map)
         }

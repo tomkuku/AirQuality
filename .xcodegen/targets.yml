@@ -48,3 +48,18 @@ targets:
       - target: AirQuality
     postbuildScripts:
       - name: "Swiftlint"
+
+  AirQualityUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    supportedDestinations: [iOS]
+    sources:
+      - path: ../AirQuality/UIComponents/AccessibilityIdentifiers.swift
+      - path: ../AirQualityUITests
+        excludes:
+          - __Snapshots__
+    dependencies:
+      - target: AirQuality
+      - { package: SwiftSnapshotTesting, product: "SnapshotTesting" }
+    postbuildScripts:
+      - name: "Swiftlint"

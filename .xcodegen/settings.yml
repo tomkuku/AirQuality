@@ -1,17 +1,17 @@
 configs:
   Development_Debug: debug
   Development_Release: release
-  Tests: debug
   Production_Debug: debug
   Production_Release: release
+  Tests: debug
 
 
 configFiles:
   Development_Debug: ../ConfigurationFiles/Development.xcconfig
   Development_Release: ../ConfigurationFiles/Development.xcconfig
-  Tests: ../ConfigurationFiles/Development.xcconfig
   Production_Debug: ../ConfigurationFiles/Production.xcconfig
   Production_Release: ../ConfigurationFiles/Production.xcconfig
+  Tests: ../ConfigurationFiles/Tests.xcconfig
 
 
 settings:
@@ -38,9 +38,9 @@ settings:
       PRODUCT_BUNDLE_IDENTIFIER: "com.air.quality.dev"
       SWIFT_ACTIVE_COMPILATION_CONDITIONS: "DEBUG"
     Tests:
-      APP_DISPLAY_NAME: "AirQuality"
-      PRODUCT_BUNDLE_IDENTIFIER: "com.air.quality.dev"
-      SWIFT_ACTIVE_COMPILATION_CONDITIONS: "PROD"
+      APP_DISPLAY_NAME: "AirQuality Test"
+      PRODUCT_BUNDLE_IDENTIFIER: "com.air.quality.test"
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: "DEBUG TESTS"
     Production_Debug:
       APP_DISPLAY_NAME: "AirQuality"
       PRODUCT_BUNDLE_IDENTIFIER: "com.air.quality"

@@ -25,6 +25,7 @@ struct StationMapAnnotationView: MapContent {
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 50, height: 50, alignment: .center)
             }
+            .accessibilityIdentifier(AccessibilityIdentifiers.StationMapAnnotationView.annotation.rawValue)
             .onTapGesture {
                 isSelected = true
             }
@@ -51,10 +52,13 @@ struct StationMapAnnotationView: MapContent {
                     Group {
                         if let street = station.street {
                             Text(street)
+                                .accessibilityIdentifier(AccessibilityIdentifiers.StationMapAnnotationView.street.rawValue)
                         }
                         Text(station.cityName)
+                            .accessibilityIdentifier(AccessibilityIdentifiers.StationMapAnnotationView.cityName.rawValue)
                         Text(station.province)
                             .padding(.bottom, 8)
+                            .accessibilityIdentifier(AccessibilityIdentifiers.StationMapAnnotationView.province.rawValue)
                     }
                 }
                 .frame(alignment: .leading)
@@ -89,6 +93,7 @@ struct StationMapAnnotationView: MapContent {
                 .font(.system(size: 14, weight: .semibold))
                 .frame(height: 36)
                 .padding(.horizontal, 8)
+                .accessibilityIdentifier(AccessibilityIdentifiers.StationMapAnnotationView.addObservedStationButton.rawValue)
         })
         .tint(.white)
         .controlSize(.small)

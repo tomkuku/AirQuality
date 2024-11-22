@@ -9,13 +9,6 @@ import Foundation
 import struct Alamofire.HTTPMethod
 
 extension Endpoint.Measurements: HTTPRequest {
-    var baseURL: String {
-        switch self {
-        case .get:
-            "https://api.gios.gov.pl"
-        }
-    }
-    
     var path: String {
         switch self {
         case .get(let id):

@@ -2,3 +2,6 @@ packages:
   Alamofire:
     url: https://github.com/Alamofire/Alamofire
     version: 5.9.1
+  SwiftSnapshotTesting:
+    url: https://github.com/pointfreeco/swift-snapshot-testing
+    version: 1.17.6

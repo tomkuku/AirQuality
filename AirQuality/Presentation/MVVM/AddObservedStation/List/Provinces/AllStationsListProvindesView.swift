@@ -37,6 +37,7 @@ struct AllStationsListProvindesView: View {
                     }
                 }
                 .listStyle(.inset)
+                .accessibilityIdentifier(AccessibilityIdentifiers.AllStationsListProvindesView.provindesList.rawValue)
                 .refreshable {
                     try? await Task.sleep(for: .milliseconds(600))
                     

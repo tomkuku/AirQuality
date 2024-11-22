@@ -58,10 +58,4 @@ final class AddStationToObservedCoordinator: CoordinatorBase, CoordinatorProtoco
     func goTo(_ navigationComponent: NavigationComponent) { 
         assertionFailure("No navigation for navigationComponent: \(navigationComponent)!")
     }
-    
-    override func dismiss() {
-        super.dismiss()
-        
-        showToast(.changesHaveBeenSaved())
-    }
 }

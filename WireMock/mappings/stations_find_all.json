@@ -1,0 +1,10 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/pjp-api/rest/station/findAll"
+    },
+    "response": {
+        "status": 200,
+        "bodyFileName": "stations_find_all.json"
+    }
+}

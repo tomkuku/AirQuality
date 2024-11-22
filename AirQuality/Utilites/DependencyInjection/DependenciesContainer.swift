@@ -108,7 +108,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         
         self.stationSensorsParamsNetworkMapper = StationSensorsParamsNetworkMapper()
         
-#if targetEnvironment(simulator)
+#if targetEnvironment(simulator) || TESTS
         if ProcessInfo.isPreview {
             SwiftDataPreviewAccessor.shared = .init(modelContainer: modelContainer)
             
@@ -139,7 +139,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     
     private static func createModelContainer() throws -> ModelContainer {
         let schema = Schema([StationLocalDatabaseModel.self])
-        let isStoredInMemoryOnly = ProcessInfo.isPreview || ProcessInfo.isTest
+        let isStoredInMemoryOnly = ProcessInfo.isPreview || ProcessInfo.isTest || ProcessInfo.isUITests
         
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: isStoredInMemoryOnly)
         return try ModelContainer(for: schema, configurations: [configuration])

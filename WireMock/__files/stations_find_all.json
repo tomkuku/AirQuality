@@ -1,0 +1,162 @@
+[
+    {
+        "id": 400,
+        "stationName": "Kraków, Aleja Krasińskiego",
+        "gegrLat": "50.057678",
+        "gegrLon": "19.926189",
+        "city": {
+            "id": 415,
+            "name": "Kraków",
+            "commune": {
+                "communeName": "Kraków",
+                "districtName": "Kraków",
+                "provinceName": "MAŁOPOLSKIE"
+            }
+        },
+        "addressStreet": "al. Krasińskiego"
+    },
+    {
+        "id": 401,
+        "stationName": "Kraków, ul. Bujaka",
+        "gegrLat": "50.010575",
+        "gegrLon": "19.949189",
+        "city": {
+            "id": 415,
+            "name": "Kraków",
+            "commune": {
+                "communeName": "Kraków",
+                "districtName": "Kraków",
+                "provinceName": "MAŁOPOLSKIE"
+            }
+        },
+        "addressStreet": "ul. Bujaka"
+    },
+    {
+        "id": 402,
+        "stationName": "Kraków, ul. Bulwarowa",
+        "gegrLat": "50.069308",
+        "gegrLon": "20.053492",
+        "city": {
+            "id": 415,
+            "name": "Kraków",
+            "commune": {
+                "communeName": "Kraków",
+                "districtName": "Kraków",
+                "provinceName": "MAŁOPOLSKIE"
+            }
+        },
+        "addressStreet": "ul. Bulwarowa"
+    },
+    {
+        "id": 444,
+        "stationName": "Tarnów, ul. Bitwy pod Studziankami",
+        "gegrLat": "50.020169",
+        "gegrLon": "21.004167",
+        "city": {
+            "id": 958,
+            "name": "Tarnów",
+            "commune": {
+                "communeName": "Tarnów",
+                "districtName": "Tarnów",
+                "provinceName": "MAŁOPOLSKIE"
+            }
+        },
+        "addressStreet": "ul. Bitwy pod Studziankami"
+    },
+    {
+        "id": 10120,
+        "stationName": "Tarnów, ul. Ks. Romana Sitko",
+        "gegrLat": "50.018253",
+        "gegrLon": "20.992578",
+        "city": {
+            "id": 958,
+            "name": "Tarnów",
+            "commune": {
+                "communeName": "Tarnów",
+                "districtName": "Tarnów",
+                "provinceName": "MAŁOPOLSKIE"
+            }
+        },
+        "addressStreet": "ul. Ks. Romana Sitko"
+    },
+    {
+        "id": 426,
+        "stationName": "Nowy Sącz, ul. Nadbrzeżna",
+        "gegrLat": "49.619281",
+        "gegrLon": "20.714403",
+        "city": {
+            "id": 623,
+            "name": "Nowy Sącz",
+            "commune": {
+                "communeName": "Nowy Sącz",
+                "districtName": "Nowy Sącz",
+                "provinceName": "MAŁOPOLSKIE"
+            }
+        },
+        "addressStreet": "ul. Nadbrzeżna"
+    },
+    {
+        "id": 530,
+        "stationName": "Warszawa, al. Niepodległości",
+        "gegrLat": "52.219298",
+        "gegrLon": "21.004724",
+        "city": {
+            "id": 1006,
+            "name": "Warszawa",
+            "commune": {
+                "communeName": "Warszawa",
+                "districtName": "Warszawa",
+                "provinceName": "MAZOWIECKIE"
+            }
+        },
+        "addressStreet": "al. Niepodległości 227/233"
+    },
+    {
+        "id": 550,
+        "stationName": "Warszawa, ul. Wokalna",
+        "gegrLat": "52.160772",
+        "gegrLon": "21.033819",
+        "city": {
+            "id": 1006,
+            "name": "Warszawa",
+            "commune": {
+                "communeName": "Warszawa",
+                "districtName": "Warszawa",
+                "provinceName": "MAZOWIECKIE"
+            }
+        },
+        "addressStreet": "ul. Wokalna 1"
+    },
+    {
+        "id": 552,
+        "stationName": "Warszawa, ul. Kondratowicza",
+        "gegrLat": "52.290864",
+        "gegrLon": "21.042458",
+        "city": {
+            "id": 1006,
+            "name": "Warszawa",
+            "commune": {
+                "communeName": "Warszawa",
+                "districtName": "Warszawa",
+                "provinceName": "MAZOWIECKIE"
+            }
+        },
+        "addressStreet": "ul. Kondratowicza 8"
+    },
+    {
+        "id": 944,
+        "stationName": "Poznań, ul. Dąbrowskiego",
+        "gegrLat": "52.420319",
+        "gegrLon": "16.877289",
+        "city": {
+            "id": 729,
+            "name": "Poznań",
+            "commune": {
+                "communeName": "Poznań",
+                "districtName": "Poznań",
+                "provinceName": "WIELKOPOLSKIE"
+            }
+        },
+        "addressStreet": "ul. Dąbrowskiego 169"
+    }
+]

@@ -16,16 +16,28 @@ struct AirQualityApp: App {
     @StateObject private var alertsCoordinator: AlertsCoordinator
     @StateObject private var toastsCoordinator: ToastsCoordinator
     
+    var value: String {
+        return ProcessInfo.processInfo.arguments.joined(separator: "\n")
+        
+        if ProcessInfo.processInfo.arguments.contains("-uitests") {
+            return "UI TESTS"
+        } else if ProcessInfo.processInfo.arguments.contains("-unit-tests") {
+            return "UNIT TESTS"
+        } else {
+            return "dupa"
+        }
+    }
+    
     var body: some Scene {
         WindowGroup {
-            if ProcessInfo.isTest {
-                Text("Tests")
-            } else {
+//            if ProcessInfo.isTest {
+//                Text(value)
+//            } else {
                 CoordinatorInitialNavigationView(coordinator: appCoordinator)
                     .taskOnFirstAppear {
                         appCoordinator.monitorInternetConnection()
                     }
-            }
+//            }
         }
     }
     
@@ -44,6 +56,7 @@ struct AirQualityApp: App {
         self._appCoordinator = StateObject(wrappedValue: appCoordinator)
         self._alertsCoordinator = StateObject(wrappedValue: alertsCoordinator)
         self._toastsCoordinator = StateObject(wrappedValue: toastsCoordinator)
+        
     }
 }
 

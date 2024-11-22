@@ -46,6 +46,7 @@ struct DoneToolbarButton: ViewModifier {
                 Button(action: action, label: {
                     Text(L10n.title)
                 })
+                .accessibilityIdentifier(AccessibilityIdentifiers.doneToolbarButton.rawValue)
             }
     }
     

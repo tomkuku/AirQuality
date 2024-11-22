@@ -25,6 +25,10 @@ actor HTTPDataSource: HTTPDataSourceProtocol {
         if !ProcessInfo.isTest {
             eventMonitors.append(EventMonitorLogger())
         }
+        
+        if ProcessInfo.processInfo.arguments.contains("-local_mock") {
+            
+        }
 #endif
         
         self.session = Session(
