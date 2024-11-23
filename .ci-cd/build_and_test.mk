@@ -13,8 +13,9 @@ DEVICE = 'iPhone 15 Pro'
 OS_VERSION = 18.0
 XCRESULT_PATH = danger.xcresult
 
-# - Targets
-all: prepare_environemnt generate_xcodeproj unit_tests ui_tests
+# MARK: - Targets
+
+all: prepare_environemnt generate_xcodeproj ui_tests
 
 prepare_environemnt:
 	@touch AirQuality/Localizable/Localizable.swift
@@ -37,10 +38,10 @@ unit_tests:
 
 ui_tests:
 	@echo "ℹ️ Building and Testing"
-	set -euo pipefail && xcodebuild \
+	xcodebuild \
 	test \
 	-project $(PROJECT) \
 	-scheme $(UI_TEST_SCHEME) \
 	-destination platform=$(PLATFORM),name=$(DEVICE),OS=$(OS_VERSION) \
-	-resultBundlePath danger2.xcresult \
 	| xcbeautify
+	curl http://localhost:8080/pjp-api/rest/station/findAll

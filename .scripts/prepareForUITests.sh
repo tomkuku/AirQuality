@@ -38,3 +38,7 @@ java \
 --port 8080 \
 > /dev/null 2>&1 \
 &
+
+while ! lsof -i :8080 > /dev/null; do
+  sleep 1
+done

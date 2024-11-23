@@ -11,4 +11,4 @@ readonly device_identifier="$1"
 
 xcrun simctl status_bar $device_identifier clear
 
-ps aux | grep "wire-mock.jar" | grep -v grep | awk '{print $2}' | xargs kill -KILL
+# ps aux | grep "wire-mock.jar" | grep -v grep | awk '{print $2}' | xargs kill -KILL
