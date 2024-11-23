@@ -22,8 +22,6 @@ final class AirQualityUITestsLaunchTests: XCTestCase, @unchecked Sendable {
         try await super.setUp()
         
         await MainActor.run { [weak self] in
-            XCUIDevice.shared.appearance = .dark
-            
             self?.app = XCUIApplication()
             self?.app.launchArguments = ["-uitests"]
             self?.app.resetAuthorizationStatus(for: .location)
@@ -86,7 +84,7 @@ final class AirQualityUITestsLaunchTests: XCTestCase, @unchecked Sendable {
         findTheNearestStationButton.tap()
         
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        let allowOnceButton = springboard.alerts.element(boundBy: 0).buttons["Pozwól raz"]
+        let allowOnceButton = springboard.alerts.element(boundBy: 0).buttons.element(boundBy: 0)
         
         XCTAssertTrue(allowOnceButton.waitForExistence(timeout: 4))
         
