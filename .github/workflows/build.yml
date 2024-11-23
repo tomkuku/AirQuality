@@ -22,6 +22,11 @@ jobs:
     - name: Build and Test
       run: |
         make -f .ci-cd/build_and_test.mk
+        ./.scripts/moveFailedSnapshotsImages.sh
+    - uses: actions/upload-artifact@v3
+      with:
+        name: UITestsSnapshots
+        path: UITestsSnapshots
     - name: Run Danger
       if: github.event_name == 'pull_request'
       run: |

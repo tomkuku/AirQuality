@@ -22,6 +22,8 @@ final class AirQualityUITestsLaunchTests: XCTestCase, @unchecked Sendable {
         try await super.setUp()
         
         await MainActor.run { [weak self] in
+            XCUIDevice.shared.appearance = .dark
+            
             self?.app = XCUIApplication()
             self?.app.launchArguments = ["-uitests"]
             self?.app.resetAuthorizationStatus(for: .location)
