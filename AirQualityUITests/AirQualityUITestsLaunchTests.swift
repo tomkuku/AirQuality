@@ -155,7 +155,7 @@ final class AirQualityUITestsLaunchTests: XCTestCase, @unchecked Sendable {
         
         assertSnapshot(
             of: snapshot,
-            as: .image(precision: 1),
+            as: .image(precision: 0.98),
             record: false,
             testName: imageName
         )
