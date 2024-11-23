@@ -38,9 +38,10 @@ unit_tests:
 
 ui_tests:
 	echo "ℹ️ Building and Testing"
-	xcodebuild \
+	set -euo pipefail && xcodebuild \
 	test \
 	-project $(PROJECT) \
 	-scheme $(UI_TEST_SCHEME) \
 	-destination platform=$(PLATFORM),name=$(DEVICE),OS=$(OS_VERSION) \
-	| xcbeautify
+	| xcbeautify \
+	|| ./.scripts/moveFailedSnapshotsImages.sh

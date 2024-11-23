@@ -22,8 +22,8 @@ jobs:
     - name: Build and Test
       run: |
         make -f .ci-cd/build_and_test.mk
-        ./.scripts/moveFailedSnapshotsImages.sh
     - uses: actions/upload-artifact@v3
+      if: failure()
       with:
         name: UITestsSnapshots
         path: UITestsSnapshots
