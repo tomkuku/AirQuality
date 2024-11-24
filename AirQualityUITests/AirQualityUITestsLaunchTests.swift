@@ -67,11 +67,11 @@ final class AirQualityUITestsLaunchTests: XCTestCase, @unchecked Sendable {
         
         mapButton.tap()
         
-        let mapBottomMenyGrabber = app.buttons[AccessibilityIdentifiers.BottomSheet.grabber.rawValue]
+        let mapBottomMenuGrabber = app.buttons[AccessibilityIdentifiers.BottomSheet.grabber.rawValue]
         
-        XCTAssertTrue(mapBottomMenyGrabber.waitForExistence(timeout: 4))
+        XCTAssertTrue(mapBottomMenuGrabber.waitForExistence(timeout: 4))
         
-        mapBottomMenyGrabber.tap()
+        mapBottomMenuGrabber.tap()
         
         let findTheNearestStationButton = app.buttons[AccessibilityIdentifiers.AddObservedStationMapView.findTheNearestStationButton.rawValue]
         
@@ -95,8 +95,6 @@ final class AirQualityUITestsLaunchTests: XCTestCase, @unchecked Sendable {
         let annotation = app.images[AccessibilityIdentifiers.StationMapAnnotationView.annotation.rawValue]
         
         XCTAssertTrue(annotation.waitForExistence(timeout: 4))
-        
-        testSnapshot(imageName: "theNearestStation")
         
         annotation.tap()
         
