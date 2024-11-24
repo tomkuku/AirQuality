@@ -48,6 +48,9 @@ targets:
       - target: AirQuality
     postbuildScripts:
       - name: "Swiftlint"
+        basedOnDependencyAnalysis: no
+        script: |
+          ./.scripts/swiftlint.sh
 
   AirQualityUITests:
     type: bundle.ui-testing
@@ -63,3 +66,6 @@ targets:
       - { package: SwiftSnapshotTesting, product: "SnapshotTesting" }
     postbuildScripts:
       - name: "Swiftlint"
+        basedOnDependencyAnalysis: no
+        script: |
+          ./.scripts/swiftlint.sh

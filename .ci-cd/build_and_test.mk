@@ -13,20 +13,9 @@ DEVICE = 'iPhone 15 Pro'
 OS_VERSION = 18.0
 XCRESULT_PATH = danger.xcresult
 
-# MARK: - Targets
+# MARK: UnitTests
 
-all: prepare_environemnt generate_xcodeproj ui_tests unit_tests
-
-prepare_environemnt:
-	@touch AirQuality/Localizable/Localizable.swift
-	@touch AirQuality/Assets/Assets.swift
-	@touch AirQuality/Assets/Params.swift
-
-generate_xcodeproj:
-	@echo "ℹ️ Generating $(PROJECT)"
-	@xcodegen generate
-
-unit_tests:
+unit_tests: shared
 	@echo "ℹ️ Building and Testing"
 	set -euo pipefail && xcodebuild \
 	test \
@@ -36,12 +25,27 @@ unit_tests:
 	-resultBundlePath Results/unitTets.xcresult \
 	| xcbeautify
 
-ui_tests:
+# MARK: UITests
+
+ui_tests: shared
 	echo "ℹ️ Building and Testing"
 	set -euo pipefail && xcodebuild \
 	test \
 	-project $(PROJECT) \
 	-scheme $(UI_TEST_SCHEME) \
 	-destination platform=$(PLATFORM),name=$(DEVICE),OS=$(OS_VERSION) \
-	-resultBundlePath Results/uiTets.xcresult \
+	-resultBundlePath Results/uiTests.xcresult \
 	| xcbeautify
+
+# MARK: Shared
+
+shared: prepare_environemnt generate_xcodeproj
+
+prepare_environemnt:
+	@touch AirQuality/Localizable/Localizable.swift
+	@touch AirQuality/Assets/Assets.swift
+	@touch AirQuality/Assets/Params.swift
+
+generate_xcodeproj:
+	@echo "ℹ️ Generating $(PROJECT)"
+	@xcodegen generate

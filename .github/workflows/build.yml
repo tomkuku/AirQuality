@@ -19,12 +19,16 @@ jobs:
     - name: Install Dependencies
       run: |
         ./.scripts/installBrewDependencyIfNeeded.sh xcbeautify xcodegen swiftlint swiftgen
-    - name: Build and Test
+    - name: Unit Tests
       run: |
-        make -f .ci-cd/build_and_test.mk
+        make -f .ci-cd/build_and_test.mk -B unit_tests
+    - name: UI Tests
+      run: |
+        make -f .ci-cd/build_and_test.mk -B ui_tests
     - name: Prepare xcresult
       if: always()
       run: |
+        ls -la Results
         xcrun xcresulttool merge Results/*.xcresult --output-path result.xcresult
     - uses: actions/upload-artifact@v3
       if: failure()
@@ -32,7 +36,7 @@ jobs:
         name: UITestsSnapshots
         path: UITestsSnapshots
     - name: Run Danger
-      if: github.event_name == 'pull_request'
+      if: always()
       run: |
         bundle install
         bundle exec danger
