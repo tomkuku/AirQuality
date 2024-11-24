@@ -4,7 +4,11 @@ on:
   pull_request:
     types: [opened, reopened, synchronize]
 
-jobs:  
+env:
+  XCRESULTS_DIR_PATH: Results
+  FAILUE_UI_TESTS_SNAPSHOTS_DIR: UITestsSnapshots
+
+jobs:
   build-and-test:
     runs-on: macos-latest
     steps:
@@ -28,13 +32,12 @@ jobs:
     - name: Prepare xcresult
       if: always()
       run: |
-        ls -la Results
-        xcrun xcresulttool merge Results/*.xcresult --output-path result.xcresult
+        ./.scripts/prepareXcresults.sh
     - uses: actions/upload-artifact@v3
       if: failure()
       with:
         name: UITestsSnapshots
-        path: UITestsSnapshots
+        path: ${{ env.FAILUE_UI_TESTS_SNAPSHOTS_DIR }}
     - name: Run Danger
       if: always()
       run: |
