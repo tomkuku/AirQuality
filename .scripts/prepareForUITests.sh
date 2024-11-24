@@ -7,28 +7,26 @@
 #  Created by Tomasz Kukułka on 06/05/2024.
 #
 
-readonly device_identifier="$1"
-readonly dirRoot="$2"
-
-readonly device_state=`xcrun simctl list devices | grep "$device_identifier" | awk '{print $NF}' | sed 's/[()]//g'`
+readonly deviceIdentifier=$TARGET_DEVICE_IDENTIFIER
+readonly dirRoot="$PROJECT_DIR"
+readonly deviceState=`xcrun simctl list devices | grep "$deviceIdentifier" | awk '{print $NF}' | sed 's/[()]//g'`
 
 # Launch WireMock and move its process to the backgrund, block the standard output.
 java \
 -jar ${dirRoot}/WireMock/wire-mock.jar \
 --root-dir ${dirRoot}/WireMock \
 --port 8080 \
-> /dev/null 2>&1 \
-&
+> /dev/null 2>&1 &
 
-if [ "$device_state" != "Booted" ]; then
-    xcrun simctl boot $device_identifier
-    xcrun simctl bootstatus $device_identifier
+if [ "$deviceState" != "Booted" ]; then
+    xcrun simctl boot $deviceIdentifier
+    xcrun simctl bootstatus $deviceIdentifier
 fi
 
-xcrun simctl ui $device_identifier appearance dark
+xcrun simctl ui $deviceIdentifier appearance dark
 
 xcrun simctl \
-status_bar $device_identifier \
+status_bar $deviceIdentifier \
 override \
 --time "9:41" \
 --dataNetwork wifi \

@@ -15,7 +15,7 @@ XCRESULT_PATH = danger.xcresult
 
 # MARK: - Targets
 
-all: prepare_environemnt generate_xcodeproj ui_tests
+all: prepare_environemnt generate_xcodeproj ui_tests unit_tests
 
 prepare_environemnt:
 	@touch AirQuality/Localizable/Localizable.swift
@@ -33,7 +33,7 @@ unit_tests:
 	-project $(PROJECT) \
 	-scheme $(UNIT_TEST_SCHEME) \
 	-destination platform=$(PLATFORM),name=$(DEVICE),OS=$(OS_VERSION) \
-	-resultBundlePath $(XCRESULT_PATH) \
+	-resultBundlePath Results/unitTets.xcresult \
 	| xcbeautify
 
 ui_tests:
@@ -43,5 +43,5 @@ ui_tests:
 	-project $(PROJECT) \
 	-scheme $(UI_TEST_SCHEME) \
 	-destination platform=$(PLATFORM),name=$(DEVICE),OS=$(OS_VERSION) \
-	| xcbeautify \
-	|| ./.scripts/moveFailedSnapshotsImages.sh
+	-resultBundlePath Results/uiTets.xcresult \
+	| xcbeautify

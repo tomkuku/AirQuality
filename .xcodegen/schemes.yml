@@ -58,11 +58,12 @@ schemes:
       preActions:
         - settingsTarget: AirQualityUITests
           script: |
-            $PROJECT_DIR/.scripts/prepareForUITests.sh $TARGET_DEVICE_IDENTIFIER $PROJECT_DIR
+            $PROJECT_DIR/.scripts/prepareForUITests.sh
       postActions:
         - settingsTarget: AirQualityUITests
           script: |
-            $PROJECT_DIR/.scripts/cleanUpAfterUITests.sh $TARGET_DEVICE_IDENTIFIER
+            $PROJECT_DIR/.scripts/cleanUpAfterUITests.sh
+            $PROJECT_DIR/.scripts/copyFailedUITestsSnapshots.sh
       runPostActionsOnFailure: true
 
   UnitTests:

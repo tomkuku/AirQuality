@@ -22,6 +22,10 @@ jobs:
     - name: Build and Test
       run: |
         make -f .ci-cd/build_and_test.mk
+    - name: Prepare xcresult
+      if: always()
+      run: |
+        xcrun xcresulttool merge Results/*.xcresult --output-path result.xcresult
     - uses: actions/upload-artifact@v3
       if: failure()
       with:
