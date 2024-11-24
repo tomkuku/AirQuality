@@ -33,10 +33,6 @@ final class AirQualityUITestsLaunchTests: XCTestCase, @unchecked Sendable {
     func testLaunch() {
         testSnapshot(imageName: "noObserbedStations")
         
-        let test = "xxx"
-        
-        let a = "c" as? String
-        
         let noObservedStationsText = app.staticTexts[AccessibilityIdentifiers.ObservedStationsListView.noObservedStations.rawValue]
         
         XCTAssertTrue(noObservedStationsText.exists)

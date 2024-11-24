@@ -23,7 +23,7 @@ if [ "$deviceState" != "Booted" ]; then
     xcrun simctl bootstatus $deviceIdentifier
 fi
 
-xcrun simctl ui $deviceIdentifier appearance dark
+xcrun simctl ui $deviceIdentifier appearance light
 
 xcrun simctl \
 status_bar $deviceIdentifier \

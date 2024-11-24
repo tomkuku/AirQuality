@@ -17,7 +17,6 @@ final class BackgroundTasksManagerSpy: BackgroundTasksManagerProtocol, @unchecke
         case endFiniteLengthTask(String)
     }
     
-    
     var expectation: XCTestExpectation?
     var events: [Event] = []
     
