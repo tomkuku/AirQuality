@@ -1,0 +1,10 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/pjp-api/rest/station/sensors/944"
+    },
+    "response": {
+        "status": 200,
+        "bodyFileName": "station_944_sensors.json"
+    }
+}

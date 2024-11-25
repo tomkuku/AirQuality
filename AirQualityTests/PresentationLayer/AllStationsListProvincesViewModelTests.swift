@@ -14,6 +14,7 @@ final class AllStationsListProvincesViewModelTests: BaseTestCase, @unchecked Sen
     private var sut: AllStationsListProvincesViewModel!
     
     private var fetchAllStationsUseCaseSpy: FetchAllStationsUseCaseSpy!
+    private var networkConnectionMonitorUseCaseSpy: NetworkConnectionMonitorUseCaseSpy!
     
     private var station1: Station!
     private var station2: Station!
@@ -26,8 +27,10 @@ final class AllStationsListProvincesViewModelTests: BaseTestCase, @unchecked Sen
         try await super.setUp()
         
         fetchAllStationsUseCaseSpy = FetchAllStationsUseCaseSpy()
+        networkConnectionMonitorUseCaseSpy = NetworkConnectionMonitorUseCaseSpy()
         
         dependenciesContainerDummy[\.fetchAllStationsUseCase] = fetchAllStationsUseCaseSpy
+        dependenciesContainerDummy[\.networkConnectionMonitorUseCase] = networkConnectionMonitorUseCaseSpy
         
         station1 = Station.dummy(id: 1, cityName: "Cracow", province: "Malopolska", street: "Bujaka")
         station2 = Station.dummy(id: 2, cityName: "Plock", province: "Mazowieckie", street: "Reja")
@@ -46,6 +49,8 @@ final class AllStationsListProvincesViewModelTests: BaseTestCase, @unchecked Sen
     @MainActor
     func testFetchStations() {
         // Given
+        networkConnectionMonitorUseCaseSpy.isConnectionSatisfiedReturnValue = true
+        
         fetchAllStationsUseCaseSpy.fetchStationsResult = .success([
             station1, station2, station3, station4, station5, station6
         ])
@@ -76,13 +81,15 @@ final class AllStationsListProvincesViewModelTests: BaseTestCase, @unchecked Sen
     @MainActor
     func testFetchStationsWhenFetchingStationsFailed() {
         // Given
+        networkConnectionMonitorUseCaseSpy.isConnectionSatisfiedReturnValue = true
+        
         fetchAllStationsUseCaseSpy.fetchStationsResult = .failure(ErrorDummy())
         
-        var alert: AlertModel?
+        var error: Error?
         
-        sut.alertSubject
+        sut.errorSubject
             .sink {
-                alert = $0
+                error = $0
                 self.expectation.fulfill()
             }
             .store(in: &cancellables)
@@ -90,7 +97,7 @@ final class AllStationsListProvincesViewModelTests: BaseTestCase, @unchecked Sen
         sut.$provinces
             .dropFirst()
             .sink { _ in
-                XCTFail("Provinces publisher should not have pubslihed!")
+                XCTFail("Provinces publisher should not have published!")
             }
             .store(in: &cancellables)
         
@@ -100,8 +107,12 @@ final class AllStationsListProvincesViewModelTests: BaseTestCase, @unchecked Sen
         // Then
         wait(for: [expectation], timeout: 2.0)
         
+        guard error is ErrorDummy else {
+            XCTFail("Error should be equal to ErrorDummy!")
+            return
+        }
+        
         XCTAssertEqual(fetchAllStationsUseCaseSpy.events, [.fetch])
-        XCTAssertEqual(alert, .somethigWentWrong())
     }
     
     // MARK: SearchedText DidChange
@@ -109,6 +120,8 @@ final class AllStationsListProvincesViewModelTests: BaseTestCase, @unchecked Sen
     @MainActor
     func testSearchedTextDidChangeWhenStationCityNameIsSearched() {
         // Given
+        networkConnectionMonitorUseCaseSpy.isConnectionSatisfiedReturnValue = true
+        
         fetchAllStationsUseCaseSpy.fetchStationsResult = .success([
             station1, station2, station3, station4, station5, station6
         ])
@@ -144,6 +157,8 @@ final class AllStationsListProvincesViewModelTests: BaseTestCase, @unchecked Sen
     @MainActor
     func testSearchedTextDidChangeWhenStationStreetIsSearched() {
         // Given
+        networkConnectionMonitorUseCaseSpy.isConnectionSatisfiedReturnValue = true
+        
         fetchAllStationsUseCaseSpy.fetchStationsResult = .success([
             station1, station2, station3, station4, station5, station6
         ])
@@ -179,6 +194,8 @@ final class AllStationsListProvincesViewModelTests: BaseTestCase, @unchecked Sen
     @MainActor
     func testSearchedTextDidChangeWhenAnyStationDoesNotMatch() {
         // Given
+        networkConnectionMonitorUseCaseSpy.isConnectionSatisfiedReturnValue = true
+        
         fetchAllStationsUseCaseSpy.fetchStationsResult = .success([
             station1, station2, station3, station4, station5, station6
         ])

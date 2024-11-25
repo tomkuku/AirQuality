@@ -16,7 +16,7 @@ final class SelectedStationViewModel: BaseViewModel {
     
     @Published private(set) var sensors: [Model.SensorRow] = []
     
-    var fomattedStationAddress: String {
+    var formattedStationAddress: String {
         if let stationStreet = station.street {
             return station.cityName + ", " + stationStreet
         }
@@ -48,6 +48,7 @@ final class SelectedStationViewModel: BaseViewModel {
     
     @Injected(\.getSensorsUseCase) private var getSensorsUseCase
     @Injected(\.sensorMeasurementDataFormatter) private var sensorMeasurementDataFormatter
+    @Injected(\.networkConnectionMonitorUseCase) private var networkConnectionMonitorUseCase
     
     // MARK: Lifecycle
     
@@ -64,6 +65,8 @@ final class SelectedStationViewModel: BaseViewModel {
         isLoading(true, objectWillChnage: true)
         
         do {
+            try await checkIsInternetConnected()
+            
             self.fetchedSensors = try await getSensorsUseCase.getSensors(for: station.id)
             
             let sensors = self.fetchedSensors
@@ -81,7 +84,8 @@ final class SelectedStationViewModel: BaseViewModel {
             isLoading(false, objectWillChnage: false)
             self.sensors = sensors
         } catch {
-            Logger.error("Fetching measurements for sensors with error \(error)")
+            
+            Logger.error("Fetching measurements for sensors with error: \(error)")
             errorSubject.send(error)
         }
     }

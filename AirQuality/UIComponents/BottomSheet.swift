@@ -45,6 +45,7 @@ struct BottomSheet<Content: View>: View {
                         .frame(width: 30, height: 10)
                         .padding(.top, 16)
                         .foregroundStyle(.gray)
+                        .accessibilityIdentifier(AccessibilityIdentifiers.BottomSheet.grabber.rawValue)
                 }
                 .background(.clear)
                 

@@ -8,16 +8,25 @@
 import Foundation
 import Network
 
-protocol NWPathMonitorProtocol: Sendable, AnyObject {
-    @preconcurrency var pathUpdateHandler: (@Sendable (_ newPath: NWPath) -> Void)? { get set }
-    
-    func start(queue: DispatchQueue)
-    func cancel()
+protocol HasNetworkConnectionMonitorUseCase {
+    var networkConnectionMonitorUseCase: NetworkConnectionMonitorUseCaseProtocol { get }
 }
 
-extension NWPathMonitor: NWPathMonitorProtocol { }
+protocol NetworkConnectionMonitorUseCaseProtocol: Sendable {
+    var isConnectionSatisfied: Bool { get async }
+    
+    func startMonitor(noConnectionBlock: @Sendable @escaping () -> ()) async
+}
 
-actor NetworkConnectionMonitorUseCase {
+actor NetworkConnectionMonitorUseCase: NetworkConnectionMonitorUseCaseProtocol {
+    
+    // MARK: Properties
+    
+    var isConnectionSatisfied: Bool {
+        get async {
+            pathMonitor.currentPath.status == .satisfied
+        }
+    }
     
     // MARK: Private properties
     

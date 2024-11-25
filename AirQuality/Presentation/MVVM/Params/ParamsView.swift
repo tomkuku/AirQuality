@@ -45,6 +45,7 @@ struct ParamsView: View {
                                 .foregroundStyle(Color.Standard.grey)
                         }
                 }
+                .accessibilityIdentifier(AccessibilityIdentifiers.ParamsView.params.rawValue)
             } else {
                 Text(L10n.noParams)
             }

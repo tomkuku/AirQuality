@@ -25,8 +25,6 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         super.init()
     }
     
-    var cancellables = Set<AnyCancellable>()
-    
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil

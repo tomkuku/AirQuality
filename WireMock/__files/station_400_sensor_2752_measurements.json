@@ -1,0 +1,99 @@
+{
+	"Lista danych pomiarowych": [
+		{
+			"Kod stanowiska": "MpKrakAlKras-PM2.5-1g",
+			"Data": "2024-11-22 08:00:00",
+			"Wartość": 11.8
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-PM2.5-1g",
+			"Data": "2024-11-22 07:00:00",
+			"Wartość": 8.0
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-PM2.5-1g",
+			"Data": "2024-11-22 06:00:00",
+			"Wartość": 6.0
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-PM2.5-1g",
+			"Data": "2024-11-22 05:00:00",
+			"Wartość": 5.9
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-PM2.5-1g",
+			"Data": "2024-11-22 04:00:00",
+			"Wartość": 8.8
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-PM2.5-1g",
+			"Data": "2024-11-22 03:00:00",
+			"Wartość": 11.6
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-PM2.5-1g",
+			"Data": "2024-11-22 02:00:00",
+			"Wartość": 13.2
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-PM2.5-1g",
+			"Data": "2024-11-22 01:00:00",
+			"Wartość": 13.8
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-PM2.5-1g",
+			"Data": "2024-11-22 00:00:00",
+			"Wartość": 11.9
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-PM2.5-1g",
+			"Data": "2024-11-21 23:00:00",
+			"Wartość": 12.2
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-PM2.5-1g",
+			"Data": "2024-11-21 22:00:00",
+			"Wartość": 13.5
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-PM2.5-1g",
+			"Data": "2024-11-21 21:00:00",
+			"Wartość": 12.7
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-PM2.5-1g",
+			"Data": "2024-11-21 20:00:00",
+			"Wartość": 12.7
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-PM2.5-1g",
+			"Data": "2024-11-21 19:00:00",
+			"Wartość": 10.8
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-PM2.5-1g",
+			"Data": "2024-11-21 18:00:00",
+			"Wartość": 8.6
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-PM2.5-1g",
+			"Data": "2024-11-21 17:00:00",
+			"Wartość": 7.2
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-PM2.5-1g",
+			"Data": "2024-11-21 16:00:00",
+			"Wartość": 7.2
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-PM2.5-1g",
+			"Data": "2024-11-21 15:00:00",
+			"Wartość": 5.7
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-PM2.5-1g",
+			"Data": "2024-11-21 14:00:00",
+			"Wartość": 3.6
+		}
+	]
+}

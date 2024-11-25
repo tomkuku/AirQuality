@@ -6,14 +6,40 @@
 #
 
 PROJECT = AirQuality.xcodeproj
-SCHEME = Development
+UI_TEST_SCHEME = UITests
+UNIT_TEST_SCHEME = UnitTests
 PLATFORM = 'iOS Simulator'
 DEVICE = 'iPhone 15 Pro'
-OS_VERSION = 17.4
+OS_VERSION = 18.0
 XCRESULT_PATH = danger.xcresult
 
-# - Targets
-all: prepare_environemnt generate_xcodeproj build_and_test
+# MARK: UnitTests
+
+unit_tests: shared
+	@echo "ℹ️ Building and Testing"
+	set -euo pipefail && xcodebuild \
+	test \
+	-project $(PROJECT) \
+	-scheme $(UNIT_TEST_SCHEME) \
+	-destination platform=$(PLATFORM),name=$(DEVICE),OS=$(OS_VERSION) \
+	-resultBundlePath Results/unitTets.xcresult \
+	| xcbeautify
+
+# MARK: UITests
+
+ui_tests: shared
+	echo "ℹ️ Building and Testing"
+	set -euo pipefail && xcodebuild \
+	test \
+	-project $(PROJECT) \
+	-scheme $(UI_TEST_SCHEME) \
+	-destination platform=$(PLATFORM),name=$(DEVICE),OS=$(OS_VERSION) \
+	-resultBundlePath Results/uiTests.xcresult \
+	| xcbeautify
+
+# MARK: Shared
+
+shared: prepare_environemnt generate_xcodeproj
 
 prepare_environemnt:
 	@touch AirQuality/Localizable/Localizable.swift
@@ -23,13 +49,3 @@ prepare_environemnt:
 generate_xcodeproj:
 	@echo "ℹ️ Generating $(PROJECT)"
 	@xcodegen generate
-
-build_and_test:
-	@echo "ℹ️ Building and Testing"
-	set -euo pipefail && xcodebuild \
-	test \
-	-project $(PROJECT) \
-	-scheme $(SCHEME) \
-	-destination platform=$(PLATFORM),name=$(DEVICE),OS=$(OS_VERSION) \
-	-resultBundlePath $(XCRESULT_PATH) \
-	| xcbeautify

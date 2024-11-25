@@ -18,11 +18,13 @@ struct AirQualityApp: App {
     
     var body: some Scene {
         WindowGroup {
-            if ProcessInfo.isTest {
-                Text("Tests")
+            if ProcessInfo.isUnitTests {
+                Text("Unit Tests")
             } else {
                 CoordinatorInitialNavigationView(coordinator: appCoordinator)
-                    .coordinateSpace(name: "Custom")
+                    .taskOnFirstAppear {
+                        appCoordinator.monitorInternetConnection()
+                    }
             }
         }
     }
@@ -42,6 +44,7 @@ struct AirQualityApp: App {
         self._appCoordinator = StateObject(wrappedValue: appCoordinator)
         self._alertsCoordinator = StateObject(wrappedValue: alertsCoordinator)
         self._toastsCoordinator = StateObject(wrappedValue: toastsCoordinator)
+        
     }
 }
 

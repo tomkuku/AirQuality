@@ -1,0 +1,9 @@
+//
+//  Tests.xcconfig
+//  AirQuality
+//
+//  Created by Tomasz Kukułka on 18/11/2024.
+//
+
+GIOS_API_BASE_URL = http:/$()/localhost:8080
+ALLOWS_LOCAL_NETWORK = YES

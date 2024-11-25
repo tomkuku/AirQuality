@@ -12,6 +12,14 @@ extension ProcessInfo {
         processInfo.environment["IS_TEST"] != nil
     }
     
+    static var isUnitTests: Bool {
+        processInfo.arguments.contains("-unit-tests")
+    }
+    
+    static var isUITests: Bool {
+        processInfo.arguments.contains("-uitests")
+    }
+    
     static var isPreview: Bool {
         processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != nil
     }

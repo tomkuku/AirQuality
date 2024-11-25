@@ -22,6 +22,9 @@
 "Alert.FindingTheNearestStationsFailed.title" = "Szukanie najbliższej stacji nie powiodło się";
 "Alert.FindingTheNearestStationsFailed.message" = "Spróbuj ponownie później.";
 
+"Alert.NoInternetConnection.title" = "Brak połączenia z Internetem";
+"Alert.NoInternetConnection.message" = "Przejdz do ustawień aby połączyć z Internetem.";
+
 "Alert.Button.ok" = "Ok";
 "Alert.Button.cancel" = "Anuluj";
 "Alert.Button.goToSettings" = "Przejdź do ustawień";
@@ -30,7 +33,7 @@
 
 "ToastModel.observedStationWasAdded" = "Stacja została dodany do listy obserwowanych";
 "ToastModel.observedStationWasDeleted" = "Stacja została usunięta z listy obserwowanych";
-"ToastModel.noInternetConnection" = "Brak połączenia z internetem";
+"ToastModel.noInternetConnection" = "Brak połączenia z Internetem";
 "ToastModel.changesHaveBeenSaved" = "Zmiany zostały zapisane";
 
 // MARK: AddObservedStationContainerView

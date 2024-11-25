@@ -50,11 +50,13 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     let stationSensorsParamsNetworkMapper: any StationSensorsParamsNetworkMapperProtocol
     let getUserLocationUseCase: GetUserLocationUseCaseProtocol
     let uiApplication: UIApplicationProtocol
+    let networkConnectionMonitorUseCase: NetworkConnectionMonitorUseCaseProtocol
     
     // swiftlint:disable function_body_length
     @MainActor
     init() throws {
         self.uiApplication = UIApplication.shared
+        self.networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCase()
         
         let httpDataSource = HTTPDataSource()
         
@@ -106,7 +108,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         
         self.stationSensorsParamsNetworkMapper = StationSensorsParamsNetworkMapper()
         
-#if targetEnvironment(simulator)
+#if targetEnvironment(simulator) || TESTS
         if ProcessInfo.isPreview {
             SwiftDataPreviewAccessor.shared = .init(modelContainer: modelContainer)
             
@@ -137,7 +139,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     
     private static func createModelContainer() throws -> ModelContainer {
         let schema = Schema([StationLocalDatabaseModel.self])
-        let isStoredInMemoryOnly = ProcessInfo.isPreview || ProcessInfo.isTest
+        let isStoredInMemoryOnly = ProcessInfo.isPreview || ProcessInfo.isTest || ProcessInfo.isUITests
         
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: isStoredInMemoryOnly)
         return try ModelContainer(for: schema, configurations: [configuration])

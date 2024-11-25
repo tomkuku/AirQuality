@@ -15,6 +15,7 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
     
     private var sut: AddObservedStationMapViewModel!
     
+    private var networkConnectionMonitorUseCaseSpy: NetworkConnectionMonitorUseCaseSpy!
     private var getObservedStationsUseCaseSpy: GetObservedStationsUseCaseSpy!
     private var fetchAllStationsUseCaseSpy: FetchAllStationsUseCaseSpy!
     private var findTheNearestStationUseCaseSpy: FindTheNearestStationUseCaseSpy!
@@ -34,11 +35,13 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         fetchAllStationsUseCaseSpy = FetchAllStationsUseCaseSpy()
         findTheNearestStationUseCaseSpy = FindTheNearestStationUseCaseSpy()
         getUserLocationUseCaseSpy = GetUserLocationUseCaseSpy()
+        networkConnectionMonitorUseCaseSpy = NetworkConnectionMonitorUseCaseSpy()
         
         dependenciesContainerDummy[\.getObservedStationsUseCase] = getObservedStationsUseCaseSpy
         dependenciesContainerDummy[\.fetchAllStationsUseCase] = fetchAllStationsUseCaseSpy
         dependenciesContainerDummy[\.findTheNearestStationUseCase] = findTheNearestStationUseCaseSpy
         dependenciesContainerDummy[\.getUserLocationUseCase] = getUserLocationUseCaseSpy
+        dependenciesContainerDummy[\.networkConnectionMonitorUseCase] = networkConnectionMonitorUseCaseSpy
         
         station1 = Station.dummy(id: 1, cityName: "Cracow", province: "Malopolska", street: "Bujaka")
         station2 = Station.dummy(id: 2, cityName: "Plock", province: "Mazowieckie", street: "Reja")
@@ -57,6 +60,8 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
     @MainActor
     func testFetchStations() {
         // Given
+        networkConnectionMonitorUseCaseSpy.isConnectionSatisfiedReturnValue = true
+        
         var annotations: [AddObservedStationMapModel.StationAnnotation]?
         
         fetchAllStationsUseCaseSpy.fetchStationsResult = .success([
@@ -105,6 +110,8 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
     @MainActor
     func testFetchStationsWhenNoObservedStations() {
         // Given
+        networkConnectionMonitorUseCaseSpy.isConnectionSatisfiedReturnValue = true
+        
         var annotations: [AddObservedStationMapModel.StationAnnotation]?
         
         fetchAllStationsUseCaseSpy.fetchStationsResult = .success([
@@ -151,6 +158,8 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
     @MainActor
     func testFetchStationsWhenObservedStationsDidChange() {
         // Given
+        networkConnectionMonitorUseCaseSpy.isConnectionSatisfiedReturnValue = true
+        
         var annotations: [AddObservedStationMapModel.StationAnnotation]?
         
         fetchAllStationsUseCaseSpy.fetchStationsResult = .success([
@@ -210,6 +219,8 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
     @MainActor
     func testFetchStationsWhenFetchingStationsFailed() {
         // Given
+        networkConnectionMonitorUseCaseSpy.isConnectionSatisfiedReturnValue = true
+        
         fetchAllStationsUseCaseSpy.fetchStationsResult = .failure(ErrorDummy())
         getObservedStationsUseCaseSpy.fetchStationsResult = .success([])
         
@@ -243,6 +254,8 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
     @MainActor
     func testFetchStationsWhenFetchingObservedStationsFailed() {
         // Given
+        networkConnectionMonitorUseCaseSpy.isConnectionSatisfiedReturnValue = true
+        
         fetchAllStationsUseCaseSpy.fetchStationsResult = .success([])
         getObservedStationsUseCaseSpy.fetchStationsResult = .failure(ErrorDummy())
         

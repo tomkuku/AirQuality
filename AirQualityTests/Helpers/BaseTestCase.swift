@@ -53,6 +53,7 @@ class BaseTestCase: XCTestCase {
         super.tearDown()
     }
     
+    // swiftlint:disable test_case_accessibility
     func newTask(operation: @escaping @Sendable () async throws -> ()) rethrows {
         tasks.append(Task(operation: operation))
     }
@@ -69,4 +70,5 @@ class BaseTestCase: XCTestCase {
             }
         })
     }
+    // swiftlint:enable test_case_accessibility
 }

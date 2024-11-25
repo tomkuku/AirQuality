@@ -33,6 +33,7 @@ struct SelectedStationView: View {
                     
                     viewModel.refresh()
                 }
+                .accessibilityIdentifier(AccessibilityIdentifiers.SelectedStationView.sensorsList.rawValue)
             } else {
                 VStack(spacing: 12) {
                     ProgressView()
@@ -45,7 +46,7 @@ struct SelectedStationView: View {
             }
         }
         .background(Color.Background.primary)
-        .navigationTitle(viewModel.fomattedStationAddress)
+        .navigationTitle(viewModel.formattedStationAddress)
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: viewModel.isLoading) { _, _ in
             dataProviderAnimate = false

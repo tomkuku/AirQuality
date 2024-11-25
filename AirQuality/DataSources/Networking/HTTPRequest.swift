@@ -16,6 +16,10 @@ protocol HTTPRequest: URLRequestConvertible, Equatable, Sendable {
 }
 
 extension HTTPRequest {
+    var baseURL: String {
+        AppConstant[.giosApiBaseUrl]
+    }
+    
     var params: [String: String]? {
         nil
     }

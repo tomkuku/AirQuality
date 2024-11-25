@@ -90,6 +90,8 @@ final class AddObservedStationMapViewModel: BaseViewModel {
             guard let self else { return }
             
             do {
+                try await checkIsInternetConnected()
+                
                 async let fetchedStations = fetchAllStationsUseCase.fetch()
                 async let observedStations = getObservedStationsUseCase.fetchedStations()
                 

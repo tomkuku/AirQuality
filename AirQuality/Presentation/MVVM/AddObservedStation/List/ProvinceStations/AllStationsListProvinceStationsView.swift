@@ -24,6 +24,7 @@ struct AllStationsListProvinceStationsView: View {
         .listStyle(.inset)
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(provinceName)
+        .accessibilityIdentifier(AccessibilityIdentifiers.AllStationsListProvinceStationsView.stationsList.rawValue)
         .doneToolbarButton {
             coordinator.dismiss()
         }

@@ -1,0 +1,9 @@
+//
+//  Production.xcconfig
+//  AirQuality
+//
+//  Created by Tomasz Kukułka on 18/11/2024.
+//
+
+GIOS_API_BASE_URL = https:/$()/api.gios.gov.pl
+ALLOWS_LOCAL_NETWORK = NO

@@ -1,5 +1,6 @@
 excluded:
   - AirQualityTests/*
+  - AirQualityUITests/*
   - AirQuality/Localizable/*
   - AirQuality/Assets/*
   - GenerateSwiftFromJson

@@ -4,14 +4,18 @@ on:
   pull_request:
     types: [opened, reopened, synchronize]
 
-jobs:  
+env:
+  XCRESULTS_DIR_PATH: Results
+  FAILUE_UI_TESTS_SNAPSHOTS_DIR: UITestsSnapshots
+
+jobs:
   build-and-test:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v1
     - uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '15.3'
+        xcode-version: '15.4'
     - name: Logs
       run: |
         /usr/bin/xcodebuild -version
@@ -19,11 +23,23 @@ jobs:
     - name: Install Dependencies
       run: |
         ./.scripts/installBrewDependencyIfNeeded.sh xcbeautify xcodegen swiftlint swiftgen
-    - name: Build and Test
+    - name: Unit Tests
       run: |
-        make -f .ci-cd/build_and_test.mk
+        make -f .ci-cd/build_and_test.mk -B unit_tests
+    - name: UI Tests
+      run: |
+        make -f .ci-cd/build_and_test.mk -B ui_tests
+    - name: Prepare xcresult
+      if: always()
+      run: |
+        ./.scripts/prepareXcresults.sh
+    - uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: UITestsSnapshots
+        path: ${{ env.FAILUE_UI_TESTS_SNAPSHOTS_DIR }}
     - name: Run Danger
-      if: github.event_name == 'pull_request'
+      if: always()
       run: |
         bundle install
         bundle exec danger

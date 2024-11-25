@@ -1,0 +1,104 @@
+{
+	"Lista danych pomiarowych": [
+		{
+			"Kod stanowiska": "MpKrakAlKras-C6H6-1g",
+			"Data": "2024-11-22 09:00:00",
+			"Wartość": 0.59
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-C6H6-1g",
+			"Data": "2024-11-22 08:00:00",
+			"Wartość": 0.7
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-C6H6-1g",
+			"Data": "2024-11-22 07:00:00",
+			"Wartość": 0.46
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-C6H6-1g",
+			"Data": "2024-11-22 06:00:00",
+			"Wartość": 0.2
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-C6H6-1g",
+			"Data": "2024-11-22 05:00:00",
+			"Wartość": 0.23
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-C6H6-1g",
+			"Data": "2024-11-22 04:00:00",
+			"Wartość": 0.34
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-C6H6-1g",
+			"Data": "2024-11-22 03:00:00",
+			"Wartość": 0.48
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-C6H6-1g",
+			"Data": "2024-11-22 02:00:00",
+			"Wartość": 0.51
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-C6H6-1g",
+			"Data": "2024-11-22 01:00:00",
+			"Wartość": 0.5
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-C6H6-1g",
+			"Data": "2024-11-22 00:00:00",
+			"Wartość": 0.35
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-C6H6-1g",
+			"Data": "2024-11-21 23:00:00",
+			"Wartość": 0.6
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-C6H6-1g",
+			"Data": "2024-11-21 22:00:00",
+			"Wartość": 0.81
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-C6H6-1g",
+			"Data": "2024-11-21 21:00:00",
+			"Wartość": 0.97
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-C6H6-1g",
+			"Data": "2024-11-21 20:00:00",
+			"Wartość": 1.4
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-C6H6-1g",
+			"Data": "2024-11-21 19:00:00",
+			"Wartość": 1.03
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-C6H6-1g",
+			"Data": "2024-11-21 18:00:00",
+			"Wartość": 0.86
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-C6H6-1g",
+			"Data": "2024-11-21 17:00:00",
+			"Wartość": 0.72
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-C6H6-1g",
+			"Data": "2024-11-21 16:00:00",
+			"Wartość": 0.65
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-C6H6-1g",
+			"Data": "2024-11-21 15:00:00",
+			"Wartość": 0.32
+		},
+		{
+			"Kod stanowiska": "MpKrakAlKras-C6H6-1g",
+			"Data": "2024-11-21 14:00:00",
+			"Wartość": 0.2
+		}
+	]
+}

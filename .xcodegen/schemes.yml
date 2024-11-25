@@ -24,10 +24,6 @@ schemeTemplates:
       region: en_US
       targets:
         - name: AirQualityTests
-      environmentVariables:
-        - variable: IS_TEST
-          value: ''
-          isEnabled: true
 
 
 schemes:
@@ -38,7 +34,7 @@ schemes:
     templateAttributes:
       configName: Development
       appTargetName: AirQuality
-
+  
   Production:
     templates:
       - SharedConfigScheme
@@ -46,3 +42,41 @@ schemes:
     templateAttributes:
       configName: Production
       appTargetName: AirQuality
+
+  UITests:
+    build:
+      config: Tests
+      targets:
+        AirQuality: [test]
+    test:
+      config: Tests
+      gatherCoverageData: false
+      language: pl
+      region: en_US
+      targets:
+        - name: AirQualityUITests
+      preActions:
+        - settingsTarget: AirQualityUITests
+          script: |
+            $PROJECT_DIR/.scripts/prepareForUITests.sh
+      postActions:
+        - settingsTarget: AirQualityUITests
+          script: |
+            $PROJECT_DIR/.scripts/cleanUpAfterUITests.sh
+            $PROJECT_DIR/.scripts/copyFailedUITestsSnapshots.sh
+      runPostActionsOnFailure: true
+
+  UnitTests:
+    build:
+      config: Tests
+      targets:
+        AirQuality: [test]
+    test:
+      config: Tests
+      gatherCoverageData: false
+      language: en
+      region: en_US
+      targets:
+        - name: AirQualityTests
+      commandLineArguments:
+        "-unit-tests": true
