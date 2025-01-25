@@ -68,9 +68,9 @@ struct ParamsView: View {
 }
 
 #Preview {
-    GetStationSensorsParamsUseCasePreviewDummy.getParamsResult = [.c6h6, .pm10, .pm25, .so2, .co, .no2, .o3]
+    @Previewable @State var heigth: CGFloat = .zero
     
-    @State var heigth: CGFloat = .zero
+    GetStationSensorsParamsUseCasePreviewDummy.getParamsResult = [.c6h6, .pm10, .pm25, .so2, .co, .no2, .o3]
     
     return VStack {
         Rectangle()

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class CompletableOperation: Operation {
+class CompletableOperation: Operation, @unchecked Sendable {
     
     typealias Completion = () -> ()
     

@@ -44,7 +44,6 @@ struct AirQualityApp: App {
         self._appCoordinator = StateObject(wrappedValue: appCoordinator)
         self._alertsCoordinator = StateObject(wrappedValue: alertsCoordinator)
         self._toastsCoordinator = StateObject(wrappedValue: toastsCoordinator)
-        
     }
 }
 

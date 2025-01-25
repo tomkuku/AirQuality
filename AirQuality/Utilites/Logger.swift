@@ -10,8 +10,8 @@ import Foundation
 import Alamofire
 
 enum Logger {
-    private nonisolated(unsafe)  static var subsystem = Bundle.main.bundleIdentifier! // swiftlint:disable:this force_unwrapping
-    private nonisolated(unsafe) static let logger = os.Logger(subsystem: subsystem, category: "statistics")
+    private nonisolated(unsafe) static var subsystem = Bundle.main.bundleIdentifier! // swiftlint:disable:this force_unwrapping
+    private static let logger = os.Logger(subsystem: subsystem, category: "statistics")
     
     static func info(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {
 #if targetEnvironment(simulator)

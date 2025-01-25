@@ -16,13 +16,12 @@ protocol AddObservedStationUseCaseProtocol: Sendable {
 }
 
 final class AddObservedStationUseCase: AddObservedStationUseCaseProtocol {
-    @Injected(\.localDatabaseRepository) private var localDatabaseRepository
-    @Injected(\.stationsLocalDatabaseMapper) private var stationsLocalDatabaseMapper
-    
-    init() { }
+    private var stationsLocalDatabaseMapper: any StationsLocalDatabaseMapperProtocol {
+        Injected[\.stationsLocalDatabaseMapper]
+    }
     
     func add(station: Station) async throws {
-        try await localDatabaseRepository.insert(
+        try await Injected[\.localDatabaseRepository].insert(
             mapper: stationsLocalDatabaseMapper,
             object: station
         )

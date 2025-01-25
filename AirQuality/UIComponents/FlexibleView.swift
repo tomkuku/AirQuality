@@ -36,7 +36,7 @@ struct FlexibleView<Data: Collection, Content: View>: View where Data.Element: H
     }
 }
 
-private struct FlexibleViewContent<Data: Collection, Content: View>: View where Data.Element: Hashable {
+private struct FlexibleViewContent<Data: Collection, Content: View>: View where Data.Element: Hashable & Sendable {
     let availableWidth: CGFloat
     let data: Data
     let spacing: CGFloat

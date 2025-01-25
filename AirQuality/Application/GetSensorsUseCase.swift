@@ -17,9 +17,7 @@ protocol GetSensorsUseCaseProtocol: Sendable {
 }
 
 final class GetSensorsUseCase: GetSensorsUseCaseProtocol {
-    @Injected(\.giosApiRepository) private var giosApiRepository
-    
     func getSensors(for stationId: Int) async throws -> [Sensor] {
-        try await giosApiRepository.fetchSensors(for: stationId)
+        try await Injected[\.giosApiRepository].fetchSensors(for: stationId)
     }
 }

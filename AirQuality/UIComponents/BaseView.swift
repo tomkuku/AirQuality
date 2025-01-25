@@ -99,7 +99,8 @@ where C: CoordinatorBase & CoordinatorProtocol, V: View, VM: BaseViewModel {
     }
 }
 
-#Preview {
+// swiftlint:disable:next type_name
+struct BaseView_Preview: PreviewProvider {
     final class CoordinatorPreviewDummy: CoordinatorBase, CoordinatorProtocol {
         struct NavigationComponent: Identifiable, Hashable {
             let id: Int
@@ -126,13 +127,15 @@ where C: CoordinatorBase & CoordinatorProtocol, V: View, VM: BaseViewModel {
         func goTo(_ navigationComponent: NavigationComponent) { }
     }
     
-    let baseViewModel = BaseViewModel()
-    baseViewModel.isLoading = true
-    
-    @StateObject var viewModel = baseViewModel
-    @StateObject var coordinator = CoordinatorPreviewDummy()
-    
-    return BaseView(viewModel: viewModel, coordinator: coordinator) {
-        EmptyView()
+    static var previews: some View {
+        let baseViewModel = BaseViewModel()
+        baseViewModel.isLoading = true
+        
+        @StateObject var viewModel = baseViewModel
+        @StateObject var coordinator = CoordinatorPreviewDummy()
+        
+        return BaseView(viewModel: viewModel, coordinator: coordinator) {
+            EmptyView()
+        }
     }
 }

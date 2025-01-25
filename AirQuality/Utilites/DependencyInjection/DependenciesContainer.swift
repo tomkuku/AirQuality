@@ -55,7 +55,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     // swiftlint:disable function_body_length
     @MainActor
     init() throws {
-        self.uiApplication = UIApplication.shared
+        self.uiApplication = UIApplicationWrapper()
         self.networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCase()
         
         let httpDataSource = HTTPDataSource()
@@ -64,7 +64,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         
         self.notificationCenter = NotificationCenter.default
         
-        let backgroundTasksManager = BackgroundTasksManager(uiApplication: UIApplication.shared)
+        let backgroundTasksManager = BackgroundTasksManager(uiApplication: UIApplicationWrapper())
         
         self.stationsNetworkMapper = StationsNetworkMapper()
         

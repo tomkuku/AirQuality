@@ -18,13 +18,13 @@ protocol LocalDatabaseModel: PersistentModel, Sendable {
 
 @Model
 final class StationLocalDatabaseModel: LocalDatabaseModel, @unchecked Sendable {
-    let identifier: Int
-    let latitude: Double
-    let longitude: Double
-    let cityName: String
-    let commune: String
-    let province: String
-    let street: String?
+    var latitude: Double
+    var identifier: Int
+    var longitude: Double
+    var cityName: String
+    var commune: String
+    var province: String
+    var street: String?
     
     static func idPredicate(with id: Int) -> Predicate<StationLocalDatabaseModel> {
         #Predicate<StationLocalDatabaseModel> { model in

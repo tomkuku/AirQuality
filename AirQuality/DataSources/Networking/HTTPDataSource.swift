@@ -25,10 +25,6 @@ actor HTTPDataSource: HTTPDataSourceProtocol {
         if !ProcessInfo.isTest {
             eventMonitors.append(EventMonitorLogger())
         }
-        
-        if ProcessInfo.processInfo.arguments.contains("-local_mock") {
-            
-        }
 #endif
         
         self.session = Session(
@@ -78,6 +74,7 @@ final class EventMonitorLogger: EventMonitor {
         
         if let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
            let data = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) {
+            // swiftlint:disable:next optional_data_string_conversion
             body = String(decoding: data, as: UTF8.self)
         } else {
             body = "Body is empty"

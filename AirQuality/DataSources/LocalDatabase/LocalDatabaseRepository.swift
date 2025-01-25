@@ -25,9 +25,7 @@ final class LocalDatabaseRepository: LocalDatabaseRepositoryProtocol, Sendable {
     
     private let localDatabaseDataSource: LocalDatabaseDataSourceProtocol
     
-    init(
-        localDatabaseDataSource: LocalDatabaseDataSourceProtocol
-    ) {
+    init(localDatabaseDataSource: LocalDatabaseDataSourceProtocol) {
         self.localDatabaseDataSource = localDatabaseDataSource
     }
     

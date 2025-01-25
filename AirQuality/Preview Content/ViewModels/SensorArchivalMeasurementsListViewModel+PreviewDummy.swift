@@ -31,7 +31,7 @@ extension SensorArchivalMeasurementsListViewModel {
         }
     }
     
-    nonisolated(unsafe) static let previewDummy = SensorArchivalMeasurementsListViewModel(
+    static let previewDummy = SensorArchivalMeasurementsListViewModel(
         sensor: .previewDummy(),
         getArchivalMeasurementsUseCase: GetArchivalMeasurementsUseCase()
     )

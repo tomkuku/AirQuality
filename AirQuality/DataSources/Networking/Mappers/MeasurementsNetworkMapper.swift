@@ -15,10 +15,8 @@ protocol SensorMeasurementNetworkMapperProtocol: NetworkMapperProtocol
 where DTOModel == [MeasurementNetworkModel], DomainModel == [SensorMeasurement] { }
 
 final class SensorMeasurementNetworkMapper: SensorMeasurementNetworkMapperProtocol {
-    @Injected(\.sensorMeasurementDataFormatter) private var sensorMeasurementDataFormatter
-    
     func map(_ input: [MeasurementNetworkModel]) throws -> [SensorMeasurement] {
-        let sensorMeasurementDataFormatter = sensorMeasurementDataFormatter
+        let sensorMeasurementDataFormatter = Injected[\.sensorMeasurementDataFormatter]
         
         return try input.compactMap {
             guard let date = sensorMeasurementDataFormatter.date(from: $0.date) else {

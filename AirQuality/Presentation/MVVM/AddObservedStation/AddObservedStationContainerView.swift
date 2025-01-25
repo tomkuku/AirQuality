@@ -46,7 +46,7 @@ struct AddObservedStationContainerView: View {
 }
 
 #Preview {
-    @StateObject var addStationToObservedCoordinator = AddStationToObservedCoordinator(
+    @Previewable @StateObject var addStationToObservedCoordinator = AddStationToObservedCoordinator(
         coordinatorNavigationType: .presentation(dismissHandler: {}),
         alertSubject: .init(),
         toastSubject: .init()
