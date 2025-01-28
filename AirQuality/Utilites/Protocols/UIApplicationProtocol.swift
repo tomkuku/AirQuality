@@ -43,7 +43,7 @@ final class UIApplicationWrapper: UIApplicationProtocol {
         UIApplication.shared.canOpenURL(url)
     }
     
-    func open(_ url: URL, options: [UIApplication.OpenExternalURLOptionsKey : Any]) async -> Bool {
+    func open(_ url: URL, options: [UIApplication.OpenExternalURLOptionsKey: Any]) async -> Bool {
         await UIApplication.shared.open(url, options: options)
     }
 }
