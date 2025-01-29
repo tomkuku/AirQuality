@@ -30,19 +30,21 @@ struct AllStationsListProvindesView: View {
                     Spacer()
                 }
             } else {
-                List {
-                    ForEach(viewModel.provinces) { province in
-                        AllStationsListProvindesRowView(province: province)
-                            .environmentObject(coordinator)
+                RefreshableScrollView(
+                    onRefresh: {
+                        try? await Task.sleep(for: .milliseconds(600))
+                        
+                        viewModel.refresh()
+                    },
+                    contentView: {
+                        ForEach(viewModel.provinces) { province in
+                            AllStationsListProvindesRowView(province: province)
+                                .environmentObject(coordinator)
+                                .listRowSeparator(.hidden)
+                        }
                     }
-                }
-                .listStyle(.inset)
+                )
                 .accessibilityIdentifier(AccessibilityIdentifiers.AllStationsListProvindesView.provindesList.rawValue)
-                .refreshable {
-                    try? await Task.sleep(for: .milliseconds(600))
-                    
-                    viewModel.fetchStations()
-                }
             }
         }
         .navigationBarTitleDisplayMode(.inline)

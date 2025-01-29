@@ -10,6 +10,7 @@ targetTemplates:
       TARGETED_DEVICE_FAMILY: 1
     dependencies:
       - package: Alamofire
+      - package: Lottie
     preBuildScripts:
       - name: "SwiftGen"
         basedOnDependencyAnalysis: no
@@ -57,7 +58,7 @@ targets:
     platform: iOS
     supportedDestinations: [iOS]
     sources:
-      - path: ../AirQuality/UIComponents/AccessibilityIdentifiers.swift
+      - path: ../AirQuality/Presentation/UIComponents/AccessibilityIdentifiers.swift
       - path: ../AirQualityUITests
         excludes:
           - __Snapshots__

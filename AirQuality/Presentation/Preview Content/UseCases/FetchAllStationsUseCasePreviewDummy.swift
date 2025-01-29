@@ -11,6 +11,6 @@ final class FetchAllStationsUseCasePreviewDummy: FetchAllStationsUseCaseProtocol
     nonisolated(unsafe) static var fetchReturnValue: [Station] = []
     
     func fetch() async throws -> [Station] {
-        Self.fetchReturnValue
+        return Self.fetchReturnValue
     }
 }

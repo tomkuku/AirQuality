@@ -56,7 +56,6 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     @MainActor
     init() throws {
         self.uiApplication = UIApplicationWrapper()
-        self.networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCase()
         
         let httpDataSource = HTTPDataSource()
         
@@ -118,6 +117,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
             self.getUserLocationUseCase = GetUserLocationUseCasePreviewDummy()
             self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCasePreviewDummy()
             self.getObservedStationsUseCase = GetObservedStationsUseCasePreviewDummy()
+            self.networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCasePreviewDummy()
         } else {
             self.fetchAllStationsUseCase = FetchAllStationsUseCase()
             self.findTheNearestStationUseCase = FindTheNearestStationUseCase()
@@ -125,6 +125,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
             self.getUserLocationUseCase = GetUserLocationUseCase()
             self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCase()
             self.getObservedStationsUseCase = GetObservedStationsUseCase()
+            self.networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCase()
         }
 #else
         self.fetchAllStationsUseCase = FetchAllStationsUseCase()
@@ -133,6 +134,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         self.getUserLocationUseCase = GetUserLocationUseCase()
         self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCase()
         self.getObservedStationsUseCase = GetObservedStationsUseCase()
+        self.networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCase()
 #endif
     }
     // swiftlint:enable function_body_length
