@@ -18,21 +18,24 @@ struct SelectedStationView: View {
     var body: some View {
         BaseView(viewModel: viewModel, coordinator: appCoordinator) {
             if !viewModel.isLoading {
-                RefreshableScrollView {
-                    /// Delay to avoid instacne switch between sensors list and loading indicator.
-                    try? await Task.sleep(for: .milliseconds(600))
-                    
-                    viewModel.refresh()
-                } contentView: {
-                    LazyVStack(alignment: .leading, spacing: 8) {
-                        ForEach(0..<viewModel.sensors.count, id: \.self) { index in
-                            SelectedStationSensorRow(sensor: viewModel.sensors[index], index: index)
-                        }
+                RefreshableScrollView(
+                    onRefresh: {
+                        /// Delay to avoid instacne switch between sensors list and loading indicator.
+                        try? await Task.sleep(for: .milliseconds(600))
                         
-                        dataProvider
-                    }
-                    .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
-                }
+                        viewModel.refresh()
+                    }, contentView: {
+                        LazyVStack(alignment: .leading, spacing: 8) {
+                            ForEach(0..<viewModel.sensors.count, id: \.self) { index in
+                                SelectedStationSensorRow(sensor: viewModel.sensors[index], index: index)
+                            }
+                            
+                            dataProvider
+                        }
+                        .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                    },
+                    accessibilityIdentifier: AccessibilityIdentifiers.SelectedStationView.sensorsList.rawValue
+                )
             } else {
                 VStack(spacing: 12) {
                     ProgressView()

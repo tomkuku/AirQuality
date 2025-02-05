@@ -51,56 +51,9 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
                 .offset(y: offsetY)
             }
             .scrollDisabled(isScrollDisabled)
+            .accessibilityIdentifier(accessibilityIdentifier)
             .simultaneousGesture(
-                DragGesture()
-                    .onChanged { value in
-                        guard value.translation.height >= 0 else { return }
-                        
-                        let scroll = value.translation.height
-                        
-                        if scroll >= beginShowingRefreshControllYPosition {
-                            let progress = (scroll - beginShowingRefreshControllYPosition) / endShowingRefreshControllYPosition
-                            
-                            var refreshPorgress = self.refreshPorgress
-                            
-                            if progress > 1 {
-                                refreshPorgress.setLottiePlaybackModeToPlayingInfinity()
-                                refreshPorgress.refreshOpactiy = 1
-                            } else {
-                                let animationProgress = progress * animationFactor
-                                refreshPorgress.setLottiePlaybackModeToPaused(atProgress: animationProgress)
-                                refreshPorgress.refreshOpactiy = progress
-                            }
-                            
-                            self.refreshPorgress = refreshPorgress
-                        }
-                    }
-                    .onEnded { value in
-                        let scroll = value.translation.height
-                        
-                        if scroll >= endShowingRefreshControllYPosition {
-                            withAnimation {
-                                offsetY = offsetYWhenGestureEnds
-                                isScrollDisabled = true
-                                
-                                var refreshPorgress = self.refreshPorgress
-                                refreshPorgress.setLottiePlaybackModeToPlayingInfinity()
-                                refreshPorgress.refreshOpactiy = 1
-                                self.refreshPorgress = refreshPorgress
-                            } completion: {
-                                Task { @MainActor in
-                                    await onRefresh()
-                                    
-                                    endRefreshing()
-                                }
-                            }
-                        } else {
-                            var refreshPorgress = self.refreshPorgress
-                            refreshPorgress.setLottiePlaybackModeToPlayOnceFromCurrentProgress()
-                            refreshPorgress.refreshOpactiy = 0.0
-                            self.refreshPorgress = refreshPorgress
-                        }
-                    }
+                createDragGesture()
             )
             .zIndex(1)
         }
@@ -121,8 +74,9 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
     private let contentView: () -> ContentView
     private let beginShowingRefreshControllYPosition: CGFloat
     private let endShowingRefreshControllYPosition: CGFloat
-    private let animationFactor = 0.2
+    private let animationFactor = 0.3
     private let offsetYWhenGestureEnds: CGFloat = 60
+    private let accessibilityIdentifier: String
     
     // MARK: Init
     
@@ -130,15 +84,69 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
         onRefresh: @MainActor @Sendable @escaping () async -> (),
         contentView: @escaping () -> ContentView,
         beginShowingRefreshControllYPosition: CGFloat = 100,
-        endShowingRefreshControllYPosition: CGFloat = 330
+        endShowingRefreshControllYPosition: CGFloat = 330,
+        accessibilityIdentifier: String = ""
     ) {
         self.onRefresh = onRefresh
         self.contentView = contentView
         self.beginShowingRefreshControllYPosition = beginShowingRefreshControllYPosition
         self.endShowingRefreshControllYPosition = endShowingRefreshControllYPosition
+        self.accessibilityIdentifier = accessibilityIdentifier
     }
     
     // MARK: Private methods
+    
+    private func createDragGesture() -> some Gesture {
+        DragGesture()
+            .onChanged { value in
+                guard value.translation.height >= 0 else { return }
+                
+                let scroll = value.translation.height
+                
+                if scroll >= beginShowingRefreshControllYPosition {
+                    let progress = (scroll - beginShowingRefreshControllYPosition) / endShowingRefreshControllYPosition
+                    
+                    var refreshPorgress = self.refreshPorgress
+                    
+                    if progress > 1 {
+                        refreshPorgress.setLottiePlaybackModeToPlayingInfinity()
+                        refreshPorgress.refreshOpactiy = 1
+                    } else {
+                        let animationProgress = progress * animationFactor
+                        refreshPorgress.setLottiePlaybackModeToPaused(atProgress: animationProgress)
+                        refreshPorgress.refreshOpactiy = progress
+                    }
+                    
+                    self.refreshPorgress = refreshPorgress
+                }
+            }
+            .onEnded { value in
+                let scroll = value.translation.height
+                
+                if scroll >= endShowingRefreshControllYPosition {
+                    withAnimation {
+                        offsetY = offsetYWhenGestureEnds
+                        isScrollDisabled = true
+                        
+                        var refreshPorgress = self.refreshPorgress
+                        refreshPorgress.setLottiePlaybackModeToPlayingInfinity()
+                        refreshPorgress.refreshOpactiy = 1
+                        self.refreshPorgress = refreshPorgress
+                    } completion: {
+                        Task { @MainActor in
+                            await onRefresh()
+                            
+                            endRefreshing()
+                        }
+                    }
+                } else {
+                    var refreshPorgress = self.refreshPorgress
+                    refreshPorgress.setLottiePlaybackModeToPlayOnceFromCurrentProgress()
+                    refreshPorgress.refreshOpactiy = 0.0
+                    self.refreshPorgress = refreshPorgress
+                }
+            }
+    }
     
     private func endRefreshing() {
         withAnimation(.easeOut) {
@@ -151,7 +159,6 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
         } completion: {
             var refreshPorgress = self.refreshPorgress
             refreshPorgress.setLottiePlaybackModeToPaused(atProgress: 0)
-            refreshPorgress.refreshOpactiy = 0
             self.refreshPorgress = refreshPorgress
         }
     }

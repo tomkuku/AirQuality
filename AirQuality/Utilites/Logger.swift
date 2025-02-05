@@ -16,7 +16,7 @@ enum Logger {
     static func info(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {
 #if targetEnvironment(simulator)
         /// Do not log when tests
-        guard !ProcessInfo.isTest else { return }
+        guard !ProcessInfo.isUnitTests else { return }
 #endif
         
         let logMessage: String = "⚙️ \(file.fileName):\(function):\(line)\n\(message)"
@@ -26,7 +26,7 @@ enum Logger {
     static func error(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {
 #if targetEnvironment(simulator)
         /// Do not log when tests
-        guard !ProcessInfo.isTest else { return }
+        guard !ProcessInfo.isUnitTests else { return }
 #endif
         
         let logMessage: String = "🚨 \(file.fileName):\(function):\(line)\n\(message)"

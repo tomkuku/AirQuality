@@ -8,16 +8,12 @@
 import Foundation
 
 extension ProcessInfo {
-    static var isTest: Bool {
-        processInfo.environment["IS_TEST"] != nil
-    }
-    
     static var isUnitTests: Bool {
         processInfo.arguments.contains("-unit-tests")
     }
     
     static var isUITests: Bool {
-        processInfo.arguments.contains("-uitests")
+        processInfo.arguments.contains("-ui-tests")
     }
     
     static var isPreview: Bool {

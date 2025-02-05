@@ -42,9 +42,9 @@ struct AllStationsListProvindesView: View {
                                 .environmentObject(coordinator)
                                 .listRowSeparator(.hidden)
                         }
-                    }
+                    },
+                    accessibilityIdentifier: AccessibilityIdentifiers.AllStationsListProvindesView.provindesList.rawValue
                 )
-                .accessibilityIdentifier(AccessibilityIdentifiers.AllStationsListProvindesView.provindesList.rawValue)
             }
         }
         .navigationBarTitleDisplayMode(.inline)

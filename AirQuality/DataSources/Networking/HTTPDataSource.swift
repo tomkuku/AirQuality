@@ -22,7 +22,7 @@ actor HTTPDataSource: HTTPDataSourceProtocol {
         var eventMonitors: [EventMonitor] = []
         
 #if DEBUG
-        if !ProcessInfo.isTest {
+        if !ProcessInfo.isUnitTests {
             eventMonitors.append(EventMonitorLogger())
         }
 #endif
