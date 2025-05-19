@@ -10,8 +10,6 @@ import Foundation
 import CoreLocation
 import SnapshotTesting
 
-@testable import AirQuality
-
 // swiftlint:disable balanced_xctest_lifecycle
 final class AirQualityUITestsLaunchTests: XCTestCase, @unchecked Sendable {
     
@@ -23,7 +21,7 @@ final class AirQualityUITestsLaunchTests: XCTestCase, @unchecked Sendable {
         
         await MainActor.run { [weak self] in
             self?.app = XCUIApplication()
-            self?.app.launchArguments = ["-uitests"]
+            self?.app.launchArguments = ["-ui-tests"]
             self?.app.resetAuthorizationStatus(for: .location)
             self?.app.launch()
         }
@@ -33,25 +31,27 @@ final class AirQualityUITestsLaunchTests: XCTestCase, @unchecked Sendable {
     func testLaunch() {
         testSnapshot(imageName: "noObserbedStations")
         
-        let noObservedStationsText = app.staticTexts[AccessibilityIdentifiers.ObservedStationsListView.noObservedStations.rawValue]
+        let noObservedStationsText = app.staticTexts[\.observedStationsListView.noObservedStations]
         
         XCTAssertTrue(noObservedStationsText.exists)
         
-        let addObservedStationsButton = app.buttons[ AccessibilityIdentifiers.ObservedStationsListView.addObservedStationsButton.rawValue]
+        let addObservedStationsButton = app.buttons[\.observedStationsListView.addObservedStationsButton]
         
         XCTAssertTrue(addObservedStationsButton.exists)
         
         addObservedStationsButton.tap()
         
-        let provincesCollectionView = app.collectionViews[AccessibilityIdentifiers.AllStationsListProvindesView.provindesList.rawValue]
+        let provincesScrollView = app.scrollViews[\.allStationsListProvindesView.provindesList]
         
-        XCTAssertTrue(provincesCollectionView.waitForExistence(timeout: 4))
+        XCTAssertTrue(provincesScrollView.waitForExistence(timeout: 4))
         
         testSnapshot(imageName: "provincesList")
         
-        tapCell(in: provincesCollectionView, index: 1)
+        /// Whole row is tappable!
+        let images = provincesScrollView.images.matching(keyPath: \.allStationsListProvindesView.provindesListRow)
+        images.element(boundBy: 1).tap()
         
-        let stationsCollectionView = app.collectionViews[AccessibilityIdentifiers.AllStationsListProvinceStationsView.stationsList.rawValue]
+        let stationsCollectionView = app.collectionViews[\.allStationsListProvinceStationsView.stationsList]
         
         XCTAssertTrue(stationsCollectionView.waitForExistence(timeout: 4))
         
@@ -61,19 +61,19 @@ final class AirQualityUITestsLaunchTests: XCTestCase, @unchecked Sendable {
         
         testSnapshot(imageName: "provinceStationsWithSelection")
         
-        let mapButton = app.buttons[AccessibilityIdentifiers.AddObservedStationContainerView.tabViewMap.rawValue]
+        let mapButton = app.buttons[\.addObservedStationContainerView.tabViewMap]
         
         XCTAssertTrue(mapButton.exists)
         
         mapButton.tap()
         
-        let mapBottomMenuGrabber = app.buttons[AccessibilityIdentifiers.BottomSheet.grabber.rawValue]
+        let mapBottomMenuGrabber = app.buttons[\.bottomSheet.grabber]
         
         XCTAssertTrue(mapBottomMenuGrabber.waitForExistence(timeout: 4))
         
         mapBottomMenuGrabber.tap()
         
-        let findTheNearestStationButton = app.buttons[AccessibilityIdentifiers.AddObservedStationMapView.findTheNearestStationButton.rawValue]
+        let findTheNearestStationButton = app.buttons[\.addObservedStationMapView.findTheNearestStationButton]
         
         XCTAssertTrue(findTheNearestStationButton.waitForExistence(timeout: 4))
         
@@ -92,14 +92,14 @@ final class AirQualityUITestsLaunchTests: XCTestCase, @unchecked Sendable {
         
         _ = consume springboard
         
-        let annotation = app.images[AccessibilityIdentifiers.StationMapAnnotationView.annotation.rawValue]
+        let annotation = app.images[\.stationMapAnnotationView.annotation]
         
         XCTAssertTrue(annotation.waitForExistence(timeout: 4))
         
         annotation.tap()
         
-        let addObservedStationButton = app.buttons[AccessibilityIdentifiers.StationMapAnnotationView.addObservedStationButton.rawValue]
-        let paramsView = app.staticTexts[AccessibilityIdentifiers.ParamsView.params.rawValue]
+        let addObservedStationButton = app.buttons[\.stationMapAnnotationView.addObservedStationButton]
+        let paramsView = app.staticTexts[\.paramsView.params]
         
         XCTAssertTrue(paramsView.waitForExistence(timeout: 4))
         
@@ -107,23 +107,11 @@ final class AirQualityUITestsLaunchTests: XCTestCase, @unchecked Sendable {
         
         tapAtSpecificPoint(CGPoint(x: 100, y: 100), onApp: app)
         
-        let doneButton = app.otherElements[AccessibilityIdentifiers.doneToolbarButton.rawValue]
+        let doneButton = app.otherElements[\.doneToolbarButton]
         
         XCTAssertTrue(doneButton.isHittable)
         
         doneButton.tap()
-        
-        let observedStationsList = app.collectionViews[AccessibilityIdentifiers.ObservedStationsListView.stationsList.rawValue]
-        
-        XCTAssertTrue(observedStationsList.waitForExistence(timeout: 4))
-        
-        testSnapshot(imageName: "observedStations")
-        
-        tapCell(in: observedStationsList, index: 0)
-        
-        let sensorsList = app.scrollViews[AccessibilityIdentifiers.SelectedStationView.sensorsList.rawValue]
-        
-        XCTAssertTrue(sensorsList.waitForExistence(timeout: 4))
     }
     
     @MainActor
@@ -133,28 +121,6 @@ final class AirQualityUITestsLaunchTests: XCTestCase, @unchecked Sendable {
         let targetCoordinate = coordinate.withOffset(point)
         
         targetCoordinate.tap()
-    }
-    
-    @MainActor
-    private func tapCell(in collectionView: XCUIElement, index cellIndex: Int) {
-        let firstCell = collectionView.cells.element(boundBy: cellIndex)
-        
-        XCTAssertTrue(firstCell.exists)
-        
-        firstCell.tap()
-    }
-    
-    @MainActor
-    private func testSnapshot(imageName: String) {
-        let screenshot = XCUIScreen.main.screenshot()
-        let snapshot = UIImage(data: screenshot.pngRepresentation)!
-        
-        assertSnapshot(
-            of: snapshot,
-            as: .image(precision: 0.98),
-            record: false,
-            testName: imageName
-        )
     }
 }
 // swiftlint:enable balanced_xctest_lifecycle

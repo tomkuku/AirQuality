@@ -106,6 +106,7 @@ struct ParamsView: View {
                     Text(L10n.noParams)
                 }
             }
+            .accessibilityIdentifier(\.paramsView.params)
             .modifier(AnimatingHeight(height: height))
             .background(.green)
             .frame(width: 300)

@@ -99,7 +99,7 @@ struct AddObservedStationMapView: View {
         .clipShape(
             RoundedRectangle(cornerRadius: 12)
         )
-        .accessibilityIdentifier(AccessibilityIdentifiers.AddObservedStationMapView.findTheNearestStationButton.rawValue)
+        .accessibilityIdentifier(\.addObservedStationMapView.findTheNearestStationButton)
     }
     
     private var bottomMenu: some View {

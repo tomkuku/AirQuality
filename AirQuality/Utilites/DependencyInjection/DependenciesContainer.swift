@@ -52,7 +52,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     let uiApplication: UIApplicationProtocol
     let networkConnectionMonitorUseCase: NetworkConnectionMonitorUseCaseProtocol
     
-    // swiftlint:disable function_body_length
+    // swif tlint:disable function_body_length
     @MainActor
     init() throws {
         self.uiApplication = UIApplicationWrapper()
@@ -107,27 +107,27 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         
         self.stationSensorsParamsNetworkMapper = StationSensorsParamsNetworkMapper()
         
-#if targetEnvironment(simulator) || TESTS
-        if ProcessInfo.isPreview {
-            SwiftDataPreviewAccessor.shared = .init(modelContainer: modelContainer)
-            
-            self.fetchAllStationsUseCase = FetchAllStationsUseCasePreviewDummy()
-            self.findTheNearestStationUseCase = FindTheNearestStationUseCasePreviewDummy()
-            self.getSensorsUseCase = GetSensorsUseCasePreviewDummy()
-            self.getUserLocationUseCase = GetUserLocationUseCasePreviewDummy()
-            self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCasePreviewDummy()
-            self.getObservedStationsUseCase = GetObservedStationsUseCasePreviewDummy()
-            self.networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCasePreviewDummy()
-        } else {
-            self.fetchAllStationsUseCase = FetchAllStationsUseCase()
-            self.findTheNearestStationUseCase = FindTheNearestStationUseCase()
-            self.getSensorsUseCase = GetSensorsUseCase()
-            self.getUserLocationUseCase = GetUserLocationUseCase()
-            self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCase()
-            self.getObservedStationsUseCase = GetObservedStationsUseCase()
-            self.networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCase()
-        }
-#else
+//#if targetEnvironment(simulator) || TESTS
+//        if ProcessInfo.isPreview {
+//            SwiftDataPreviewAccessor.shared = .init(modelContainer: modelContainer)
+//            
+//            self.fetchAllStationsUseCase = FetchAllStationsUseCasePreviewDummy()
+//            self.findTheNearestStationUseCase = FindTheNearestStationUseCasePreviewDummy()
+//            self.getSensorsUseCase = GetSensorsUseCasePreviewDummy()
+//            self.getUserLocationUseCase = GetUserLocationUseCasePreviewDummy()
+//            self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCasePreviewDummy()
+//            self.getObservedStationsUseCase = GetObservedStationsUseCasePreviewDummy()
+//            self.networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCasePreviewDummy()
+//        } else {
+//            self.fetchAllStationsUseCase = FetchAllStationsUseCase()
+//            self.findTheNearestStationUseCase = FindTheNearestStationUseCase()
+//            self.getSensorsUseCase = GetSensorsUseCase()
+//            self.getUserLocationUseCase = GetUserLocationUseCase()
+//            self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCase()
+//            self.getObservedStationsUseCase = GetObservedStationsUseCase()
+//            self.networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCase()
+//        }
+//#else
         self.fetchAllStationsUseCase = FetchAllStationsUseCase()
         self.findTheNearestStationUseCase = FindTheNearestStationUseCase()
         self.getSensorsUseCase = GetSensorsUseCase()
@@ -135,15 +135,25 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCase()
         self.getObservedStationsUseCase = GetObservedStationsUseCase()
         self.networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCase()
-#endif
+//#endif
     }
-    // swiftlint:enable function_body_length
+    // swi ftlint:enable function_body_length
     
     private static func createModelContainer() throws -> ModelContainer {
         let schema = Schema([StationLocalDatabaseModel.self])
         let isStoredInMemoryOnly = ProcessInfo.isPreview || ProcessInfo.isUnitTests || ProcessInfo.isUITests
         
-        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: isStoredInMemoryOnly)
+        var configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: isStoredInMemoryOnly)
+        
+        #if TESTS
+        if ProcessInfo.isUITests {
+            if let sqliteUrlString = ProcessInfo.processInfo.environment["UITESTS_SQLITE_PATH"],
+                let sqliteUrl = URL(string: sqliteUrlString) {
+                configuration = ModelConfiguration(schema: schema, url: sqliteUrl, allowsSave: true)
+            }
+        }
+        #endif
+            
         return try ModelContainer(for: schema, configurations: [configuration])
     }
 }

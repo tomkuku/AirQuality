@@ -62,32 +62,31 @@ actor HTTPDataSource: HTTPDataSourceProtocol {
 
 #if DEBUG
 final class EventMonitorLogger: EventMonitor {
-    func request(_ request: DataRequest, didParseResponse response: DataResponse<Data?, AFError>) {
-        guard
-            let data = response.data,
-            let httpResponse = response.response
-        else {
-            return
-        }
-        
+    func request(
+        _ request: DataRequest,
+        didValidateRequest urlRequest: URLRequest?,
+        response: HTTPURLResponse,
+        data: Data?,
+        withResult result: Request.ValidationResult
+    ) {
         let body: String
         
-        if let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
+        if let data,
+           let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
            let data = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) {
-            // swiftlint:disable:next optional_data_string_conversion
+            // swi ftlint:disable:next optional_data_string_conversion
             body = String(decoding: data, as: UTF8.self)
         } else {
             body = "Body is empty"
         }
         
         let message = """
-            Request didParseResponse
-            URL: \(request.convertible)
-            StatusCode: \(httpResponse.statusCode)
-            Body: \n \(body)
-        """
+                    Request: \(urlRequest?.httpMethod?.uppercased() ?? "") \(urlRequest?.url?.path() ?? "none")
+                    StatusCode: \(response.statusCode)
+                    Body: \n \(body)
+                """
         
-        Logger.info(message)
+        Logger.error(message)
     }
 }
 #endif

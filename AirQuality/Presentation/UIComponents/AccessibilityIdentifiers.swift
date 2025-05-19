@@ -6,62 +6,100 @@
 //
 
 import Foundation
+import SwiftUI
 
-enum AccessibilityIdentifiers: String {
-    case doneToolbarButton
-    
-    enum ObservedStationsListView: String {
-        case addObservedStationsButton
-        case noObservedStations
-        case stationsList
+struct AccessibilityIdentifiers {
+    struct ObservedStationsListView {
+        let addObservedStationsButton = ""
+        let noObservedStations = ""
+        let stationsList = ""
     }
     
-    enum AllStationsListProvindesView: String {
-        case provindesList
+    struct AllStationsListProvindesView {
+        let provindesList = ""
+        let provindesListRow = ""
     }
     
-    enum AllStationsListProvindesRowView: String {
-        case provinceName
-        case numberOfStations
+    struct AllStationsListProvindesRowView {
+        let provinceName = ""
+        let numberOfStations = ""
     }
     
-    enum AllStationsListProvinceStationsView: String {
-        case stationsList
+    struct AllStationsListProvinceStationsView {
+        let stationsList = ""
     }
     
-    enum AllStationsListProvinceStationsRowView: String {
-        case street
-        case cityName
-        case isObserved
-        case isNotObserved
+    struct AllStationsListProvinceStationsRowView {
+        let street = ""
+        let cityName = ""
+        let isObserved = ""
+        let isNotObserved = ""
     }
     
-    enum AddObservedStationContainerView: String {
-        case tabViewList
-        case tabViewMap
+    struct AddObservedStationContainerView {
+        let tabViewList = ""
+        let tabViewMap = ""
     }
     
-    enum BottomSheet: String {
-        case grabber
+    struct BottomSheet {
+        let grabber = ""
     }
     
-    enum AddObservedStationMapView: String {
-        case findTheNearestStationButton
+    struct AddObservedStationMapView {
+        let findTheNearestStationButton = ""
     }
     
-    enum StationMapAnnotationView: String {
-        case annotation
-        case street
-        case cityName
-        case province
-        case addObservedStationButton
+    struct StationMapAnnotationView {
+        let annotation = ""
+        let street = ""
+        let cityName = ""
+        let province = ""
+        let addObservedStationButton = ""
     }
     
-    enum ParamsView: String {
-        case params
+    struct ParamsView {
+        let params = ""
     }
     
-    enum SelectedStationView: String {
-        case sensorsList
+    struct SelectedStationView {
+        let sensorsList = ""
+    }
+    
+    init() {}
+    
+    static let shared = AccessibilityIdentifiers()
+    
+    let doneToolbarButton = ""
+    
+    let observedStationsListView = ObservedStationsListView()
+    let allStationsListProvindesView = AllStationsListProvindesView()
+    let allStationsListProvindesRowView = AllStationsListProvindesRowView()
+    let allStationsListProvinceStationsView = AllStationsListProvinceStationsView()
+    let allStationsListProvinceStationsRowView = AllStationsListProvinceStationsRowView()
+    let addObservedStationContainerView = AddObservedStationContainerView()
+    let bottomSheet = BottomSheet()
+    let addObservedStationMapView = AddObservedStationMapView()
+    let stationMapAnnotationView = StationMapAnnotationView()
+    let paramsView = ParamsView()
+    let selectedStationView = SelectedStationView()
+}
+
+typealias AccessibilityIdentifierType = KeyPath<AccessibilityIdentifiers, String>
+
+struct AccessibilityIdentifier: ViewModifier {
+    private let identifier: String
+    
+    init(keyPath: AccessibilityIdentifierType) {
+        self.identifier = String(describing: keyPath)
+    }
+    
+    func body(content: Content) -> some View {
+        content.accessibilityIdentifier(identifier)
+    }
+}
+
+extension View {
+    func accessibilityIdentifier(_ keyPath: AccessibilityIdentifierType) -> some View {
+        self.modifier(AccessibilityIdentifier(keyPath: keyPath))
     }
 }

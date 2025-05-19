@@ -4,7 +4,7 @@ packages:
     version: 5.9.1
   SwiftSnapshotTesting:
     url: https://github.com/pointfreeco/swift-snapshot-testing
-    version: 1.17.6
+    version: 1.17.7
   Lottie:
     url: https://github.com/airbnb/lottie-ios.git
     version: 4.5.1

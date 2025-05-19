@@ -28,6 +28,7 @@ struct AllStationsListProvindesRowView: View {
                     Image.chevronCompactRight
                         .frame(width: 12, height: 12)
                         .scaledToFill()
+                        .accessibilityIdentifier(\.allStationsListProvindesView.provindesListRow)
                 }
                 .foregroundStyle(Color.Text.secondary)
             }

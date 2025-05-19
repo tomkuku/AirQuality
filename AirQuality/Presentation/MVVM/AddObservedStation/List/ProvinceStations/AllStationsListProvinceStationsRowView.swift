@@ -28,12 +28,12 @@ struct AllStationsListProvinceStationsRowView: View {
                             Image.checkmarkCircleFill
                                 .resizable()
                                 .renderingMode(.template)
-                                .accessibilityIdentifier(AccessibilityIdentifiers.AllStationsListProvinceStationsRowView.isObserved.rawValue)
+                                .accessibilityIdentifier(\.allStationsListProvinceStationsRowView.isObserved)
                         } else {
                             Image.circle
                                 .resizable()
                                 .renderingMode(.template)
-                                .accessibilityIdentifier(AccessibilityIdentifiers.AllStationsListProvinceStationsRowView.isNotObserved.rawValue)
+                                .accessibilityIdentifier(\.allStationsListProvinceStationsRowView.isNotObserved)
                         }
                     }
                     .frame(width: 24, height: 24, alignment: .center)

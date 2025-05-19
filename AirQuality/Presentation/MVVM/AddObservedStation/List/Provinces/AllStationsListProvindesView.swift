@@ -43,7 +43,7 @@ struct AllStationsListProvindesView: View {
                                 .listRowSeparator(.hidden)
                         }
                     },
-                    accessibilityIdentifier: AccessibilityIdentifiers.AllStationsListProvindesView.provindesList.rawValue
+                    accessibilityIdentifier: \.allStationsListProvindesView.provindesList
                 )
             }
         }
@@ -51,10 +51,7 @@ struct AllStationsListProvindesView: View {
         .navigationTitle(L10n.navigationTitle)
         .transition(.opacity)
         .animation(.linear(duration: 0.2), value: viewModel.isLoading)
-        .searchable(
-            text: $viewModel.searchedText,
-            prompt: L10n.seach
-        )
+        .searchable(text: $viewModel.searchedText, prompt: L10n.seach)
         .doneToolbarButton {
             coordinator.dismiss()
         }

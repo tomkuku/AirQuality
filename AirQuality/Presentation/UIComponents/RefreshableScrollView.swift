@@ -76,7 +76,7 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
     private let endShowingRefreshControllYPosition: CGFloat
     private let animationFactor = 0.3
     private let offsetYWhenGestureEnds: CGFloat = 60
-    private let accessibilityIdentifier: String
+    private let accessibilityIdentifier: AccessibilityIdentifierType
     
     // MARK: Init
     
@@ -85,7 +85,7 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
         contentView: @escaping () -> ContentView,
         beginShowingRefreshControllYPosition: CGFloat = 100,
         endShowingRefreshControllYPosition: CGFloat = 330,
-        accessibilityIdentifier: String = ""
+        accessibilityIdentifier: AccessibilityIdentifierType
     ) {
         self.onRefresh = onRefresh
         self.contentView = contentView
