@@ -20,9 +20,7 @@ enum Logger {
 #endif
         
         let logMessage: String = "⚙️ \(file.fileName):\(function):\(line)\n\(message)"
-        logger.log("log, \(logMessage)")
-        logger.debug("debug, \(logMessage)")
-//        logger.info("\(logMessage)")
+        logger.log("\(logMessage)")
     }
     
     static func error(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {

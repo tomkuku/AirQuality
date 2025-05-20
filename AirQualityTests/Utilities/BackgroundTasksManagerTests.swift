@@ -38,13 +38,13 @@ final class BackgroundTasksManagerTests: BaseTestCase, @unchecked Sendable {
         sut.beginFiniteLengthTask(taskName, completion: nil)
         
         // Then
-        XCTAssertEqual(uiApplicationSpy.events, [.beginBackgroundTask(taskName)])
+        XCTAssertEqual(uiApplicationSpy.events.value, [.beginBackgroundTask(taskName)])
     }
     
     @MainActor
     func testEndFiniteLengthTask() {
         // Given
-        uiApplicationSpy.beginBackgroundTaskReturnValue = beginBackgroundTaskIdentifier
+        uiApplicationSpy.beginBackgroundTaskReturnValue.value = beginBackgroundTaskIdentifier
         
         sut.beginFiniteLengthTask(taskName, completion: nil)
         
@@ -52,7 +52,10 @@ final class BackgroundTasksManagerTests: BaseTestCase, @unchecked Sendable {
         sut.endFiniteLengthTask(taskName)
         
         // Then
-        XCTAssertEqual(uiApplicationSpy.events, [.beginBackgroundTask(taskName), .endBackgroundTask(beginBackgroundTaskIdentifier)])
+        XCTAssertEqual(uiApplicationSpy.events.value, [
+            .beginBackgroundTask(taskName),
+            .endBackgroundTask(beginBackgroundTaskIdentifier)
+        ])
     }
     
     @MainActor
@@ -61,24 +64,27 @@ final class BackgroundTasksManagerTests: BaseTestCase, @unchecked Sendable {
         sut.endFiniteLengthTask(name)
         
         // Then
-        XCTAssertTrue(uiApplicationSpy.events.isEmpty)
+        XCTAssertTrue(uiApplicationSpy.events.value.isEmpty)
     }
     
     @MainActor
     func testWhenOperatingSystemInterruptsTask() {
         // Given
-        uiApplicationSpy.beginBackgroundTaskReturnValue = beginBackgroundTaskIdentifier
+        uiApplicationSpy.beginBackgroundTaskReturnValue.value = beginBackgroundTaskIdentifier
         
         sut.beginFiniteLengthTask(taskName) {
             self.expectation.fulfill()
         }
         
         // When
-        uiApplicationSpy.beginBackgroundTaskExpirationHandler?()
+        uiApplicationSpy.beginBackgroundTaskExpirationHandler.value?()
         
         // Then
         wait(for: [expectation], timeout: 2.0)
         
-        XCTAssertEqual(uiApplicationSpy.events, [.beginBackgroundTask(taskName), .endBackgroundTask(beginBackgroundTaskIdentifier)])
+        XCTAssertEqual(uiApplicationSpy.events.value, [
+            .beginBackgroundTask(taskName),
+            .endBackgroundTask(beginBackgroundTaskIdentifier)
+        ])
     }
 }

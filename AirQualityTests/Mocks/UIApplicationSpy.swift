@@ -11,32 +11,51 @@ import class UIKit.UIApplication
 
 @testable import AirQuality
 
-final class UIApplicationSpy: UIApplicationProtocol {
+final class UIApplicationSpy: UIApplicationProtocol, @unchecked Sendable {
     enum Event: Equatable {
         case beginBackgroundTask(String?)
         case endBackgroundTask(UIBackgroundTaskIdentifier)
     }
     
-    var events: [Event] = []
+    final class SendableWrapper<T>: @unchecked Sendable {
+        var value: T
+        
+        init(_ value: T) {
+            self.value = value
+        }
+    }
     
-    var beginBackgroundTaskExpirationHandler: (() -> Void)?
-    var beginBackgroundTaskReturnValue: UIBackgroundTaskIdentifier = .invalid
+    nonisolated let events: SendableWrapper<[Event]> = .init([])
     
-    func beginBackgroundTask(withName taskName: String?, expirationHandler handler: (() -> Void)?) -> UIBackgroundTaskIdentifier {
-        beginBackgroundTaskExpirationHandler = {
-            handler?()
+    nonisolated let beginBackgroundTaskExpirationHandler: SendableWrapper<(() -> Void)?> = .init(nil)
+    nonisolated let beginBackgroundTaskReturnValue: SendableWrapper<UIBackgroundTaskIdentifier> = .init(.invalid)
+    
+    nonisolated func setBeginBackgroundTaskReturnValue(_ value: UIBackgroundTaskIdentifier) {
+        beginBackgroundTaskReturnValue.value = value
+    }
+    
+    // MARK: - UIApplicationProtocol
+    
+    nonisolated func beginBackgroundTask(
+        withName taskName: String?,
+        expirationHandler handler: (@MainActor @Sendable () -> Void)?
+    ) -> UIBackgroundTaskIdentifier {
+        beginBackgroundTaskExpirationHandler.value = {
+            DispatchQueue.main.async {
+                handler?()
+            }
         }
         
-        events.append(.beginBackgroundTask(taskName))
+        events.value.append(.beginBackgroundTask(taskName))
         
-        return beginBackgroundTaskReturnValue
+        return beginBackgroundTaskReturnValue.value
     }
     
-    func endBackgroundTask(_ identifier: UIBackgroundTaskIdentifier) {
-        events.append(.endBackgroundTask(identifier))
+    nonisolated func endBackgroundTask(_ identifier: UIBackgroundTaskIdentifier) {
+        events.value.append(.endBackgroundTask(identifier))
     }
     
-    func canOpenURL(_ url: URL) -> Bool {
+    nonisolated func canOpenURL(_ url: URL) -> Bool {
         false
     }
     

@@ -222,7 +222,7 @@ final class SelectedStationViewModelTests: BaseTestCase, @unchecked Sendable {
     }
 }
 
-extension SelectedStationModel.SensorRow: Equatable {
+extension SelectedStationModel.SensorRow: @retroactive Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.id == rhs.id &&
         lhs.lastMeasurementAqi == rhs.lastMeasurementAqi &&

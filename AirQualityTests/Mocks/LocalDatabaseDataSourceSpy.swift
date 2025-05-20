@@ -11,7 +11,6 @@ import SwiftData
 @testable import AirQuality
 
 actor LocalDatabaseDataSourceSpy: LocalDatabaseDataSourceProtocol {
-    
     enum Event: Sendable, Equatable {
         case getInsertedModels
         case getDeletedModels
@@ -44,21 +43,21 @@ actor LocalDatabaseDataSourceSpy: LocalDatabaseDataSourceProtocol {
     
     // MARK: LocalDatabaseDataSourceProtocol
     
-    func getInsertedModels<T>() async -> [T] where T: LocalDatabaseModel {
+    func getInsertedModels<T>() -> [T] where T: PersistentModel {
         events.append(.getInsertedModels)
         return insertedModelsReturnValue.compactMap { $0 as? T }
     }
     
-    func getDeletedModels<T>() async -> [T] where T: LocalDatabaseModel {
+    func getDeletedModels<T>() -> [T] where T: PersistentModel {
         events.append(.getDeletedModels)
         return deletedModelsReturnValue.compactMap { $0 as? T }
     }
     
-    func insert<T>(_ model: T) async where T: LocalDatabaseModel {
+    func insert<T>(_ model: T) where T: PersistentModel {
         events.append(.insert(model.persistentModelID))
     }
     
-    func delete<T>(_ model: T) async where T: LocalDatabaseModel {
+    func delete<T>(_ model: T) where T: PersistentModel {
         events.append(.delete(model.persistentModelID))
     }
     
@@ -67,7 +66,7 @@ actor LocalDatabaseDataSourceSpy: LocalDatabaseDataSourceProtocol {
         predicate: Predicate<T>?,
         sorts: [SortDescriptor<T>],
         fetchLimit: Int?
-    ) async throws -> [T] where T: LocalDatabaseModel {
+    ) throws -> [T] where T: PersistentModel {
         events.append(.fetch)
         return fetchReturnValue.compactMap { $0 as? T }
     }

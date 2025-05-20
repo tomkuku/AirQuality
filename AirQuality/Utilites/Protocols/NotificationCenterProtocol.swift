@@ -24,8 +24,7 @@ protocol NotificationCenterProtocol: Sendable {
 
 extension NotificationCenterProtocol {
     func notifications(
-        named name: Notification.Name,
-        object: (AnyObject & Sendable)? = nil
+        named name: Notification.Name
     ) -> NotificationCenter.Notifications {
         notifications(named: name, object: nil)
     }

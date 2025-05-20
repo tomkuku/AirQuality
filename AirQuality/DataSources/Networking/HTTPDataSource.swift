@@ -62,6 +62,17 @@ actor HTTPDataSource: HTTPDataSourceProtocol {
 
 #if DEBUG
 final class EventMonitorLogger: EventMonitor {
+    func requestDidResume(_ request: Request) {
+        let requestUrl = "\(request.request?.httpMethod?.uppercased() ?? "") \(request.request?.url?.path() ?? "none")"
+        
+        let message =
+        """
+        ⬆️ Request: \(request.id) \(requestUrl)
+        """
+        
+        Logger.info(message)
+    }
+    
     func request(
         _ request: DataRequest,
         didValidateRequest urlRequest: URLRequest?,
@@ -73,20 +84,23 @@ final class EventMonitorLogger: EventMonitor {
         
         if let data,
            let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
-           let data = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) {
-            // swi ftlint:disable:next optional_data_string_conversion
-            body = String(decoding: data, as: UTF8.self)
+           let data = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted),
+           let _body = String(data: data, encoding: .utf8) {
+            body = _body
         } else {
             body = "Body is empty"
         }
         
-        let message = """
-                    Request: \(urlRequest?.httpMethod?.uppercased() ?? "") \(urlRequest?.url?.path() ?? "none")
-                    StatusCode: \(response.statusCode)
-                    Body: \n \(body)
-                """
+        let requestUrl = "\(request.request?.httpMethod?.uppercased() ?? "") \(request.request?.url?.path() ?? "none")"
         
-        Logger.error(message)
+        let message =
+        """
+        ⬇️ Response: \(request.id) \(requestUrl)
+           StatusCode: \(response.statusCode)
+           Body: \n \(body)
+        """
+        
+        Logger.info(message)
     }
 }
 #endif

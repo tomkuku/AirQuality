@@ -27,20 +27,28 @@ protocol UIApplicationProtocol {
 }
 
 /// It's a workaround for Xcode 16
+@MainActor
 final class UIApplicationWrapper: UIApplicationProtocol {
+    private nonisolated let application: AnyObjectSendableWrapper<UIApplication>
+    
+    @MainActor
+    init() {
+        application = .init(.shared)
+    }
+    
     nonisolated func beginBackgroundTask(
         withName taskName: String?,
         expirationHandler handler: (@MainActor @Sendable () -> Void)?
     ) -> UIBackgroundTaskIdentifier {
-        UIApplication.shared.beginBackgroundTask(withName: taskName, expirationHandler: handler)
+        application.object.beginBackgroundTask(withName: taskName, expirationHandler: handler)
     }
     
-    func endBackgroundTask(_ identifier: UIBackgroundTaskIdentifier) {
-        UIApplication.shared.endBackgroundTask(identifier)
+    nonisolated func endBackgroundTask(_ identifier: UIBackgroundTaskIdentifier) {
+        application.object.endBackgroundTask(identifier)
     }
     
-    func canOpenURL(_ url: URL) -> Bool {
-        UIApplication.shared.canOpenURL(url)
+    nonisolated func canOpenURL(_ url: URL) -> Bool {
+        application.object.canOpenURL(url)
     }
     
     func open(_ url: URL, options: [UIApplication.OpenExternalURLOptionsKey: Any]) async -> Bool {

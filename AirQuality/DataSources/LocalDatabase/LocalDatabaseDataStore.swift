@@ -28,14 +28,13 @@ extension LocalDatabaseDataSourceProtocol {
     func fetch<T>(
         object: T.Type,
         predicate: Predicate<T>? = nil,
-        sorts: [SortDescriptor<T>] = [],
-        fetchLimit: Int? = nil
+        sorts: [SortDescriptor<T>] = []
     ) throws -> [T] where T: PersistentModel {
-        try fetch(
+        try self.fetch(
             object: object,
             predicate: predicate,
             sorts: sorts,
-            fetchLimit: fetchLimit
+            fetchLimit: nil
         )
     }
     
@@ -44,7 +43,7 @@ extension LocalDatabaseDataSourceProtocol {
         predicate: Predicate<T>? = nil,
         sorts: [SortDescriptor<T>] = []
     ) throws -> T? where T: PersistentModel {
-        try fetch(
+        try self.fetch(
             object: object,
             predicate: predicate,
             sorts: sorts,
