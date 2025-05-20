@@ -1,5 +1,5 @@
 //
-//  AirQualityUITestsLaunchTests.swift
+//  AddNewStationsTests.swift
 //  AirQualityUITests
 //
 //  Created by Tomasz Kukułka on 02/10/2024.
@@ -11,7 +11,7 @@ import CoreLocation
 import SnapshotTesting
 
 // swiftlint:disable balanced_xctest_lifecycle
-final class AirQualityUITestsLaunchTests: XCTestCase, @unchecked Sendable {
+final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
     
     @MainActor
     private var app: XCUIApplication!
@@ -19,11 +19,11 @@ final class AirQualityUITestsLaunchTests: XCTestCase, @unchecked Sendable {
     override func setUp() async throws {
         try await super.setUp()
         
-        await MainActor.run { [weak self] in
-            self?.app = XCUIApplication()
-            self?.app.launchArguments = ["-ui-tests"]
-            self?.app.resetAuthorizationStatus(for: .location)
-            self?.app.launch()
+        await MainActor.run {
+            app = XCUIApplication()
+            app.setLaunchArguments([.datatbaseStoreInMemoryOnly])
+            app.resetAuthorizationStatus(for: .location)
+            app.launch()
         }
     }
     
@@ -41,15 +41,27 @@ final class AirQualityUITestsLaunchTests: XCTestCase, @unchecked Sendable {
         
         addObservedStationsButton.tap()
         
+        // Add stations on list
+        
         let provincesScrollView = app.scrollViews[\.allStationsListProvindesView.provindesList]
         
         XCTAssertTrue(provincesScrollView.waitForExistence(timeout: 4))
         
         testSnapshot(imageName: "provincesList")
+                
+        let searchBar = app.searchFields[Localizable.AddObservedStationListView.seach]
+        
+        XCTAssertTrue(searchBar.waitForExistence(timeout: 4))
+        XCTAssertTrue(searchBar.isHittable)
+        
+        searchBar.tap()
+        searchBar.typeText("Kraków")
+        
+        testSnapshot(imageName: "provincesListAfterSearching")
         
         /// Whole row is tappable!
         let images = provincesScrollView.images.matching(keyPath: \.allStationsListProvindesView.provindesListRow)
-        images.element(boundBy: 1).tap()
+        images.element(boundBy: 0).tap()
         
         let stationsCollectionView = app.collectionViews[\.allStationsListProvinceStationsView.stationsList]
         
@@ -60,6 +72,8 @@ final class AirQualityUITestsLaunchTests: XCTestCase, @unchecked Sendable {
         tapCell(in: stationsCollectionView, index: 0)
         
         testSnapshot(imageName: "provinceStationsWithSelection")
+        
+        // Add stations on map
         
         let mapButton = app.buttons[\.addObservedStationContainerView.tabViewMap]
         
@@ -112,6 +126,12 @@ final class AirQualityUITestsLaunchTests: XCTestCase, @unchecked Sendable {
         XCTAssertTrue(doneButton.isHittable)
         
         doneButton.tap()
+        
+        let observedStationsList = app.collectionViews[\.observedStationsListView.stationsList]
+        
+        XCTAssertTrue(observedStationsList.waitForExistence(timeout: 4))
+        
+        testSnapshot(imageName: "observedStationsAfterAddingStations")
     }
     
     @MainActor

@@ -13,7 +13,6 @@ import SwiftData
 
 @testable import AirQuality
 
-// swiftlint:disable balanced_xctest_lifecycle
 final class ObservedStationsTests: XCTestCase, @unchecked Sendable {
     
     @MainActor
@@ -22,6 +21,8 @@ final class ObservedStationsTests: XCTestCase, @unchecked Sendable {
     private var station1: Station!
     private var station2: Station!
     private var station3: Station!
+    
+    private var sqliteURL: URL!
     
     override func setUp() async throws {
         try await super.setUp()
@@ -56,16 +57,22 @@ final class ObservedStationsTests: XCTestCase, @unchecked Sendable {
             street: "ul. Sienkiewicza"
         )
         
-        let sqliteURL = try createBaseDatabase(with: [station1, station2, station3])
+        sqliteURL = try createBaseDatabase(with: [station1, station2, station3])
         
         await MainActor.run {
             app = XCUIApplication()
-            app.launchEnvironment = ["UITESTS_SQLITE_PATH": sqliteURL.absoluteString]
-            app.launchArguments = ["-ui-tests"]
+            app.setLaunchArguments([.uiTests, .specificDatabaseSqlitePath])
+            app.setLaunchEnvironment([.uiTestsSqlitePath: sqliteURL.absoluteString])
             app.launch()
         }
     }
-
+    
+    override func tearDownWithError() throws {
+        try super.tearDownWithError()
+        
+        try FileManager.default.removeItem(at: sqliteURL)
+    }
+    
     @MainActor
     func testLaunch() throws {
         let observedStationsList = app.collectionViews[\.observedStationsListView.stationsList]
@@ -85,6 +92,8 @@ final class ObservedStationsTests: XCTestCase, @unchecked Sendable {
         let sensorsList = app.scrollViews[\.selectedStationView.sensorsList]
         
         XCTAssertTrue(sensorsList.waitForExistence(timeout: 4))
+        
+        app.terminate()
     }
     
     // MARK: Private methods
@@ -112,4 +121,3 @@ final class ObservedStationsTests: XCTestCase, @unchecked Sendable {
         return sqliteURL
     }
 }
-// swiftlint:enable balanced_xctest_lifecycle
