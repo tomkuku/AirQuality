@@ -20,7 +20,7 @@ enum SourceType {
     case remote
 }
 
-protocol GIOSApiRepositoryProtocol {
+protocol GIOSApiRepositoryProtocol: Sendable {
     func fetch<T>(
         mapper: T,
         endpoint: any HTTPRequest,

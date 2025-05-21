@@ -16,13 +16,8 @@ protocol DeleteObservedStationUseCaseProtocol: Sendable {
 }
 
 final class DeleteObservedStationUseCase: DeleteObservedStationUseCaseProtocol {
-    @Injected(\.localDatabaseRepository) private var localDatabaseRepository
-    @Injected(\.stationsLocalDatabaseMapper) private var stationsLocalDatabaseMapper
-    
-    init() { }
-    
     func delete(station: Station) async throws {
-        try await localDatabaseRepository.delete(
+        try await Injected[\.localDatabaseRepository].delete(
             mapperType: StationsLocalDatabaseMapper.self,
             object: station
         )

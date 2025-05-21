@@ -12,25 +12,33 @@ struct AllStationsListProvindesRowView: View {
     // MARK: Body
     
     var body: some View {
-        HStack(alignment: .top, spacing: 10) {
-            Text(province.name)
-                .font(.headline)
-                .foregroundStyle(Color.Text.primary)
-            
-            Spacer()
-            
-            HStack {
-                Text("\(province.numberOfStations)")
-                    .font(.system(size: 20, weight: .regular))
-                    .padding(.trailing, 8)
+        VStack {
+            HStack(alignment: .top, spacing: 10) {
+                Text(province.name)
+                    .font(.headline)
+                    .foregroundStyle(Color.Text.primary)
                 
-                Image.chevronCompactRight
-                    .frame(width: 12, height: 12)
-                    .scaledToFill()
+                Spacer()
+                
+                HStack {
+                    Text("\(province.numberOfStations)")
+                        .font(.system(size: 20, weight: .regular))
+                        .padding(.trailing, 8)
+                    
+                    Image.chevronCompactRight
+                        .frame(width: 12, height: 12)
+                        .scaledToFill()
+                        .accessibilityIdentifier(\.allStationsListProvindesView.provindesListRow)
+                }
+                .foregroundStyle(Color.Text.secondary)
             }
-            .foregroundStyle(Color.Text.secondary)
+            
+            Rectangle()
+                .frame(height: 0.5)
+                .foregroundStyle(Color.gray.opacity(0.6))
         }
-        .frame(height: 40)
+        .padding(.horizontal, 16)
+        .frame(height: 50)
         .contentShape(Rectangle())
         .gesture(
             TapGesture()
@@ -39,7 +47,6 @@ struct AllStationsListProvindesRowView: View {
                     coordinator.goTo(.provinceStations(provinceName: province.name, stations: province.stations))
                 }
         )
-        .listRowBackground(backgroundColor)
     }
     
     // MARK: Properties

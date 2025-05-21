@@ -30,29 +30,28 @@ struct AllStationsListProvindesView: View {
                     Spacer()
                 }
             } else {
-                List {
-                    ForEach(viewModel.provinces) { province in
-                        AllStationsListProvindesRowView(province: province)
-                            .environmentObject(coordinator)
-                    }
-                }
-                .listStyle(.inset)
-                .accessibilityIdentifier(AccessibilityIdentifiers.AllStationsListProvindesView.provindesList.rawValue)
-                .refreshable {
-                    try? await Task.sleep(for: .milliseconds(600))
-                    
-                    viewModel.fetchStations()
-                }
+                RefreshableScrollView(
+                    onRefresh: {
+                        try? await Task.sleep(for: .milliseconds(600))
+                        
+                        viewModel.refresh()
+                    },
+                    contentView: {
+                        ForEach(viewModel.provinces) { province in
+                            AllStationsListProvindesRowView(province: province)
+                                .environmentObject(coordinator)
+                                .listRowSeparator(.hidden)
+                        }
+                    },
+                    accessibilityIdentifier: \.allStationsListProvindesView.provindesList
+                )
             }
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(L10n.navigationTitle)
         .transition(.opacity)
         .animation(.linear(duration: 0.2), value: viewModel.isLoading)
-        .searchable(
-            text: $viewModel.searchedText,
-            prompt: L10n.seach
-        )
+        .searchable(text: $viewModel.searchedText, prompt: L10n.seach)
         .doneToolbarButton {
             coordinator.dismiss()
         }

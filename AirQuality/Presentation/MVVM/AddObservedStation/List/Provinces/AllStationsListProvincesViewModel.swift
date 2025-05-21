@@ -16,6 +16,7 @@ final class AllStationsListProvincesViewModel: BaseViewModel {
     // MARK: Properties
     
     @Published private(set) var provinces: [Model.Province] = []
+    @Published private(set) var isRefreshing = false
     
     var searchedText: String = "" {
         didSet {
@@ -52,6 +53,27 @@ final class AllStationsListProvincesViewModel: BaseViewModel {
                 isLoading = false
                 
                 createAndSortSections(allStations)
+            } catch {
+                Logger.error(error.localizedDescription)
+                errorSubject.send(error)
+            }
+        }
+    }
+    
+    func refresh() {
+        Task { [weak self] in
+            guard let self else { return }
+            
+            isRefreshing = true
+            
+            do {
+                try await checkIsInternetConnected()
+                
+                allStations = try await fetchAllStationsUseCase.fetch()
+                
+                createAndSortSections(allStations)
+                
+                isRefreshing = false
             } catch {
                 Logger.error(error.localizedDescription)
                 errorSubject.send(error)

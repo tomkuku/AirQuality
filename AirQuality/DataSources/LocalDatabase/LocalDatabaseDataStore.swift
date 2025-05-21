@@ -9,33 +9,32 @@ import Foundation
 import SwiftData
 import class UIKit.UIScene
 
-protocol LocalDatabaseDataSourceProtocol: Sendable, AnyObject {
-    func getInsertedModels<T>() async -> [T] where T: LocalDatabaseModel
-    func getDeletedModels<T>() async -> [T] where T: LocalDatabaseModel
+protocol LocalDatabaseDataSourceProtocol: AnyObject, Actor {
+    func getInsertedModels<T>() -> [T] where T: PersistentModel
+    func getDeletedModels<T>() -> [T] where T: PersistentModel
     
-    func insert<T>(_ model: T) async where T: LocalDatabaseModel
-    func delete<T>(_ model: T) async where T: LocalDatabaseModel
+    func insert<T>(_ model: T) where T: PersistentModel
+    func delete<T>(_ model: T) where T: PersistentModel
     
     func fetch<T>(
         object: T.Type,
         predicate: Predicate<T>?,
         sorts: [SortDescriptor<T>],
         fetchLimit: Int?
-    ) async throws -> [T] where T: LocalDatabaseModel
+    ) throws -> [T] where T: PersistentModel
 }
 
 extension LocalDatabaseDataSourceProtocol {
     func fetch<T>(
         object: T.Type,
         predicate: Predicate<T>? = nil,
-        sorts: [SortDescriptor<T>] = [],
-        fetchLimit: Int? = nil
-    ) async throws -> [T] where T: LocalDatabaseModel {
-        try await fetch(
+        sorts: [SortDescriptor<T>] = []
+    ) throws -> [T] where T: PersistentModel {
+        try self.fetch(
             object: object,
             predicate: predicate,
             sorts: sorts,
-            fetchLimit: fetchLimit
+            fetchLimit: nil
         )
     }
     
@@ -43,8 +42,8 @@ extension LocalDatabaseDataSourceProtocol {
         object: T.Type,
         predicate: Predicate<T>? = nil,
         sorts: [SortDescriptor<T>] = []
-    ) async throws -> T? where T: LocalDatabaseModel {
-        try await fetch(
+    ) throws -> T? where T: PersistentModel {
+        try self.fetch(
             object: object,
             predicate: predicate,
             sorts: sorts,
@@ -81,22 +80,20 @@ actor LocalDatabaseDataSource: ModelActor, LocalDatabaseDataSourceProtocol {
         self.backgroundTasksManager = backgroundTasksManager
         self.notificationCenter = notificationCenter
         
-        Task { [weak self] in
-            await self?.observeSceneStates()
-        }
+        observeSceneStates()
     }
     
     // MARK: Methods
     
-    func getInsertedModels<T>() async -> [T] where T: LocalDatabaseModel {
+    func getInsertedModels<T>() -> [T] where T: PersistentModel {
         modelContext.insertedModelsArray.compactMap({ $0 as? T })
     }
     
-    func getDeletedModels<T>() async -> [T] where T: LocalDatabaseModel {
+    func getDeletedModels<T>() -> [T] where T: PersistentModel {
         modelContext.deletedModelsArray.compactMap({ $0 as? T })
     }
     
-    func insert<T>(_ model: T) async where T: LocalDatabaseModel {
+    func insert<T>(_ model: T) where T: PersistentModel {
         modelContext.insert(model)
         
         Task.detached {
@@ -104,13 +101,27 @@ actor LocalDatabaseDataSource: ModelActor, LocalDatabaseDataSourceProtocol {
         }
     }
     
-    func delete<T>(_ model: T) async where T: LocalDatabaseModel {
+    func delete<T>(_ model: T) where T: PersistentModel {
         modelContext.delete(model)
         
         Task.detached {
             NotificationCenter.default.post(name: .localDatabaseDidChange, object: self)
         }
     }
+    
+    func fetch<T>(
+        object: T.Type,
+        predicate: Predicate<T>?,
+        sorts: [SortDescriptor<T>],
+        fetchLimit: Int?
+    ) throws -> [T] where T: PersistentModel {
+        var fetchDescriptor = FetchDescriptor(predicate: predicate, sortBy: sorts)
+        fetchDescriptor.fetchLimit = fetchLimit
+        
+        return try modelContext.fetch(fetchDescriptor)
+    }
+    
+    // MARK: Privte methods
     
     func save() throws {
         guard modelContext.hasChanges else { return }
@@ -124,25 +135,17 @@ actor LocalDatabaseDataSource: ModelActor, LocalDatabaseDataSourceProtocol {
         }
     }
     
-    func fetch<T>(
-        object: T.Type,
-        predicate: Predicate<T>?,
-        sorts: [SortDescriptor<T>],
-        fetchLimit: Int?
-    ) async throws -> [T] where T: LocalDatabaseModel {
-        var fetchDescriptor = FetchDescriptor(predicate: predicate, sortBy: sorts)
-        fetchDescriptor.fetchLimit = fetchLimit
-        
-        return try modelContext.fetch(fetchDescriptor)
-    }
-    
-    private func observeSceneStates() async {
-        for await _ in await notificationCenter.notifications(named: UIScene.willDeactivateNotification).map({ $0.name }) {
-            await backgroundTasksManager.beginFiniteLengthTask()
+    private nonisolated func observeSceneStates() {
+        Task { [weak self] in
+            guard let self else { return }
             
-            try? save()
-            
-            await backgroundTasksManager.endFiniteLengthTask()
+            for await _ in self.notificationCenter.notifications(named: UIScene.willDeactivateNotification).map({ $0.name }) {
+                await self.backgroundTasksManager.beginFiniteLengthTask()
+                
+                try? await self.save()
+                
+                await self.backgroundTasksManager.endFiniteLengthTask()
+            }
         }
     }
 }

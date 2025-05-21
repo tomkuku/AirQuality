@@ -6,6 +6,10 @@
   
 */
 
+// MARK: BaseView
+
+"BaseView.loading" = "Pobieranie danych";
+
 // MARK: Alerts
 
 "Alert.SomethingWentWrong.title" = "Ups, coś poszło nie tak";

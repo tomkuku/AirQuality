@@ -22,12 +22,8 @@ actor HTTPDataSource: HTTPDataSourceProtocol {
         var eventMonitors: [EventMonitor] = []
         
 #if DEBUG
-        if !ProcessInfo.isTest {
+        if !ProcessInfo.isUnitTests {
             eventMonitors.append(EventMonitorLogger())
-        }
-        
-        if ProcessInfo.processInfo.arguments.contains("-local_mock") {
-            
         }
 #endif
         
@@ -66,28 +62,42 @@ actor HTTPDataSource: HTTPDataSourceProtocol {
 
 #if DEBUG
 final class EventMonitorLogger: EventMonitor {
-    func request(_ request: DataRequest, didParseResponse response: DataResponse<Data?, AFError>) {
-        guard
-            let data = response.data,
-            let httpResponse = response.response
-        else {
-            return
-        }
+    func requestDidResume(_ request: Request) {
+        let requestUrl = "\(request.request?.httpMethod?.uppercased() ?? "") \(request.request?.url?.path() ?? "none")"
         
+        let message =
+        """
+        ⬆️ Request: \(request.id) \(requestUrl)
+        """
+        
+        Logger.info(message)
+    }
+    
+    func request(
+        _ request: DataRequest,
+        didValidateRequest urlRequest: URLRequest?,
+        response: HTTPURLResponse,
+        data: Data?,
+        withResult result: Request.ValidationResult
+    ) {
         let body: String
         
-        if let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
-           let data = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) {
-            body = String(decoding: data, as: UTF8.self)
+        if let data,
+           let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
+           let data = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted),
+           let _body = String(data: data, encoding: .utf8) {
+            body = _body
         } else {
             body = "Body is empty"
         }
         
-        let message = """
-            Request didParseResponse
-            URL: \(request.convertible)
-            StatusCode: \(httpResponse.statusCode)
-            Body: \n \(body)
+        let requestUrl = "\(request.request?.httpMethod?.uppercased() ?? "") \(request.request?.url?.path() ?? "none")"
+        
+        let message =
+        """
+        ⬇️ Response: \(request.id) \(requestUrl)
+           StatusCode: \(response.statusCode)
+           Body: \n \(body)
         """
         
         Logger.info(message)

@@ -9,12 +9,12 @@ import Foundation
 import SwiftUI
 
 struct AlertModel: Equatable, Sendable {
-    struct Button: Equatable {
+    struct Button: Equatable, Sendable {
         let title: String
         let role: ButtonRole?
-        let action: (() -> ())?
+        let action: (@Sendable () -> ())?
         
-        init(title: String, role: ButtonRole? = nil, action: (() -> ())? = nil) {
+        init(title: String, role: ButtonRole? = nil, action: (@Sendable () -> ())? = nil) {
             self.title = title
             self.role = role
             self.action = action
@@ -29,13 +29,13 @@ struct AlertModel: Equatable, Sendable {
     let title: String
     let message: String?
     let buttons: [Button]
-    let dismissAction: (() -> ())?
+    let dismissAction: (@Sendable () -> ())?
     
     init(
         title: String,
         message: String? = nil,
         buttons: [Button],
-        dismissAction: (() -> Void)? = nil
+        dismissAction: (@Sendable () -> Void)? = nil
     ) {
         self.title = title
         self.message = message
@@ -65,7 +65,7 @@ extension AlertModel.Button {
 extension AlertModel {
     private typealias L10n = Localizable.Alert
     
-    static func somethigWentWrong(dismiss: (() -> ())? = nil) -> Self {
+    static func somethigWentWrong(dismiss: (@Sendable () -> ())? = nil) -> Self {
         Self(
             title: L10n.SomethingWentWrong.title,
             message: L10n.SomethingWentWrong.message,
@@ -123,7 +123,9 @@ extension AlertModel {
         dismiss: (@Sendable () -> ())? = nil
     ) -> Self {
         let goToSettingsButton = AlertModel.Button(title: L10n.Button.goToSettings) {
-            coordinator.open(url: url)
+            Task { @MainActor in
+                coordinator.open(url: url)
+            }
         }
         
         return Self(

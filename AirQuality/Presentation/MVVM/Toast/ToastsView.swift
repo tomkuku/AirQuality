@@ -96,19 +96,21 @@ struct ToastView: View {
     }
 }
 
-#Preview {
-    // swiftlint:disable:next private_subject
-    let subject = PassthroughSubject<ToastModel, Never>()
-    
-    @StateObject var toastsViewModel = ToastsViewModel(subject.eraseToAnyPublisher())
-    
-    for i in 1...10 {
-        DispatchQueue.main.asyncAfter(deadline: .now() + .microseconds(i * 200)) {
-            subject.send(ToastModel(body: "\(i) Toast preview body text"))
+// swiftlint:disable:next type_name
+struct ToastView_Preview: PreviewProvider {
+    static var previews: some View {
+        let subject = PassthroughSubject<ToastModel, Never>()
+        
+        @StateObject var toastsViewModel = ToastsViewModel(subject.eraseToAnyPublisher())
+        
+        for i in 1...10 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .microseconds(i * 200)) {
+                subject.send(ToastModel(body: "\(i) Toast preview body text"))
+            }
         }
-    }
-    
-    return VStack {
-        ToastsView(toastsViewModel: toastsViewModel)
+        
+        return VStack {
+            ToastsView(toastsViewModel: toastsViewModel)
+        }
     }
 }

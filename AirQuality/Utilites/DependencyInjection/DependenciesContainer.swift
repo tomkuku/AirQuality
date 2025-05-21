@@ -55,8 +55,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     // swiftlint:disable function_body_length
     @MainActor
     init() throws {
-        self.uiApplication = UIApplication.shared
-        self.networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCase()
+        self.uiApplication = UIApplicationWrapper()
         
         let httpDataSource = HTTPDataSource()
         
@@ -64,7 +63,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         
         self.notificationCenter = NotificationCenter.default
         
-        let backgroundTasksManager = BackgroundTasksManager(uiApplication: UIApplication.shared)
+        let backgroundTasksManager = BackgroundTasksManager(uiApplication: UIApplicationWrapper())
         
         self.stationsNetworkMapper = StationsNetworkMapper()
         
@@ -118,6 +117,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
             self.getUserLocationUseCase = GetUserLocationUseCasePreviewDummy()
             self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCasePreviewDummy()
             self.getObservedStationsUseCase = GetObservedStationsUseCasePreviewDummy()
+            self.networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCasePreviewDummy()
         } else {
             self.fetchAllStationsUseCase = FetchAllStationsUseCase()
             self.findTheNearestStationUseCase = FindTheNearestStationUseCase()
@@ -125,6 +125,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
             self.getUserLocationUseCase = GetUserLocationUseCase()
             self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCase()
             self.getObservedStationsUseCase = GetObservedStationsUseCase()
+            self.networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCase()
         }
 #else
         self.fetchAllStationsUseCase = FetchAllStationsUseCase()
@@ -133,15 +134,29 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         self.getUserLocationUseCase = GetUserLocationUseCase()
         self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCase()
         self.getObservedStationsUseCase = GetObservedStationsUseCase()
+        self.networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCase()
 #endif
     }
     // swiftlint:enable function_body_length
     
     private static func createModelContainer() throws -> ModelContainer {
         let schema = Schema([StationLocalDatabaseModel.self])
-        let isStoredInMemoryOnly = ProcessInfo.isPreview || ProcessInfo.isTest || ProcessInfo.isUITests
+        let isStoredInMemoryOnly = ProcessInfo.isPreview || ProcessInfo.isUnitTests
         
-        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: isStoredInMemoryOnly)
+        var configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: isStoredInMemoryOnly)
+        
+#if TESTS
+        if ProcessInfo.containsArgument(.specificDatabaseSqlitePath) {
+            guard let sqliteUrlString = ProcessInfo.processInfo.environment["UITESTS_SQLITE_PATH"],
+                  let sqliteUrl = URL(string: sqliteUrlString) else {
+                fatalError("sqliteUrl invalid or nil!")
+            }
+            configuration = ModelConfiguration(schema: schema, url: sqliteUrl, allowsSave: true)
+        } else if ProcessInfo.containsArgument(.datatbaseStoreInMemoryOnly) {
+            configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+        }
+#endif
+        
         return try ModelContainer(for: schema, configurations: [configuration])
     }
 }

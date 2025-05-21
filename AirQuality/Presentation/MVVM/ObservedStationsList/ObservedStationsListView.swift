@@ -20,7 +20,7 @@ struct ObservedStationsListView: View {
                 Spacer()
                 
                 Text(L10n.noObservedStations)
-                    .accessibilityIdentifier(AccessibilityIdentifiers.ObservedStationsListView.noObservedStations.rawValue)
+                    .accessibilityIdentifier(\.observedStationsListView.noObservedStations)
                 
                 Spacer()
             } else {
@@ -31,7 +31,7 @@ struct ObservedStationsListView: View {
                     }
                 }
                 .listStyle(.sidebar)
-                .accessibilityIdentifier(AccessibilityIdentifiers.ObservedStationsListView.stationsList.rawValue)
+                .accessibilityIdentifier(\.observedStationsListView.stationsList)
             }
         }
         .safeAreaInset(edge: .bottom) {
@@ -58,7 +58,7 @@ struct ObservedStationsListView: View {
                 RoundedRectangle(cornerRadius: 16)
             )
             .shadow(color: .black.opacity(0.3), radius: 16)
-            .accessibilityIdentifier(AccessibilityIdentifiers.ObservedStationsListView.addObservedStationsButton.rawValue)
+            .accessibilityIdentifier(\.observedStationsListView.addObservedStationsButton)
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 16)

@@ -18,8 +18,13 @@ protocol FetchAllStationsUseCaseProtocol: Sendable {
 }
 
 final class FetchAllStationsUseCase: FetchAllStationsUseCaseProtocol {
-    @Injected(\.giosApiRepository) private var giosApiRepository
-    @Injected(\.stationsNetworkMapper) private var stationsNetworkMapper
+    private var giosApiRepository: GIOSApiRepositoryProtocol {
+        Injected(\.giosApiRepository).wrappedValue
+    }
+    
+    private var stationsNetworkMapper: any StationsNetworkMapperProtocol {
+        Injected(\.stationsNetworkMapper).wrappedValue
+    }
     
     init() { }
     

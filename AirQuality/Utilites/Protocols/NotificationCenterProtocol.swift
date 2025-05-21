@@ -13,13 +13,20 @@ protocol HasNotificationCenter {
 
 protocol NotificationCenterProtocol: Sendable {
     func post(name aName: NSNotification.Name, object anObject: Any?)
-    func notifications(named name: Notification.Name, object: AnyObject?) -> NotificationCenter.Notifications
+    
+    func notifications(
+        named name: Notification.Name,
+        object: (any AnyObject & Sendable)?
+    ) -> NotificationCenter.Notifications
+    
     func publisher(for name: Notification.Name, object: AnyObject?) -> NotificationCenter.Publisher
 }
 
 extension NotificationCenterProtocol {
-    func notifications(named name: Notification.Name, object: AnyObject? = nil) -> NotificationCenter.Notifications {
-        notifications(named: name, object: object)
+    func notifications(
+        named name: Notification.Name
+    ) -> NotificationCenter.Notifications {
+        notifications(named: name, object: nil)
     }
 }
 

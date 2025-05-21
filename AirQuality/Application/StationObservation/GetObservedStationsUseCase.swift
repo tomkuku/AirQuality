@@ -18,16 +18,11 @@ protocol GetObservedStationsUseCaseProtocol: Sendable {
 }
 
 final class GetObservedStationsUseCase: GetObservedStationsUseCaseProtocol {
-    @Injected(\.observedStationsFetchResultsRepository) private var observedStationsFetchResultsRepository
-    @Injected(\.stationsLocalDatabaseMapper) private var stationsLocalDatabaseMapper
-    
-    init() { }
-    
     func fetchedStations() async throws -> [Station] {
-        try await observedStationsFetchResultsRepository.getFetchedObjects()
+        try await Injected[\.observedStationsFetchResultsRepository].getFetchedObjects()
     }
     
     func createNewStream() -> AsyncThrowingStream<[Station], Error> {
-        observedStationsFetchResultsRepository.ceateNewStrem()
+        Injected[\.observedStationsFetchResultsRepository].ceateNewStrem()
     }
 }

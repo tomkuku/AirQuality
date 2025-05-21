@@ -10,6 +10,7 @@ targetTemplates:
       TARGETED_DEVICE_FAMILY: 1
     dependencies:
       - package: Alamofire
+      - package: Lottie
     preBuildScripts:
       - name: "SwiftGen"
         basedOnDependencyAnalysis: no
@@ -56,13 +57,19 @@ targets:
     type: bundle.ui-testing
     platform: iOS
     supportedDestinations: [iOS]
+    settings:
+      base:
+        OTHER_SWIFT_FLAGS: "-DDEBUG"
     sources:
-      - path: ../AirQuality/UIComponents/AccessibilityIdentifiers.swift
+      - path: ../AirQuality
+      - path: ../AirQuality/Presentation/UIComponents/AccessibilityIdentifiers.swift
       - path: ../AirQualityUITests
         excludes:
           - __Snapshots__
     dependencies:
       - target: AirQuality
+      - package: Alamofire
+      - package: Lottie
       - { package: SwiftSnapshotTesting, product: "SnapshotTesting" }
     postbuildScripts:
       - name: "Swiftlint"

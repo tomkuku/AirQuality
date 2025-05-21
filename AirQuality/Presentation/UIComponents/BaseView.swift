@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import Lottie
 
 @MainActor
 class BaseViewModel: ObservableObject {
@@ -47,6 +48,7 @@ where C: CoordinatorBase & CoordinatorProtocol, V: View, VM: BaseViewModel {
     
     @ObservedObject private var coordinator: C
     @ObservedObject private var viewModel: VM
+    @State private var lottiePlaybackMode: LottiePlaybackMode = .paused
     
     var body: some View {
         VStack {
@@ -55,10 +57,17 @@ where C: CoordinatorBase & CoordinatorProtocol, V: View, VM: BaseViewModel {
                     Spacer()
                     
                     VStack(spacing: 8) {
-                        ProgressView()
-                            .progressViewStyle(.circular)
+                        LottieView(animation: .named("LottieLoadingAnimation"))
+                            .playbackMode(lottiePlaybackMode)
+                            .frame(width: 46, height: 46)
                         
-                        Text("Pobieranie danych")
+                        Text(Localizable.BaseView.loading)
+                    }
+                    .onAppear {
+                        lottiePlaybackMode = .playing(.fromProgress(0, toProgress: 1, loopMode: .loop))
+                    }
+                    .onDisappear {
+                        lottiePlaybackMode = .paused
                     }
                     
                     Spacer()
@@ -99,7 +108,8 @@ where C: CoordinatorBase & CoordinatorProtocol, V: View, VM: BaseViewModel {
     }
 }
 
-#Preview {
+// swiftlint:disable:next type_name
+struct BaseView_Preview: PreviewProvider {
     final class CoordinatorPreviewDummy: CoordinatorBase, CoordinatorProtocol {
         struct NavigationComponent: Identifiable, Hashable {
             let id: Int
@@ -126,13 +136,15 @@ where C: CoordinatorBase & CoordinatorProtocol, V: View, VM: BaseViewModel {
         func goTo(_ navigationComponent: NavigationComponent) { }
     }
     
-    let baseViewModel = BaseViewModel()
-    baseViewModel.isLoading = true
-    
-    @StateObject var viewModel = baseViewModel
-    @StateObject var coordinator = CoordinatorPreviewDummy()
-    
-    return BaseView(viewModel: viewModel, coordinator: coordinator) {
-        EmptyView()
+    static var previews: some View {
+        let baseViewModel = BaseViewModel()
+        baseViewModel.isLoading = true
+        
+        @StateObject var viewModel = baseViewModel
+        @StateObject var coordinator = CoordinatorPreviewDummy()
+        
+        return BaseView(viewModel: viewModel, coordinator: coordinator) {
+            EmptyView()
+        }
     }
 }

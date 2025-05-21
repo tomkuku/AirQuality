@@ -8,32 +8,34 @@
 import SwiftUI
 
 struct SelectedStationView: View {
+    
+    // MARK: Types
+    
     private typealias L10n = Localizable.SelectedStationView
     
-    @EnvironmentObject private var appCoordinator: AppCoordinator
-    @StateObject private var viewModel: SelectedStationViewModel
-    @State private var dataProviderAnimate = false
+    // MARK: Body
     
     var body: some View {
         BaseView(viewModel: viewModel, coordinator: appCoordinator) {
             if !viewModel.isLoading {
-                ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 8) {
-                        ForEach(0..<viewModel.sensors.count, id: \.self) { index in
-                            SelectedStationSensorRow(sensor: viewModel.sensors[index], index: index)
-                        }
+                RefreshableScrollView(
+                    onRefresh: {
+                        /// Delay to avoid instacne switch between sensors list and loading indicator.
+                        try? await Task.sleep(for: .milliseconds(600))
                         
-                        dataProvider
-                    }
-                    .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
-                }
-                .refreshable {
-                    /// Delay to avoid instacne switch between sensors list and loading indicator.
-                    try? await Task.sleep(for: .milliseconds(600))
-                    
-                    viewModel.refresh()
-                }
-                .accessibilityIdentifier(AccessibilityIdentifiers.SelectedStationView.sensorsList.rawValue)
+                        viewModel.refresh()
+                    }, contentView: {
+                        LazyVStack(alignment: .leading, spacing: 8) {
+                            ForEach(0..<viewModel.sensors.count, id: \.self) { index in
+                                SelectedStationSensorRow(sensor: viewModel.sensors[index], index: index)
+                            }
+                            
+                            dataProvider
+                        }
+                        .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                    },
+                    accessibilityIdentifier: \.selectedStationView.sensorsList
+                )
             } else {
                 VStack(spacing: 12) {
                     ProgressView()
@@ -74,10 +76,20 @@ struct SelectedStationView: View {
         }
     }
     
+    // MARK: Private properties
+    
+    @EnvironmentObject private var appCoordinator: AppCoordinator
+    @StateObject private var viewModel: SelectedStationViewModel
+    @State private var dataProviderAnimate = false
+    
+    // MARK: Init
+    
     init(viewModel: @autoclosure @escaping () -> SelectedStationViewModel) {
         self._viewModel = StateObject(wrappedValue: viewModel())
     }
 }
+
+// MARK: Previews
 
 #Preview {
     GetSensorsUseCasePreviewDummy.fetchReturnValue = [

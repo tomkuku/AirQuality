@@ -22,5 +22,5 @@ final class LocalDatabaseModelDummy: LocalDatabaseModel, @unchecked Sendable {
         self.identifier = identifier
     }
     
-    let identifier: Int
+    var identifier: Int
 }

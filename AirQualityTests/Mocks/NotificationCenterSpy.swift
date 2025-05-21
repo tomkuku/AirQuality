@@ -10,7 +10,6 @@ import Foundation
 @testable import AirQuality
 
 final class NotificationCenterSpy: NotificationCenterProtocol, @unchecked Sendable {
-    
     enum Event: Equatable, Sendable, Hashable {
         case post(NSNotification.Name)
         case publisher(Notification.Name)
@@ -38,7 +37,10 @@ final class NotificationCenterSpy: NotificationCenterProtocol, @unchecked Sendab
         return notificationCenter.publisher(for: name, object: object)
     }
     
-    func notifications(named name: Notification.Name, object: AnyObject?) -> NotificationCenter.Notifications {
+    func notifications(
+        named name: Notification.Name,
+        object: (any AnyObject & Sendable)?
+    ) -> NotificationCenter.Notifications {
         queue.sync {
             events.append(.publisher(name))
         }

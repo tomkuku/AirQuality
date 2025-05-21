@@ -13,8 +13,7 @@ protocol GetArchivalMeasurementsUseCaseProtocol: Sendable {
 }
 
 final class GetArchivalMeasurementsUseCase: GetArchivalMeasurementsUseCaseProtocol {
-    @Injected(\.giosApiV1Repository) private var giosApiV1Repository
-    
+    private var giosApiV1Repository: GIOSApiV1RepositoryProtocol { Injected[\.giosApiV1Repository] }
     private let sensorMeasurementNetworkMapper: any SensorMeasurementNetworkMapperProtocol
     
     init(sensorMeasurementNetworkMapper: any SensorMeasurementNetworkMapperProtocol) {
