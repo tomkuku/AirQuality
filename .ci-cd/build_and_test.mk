@@ -9,8 +9,8 @@ PROJECT = AirQuality.xcodeproj
 UI_TEST_SCHEME = UITests
 UNIT_TEST_SCHEME = UnitTests
 PLATFORM = 'iOS Simulator'
-DEVICE = 'iPhone 15 Pro'
-OS_VERSION = 18.0
+DEVICE = 'iPhone 16 Pro'
+OS_VERSION = 18.2
 XCRESULT_PATH = danger.xcresult
 
 # MARK: UnitTests
