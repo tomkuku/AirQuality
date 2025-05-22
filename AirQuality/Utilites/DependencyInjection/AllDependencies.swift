@@ -34,6 +34,7 @@ HasSensorsNetworkMapper &
 HasSensorMeasurementNetworkMapper &
 HasStationsLocalDatabaseMapper &
 HasStationSensorsParamsNetworkMapper &
+HasDTOSensorsNetworkMapper &
 // Others
 HasSensorMeasurementDataFormatter &
 HasUIApplication

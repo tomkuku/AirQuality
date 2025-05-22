@@ -22,7 +22,6 @@ final class StationLocalDatabaseModel: LocalDatabaseModel, @unchecked Sendable {
     var identifier: Int
     var longitude: Double
     var cityName: String
-    var commune: String
     var province: String
     var street: String?
     
@@ -37,7 +36,6 @@ final class StationLocalDatabaseModel: LocalDatabaseModel, @unchecked Sendable {
         latitude: Double,
         longitude: Double,
         cityName: String,
-        commune: String,
         province: String,
         street: String?
     ) {
@@ -45,7 +43,6 @@ final class StationLocalDatabaseModel: LocalDatabaseModel, @unchecked Sendable {
         self.latitude = latitude
         self.longitude = longitude
         self.cityName = cityName
-        self.commune = commune
         self.province = province
         self.street = street
     }

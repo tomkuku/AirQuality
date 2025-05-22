@@ -27,9 +27,8 @@ struct StationsNetworkMapper: StationsNetworkMapperProtocol {
                 id: $0.id,
                 latitude: latitude,
                 longitude: longitude,
-                cityName: $0.city.name,
-                commune: $0.city.commune.name,
-                province: $0.city.commune.provinceName,
+                cityName: $0.cityName,
+                province: $0.province,
                 street: $0.street
             )
         }

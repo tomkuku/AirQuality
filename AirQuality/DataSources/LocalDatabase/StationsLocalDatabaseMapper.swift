@@ -24,7 +24,6 @@ struct StationsLocalDatabaseMapper: StationsLocalDatabaseMapperProtocol {
             latitude: input.latitude,
             longitude: input.longitude,
             cityName: input.cityName,
-            commune: input.commune,
             province: input.province,
             street: input.street
         )
@@ -36,7 +35,6 @@ struct StationsLocalDatabaseMapper: StationsLocalDatabaseMapperProtocol {
             latitude: input.latitude,
             longitude: input.longitude,
             cityName: input.cityName,
-            commune: input.commune,
             province: input.province,
             street: input.street
         )

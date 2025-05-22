@@ -87,6 +87,7 @@ struct Param: Sendable, Equatable, Hashable {
         case ParamType.co.rawValue:
             self = .co
         default:
+            Logger.error("No param with id: \(id)")
             return nil
         }
     }

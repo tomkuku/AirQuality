@@ -16,41 +16,44 @@ protocol DependenciesContainerProtocol: AnyObject {
 
 final class DependenciesContainer: AllDependencies, DependenciesContainerProtocol {
     subscript<T>(_ keyPath: KeyPath<AllDependencies, T>) -> T {
-        let mirror = Mirror(reflecting: self)
-        
-        for child in mirror.children {
-            guard let label = child.label else { continue }
-            
-            guard let scheardDependency = mirror.descendant(label) as? T else { continue }
-            return scheardDependency
-        }
-        
-        fatalError("Dependency \(String(describing: T.self)) not found!")
+        self[keyPath: keyPath]
     }
+    
+    // MARK: Others
+    
+    let cacheDataSource: CacheDataSourceProtocol
+    let notificationCenter: NotificationCenterProtocol
+    let sensorMeasurementDataFormatter: SensorMeasurementDataFormatterProtocol
+    let uiApplication: UIApplicationProtocol
+    
+    // MARK: Repositories
     
     let giosApiV1Repository: GIOSApiV1RepositoryProtocol
     let giosApiRepository: GIOSApiRepositoryProtocol
     let localDatabaseRepository: LocalDatabaseRepositoryProtocol
     let observedStationsFetchResultsRepository: LocalDatabaseFetchResultsRepository<StationsLocalDatabaseMapper>
-    let stationsLocalDatabaseMapper: any StationsLocalDatabaseMapperProtocol
+    let locationRespository: LocationRespositoryProtocol
+    
+    // MARK: UseCases
+    
     let addObservedStationUseCase: AddObservedStationUseCaseProtocol
     let deleteObservedStationUseCase: DeleteObservedStationUseCaseProtocol
     let fetchAllStationsUseCase: FetchAllStationsUseCaseProtocol
     let getObservedStationsUseCase: GetObservedStationsUseCaseProtocol
-    let cacheDataSource: CacheDataSourceProtocol
-    let locationRespository: LocationRespositoryProtocol
-    let notificationCenter: NotificationCenterProtocol
-    let stationsNetworkMapper: any StationsNetworkMapperProtocol
     let findTheNearestStationUseCase: FindTheNearestStationUseCaseProtocol
-    let sensorsNetworkMapper: any SensorsNetworkMapperProtocol
-    var sensorMeasurementsNetworkMapper: any SensorMeasurementNetworkMapperProtocol
     let getSensorsUseCase: GetSensorsUseCaseProtocol
-    let sensorMeasurementDataFormatter: SensorMeasurementDataFormatterProtocol
     let getStationSensorsParamsUseCase: GetStationSensorsParamsUseCaseProtocol
-    let stationSensorsParamsNetworkMapper: any StationSensorsParamsNetworkMapperProtocol
     let getUserLocationUseCase: GetUserLocationUseCaseProtocol
-    let uiApplication: UIApplicationProtocol
     let networkConnectionMonitorUseCase: NetworkConnectionMonitorUseCaseProtocol
+    
+    // MARK: Mappers
+    
+    let stationsLocalDatabaseMapper: any StationsLocalDatabaseMapperProtocol = StationsLocalDatabaseMapper()
+    let sensorsNetworkMapper: any SensorsNetworkMapperProtocol = SensorsNetworkMapper()
+    let sensorMeasurementsNetworkMapper: any SensorMeasurementNetworkMapperProtocol = SensorMeasurementNetworkMapper()
+    let stationsNetworkMapper: any StationsNetworkMapperProtocol = StationsNetworkMapper()
+    let stationSensorsParamsNetworkMapper: any StationSensorsParamsNetworkMapperProtocol = StationSensorsParamsNetworkMapper()
+    let dtoSensorsNetworkMapper: any DTOSensorsNetworkMapperProtocol = DTOSensorsNetworkMapper()
     
     // swiftlint:disable function_body_length
     @MainActor
@@ -65,12 +68,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         
         let backgroundTasksManager = BackgroundTasksManager(uiApplication: UIApplicationWrapper())
         
-        self.stationsNetworkMapper = StationsNetworkMapper()
-        
         self.giosApiV1Repository = GIOSApiV1Repository(httpDataSource: httpDataSource)
-        
-        self.sensorsNetworkMapper = SensorsNetworkMapper()
-        self.sensorMeasurementsNetworkMapper = SensorMeasurementNetworkMapper()
         
         self.giosApiRepository = GIOSApiRepository(httpDataSource: httpDataSource)
         
@@ -96,7 +94,6 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
             localDatabaseFetchResultsDataSource: observedStationLocalDatabaseFetchResultsDataSource,
             mapper: stationsLocalDatabaseMapper
         )
-        self.stationsLocalDatabaseMapper = stationsLocalDatabaseMapper
         self.addObservedStationUseCase = AddObservedStationUseCase()
         self.deleteObservedStationUseCase = DeleteObservedStationUseCase()
                 
@@ -104,8 +101,6 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         
         let userLocationDataSource = UserLocationDataSource(locationManager: CLLocationManager())
         self.locationRespository = LocationRespository(userLocationDataSource: userLocationDataSource)
-        
-        self.stationSensorsParamsNetworkMapper = StationSensorsParamsNetworkMapper()
         
 #if targetEnvironment(simulator) || TESTS
         if ProcessInfo.isPreview {

@@ -19,7 +19,7 @@ extension Endpoint.ArchivalMeasurements: HTTPRequest {
     var method: HTTPMethod {
         switch self {
         case .get:
-                .get
+            .get
         }
     }
     

@@ -18,8 +18,8 @@ protocol FetchAllStationsUseCaseProtocol: Sendable {
 }
 
 final class FetchAllStationsUseCase: FetchAllStationsUseCaseProtocol {
-    private var giosApiRepository: GIOSApiRepositoryProtocol {
-        Injected(\.giosApiRepository).wrappedValue
+    private var giosApiV1Repository: GIOSApiV1RepositoryProtocol {
+        Injected(\.giosApiV1Repository).wrappedValue
     }
     
     private var stationsNetworkMapper: any StationsNetworkMapperProtocol {
@@ -29,10 +29,38 @@ final class FetchAllStationsUseCase: FetchAllStationsUseCaseProtocol {
     init() { }
     
     func fetch() async throws -> [Station] {
-        try await giosApiRepository.fetch(
+        let numberOfStations = try await fetchNumberOfStations()
+        
+        return try await withThrowingTaskGroup(of: [Station].self) { group in
+            for page in 0..<numberOfStations {
+                group.addTask { [weak self] in
+                    guard let self else { return [] }
+                    
+                    return try await self.handleFetchPage(page)
+                }
+            }
+            
+            var stations: [Station] = []
+            
+            for try await result in group {
+                stations.append(contentsOf: result)
+            }
+            
+            return stations
+        }
+    }
+    
+    private func handleFetchPage(_ page: Int) async throws -> [Station] {
+        try await giosApiV1Repository.fetch(
             mapper: stationsNetworkMapper,
-            endpoint: Endpoint.Stations.get,
-            source: .cacheIfPossible
+            endpoint: Endpoint.Stations.get(page: page, size: 100),
+            contentContainerName: .stations
+        )
+    }
+    
+    private func fetchNumberOfStations() async throws -> Int {
+        try await giosApiV1Repository.fetchNumberOfPages(
+            endpoint: Endpoint.Stations.get(page: 1, size: 100)
         )
     }
 }

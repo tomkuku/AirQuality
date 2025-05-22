@@ -16,8 +16,18 @@ protocol GIOSApiV1RepositoryProtocol: Sendable {
     func fetch<T>(
         mapper: T,
         endpoint: any HTTPRequest,
-        contentContainerName: String
+        contentContainerName: GIOSApiV1.ContainerName
     ) async throws -> T.DomainModel where T: NetworkMapperProtocol
+    
+    func fetchNumberOfPages(endpoint: any HTTPRequest) async throws -> Int
+}
+
+enum GIOSApiV1 {
+    enum ContainerName: String {
+        case stations = "Lista stacji pomiarowych"
+        case sensors = "Lista stanowisk pomiarowych dla podanej stacji"
+        case measurements = "Lista danych pomiarowych"
+    }
 }
 
 actor GIOSApiV1Repository: GIOSApiV1RepositoryProtocol {
@@ -43,11 +53,17 @@ actor GIOSApiV1Repository: GIOSApiV1RepositoryProtocol {
     func fetch<T>(
         mapper: T,
         endpoint: any HTTPRequest,
-        contentContainerName: String
+        contentContainerName: GIOSApiV1.ContainerName
     ) async throws -> T.DomainModel where T: NetworkMapperProtocol {
         let data = try await httpDataSource.requestData(endpoint)
         let decodedResponse = try jsonDecoder.decode(GIOSApiV1Response.self, from: data)
-        let networkModelObjects: T.DTOModel = try decodedResponse.getValue(for: contentContainerName)
+        let networkModelObjects: T.DTOModel = try decodedResponse.getValue(for: contentContainerName.rawValue)
         return try mapper.map(networkModelObjects)
+    }
+    
+    func fetchNumberOfPages(endpoint: any HTTPRequest) async throws -> Int {
+        let data = try await httpDataSource.requestData(endpoint)
+        let decodedModel = try jsonDecoder.decode(TotalPagesNetworkModel.self, from: data)
+        return decodedModel.totalPages
     }
 }

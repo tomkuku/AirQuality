@@ -21,10 +21,11 @@ final class GetArchivalMeasurementsUseCase: GetArchivalMeasurementsUseCaseProtoc
     }
     
     func getArchivalMeasurements(for sensorId: Int) async throws -> [SensorMeasurement] {
-        try await giosApiV1Repository.fetch(
-            mapper: sensorMeasurementNetworkMapper,
-            endpoint: Endpoint.ArchivalMeasurements.get(sensorId),
-            contentContainerName: "Lista archiwalnych wyników pomiarów"
-        )
+        []
+//        try await giosApiV1Repository.fetch(
+//            mapper: sensorMeasurementNetworkMapper,
+//            endpoint: Endpoint.ArchivalMeasurements.get(sensorId),
+//            contentContainerName: "Lista archiwalnych wyników pomiarów"
+//        )
     }
 }

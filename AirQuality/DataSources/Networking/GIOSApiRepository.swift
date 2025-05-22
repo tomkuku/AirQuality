@@ -87,44 +87,46 @@ actor GIOSApiRepository: GIOSApiRepositoryProtocol {
     }
     
     func fetchSensors(for stationId: Int) async throws -> [Sensor] {
-        try await withThrowingTaskGroup(of: (SensorNetworkModel, Param, [SensorMeasurement])?.self) { [weak self] group in
-            guard let self else {
-                Logger.error("\(String(describing: Self.self)) is nil")
-                return []
-            }
-            
-            try await handleFetchSensors(for: stationId).forEach { sensorNetworkModel in
-                group.addTask {
-                    guard let param = Param(id: sensorNetworkModel.param.idParam) else { return nil }
-                    let measurements = try await self.handleFetchMeasurements(forSensorId: sensorNetworkModel.id)
-                    return (sensorNetworkModel, param, measurements)
-                }
-            }
-            
-            var sensors = [Sensor]()
-            
-            for try await value in group {
-                guard let value else {
-                    Logger.error("Sensor value is nil!")
-                    continue
-                }
-                
-                let sensor = try await self.sensorsNetworkMapper.map(value)
-                sensors.append(sensor)
-            }
-            
-            return sensors
-        }
+        []
+//        try await withThrowingTaskGroup(of: (SensorNetworkModel, Param, [SensorMeasurement])?.self) { [weak self] group in
+//            guard let self else {
+//                Logger.error("\(String(describing: Self.self)) is nil")
+//                return []
+//            }
+//            
+//            try await handleFetchSensors(for: stationId).forEach { sensorNetworkModel in
+//                group.addTask {
+//                    guard let param = Param(id: sensorNetworkModel.param.idParam) else { return nil }
+//                    let measurements = try await self.handleFetchMeasurements(forSensorId: sensorNetworkModel.id)
+//                    return (sensorNetworkModel, param, measurements)
+//                }
+//            }
+//            
+//            var sensors = [Sensor]()
+//            
+//            for try await value in group {
+//                guard let value else {
+//                    Logger.error("Sensor value is nil!")
+//                    continue
+//                }
+//                
+//                let sensor = try await self.sensorsNetworkMapper.map(value)
+//                sensors.append(sensor)
+//            }
+//            
+//            return sensors
+//        }
     }
     
     // MARK: Private methods
     
     private func handleFetchMeasurements(forSensorId sensorId: Int) async throws -> [SensorMeasurement] {
-        try await giosApiV1Repository.fetch(
-            mapper: sensorMeasurementsNetworkMapper,
-            endpoint: Endpoint.Measurements.get(sensorId),
-            contentContainerName: "Lista danych pomiarowych"
-        )
+        []
+//        try await giosApiV1Repository.fetch(
+//            mapper: sensorMeasurementsNetworkMapper,
+//            endpoint: Endpoint.Measurements.get(sensorId),
+//            contentContainerName: "Lista danych pomiarowych"
+//        )
     }
     
     private func handleFetchSensors(for stationId: Int) async throws -> [SensorNetworkModel] {

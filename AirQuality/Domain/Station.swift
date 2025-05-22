@@ -12,7 +12,6 @@ struct Station: Hashable, Sendable, Identifiable {
     let latitude: Double
     let longitude: Double
     let cityName: String
-    let commune: String
     let province: String
     let street: String?
 }

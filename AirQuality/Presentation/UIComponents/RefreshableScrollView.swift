@@ -12,9 +12,9 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
     
     // MARK: - Type
     
-    private struct RefreshPorgress {
+    private struct RefreshProgress {
         var lottiePlaybackMode: LottiePlaybackMode = .paused(at: .progress(0))
-        var refreshOpactiy: CGFloat = 0
+        var refreshOpacity: CGFloat = 0
         
         mutating func setLottiePlaybackModeToPlayingInfinity() {
             lottiePlaybackMode = .playing(.fromProgress(0, toProgress: 1, loopMode: .repeat(.greatestFiniteMagnitude)))
@@ -35,10 +35,10 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
         ZStack {
             VStack {
                 LottieView(animation: .named("LottieLoadingAnimation"))
-                    .playbackMode(refreshPorgress.lottiePlaybackMode)
+                    .playbackMode(refreshProgress.lottiePlaybackMode)
                     .frame(width: 46, height: 46)
                     .padding(.top, 4)
-                    .opacity(refreshPorgress.refreshOpactiy)
+                    .opacity(refreshProgress.refreshOpacity)
                 
                 Spacer()
             }
@@ -61,7 +61,7 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
     
     // MARK: Private properties
     
-    @State private var refreshPorgress: RefreshPorgress = .init()
+    @State private var refreshProgress: RefreshProgress = .init()
     @State private var offsetY: CGFloat = 0
     
     @State private var isRefreshing = false
@@ -72,8 +72,8 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
     
     private let onRefresh: @MainActor @Sendable () async -> ()
     private let contentView: () -> ContentView
-    private let beginShowingRefreshControllYPosition: CGFloat
-    private let endShowingRefreshControllYPosition: CGFloat
+    private let beginShowingRefreshControlYPosition: CGFloat
+    private let endShowingRefreshControlYPosition: CGFloat
     private let animationFactor = 0.3
     private let offsetYWhenGestureEnds: CGFloat = 60
     private let accessibilityIdentifier: AccessibilityIdentifierType
@@ -83,14 +83,14 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
     init(
         onRefresh: @MainActor @Sendable @escaping () async -> (),
         contentView: @escaping () -> ContentView,
-        beginShowingRefreshControllYPosition: CGFloat = 100,
-        endShowingRefreshControllYPosition: CGFloat = 330,
+        beginShowingRefreshControlYPosition: CGFloat = 100,
+        endShowingRefreshControlYPosition: CGFloat = 330,
         accessibilityIdentifier: AccessibilityIdentifierType
     ) {
         self.onRefresh = onRefresh
         self.contentView = contentView
-        self.beginShowingRefreshControllYPosition = beginShowingRefreshControllYPosition
-        self.endShowingRefreshControllYPosition = endShowingRefreshControllYPosition
+        self.beginShowingRefreshControlYPosition = beginShowingRefreshControlYPosition
+        self.endShowingRefreshControlYPosition = endShowingRefreshControlYPosition
         self.accessibilityIdentifier = accessibilityIdentifier
     }
     
@@ -103,35 +103,35 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
                 
                 let scroll = value.translation.height
                 
-                if scroll >= beginShowingRefreshControllYPosition {
-                    let progress = (scroll - beginShowingRefreshControllYPosition) / endShowingRefreshControllYPosition
+                if scroll >= beginShowingRefreshControlYPosition {
+                    let progress = (scroll - beginShowingRefreshControlYPosition) / endShowingRefreshControlYPosition
                     
-                    var refreshPorgress = self.refreshPorgress
+                    var refreshProgress = self.refreshProgress
                     
                     if progress > 1 {
-                        refreshPorgress.setLottiePlaybackModeToPlayingInfinity()
-                        refreshPorgress.refreshOpactiy = 1
+                        refreshProgress.setLottiePlaybackModeToPlayingInfinity()
+                        refreshProgress.refreshOpacity = 1
                     } else {
                         let animationProgress = progress * animationFactor
-                        refreshPorgress.setLottiePlaybackModeToPaused(atProgress: animationProgress)
-                        refreshPorgress.refreshOpactiy = progress
+                        refreshProgress.setLottiePlaybackModeToPaused(atProgress: animationProgress)
+                        refreshProgress.refreshOpacity = progress
                     }
                     
-                    self.refreshPorgress = refreshPorgress
+                    self.refreshProgress = refreshProgress
                 }
             }
             .onEnded { value in
                 let scroll = value.translation.height
                 
-                if scroll >= endShowingRefreshControllYPosition {
+                if scroll >= endShowingRefreshControlYPosition {
                     withAnimation {
                         offsetY = offsetYWhenGestureEnds
                         isScrollDisabled = true
                         
-                        var refreshPorgress = self.refreshPorgress
-                        refreshPorgress.setLottiePlaybackModeToPlayingInfinity()
-                        refreshPorgress.refreshOpactiy = 1
-                        self.refreshPorgress = refreshPorgress
+                        var refreshProgress = self.refreshProgress
+                        refreshProgress.setLottiePlaybackModeToPlayingInfinity()
+                        refreshProgress.refreshOpacity = 1
+                        self.refreshProgress = refreshProgress
                     } completion: {
                         Task { @MainActor in
                             await onRefresh()
@@ -140,10 +140,10 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
                         }
                     }
                 } else {
-                    var refreshPorgress = self.refreshPorgress
-                    refreshPorgress.setLottiePlaybackModeToPlayOnceFromCurrentProgress()
-                    refreshPorgress.refreshOpactiy = 0.0
-                    self.refreshPorgress = refreshPorgress
+                    var refreshProgress = self.refreshProgress
+                    refreshProgress.setLottiePlaybackModeToPlayOnceFromCurrentProgress()
+                    refreshProgress.refreshOpacity = 0.0
+                    self.refreshProgress = refreshProgress
                 }
             }
     }
@@ -153,13 +153,36 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
             self.offsetY = 0
             self.isScrollDisabled = false
             
-            var refreshPorgress = self.refreshPorgress
-            refreshPorgress.refreshOpactiy = 0
-            self.refreshPorgress = refreshPorgress
+            var refreshProgress = self.refreshProgress
+            refreshProgress.refreshOpacity = 0
+            self.refreshProgress = refreshProgress
         } completion: {
-            var refreshPorgress = self.refreshPorgress
-            refreshPorgress.setLottiePlaybackModeToPaused(atProgress: 0)
-            self.refreshPorgress = refreshPorgress
+            var refreshProgress = self.refreshProgress
+            refreshProgress.setLottiePlaybackModeToPaused(atProgress: 0)
+            self.refreshProgress = refreshProgress
         }
+    }
+}
+#Preview {
+    let stations: [Station] = [
+        .previewDummy(id: 1, province: "Małopolskie"),
+        .previewDummy(id: 2, province: "zachodniopomorskie"),
+        .previewDummy(id: 3, province: "Mazowieckie"),
+        .previewDummy(id: 4, province: "Opolskie")
+    ]
+    
+    NavigationStack {
+        RefreshableScrollView(
+            onRefresh: {},
+            contentView: {
+                ForEach(stations) { station in
+                    HStack {
+                        Text(station.cityName)
+                        Spacer()
+                        Text("\(station.id)")
+                    }
+                    .frame(height: 40)
+                }
+            }, accessibilityIdentifier: \.allStationsListProvindesView.provindesList)
     }
 }
