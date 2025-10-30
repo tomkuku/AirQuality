@@ -1,5 +1,5 @@
 //
-//  AllStationsListProvindesView.swift
+//  ProvincesListView.swift
 //  AirQuality
 //
 //  Created by Tomasz Kukułka on 25/09/2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-struct AllStationsListProvindesView: View {
+struct ProvincesListView: View {
     
     private typealias L10n = Localizable.AddObservedStationListView
     
@@ -38,12 +38,12 @@ struct AllStationsListProvindesView: View {
                     },
                     contentView: {
                         ForEach(viewModel.provinces) { province in
-                            AllStationsListProvindesRowView(province: province)
+                            ProvincesListRowView(province: province)
                                 .environmentObject(coordinator)
                                 .listRowSeparator(.hidden)
                         }
                     },
-                    accessibilityIdentifier: \.allStationsListProvindesView.provindesList
+                    accessibilityIdentifier: \.provincesListView.provindesList
                 )
             }
         }
@@ -63,11 +63,11 @@ struct AllStationsListProvindesView: View {
     // MARK: Private properties
     
     @EnvironmentObject private var coordinator: AddObservedStationListCoordinator
-    @StateObject private var viewModel: AllStationsListProvincesViewModel
+    @StateObject private var viewModel: ProvincesListViewModel
     
     // MARK: Lifecycle
     
-    init(viewModel: @autoclosure @escaping () -> AllStationsListProvincesViewModel = .init()) {
+    init(viewModel: @autoclosure @escaping () -> ProvincesListViewModel = .init()) {
         self._viewModel = StateObject(wrappedValue: viewModel())
     }
 }
@@ -82,12 +82,16 @@ struct AllStationsListProvindesView: View {
         .previewDummy(id: 4, province: "Opolskie")
     ]
     
-    @ObservedObject var viewModel = AllStationsListProvincesViewModel()
-    @ObservedObject var coordinator = AddObservedStationListCoordinator(coordinatorNavigationType: .presentation(dismissHandler: {}), alertSubject: .init(), toastSubject: .init())
+    @ObservedObject var viewModel = ProvincesListViewModel()
+    @ObservedObject var coordinator = AddObservedStationListCoordinator(
+        coordinatorNavigationType: .presentation(dismissHandler: {}),
+        alertSubject: .init(),
+        toastSubject: .init()
+    )
     
     return TabView {
         NavigationStack {
-            AllStationsListProvindesView(viewModel: viewModel)
+            ProvincesListView(viewModel: viewModel)
                 .environmentObject(coordinator)
         }
     }

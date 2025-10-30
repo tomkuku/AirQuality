@@ -15,12 +15,12 @@ struct AccessibilityIdentifiers {
         let stationsList = ""
     }
     
-    struct AllStationsListProvindesView {
+    struct ProvincesListView {
         let provindesList = ""
         let provindesListRow = ""
     }
     
-    struct AllStationsListProvindesRowView {
+    struct ProvincesListRowView {
         let provinceName = ""
         let numberOfStations = ""
     }
@@ -72,8 +72,8 @@ struct AccessibilityIdentifiers {
     let doneToolbarButton = ""
     
     let observedStationsListView = ObservedStationsListView()
-    let allStationsListProvindesView = AllStationsListProvindesView()
-    let allStationsListProvindesRowView = AllStationsListProvindesRowView()
+    let provincesListView = ProvincesListView()
+    let provincesListRowView = ProvincesListRowView()
     let allStationsListProvinceStationsView = AllStationsListProvinceStationsView()
     let allStationsListProvinceStationsRowView = AllStationsListProvinceStationsRowView()
     let addObservedStationContainerView = AddObservedStationContainerView()

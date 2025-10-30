@@ -9,7 +9,7 @@ import Foundation
 
 final class AllStationListProvinceStationsViewModel: BaseViewModel {
     
-    typealias Model = AllStationsListProvindesModel
+    typealias Model = ProvincesListModel
     
     // MARK: Properties
     

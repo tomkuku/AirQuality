@@ -1,5 +1,5 @@
 //
-//  AllStationsListProvindesRowView.swift
+//  ProvincesListRowView.swift
 //  AirQuality
 //
 //  Created by Tomasz Kukułka on 25/09/2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AllStationsListProvindesRowView: View {
+struct ProvincesListRowView: View {
     
     // MARK: Body
     
@@ -28,7 +28,7 @@ struct AllStationsListProvindesRowView: View {
                     Image.chevronCompactRight
                         .frame(width: 12, height: 12)
                         .scaledToFill()
-                        .accessibilityIdentifier(\.allStationsListProvindesView.provindesListRow)
+                        .accessibilityIdentifier(\.provincesListView.provindesListRow)
                 }
                 .foregroundStyle(Color.Text.secondary)
             }
@@ -51,12 +51,12 @@ struct AllStationsListProvindesRowView: View {
     
     // MARK: Properties
     
-    private let province: AllStationsListProvindesModel.Province
+    private let province: ProvincesListModel.Province
     
     @EnvironmentObject private var coordinator: AddObservedStationListCoordinator
     @State private var backgroundColor: Color = .clear
     
-    init(province: AllStationsListProvindesModel.Province) {
+    init(province: ProvincesListModel.Province) {
         self.province = province
     }
 }

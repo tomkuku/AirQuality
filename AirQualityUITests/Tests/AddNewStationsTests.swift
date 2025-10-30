@@ -43,7 +43,7 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
         
         // Add stations on list
         
-        let provincesScrollView = app.scrollViews[\.allStationsListProvindesView.provindesList]
+        let provincesScrollView = app.scrollViews[\.provincesListView.provindesList]
         
         XCTAssertTrue(provincesScrollView.waitForExistence(timeout: 4))
         
@@ -60,7 +60,7 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
         testSnapshot(imageName: "provincesListAfterSearching")
         
         /// Whole row is tappable!
-        let images = provincesScrollView.images.matching(keyPath: \.allStationsListProvindesView.provindesListRow)
+        let images = provincesScrollView.images.matching(keyPath: \.provincesListView.provindesListRow)
         images.element(boundBy: 0).tap()
         
         let stationsCollectionView = app.collectionViews[\.allStationsListProvinceStationsView.stationsList]

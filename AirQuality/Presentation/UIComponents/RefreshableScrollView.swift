@@ -183,6 +183,6 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
                     }
                     .frame(height: 40)
                 }
-            }, accessibilityIdentifier: \.allStationsListProvindesView.provindesList)
+            }, accessibilityIdentifier: \.provincesListView.provindesList)
     }
 }

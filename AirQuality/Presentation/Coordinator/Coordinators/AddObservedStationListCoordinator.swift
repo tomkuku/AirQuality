@@ -21,7 +21,7 @@ final class AddObservedStationListCoordinator: CoordinatorBase, CoordinatorProto
     @ViewBuilder
     @MainActor
     func startView() -> some View {
-        AllStationsListProvindesView()
+        ProvincesListView()
             .environmentObject(self)
     }
     

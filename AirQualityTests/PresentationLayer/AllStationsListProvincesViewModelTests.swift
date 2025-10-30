@@ -1,5 +1,5 @@
 //
-//  AllStationsListProvincesViewModelTests.swift
+//  ProvincesListViewModelTests.swift
 //  AirQualityTests
 //
 //  Created by Tomasz Kukułka on 16/06/2024.
@@ -9,9 +9,9 @@ import XCTest
 
 @testable import AirQuality
 
-final class AllStationsListProvincesViewModelTests: BaseTestCase, @unchecked Sendable {
+final class ProvincesListViewModelTests: BaseTestCase, @unchecked Sendable {
     
-    private var sut: AllStationsListProvincesViewModel!
+    private var sut: ProvincesListViewModel!
     
     private var fetchAllStationsUseCaseSpy: FetchAllStationsUseCaseSpy!
     private var networkConnectionMonitorUseCaseSpy: NetworkConnectionMonitorUseCaseSpy!
@@ -40,7 +40,7 @@ final class AllStationsListProvincesViewModelTests: BaseTestCase, @unchecked Sen
         station6 = Station.dummy(id: 6, cityName: "Warszawa", province: "Mazowieckie", street: "Wokalna")
         
         await MainActor.run {
-            sut = AllStationsListProvincesViewModel()
+            sut = ProvincesListViewModel()
         }
     }
     
@@ -55,7 +55,7 @@ final class AllStationsListProvincesViewModelTests: BaseTestCase, @unchecked Sen
             station1, station2, station3, station4, station5, station6
         ])
         
-        var provinces: [AllStationsListProvindesModel.Province]?
+        var provinces: [ProvincesListModel.Province]?
         
         sut.$provinces
             .dropFirst()
@@ -126,7 +126,7 @@ final class AllStationsListProvincesViewModelTests: BaseTestCase, @unchecked Sen
             station1, station2, station3, station4, station5, station6
         ])
         
-        var provinces: [AllStationsListProvindesModel.Province]?
+        var provinces: [ProvincesListModel.Province]?
         
         sut.$provinces
             .dropFirst()
@@ -163,7 +163,7 @@ final class AllStationsListProvincesViewModelTests: BaseTestCase, @unchecked Sen
             station1, station2, station3, station4, station5, station6
         ])
         
-        var provinces: [AllStationsListProvindesModel.Province]?
+        var provinces: [ProvincesListModel.Province]?
         
         sut.$provinces
             .dropFirst()
@@ -200,7 +200,7 @@ final class AllStationsListProvincesViewModelTests: BaseTestCase, @unchecked Sen
             station1, station2, station3, station4, station5, station6
         ])
         
-        var provinces: [AllStationsListProvindesModel.Province]?
+        var provinces: [ProvincesListModel.Province]?
         
         sut.$provinces
             .dropFirst()
@@ -227,7 +227,7 @@ final class AllStationsListProvincesViewModelTests: BaseTestCase, @unchecked Sen
     }
 }
 
-extension AllStationsListProvindesModel.Province: Equatable {
+extension ProvincesListModel.Province: Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.name == rhs.name && lhs.stations == rhs.stations
     }

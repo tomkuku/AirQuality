@@ -1,5 +1,5 @@
 //
-//  AllStationsListProvincesViewModel.swift
+//  ProvincesListViewModel.swift
 //  AirQuality
 //
 //  Created by Tomasz Kukułka on 25/09/2024.
@@ -9,9 +9,9 @@ import Foundation
 import Combine
 
 @MainActor
-final class AllStationsListProvincesViewModel: BaseViewModel {
+final class ProvincesListViewModel: BaseViewModel {
     
-    typealias Model = AllStationsListProvindesModel
+    typealias Model = ProvincesListModel
     
     // MARK: Properties
     

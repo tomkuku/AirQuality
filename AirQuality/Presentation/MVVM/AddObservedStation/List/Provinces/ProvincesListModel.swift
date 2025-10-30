@@ -1,5 +1,5 @@
 //
-//  AllStationsListProvindesModel.swift
+//  ProvincesListModel.swift
 //  AirQuality
 //
 //  Created by Tomasz Kukułka on 25/09/2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum AllStationsListProvindesModel {
+enum ProvincesListModel {
     struct Province: Identifiable {
         var id: String {
             name
