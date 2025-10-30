@@ -1,5 +1,5 @@
 //
-//  AllStationListProvinceStationsViewModelTests.swift
+//  AllStationsListViewModelTests.swift
 //  AirQualityTests
 //
 //  Created by Tomasz Kukułka on 25/09/2024.
@@ -9,9 +9,9 @@ import XCTest
 
 @testable import AirQuality
 
-final class AllStationListProvinceStationsViewModelTests: BaseTestCase, @unchecked Sendable {
+final class AllStationsListViewModelTests: BaseTestCase, @unchecked Sendable {
     
-    private var sut: AllStationListProvinceStationsViewModel!
+    private var sut: AllStationsListViewModel!
     
     private var getObservedStationsUseCaseSpy: GetObservedStationsUseCaseSpy!
     
@@ -33,7 +33,7 @@ final class AllStationListProvinceStationsViewModelTests: BaseTestCase, @uncheck
         let stations: [Station] = [station1, station2, station3]
         
         await MainActor.run {
-            sut = AllStationListProvinceStationsViewModel(allStationsInProvicne: stations)
+            sut = AllStationsListViewModel(allStationsInProvicne: stations)
         }
     }
     

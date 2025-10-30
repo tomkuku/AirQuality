@@ -63,7 +63,7 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
         let images = provincesScrollView.images.matching(keyPath: \.provincesListView.provindesListRow)
         images.element(boundBy: 0).tap()
         
-        let stationsCollectionView = app.collectionViews[\.allStationsListProvinceStationsView.stationsList]
+        let stationsCollectionView = app.collectionViews[\.allStationsListView.stationsList]
         
         XCTAssertTrue(stationsCollectionView.waitForExistence(timeout: 4))
         

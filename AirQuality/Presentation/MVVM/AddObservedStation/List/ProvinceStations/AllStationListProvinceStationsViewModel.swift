@@ -1,5 +1,5 @@
 //
-//  AllStationListProvinceStationsViewModel.swift
+//  AllStationsListViewModel.swift
 //  AirQuality
 //
 //  Created by Tomasz Kukułka on 25/09/2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class AllStationListProvinceStationsViewModel: BaseViewModel {
+final class AllStationsListViewModel: BaseViewModel {
     
     typealias Model = ProvincesListModel
     

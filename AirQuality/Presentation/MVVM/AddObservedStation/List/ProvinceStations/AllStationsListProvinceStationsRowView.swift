@@ -84,7 +84,7 @@ struct AllStationsListProvinceStationsRowView: View {
     
     return TabView {
         NavigationStack {
-            AllStationsListProvinceStationsView(provinceName: "Małopolskie", stations: stations)
+            AllStationsListView(provinceName: "Małopolskie", stations: stations)
         }
     }
 }

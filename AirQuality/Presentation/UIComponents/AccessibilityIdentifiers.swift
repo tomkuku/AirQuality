@@ -25,7 +25,7 @@ struct AccessibilityIdentifiers {
         let numberOfStations = ""
     }
     
-    struct AllStationsListProvinceStationsView {
+    struct AllStationsListView {
         let stationsList = ""
     }
     
@@ -74,7 +74,7 @@ struct AccessibilityIdentifiers {
     let observedStationsListView = ObservedStationsListView()
     let provincesListView = ProvincesListView()
     let provincesListRowView = ProvincesListRowView()
-    let allStationsListProvinceStationsView = AllStationsListProvinceStationsView()
+    let allStationsListView = AllStationsListView()
     let allStationsListProvinceStationsRowView = AllStationsListProvinceStationsRowView()
     let addObservedStationContainerView = AddObservedStationContainerView()
     let bottomSheet = BottomSheet()

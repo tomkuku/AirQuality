@@ -1,5 +1,5 @@
 //
-//  AllStationsListProvinceStationsView.swift
+//  AllStationsListView.swift
 //  AirQuality
 //
 //  Created by Tomasz Kukułka on 25/09/2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-struct AllStationsListProvinceStationsView: View {
+struct AllStationsListView: View {
     
     private typealias L10n = Localizable.AddObservedStationListView
     
@@ -24,7 +24,7 @@ struct AllStationsListProvinceStationsView: View {
         .listStyle(.inset)
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(provinceName)
-        .accessibilityIdentifier(\.allStationsListProvinceStationsView.stationsList)
+        .accessibilityIdentifier(\.allStationsListView.stationsList)
         .doneToolbarButton {
             coordinator.dismiss()
         }
@@ -39,13 +39,13 @@ struct AllStationsListProvinceStationsView: View {
     private let stations: [Station]
     
     @State private var searchedText = ""
-    @StateObject private var viewModel: AllStationListProvinceStationsViewModel
+    @StateObject private var viewModel: AllStationsListViewModel
     @EnvironmentObject private var coordinator: AddObservedStationListCoordinator
     
     init(provinceName: String, stations: [Station]) {
         self.provinceName = provinceName
         self.stations = stations
-        let viewModel = AllStationListProvinceStationsViewModel(allStationsInProvicne: stations)
+        let viewModel = AllStationsListViewModel(allStationsInProvicne: stations)
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
 }
@@ -60,7 +60,7 @@ struct AllStationsListProvinceStationsView: View {
     
     return TabView {
         NavigationStack {
-            AllStationsListProvinceStationsView(provinceName: "Małopolskie", stations: stations)
+            AllStationsListView(provinceName: "Małopolskie", stations: stations)
         }
     }
 }
