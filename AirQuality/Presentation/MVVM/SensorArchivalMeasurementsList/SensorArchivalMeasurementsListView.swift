@@ -7,48 +7,88 @@
 
 import SwiftUI
 
-struct SensorArchivalMeasurementsListView: View {
+struct SensorArchivalMeasurementsListView<UseCase>: View where UseCase: FetchArchivalMeasurementsUseCaseProtocol {
     
-    @StateObject private var viewModel: SensorArchivalMeasurementsListViewModel
+    typealias ViewModel = SensorArchivalMeasurementsListViewModel<UseCase>
+    
+    // MARK: Properties
     
     var body: some View {
-        ScrollView {
-            ForEach(0..<viewModel.rows.count, id: \.self) { index in
-                let row = viewModel.rows[index]
-                
-                HStack {
-                    Text(row.formattedDate)
-                        .font(.system(size: 16, weight: .regular))
-                    
-                    Spacer()
-                    
-                    VStack(alignment: .trailing, spacing: 8) {
-                        Text("\(row.formattedPercentageValue)%")
-                            .font(.system(size: 18, weight: .medium))
-                        
-                        Text("\(row.formattedValue) µg/m³")
-                            .font(.system(size: 16, weight: .regular))
+        BaseView(viewModel: viewModel, coordinator: coordinator) {
+            if !viewModel.isLoading {
+                ScrollView {
+                    PaginationFetchingView(viewModel: viewModel) { section in
+                        Section {
+                            ForEach(section.rows) { row in
+                                HStack {
+                                    Text("\(row.formattedDate)")
+                                        .font(.system(size: 18, weight: .medium))
+                                    
+                                    Spacer()
+                                    
+                                    VStack(alignment: .trailing, spacing: 8) {
+                                        Text("\(row.formattedValue) µg/m³")
+                                            .font(.system(size: 18, weight: .medium))
+                                    }
+                                }
+                                .padding(.vertical, 6)
+                                .padding(.horizontal, 16)
+                            }
+                        } header: {
+                            HStack {
+                                Text("\(section.name)")
+                                    .font(.system(size: 20, weight: .bold))
+                                
+                                Spacer()
+                            }
+                            .padding(.leading, 16)
+                        }
                     }
                 }
-                .padding(.vertical, 6)
-                .padding(.horizontal, 16)
-                
-                if index < viewModel.rows.count - 1 {
-                    Divider()
+            } else {
+                VStack(spacing: 12) {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .frame(maxWidth: .infinity)
+                        .controlSize(.regular)
+                    
+                    Text(Localizable.SelectedStationView.isLoading)
                 }
             }
         }
+        .navigationTitle(viewModel.sensor.param.formula)
         .taskOnFirstAppear {
-            await viewModel.fetchArchivalMeasurements()
+            viewModel.fetchingTheFirstPage()
         }
     }
     
-    init(viewModel: @autoclosure @escaping () -> SensorArchivalMeasurementsListViewModel) {
+    // MARK: Private properties
+    
+    @StateObject private var viewModel: ViewModel
+    @EnvironmentObject private var coordinator: AppCoordinator
+    
+    // MARK: Lifecycle
+    
+    init(viewModel: @autoclosure @escaping () -> ViewModel) {
         self._viewModel = StateObject(wrappedValue: viewModel())
     }
 }
 
+// MARK: Preview
+
 #Preview {
-    let viewModel = SensorArchivalMeasurementsListViewModel.previewDummy
-    return SensorArchivalMeasurementsListView(viewModel: viewModel)
+    let sensor = Sensor.previewDummy()
+    let useCase = FetchArchivalMeasurementsUseCasePreviewDummy()
+    let viewModel = SensorArchivalMeasurementsListViewModel<FetchArchivalMeasurementsUseCasePreviewDummy>(sensor: sensor, useCase: useCase)
+    let appCoordinator = AppCoordinator(
+        coordinatorNavigationType: .presentation(dismissHandler: {}),
+        alertSubject: .init(),
+        toastSubject: .init()
+    )
+    
+    NavigationStack {
+        SensorArchivalMeasurementsListView(viewModel: viewModel)
+            .navigationBarTitleDisplayMode(.inline)
+            .environmentObject(appCoordinator)
+    }
 }

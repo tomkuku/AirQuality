@@ -61,7 +61,7 @@ final class GetSensorsUseCase: GetSensorsUseCaseProtocol {
             
             for try await result in group.compactMap({ $0 }) {
                 guard let param = result.param else {
-                    Logger.error("Param for sensor: \(result.sensorId) not found!")
+                    Logger.info("Param for sensor: \(result.sensorId) not found!")
                     continue
                 }
                 

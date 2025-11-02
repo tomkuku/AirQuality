@@ -59,6 +59,10 @@ internal enum Localizable {
       internal static let ok = Localizable.tr("Localizable", "Alert.Button.ok")
     }
 
+    internal enum Failure {
+      internal static let title = Localizable.tr("Localizable", "Alert.Failure.title")
+    }
+
     internal enum FindingTheNearestStationsFailed {
       internal static let message = Localizable.tr("Localizable", "Alert.FindingTheNearestStationsFailed.message")
       internal static let title = Localizable.tr("Localizable", "Alert.FindingTheNearestStationsFailed.title")
@@ -89,6 +93,14 @@ internal enum Localizable {
     }
   }
 
+  internal enum AllStationsListProvinces {
+
+    internal enum Errors {
+      internal static let addingStationToObservedFailed = Localizable.tr("Localizable", "AllStationsListProvinces.Errors.addingStationToObservedFailed")
+      internal static let deletingObservedStationFailed = Localizable.tr("Localizable", "AllStationsListProvinces.Errors.deletingObservedStationFailed")
+    }
+  }
+
   internal enum BaseView {
     internal static let loading = Localizable.tr("Localizable", "BaseView.loading")
   }
@@ -110,38 +122,118 @@ internal enum Localizable {
   internal enum Param {
 
     internal enum C6h6 {
-      internal static let description = Localizable.tr("Localizable", "Param.c6h6.description")
       internal static let name = Localizable.tr("Localizable", "Param.c6h6.name")
+
+      internal enum Description {
+        internal static let environmentalImpact = Localizable.tr("Localizable", "Param.c6h6.description.environmentalImpact")
+        internal static let general = Localizable.tr("Localizable", "Param.c6h6.description.general")
+        internal static let humanHealthImpact = Localizable.tr("Localizable", "Param.c6h6.description.humanHealthImpact")
+      }
     }
 
     internal enum Co {
-      internal static let description = Localizable.tr("Localizable", "Param.co.description")
       internal static let name = Localizable.tr("Localizable", "Param.co.name")
+
+      internal enum Description {
+        internal static let environmentalImpact = Localizable.tr("Localizable", "Param.co.description.environmentalImpact")
+        internal static let general = Localizable.tr("Localizable", "Param.co.description.general")
+        internal static let humanHealthImpact = Localizable.tr("Localizable", "Param.co.description.humanHealthImpact")
+      }
+    }
+
+    internal enum IndexLevel {
+
+      internal enum Good {
+        internal static let description = Localizable.tr("Localizable", "Param.indexLevel.good.description")
+        internal static let title = Localizable.tr("Localizable", "Param.indexLevel.good.title")
+      }
+
+      internal enum Hazardous {
+        internal static let description = Localizable.tr("Localizable", "Param.indexLevel.hazardous.description")
+        internal static let title = Localizable.tr("Localizable", "Param.indexLevel.hazardous.title")
+      }
+
+      internal enum Moderate {
+        internal static let description = Localizable.tr("Localizable", "Param.indexLevel.moderate.description")
+        internal static let title = Localizable.tr("Localizable", "Param.indexLevel.moderate.title")
+      }
+
+      internal enum Unhealthy {
+        internal static let description = Localizable.tr("Localizable", "Param.indexLevel.unhealthy.description")
+        internal static let title = Localizable.tr("Localizable", "Param.indexLevel.unhealthy.title")
+      }
+
+      internal enum UnhealthyForSensitiveGroup {
+        internal static let description = Localizable.tr("Localizable", "Param.indexLevel.unhealthyForSensitiveGroup.description")
+        internal static let title = Localizable.tr("Localizable", "Param.indexLevel.unhealthyForSensitiveGroup.title")
+      }
+
+      internal enum VeryUnhealthy {
+        internal static let description = Localizable.tr("Localizable", "Param.indexLevel.veryUnhealthy.description")
+        internal static let title = Localizable.tr("Localizable", "Param.indexLevel.veryUnhealthy.title")
+      }
     }
 
     internal enum No2 {
-      internal static let description = Localizable.tr("Localizable", "Param.no2.description")
       internal static let name = Localizable.tr("Localizable", "Param.no2.name")
+
+      internal enum Description {
+        internal static let environmentalImpact = Localizable.tr("Localizable", "Param.no2.description.environmentalImpact")
+        internal static let general = Localizable.tr("Localizable", "Param.no2.description.general")
+        internal static let humanHealthImpact = Localizable.tr("Localizable", "Param.no2.description.humanHealthImpact")
+      }
     }
 
     internal enum O3 {
-      internal static let description = Localizable.tr("Localizable", "Param.o3.description")
       internal static let name = Localizable.tr("Localizable", "Param.o3.name")
+
+      internal enum Description {
+        internal static let environmentalImpact = Localizable.tr("Localizable", "Param.o3.description.environmentalImpact")
+        internal static let general = Localizable.tr("Localizable", "Param.o3.description.general")
+        internal static let humanHealthImpact = Localizable.tr("Localizable", "Param.o3.description.humanHealthImpact")
+      }
     }
 
     internal enum Pm10 {
-      internal static let description = Localizable.tr("Localizable", "Param.pm10.description")
       internal static let name = Localizable.tr("Localizable", "Param.pm10.name")
+
+      internal enum Description {
+        internal static let environmentalImpact = Localizable.tr("Localizable", "Param.pm10.description.environmentalImpact")
+        internal static let general = Localizable.tr("Localizable", "Param.pm10.description.general")
+        internal static let humanHealthImpact = Localizable.tr("Localizable", "Param.pm10.description.humanHealthImpact")
+      }
     }
 
     internal enum Pm25 {
-      internal static let description = Localizable.tr("Localizable", "Param.pm25.description")
       internal static let name = Localizable.tr("Localizable", "Param.pm25.name")
+
+      internal enum Description {
+        internal static let environmentalImpact = Localizable.tr("Localizable", "Param.pm25.description.environmentalImpact")
+        internal static let general = Localizable.tr("Localizable", "Param.pm25.description.general")
+        internal static let humanHealthImpact = Localizable.tr("Localizable", "Param.pm25.description.humanHealthImpact")
+      }
     }
 
     internal enum So2 {
-      internal static let description = Localizable.tr("Localizable", "Param.so2.description")
       internal static let name = Localizable.tr("Localizable", "Param.so2.name")
+
+      internal enum Description {
+        internal static let environmentalImpact = Localizable.tr("Localizable", "Param.so2.description.environmentalImpact")
+        internal static let general = Localizable.tr("Localizable", "Param.so2.description.general")
+        internal static let humanHealthImpact = Localizable.tr("Localizable", "Param.so2.description.humanHealthImpact")
+      }
+    }
+  }
+
+  internal enum ParamDescriptionView {
+
+    internal enum Element {
+
+      internal enum Title {
+        internal static let environmentalImpact = Localizable.tr("Localizable", "ParamDescriptionView.element.title.environmentalImpact")
+        internal static let general = Localizable.tr("Localizable", "ParamDescriptionView.element.title.general")
+        internal static let humanHealthImpact = Localizable.tr("Localizable", "ParamDescriptionView.element.title.humanHealthImpact")
+      }
     }
   }
 

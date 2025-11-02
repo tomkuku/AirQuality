@@ -103,23 +103,24 @@ class CoordinatorBase: ObservableObject {
     }
     
     func handleError(_ error: Error) {
-        guard let appError = error as? AppError else {
-            showAlert(.somethigWentWrong())
-            return
-        }
-        
-        switch appError {
-        case .noInternetConnection:
-            showAlert(.noInternetConnection(self))
-        case .locationServices(let userLocationServicesError):
-            switch userLocationServicesError {
-            case .disabled:
-                showAlert(.locationServicesDisabled(self))
-            case .authorizationRestricted:
-                showAlert(.locationServicesAuthorizationRestricted(self))
-            case .authorizationDenied:
-                showAlert(.locationServicesAuthorizationDenied(self))
+        if let appError = error as? AppError {
+            switch appError {
+            case .noInternetConnection:
+                showAlert(.noInternetConnection(self))
+            case .locationServices(let userLocationServicesError):
+                switch userLocationServicesError {
+                case .disabled:
+                    showAlert(.locationServicesDisabled(self))
+                case .authorizationRestricted:
+                    showAlert(.locationServicesAuthorizationRestricted(self))
+                case .authorizationDenied:
+                    showAlert(.locationServicesAuthorizationDenied(self))
+                }
             }
+        } else if let localizedError = error as? LocalizedError {
+            showAlert(.failure(message: localizedError.localizedDescription))
+        } else {
+            showAlert(.somethingWentWrong())
         }
     }
     
@@ -127,7 +128,7 @@ class CoordinatorBase: ObservableObject {
     func open(url: URL?) {
         Task {
             guard  let url, uiApplication.canOpenURL(url) else {
-                alertSubject.send(.somethigWentWrong())
+                alertSubject.send(.somethingWentWrong())
                 return
             }
             

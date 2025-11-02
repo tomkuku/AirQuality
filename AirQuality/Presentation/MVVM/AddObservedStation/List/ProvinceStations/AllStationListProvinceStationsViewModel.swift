@@ -48,7 +48,7 @@ final class AllStationsListViewModel: BaseViewModel {
                 }
             } catch {
                 Logger.error(error.localizedDescription)
-                self?.alertSubject.send(.somethigWentWrong())
+                self?.alertSubject.send(.somethingWentWrong())
             }
         }
     }
@@ -63,7 +63,7 @@ final class AllStationsListViewModel: BaseViewModel {
                 }
             } catch {
                 Logger.error(error.localizedDescription)
-                alertSubject.send(.somethigWentWrong())
+                alertSubject.send(.somethingWentWrong())
             }
         }
     }

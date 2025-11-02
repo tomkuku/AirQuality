@@ -7,67 +7,109 @@
 
 import Foundation
 
-final class SensorArchivalMeasurementsListViewModel: ObservableObject, @unchecked Sendable {
+final class SensorArchivalMeasurementsListViewModel<UseCase>: BaseViewModel, PaginationViewModelProtocol
+where UseCase: FetchArchivalMeasurementsUseCaseProtocol {
     
+    typealias Item = Model.Section
     typealias Model = SensorArchivalMeasurementsListModel
-    
-    @Published private(set) var rows: [Model.Row] = []
-    
-    private(set) var idLoading = true
+
+    @Published var items: [Model.Section] = []
+    @Published var state: PaginationFetchingState = .fetchingTheFirstPage
     
     let sensor: Sensor
-    private let getArchivalMeasurementsUseCase: GetArchivalMeasurementsUseCaseProtocol
+    let useCase: UseCase
     
     private let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+        dateFormatter.dateFormat = "MM.dd 'o' HH:mm"
         return dateFormatter
     }()
     
-    init(
-        sensor: Sensor,
-        getArchivalMeasurementsUseCase: GetArchivalMeasurementsUseCaseProtocol = GetArchivalMeasurementsUseCase(sensorMeasurementNetworkMapper: SensorMeasurementNetworkMapper())
-    ) {
+    private let monthFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "LLLL - yy"
+        dateFormatter.locale = Locale(identifier: "pl_PL")
+        return dateFormatter
+    }()
+    
+    private let calendar = Calendar.current
+    
+    init(sensor: Sensor, useCase: UseCase) {
         self.sensor = sensor
-        self.getArchivalMeasurementsUseCase = getArchivalMeasurementsUseCase
+        self.useCase = useCase
+        
+        super.init()
+        
+        setupStream()
     }
     
-    func fetchArchivalMeasurements() async {
-        do {
-            let measurements = try await getArchivalMeasurementsUseCase.getArchivalMeasurements(for: sensor.id)
-            
-            let rows = measurements.map {
-                let percentageValue: Double
-                let formattedValue: String
-                let formattedPercentageValue: String
-                let formattedDate = dateFormatter.string(from: $0.date)
-                
-                if let value = $0.measurement?.value {
-                    percentageValue = Double(((value / sensor.param.quota) * 100).rounded(.down))
-                    formattedValue = String(format: "%.2f", value)
-                    formattedPercentageValue = "\(percentageValue)"
-                } else {
-                    percentageValue = 0
-                    formattedValue = "-"
-                    formattedPercentageValue = "-"
-                }
-                
-                return Model.Row(
-                    formattedPercentageValue: formattedPercentageValue,
-                    formattedValue: formattedValue,
-                    formattedDate: formattedDate,
-                    value: $0.measurement?.value ?? 0,
-                    percentageValue: percentageValue,
-                    date: $0.date
-                )
+    func fetchingTheFirstPage() {
+        Task { [weak self] in
+            do {
+                self?.isLoading = true
+                self?.state = .fetchingTheFirstPage
+                try await self?.useCase.fetchNextPage()
+            } catch {
+                Logger.error("Fetching the first page of archival measurements failed with error: \(error)")
+                self?.errorSubject.send(error)
+                self?.isLoading = false
             }
-            
-            await MainActor.run { [weak self] in
-                self?.idLoading = false
-                self?.rows = rows
-            }
-        } catch {
-            print(error)
         }
+    }
+    
+    func pageDidFetch(page: [SensorMeasurement]) {
+        var items = self.items
+        
+        if state == .refreshing {
+            items.removeAll()
+        }
+        
+        page.forEach {
+            let formattedValue: String
+            let formattedDate = dateFormatter.string(from: $0.date)
+            let measurementDateComponents = calendar.dateComponents([.year, .month], from: $0.date)
+            let measurementDateYear = measurementDateComponents.year ?? 0
+            let measurementDateMonth = measurementDateComponents.month ?? 0
+            
+            if let value = $0.measurement?.value {
+                formattedValue = String(format: "%.2f", value)
+            } else {
+                formattedValue = "-"
+            }
+            
+            let row = Model.Row(formattedValue: formattedValue, formattedDate: formattedDate, date: $0.date)
+            
+            if let lastElement = items.last?.rows.last {
+                let lastElementDateComponents = calendar.dateComponents([.year, .month], from: lastElement.date)
+                let lastElementYear = lastElementDateComponents.year ?? 0
+                let lastElementMonth = lastElementDateComponents.month ?? 0
+                
+                if measurementDateYear == lastElementYear && measurementDateMonth == lastElementMonth {
+                    items[items.count - 1].rows.append(row)
+                } else {
+                    let sectionName = monthFormatter.string(from: $0.date).capitalized
+                    let section = Model.Section(
+                        name: sectionName,
+                        rows: [row],
+                        year: measurementDateYear,
+                        month: measurementDateMonth
+                    )
+                    items.append(section)
+                }
+            } else {
+                let sectionName = monthFormatter.string(from: $0.date).capitalized
+                let section = Model.Section(
+                    name: sectionName,
+                    rows: [row],
+                    year: measurementDateYear,
+                    month: measurementDateMonth
+                )
+                items.append(section)
+            }
+        }
+        
+        self.state = .none
+        self.items = items
+        self.isLoading = false
     }
 }

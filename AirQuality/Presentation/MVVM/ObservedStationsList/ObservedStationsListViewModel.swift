@@ -38,7 +38,7 @@ final class ObservedStationsListViewModel: BaseViewModel {
                 self.toastSubject.send(.observedStationWasDeleted())
             } catch {
                 Logger.error("Observing station faild with error: \(error.localizedDescription)")
-                alertSubject.send(.somethigWentWrong())
+                alertSubject.send(.somethingWentWrong())
             }
         }
     }
@@ -53,7 +53,7 @@ final class ObservedStationsListViewModel: BaseViewModel {
                 }
             } catch {
                 Logger.error(error.localizedDescription)
-                alertSubject.send(.somethigWentWrong())
+                alertSubject.send(.somethingWentWrong())
             }
         }
     }

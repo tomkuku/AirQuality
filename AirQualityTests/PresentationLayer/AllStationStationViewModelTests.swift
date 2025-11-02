@@ -87,7 +87,7 @@ final class AllStationStationViewModelTests: BaseTestCase, @unchecked Sendable {
         
         XCTAssertEqual(addObservedStationUseCaseSpy.events, [.add(station)])
         XCTAssertTrue(deleteObservedStationUseCaseSpy.events.isEmpty)
-        XCTAssertEqual(alert, .somethigWentWrong())
+        XCTAssertEqual(alert, .somethingWentWrong())
     }
     
     // MARK: deletedObservedStation
@@ -142,6 +142,6 @@ final class AllStationStationViewModelTests: BaseTestCase, @unchecked Sendable {
         
         XCTAssertTrue(addObservedStationUseCaseSpy.events.isEmpty)
         XCTAssertEqual(deleteObservedStationUseCaseSpy.events, [.delete(station)])
-        XCTAssertEqual(alert, .somethigWentWrong())
+        XCTAssertEqual(alert, .somethingWentWrong())
     }
 }

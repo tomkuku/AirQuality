@@ -143,7 +143,7 @@ final class AddObservedStationMapViewModel: BaseViewModel {
                 }
             } catch {
                 Logger.error(error.localizedDescription)
-                alertSubject.send(.somethigWentWrong())
+                alertSubject.send(.somethingWentWrong())
             }
         }
     }

@@ -27,6 +27,7 @@ enum GIOSApiV1 {
         case stations = "Lista stacji pomiarowych"
         case sensors = "Lista stanowisk pomiarowych dla podanej stacji"
         case measurements = "Lista danych pomiarowych"
+        case archivalMeasurements = "Lista archiwalnych wyników pomiarów"
     }
 }
 

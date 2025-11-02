@@ -24,7 +24,7 @@ struct Param: Sendable, Equatable, Hashable {
     let formulaNumbersInBottomBaseline: Bool
     let quota: Double
     let unit: String
-    let indexLevels: IndexLevels
+    let indexLevelTresholds: IndexLevels.Tresholds
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(type.rawValue)
@@ -32,17 +32,17 @@ struct Param: Sendable, Equatable, Hashable {
     
     func getAqi(for value: Double?) -> AQI {
         switch Int(value ?? -1) {
-        case 0...indexLevels.good:
+        case 0...indexLevelTresholds.good:
             .good
-        case indexLevels.good...indexLevels.moderate:
+        case indexLevelTresholds.good...indexLevelTresholds.moderate:
             .moderate
-        case indexLevels.moderate...indexLevels.unhealthyForSensitiveGroup:
+        case indexLevelTresholds.moderate...indexLevelTresholds.unhealthyForSensitiveGroup:
             .unhealthyForSensitiveGroup
-        case indexLevels.unhealthyForSensitiveGroup...indexLevels.unhealthy:
+        case indexLevelTresholds.unhealthyForSensitiveGroup...indexLevelTresholds.unhealthy:
             .unhealthy
-        case indexLevels.unhealthy...indexLevels.veryUnhealthy:
+        case indexLevelTresholds.unhealthy...indexLevelTresholds.veryUnhealthy:
             .veryUnhealthy
-        case indexLevels.veryUnhealthy...:
+        case indexLevelTresholds.veryUnhealthy...:
             .hazardus
         default:
             .undefined
@@ -99,7 +99,7 @@ struct Param: Sendable, Equatable, Hashable {
         formulaNumbersInBottomBaseline: Bool,
         quota: Double,
         unit: String,
-        indexLevels: IndexLevels
+        indexLevelTresholds: IndexLevels.Tresholds
     ) {
         self.type = type
         self.code = code
@@ -107,16 +107,6 @@ struct Param: Sendable, Equatable, Hashable {
         self.formulaNumbersInBottomBaseline = formulaNumbersInBottomBaseline
         self.quota = quota
         self.unit = unit
-        self.indexLevels = indexLevels
-    }
-}
-
-extension Param {
-    struct IndexLevels: Sendable, Equatable {
-        let good: Int
-        let moderate: Int
-        let unhealthyForSensitiveGroup: Int
-        let unhealthy: Int
-        let veryUnhealthy: Int
+        self.indexLevelTresholds = indexLevelTresholds
     }
 }

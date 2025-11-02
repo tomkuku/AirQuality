@@ -19,6 +19,12 @@ protocol LocalDatabaseRepositoryProtocol: Sendable {
         mapperType: T.Type,
         object: D
     ) async throws where T: LocalDatabaseMapperProtocol, D == T.DomainModel
+    
+    func fetch<Mapper, Domain>(
+        predicate: Predicate<Mapper.DTOModel>?,
+        sorts: [SortDescriptor<Mapper.DTOModel>],
+        mapper: Mapper
+    ) async throws -> [Mapper.DomainModel] where Mapper: LocalDatabaseMapperProtocol, Domain == Mapper.DomainModel
 }
 
 final class LocalDatabaseRepository: LocalDatabaseRepositoryProtocol, Sendable {
@@ -50,5 +56,20 @@ final class LocalDatabaseRepository: LocalDatabaseRepositoryProtocol, Sendable {
         }
         
         await localDatabaseDataSource.delete(fetchedObject)
+    }
+    
+    func fetch<Mapper, Domain>(
+        predicate: Predicate<Mapper.DTOModel>?,
+        sorts: [SortDescriptor<Mapper.DTOModel>],
+        mapper: Mapper
+    ) async throws -> [Mapper.DomainModel] where Mapper: LocalDatabaseMapperProtocol, Domain == Mapper.DomainModel {
+        try await localDatabaseDataSource.fetch(
+            object: Mapper.DTOModel.self,
+            predicate: predicate,
+            sorts: sorts
+        )
+        .map {
+            try mapper.map($0)
+        }
     }
 }

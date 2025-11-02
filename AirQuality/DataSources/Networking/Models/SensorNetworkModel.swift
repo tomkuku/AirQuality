@@ -18,9 +18,8 @@ import Foundation
 }
 */
 
-
 struct SensorNetworkModel: Decodable {
-    enum CodingKeys: String, CodingKey{
+    enum CodingKeys: String, CodingKey {
         case idParam = "Id wskaźnika"
         case id = "Identyfikator stanowiska"
     }

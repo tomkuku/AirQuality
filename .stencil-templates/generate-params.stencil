@@ -12,7 +12,7 @@ extension Param {
         formulaNumbersInBottomBaseline: {{ param.formulaNumbersInBottomBaseline|boolConversion }},
         quota: {{ param.quota }},
         unit: "{{ param.unit }}",
-        indexLevels: Param.IndexLevels(
+        indexLevelTresholds: Param.IndexLevels.Tresholds(
             good: {{ param.indexLevels.good }},
             moderate: {{ param.indexLevels.moderate }},
             unhealthyForSensitiveGroup: {{ param.indexLevels.unhealthyForSensitiveGroup }},

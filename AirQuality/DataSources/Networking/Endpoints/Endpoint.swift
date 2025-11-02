@@ -22,6 +22,6 @@ enum Endpoint {
     }
     
     enum ArchivalMeasurements: Sendable {
-        case get(Int)
+        case get(sensorId: Int, page: Int, size: Int, dateFrom: String, dateTo: String, sort: String)
     }
 }

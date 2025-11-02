@@ -11,7 +11,7 @@ import struct Alamofire.HTTPMethod
 extension Endpoint.ArchivalMeasurements: HTTPRequest {
     var path: String {
         switch self {
-        case .get(let id):
+        case .get(let id, _, _, _, _, _):
             "/pjp-api/v1/rest/archivalData/getDataBySensor/" + "\(id)"
         }
     }
@@ -24,16 +24,22 @@ extension Endpoint.ArchivalMeasurements: HTTPRequest {
     }
     
     var params: [String: String]? {
-        [
-            "dayNumber": "366",
-            "size": "500"
-        ]
-    }
-    
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        switch (lhs, rhs) {
-        case let (.get(lhsId), .get(rhsId)):
-            lhsId == rhsId
+        switch self {
+        case .get(_, let page, let size, let dateFrom, let dateTo, let sort):
+            [
+                "page": "\(page)",
+                "size": "\(size)",
+                "dateTo": dateTo,
+                "dateFrom": dateFrom,
+                "sort": sort
+            ]
         }
     }
+    
+//    static func == (lhs: Self, rhs: Self) -> Bool {
+//        switch (lhs, rhs) {
+//        case let (.get(lhsId), .get(rhsId)):
+//            lhsId == rhsId
+//        }
+//    }
 }

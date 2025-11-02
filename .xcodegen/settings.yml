@@ -33,11 +33,11 @@ settings:
     Development_Debug:
       APP_DISPLAY_NAME: "AirQuality Dev"
       PRODUCT_BUNDLE_IDENTIFIER: "com.air.quality.dev"
-      SWIFT_ACTIVE_COMPILATION_CONDITIONS: "DEBUG"
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: "DEBUG DEVELOPMENT"
     Development_Release:
       APP_DISPLAY_NAME: "AirQuality Dev"
       PRODUCT_BUNDLE_IDENTIFIER: "com.air.quality.dev"
-      SWIFT_ACTIVE_COMPILATION_CONDITIONS: "DEBUG"
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: "DEBUG DEVELOPMENT"
     Tests:
       APP_DISPLAY_NAME: "AirQuality Test"
       PRODUCT_BUNDLE_IDENTIFIER: "com.air.quality.test"
@@ -45,7 +45,7 @@ settings:
     Production_Debug:
       APP_DISPLAY_NAME: "AirQuality"
       PRODUCT_BUNDLE_IDENTIFIER: "com.air.quality"
-      SWIFT_ACTIVE_COMPILATION_CONDITIONS: "PROD"
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: "DEBUG PROD"
     Production_Release:
       APP_DISPLAY_NAME: "AirQuality"
       PRODUCT_BUNDLE_IDENTIFIER: "com.air.quality"

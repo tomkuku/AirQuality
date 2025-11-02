@@ -1,9 +1,9 @@
 excluded:
   - AirQualityTests/*
   - AirQualityUITests/*
-  - AirQuality/Localizable/*
   - AirQuality/Assets/*
   - GenerateSwiftFromJson
+  - AirQuality/Presentation/Localizable/*
 
 opt_in_rules:
   - all
@@ -135,5 +135,8 @@ superfluous_disable_command:
 
 nesting:
   type_level: 5
+
+enum_case_associated_values_count:
+  warning: 7
 
 reporter: "xcode"

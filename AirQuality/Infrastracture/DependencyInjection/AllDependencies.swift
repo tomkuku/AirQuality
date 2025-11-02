@@ -18,12 +18,12 @@ HasGetSensorsUseCase &
 HasGetStationSensorsParamsUseCase &
 HasGetUserLocationUseCase &
 HasNetworkConnectionMonitorUseCase &
+HasFetchArchivalMeasurementsUseCase &
 // DataSources
 HasCacheDataSource &
 HasNotificationCenter &
 // Repositories
 HasGIOSApiV1Repository &
-HasGIOSApiRepository &
 HasLocalDatabaseRepository &
 HasObservedStationsFetchResultsRepository &
 HasLocationRespository &

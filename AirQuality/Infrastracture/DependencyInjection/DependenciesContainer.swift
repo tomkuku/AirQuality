@@ -15,6 +15,7 @@ protocol DependenciesContainerProtocol: AnyObject {
 }
 
 final class DependenciesContainer: AllDependencies, DependenciesContainerProtocol {
+    
     subscript<T>(_ keyPath: KeyPath<AllDependencies, T>) -> T {
         self[keyPath: keyPath]
     }
@@ -29,7 +30,6 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     // MARK: Repositories
     
     let giosApiV1Repository: GIOSApiV1RepositoryProtocol
-    let giosApiRepository: GIOSApiRepositoryProtocol
     let localDatabaseRepository: LocalDatabaseRepositoryProtocol
     let observedStationsFetchResultsRepository: LocalDatabaseFetchResultsRepository<StationsLocalDatabaseMapper>
     let locationRespository: LocationRespositoryProtocol
@@ -45,6 +45,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     let getStationSensorsParamsUseCase: GetStationSensorsParamsUseCaseProtocol
     let getUserLocationUseCase: GetUserLocationUseCaseProtocol
     let networkConnectionMonitorUseCase: NetworkConnectionMonitorUseCaseProtocol
+    let fetchArchivalMeasurementsUseCase: any FetchArchivalMeasurementsUseCaseProtocol
     
     // MARK: Mappers
     
@@ -69,8 +70,6 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         let backgroundTasksManager = BackgroundTasksManager(uiApplication: UIApplicationWrapper())
         
         self.giosApiV1Repository = GIOSApiV1Repository(httpDataSource: httpDataSource)
-        
-        self.giosApiRepository = GIOSApiRepository(httpDataSource: httpDataSource)
         
         let modelContainer = try Self.createModelContainer()
         
@@ -113,6 +112,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
             self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCasePreviewDummy()
             self.getObservedStationsUseCase = GetObservedStationsUseCasePreviewDummy()
             self.networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCasePreviewDummy()
+            self.fetchArchivalMeasurementsUseCase = FetchArchivalMeasurementsUseCasePreviewDummy()
         } else {
             self.fetchAllStationsUseCase = FetchAllStationsUseCase()
             self.findTheNearestStationUseCase = FindTheNearestStationUseCase()
@@ -121,6 +121,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
             self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCase()
             self.getObservedStationsUseCase = GetObservedStationsUseCase()
             self.networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCase()
+            self.fetchArchivalMeasurementsUseCase = FetchArchivalMeasurementsUseCase()
         }
 #else
         self.fetchAllStationsUseCase = FetchAllStationsUseCase()
@@ -130,6 +131,7 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCase()
         self.getObservedStationsUseCase = GetObservedStationsUseCase()
         self.networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCase()
+        self.fetchArchivalMeasurementsUseCase = FetchArchivalMeasurementsUseCase()
 #endif
     }
     // swiftlint:enable function_body_length

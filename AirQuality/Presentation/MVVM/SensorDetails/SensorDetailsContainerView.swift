@@ -44,16 +44,18 @@ struct SensorDetailsContainerView: View {
                     LazyHStack(alignment: .center, spacing: 0) {
                         ForEach(0..<3, id: \.self) { index in
                             ZStack {
-                                if index == 1 {
-                                    let viewModel = SensorArchivalMeasurementsListViewModel(sensor: sensor)
-                                    SensorArchivalMeasurementsListView(viewModel: viewModel)
-                                } else if index == 0 {
-                                    let viewModel = SensorParamDetailsViewModel(sensor: sensor)
-                                    SensorParamDetailsView(viewModel: viewModel)
-                                } else {
-                                    let viewModel = SensorArchivalMeasurementsListViewModel(sensor: sensor)
-                                    SensorArchivalMeasurementsChartView(viewModel: viewModel)
-                                }
+//                                if index == 1 {
+//                                    let viewModel = SensorArchivalMeasurementsListViewModel(sensor: sensor)
+//                                    SensorArchivalMeasurementsListView(viewModel: viewModel)
+//                                } else if index == 0 {
+//                                    let viewModel = SensorParamDetailsViewModel(sensor: sensor)
+//                                    SensorParamDetailsView(viewModel: viewModel)
+//                                } else {
+//                                    let viewModel = SensorArchivalMeasurementsListViewModel(sensor: sensor)
+//                                    SensorArchivalMeasurementsChartView(viewModel: viewModel)
+//                                }
+                                
+                                EmptyView()
                             }
                             .frame(width: geometry.size.width, height: geometry.size.height)
                         }

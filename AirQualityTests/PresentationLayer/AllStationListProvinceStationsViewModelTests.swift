@@ -158,6 +158,6 @@ final class AllStationsListViewModelTests: BaseTestCase, @unchecked Sendable {
         wait(for: [expectation], timeout: 2.0)
         
         XCTAssertEqual(getObservedStationsUseCaseSpy.events, [.createNewStream, .fetchedStations])
-        XCTAssertEqual(alert, .somethigWentWrong())
+        XCTAssertEqual(alert, .somethingWentWrong())
     }
 }
