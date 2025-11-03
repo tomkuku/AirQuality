@@ -96,10 +96,6 @@ final class SelectedStationViewModel: BaseViewModel {
         }
     }
     
-    func getSensor(for id: Int) -> Sensor? {
-        fetchedSensors.first(where: { $0.id == id })
-    }
-    
     // MARK: Private methods
     
     private func createSensorRow(from sensor: Sensor) -> SelectedStationModel.SensorRow {
@@ -130,7 +126,8 @@ final class SelectedStationViewModel: BaseViewModel {
             lastMeasurementPercentageValue: lastMeasurementPercentageValue,
             lastMeasurementFormattedDate: lastMeasurementFormattedDate,
             lastMeasurementFormattedValue: lastMeasurementFormattedValue,
-            lastMeasurementFormattedPercentageValue: lastMeasurementFormattedPercentageValue
+            lastMeasurementFormattedPercentageValue: lastMeasurementFormattedPercentageValue,
+            sensor: sensor
         )
     }
 }

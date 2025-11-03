@@ -34,7 +34,7 @@ where UseCase: FetchArchivalMeasurementsUseCaseProtocol {
     
     private let calendar = Calendar.current
     
-    init(sensor: Sensor, useCase: UseCase) {
+    init(sensor: Sensor, useCase: UseCase = FetchArchivalMeasurementsUseCase()) {
         self.sensor = sensor
         self.useCase = useCase
         

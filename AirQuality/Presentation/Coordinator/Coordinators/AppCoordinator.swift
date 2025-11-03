@@ -12,16 +12,18 @@ import Network
 extension AppCoordinator {
     enum NavigationComponent: Hashable, Identifiable {
         case stationsList
-        case slectedStation(Station)
+        case selectedStation(Station)
         case sensorsDetails(Sensor)
         case addNewObservedStation
+        case archivalMeasurements(Sensor)
         
         var id: Int {
             switch self {
             case .stationsList:             1
-            case .slectedStation:           2
+            case .selectedStation:          2
             case .sensorsDetails:           3
             case .addNewObservedStation:    4
+            case .archivalMeasurements:     5
             }
         }
     }
@@ -67,7 +69,7 @@ final class AppCoordinator: CoordinatorBase, CoordinatorProtocol {
         switch navigationComponent {
         case .stationsList:
             ObservedStationsListView()
-        case .slectedStation(let station):
+        case .selectedStation(let station):
             let viewModel = SelectedStationViewModel(station: station)
             SelectedStationView(viewModel: viewModel)
         case .sensorsDetails(let sensor):
@@ -76,12 +78,15 @@ final class AppCoordinator: CoordinatorBase, CoordinatorProtocol {
         case .addNewObservedStation:
             let coordinator = createAddStationToObservedCoordinator()
             CoordinatorInitialView(coordinator: coordinator)
+        case .archivalMeasurements(let sensor):
+            let viewModel = SensorArchivalMeasurementsListViewModel(sensor: sensor)
+            SensorArchivalMeasurementsListView(viewModel: viewModel)
         }
     }
     
     func goTo(_ navigationComponent: NavigationComponent) {
         switch navigationComponent {
-        case .stationsList, .slectedStation:
+        case .stationsList, .selectedStation, .archivalMeasurements:
             navigationPath.append(navigationComponent)
         case .addNewObservedStation, .sensorsDetails:
             fullScreenCover = navigationComponent
