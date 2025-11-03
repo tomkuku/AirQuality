@@ -8,6 +8,14 @@
 import SwiftUI
 import Lottie
 
+private enum RefreshableScrollViewPreferenceKey: PreferenceKey {
+    nonisolated(unsafe) static var defaultValue: CGFloat = 0
+    
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        defaultValue = nextValue()
+    }
+}
+
 struct RefreshableScrollView<ContentView>: View where ContentView: View {
     
     // MARK: - Type
@@ -45,13 +53,30 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
             .zIndex(2)
             
             ScrollView {
-                LazyVStack {
-                    contentView()
+                VStack(spacing: .zero) {
+                    GeometryReader { geometryProxy in
+                        Color.clear
+                            .preference(
+                                key: RefreshableScrollViewPreferenceKey.self,
+                                value: geometryProxy.frame(in: .named(coordinateSpace)).minY
+                            )
+                    }
+                    .frame(height: 0) 
+                    
+                    LazyVStack {
+                        contentView()
+                    }
                 }
-                .offset(y: offsetY)
+                .offset(y: isScrollDisabled ? contentOffsetY : 0)
             }
+            .coordinateSpace(name: coordinateSpace)
             .scrollDisabled(isScrollDisabled)
             .accessibilityIdentifier(accessibilityIdentifier)
+            .onPreferenceChange(RefreshableScrollViewPreferenceKey.self) {
+                guard !isScrollDisabled else { return }
+                
+                contentOffsetY = $0
+            }
             .simultaneousGesture(
                 createDragGesture()
             )
@@ -62,13 +87,8 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
     // MARK: Private properties
     
     @State private var refreshProgress: RefreshProgress = .init()
-    @State private var offsetY: CGFloat = 0
-    
-    @State private var isRefreshing = false
+    @State private var contentOffsetY: CGFloat = 0
     @State private var isScrollDisabled = false
-    
-    @State private var lastScrollTranslationHeight: CGFloat = 0
-    @State private var scrollViewFrameOriginY: CGFloat = 0
     
     private let onRefresh: @MainActor @Sendable () async -> ()
     private let contentView: () -> ContentView
@@ -77,6 +97,7 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
     private let animationFactor = 0.3
     private let offsetYWhenGestureEnds: CGFloat = 60
     private let accessibilityIdentifier: AccessibilityIdentifierType
+    private let coordinateSpace = String(describing: Self.self) + UUID().uuidString
     
     // MARK: Init
     
@@ -99,7 +120,7 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
     private func createDragGesture() -> some Gesture {
         DragGesture()
             .onChanged { value in
-                guard value.translation.height >= 0 else { return }
+                guard value.translation.height >= 0 && contentOffsetY >= 0 else { return }
                 
                 let scroll = value.translation.height
                 
@@ -121,23 +142,25 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
                 }
             }
             .onEnded { value in
+                guard contentOffsetY >= 0 else { return }
+                
                 let scroll = value.translation.height
                 
                 if scroll >= endShowingRefreshControlYPosition {
                     withAnimation {
-                        offsetY = offsetYWhenGestureEnds
                         isScrollDisabled = true
+                        contentOffsetY = offsetYWhenGestureEnds
                         
                         var refreshProgress = self.refreshProgress
                         refreshProgress.setLottiePlaybackModeToPlayingInfinity()
                         refreshProgress.refreshOpacity = 1
                         self.refreshProgress = refreshProgress
-                    } completion: {
-                        Task { @MainActor in
-                            await onRefresh()
-                            
-                            endRefreshing()
-                        }
+                    }
+                    
+                    Task { @MainActor in
+                        await onRefresh()
+                        
+                        endRefreshing()
                     }
                 } else {
                     var refreshProgress = self.refreshProgress
@@ -150,7 +173,7 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
     
     private func endRefreshing() {
         withAnimation(.easeOut) {
-            self.offsetY = 0
+            self.contentOffsetY = 0
             self.isScrollDisabled = false
             
             var refreshProgress = self.refreshProgress
@@ -163,26 +186,25 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
         }
     }
 }
+
+// MARK: Preview
+
 #Preview {
-    let stations: [Station] = [
-        .previewDummy(id: 1, province: "Małopolskie"),
-        .previewDummy(id: 2, province: "zachodniopomorskie"),
-        .previewDummy(id: 3, province: "Mazowieckie"),
-        .previewDummy(id: 4, province: "Opolskie")
-    ]
-    
     NavigationStack {
         RefreshableScrollView(
-            onRefresh: {},
+            onRefresh: {
+                try? await Task.sleep(for: .milliseconds(600))
+            },
             contentView: {
-                ForEach(stations) { station in
+                ForEach(0..<150, id: \.self) { index in
                     HStack {
-                        Text(station.cityName)
+                        Text("Section - \(index)")
                         Spacer()
-                        Text("\(station.id)")
                     }
                     .frame(height: 40)
                 }
-            }, accessibilityIdentifier: \.provincesListView.provindesList)
+            }, accessibilityIdentifier: \.provincesListView.provindesList
+        )
+        .padding(.horizontal, 16)
     }
 }
