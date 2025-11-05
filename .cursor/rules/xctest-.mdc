@@ -20,7 +20,9 @@ When writing Swift unit tests using **XCTest**, follow these conventions:
 - Use **“When”** to describe conditions and **“And”** to separate multiple conditions or rules.
   - Example: `func testFetchDataWhenNetworkFailsAndCacheIsEmpty()`
 - Prefer meaningful method names over generic ones (e.g., `testLoginSucceeds()` instead of `test1()`).
-
+- Do not use **Then** in test functions' names. Only input conditions are important (Given). Return output can not be different if input is always the same.
+  - Incorrect: `testFetchWhenNoStationsReturnedThenReturnsEmptyArray`
+  - Correct: `testFetchWhenNoStations`
 
 ### Grouping
 - Use `// MARK:` comments to group related tests:
@@ -40,7 +42,7 @@ When writing Swift unit tests using **XCTest**, follow these conventions:
 
 ### General philosophy
 - Keep tests small, independent, and easy to read.
-- Use the Arrange–Act–Assert (AAA) pattern with clear section comments.
+- Use the Given-When-Then pattern with clear section comments.
 - **Tests must always be executed inside a test method** — do not run assertions or test logic in setup or helper methods.
 - You may create **private helper methods** for generating input data or configuring mocks, but **not for executing tests** themselves.
 - Do not create own `XCTAsserts` variants.

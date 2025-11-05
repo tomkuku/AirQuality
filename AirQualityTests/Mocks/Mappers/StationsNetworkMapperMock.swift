@@ -1,5 +1,5 @@
 //
-//  StationsNetworkMapperFake.swift
+//  StationsNetworkMapperMock.swift
 //  AirQualityTests
 //
 //  Created by Tomasz Kukułka on 16/06/2024.
@@ -9,8 +9,10 @@ import Foundation
 
 @testable import AirQuality
 
-final class StationsNetworkMapperFake: StationsNetworkMapperProtocol {
+final class StationsNetworkMapperMock: StationsNetworkMapperProtocol {
+    nonisolated(unsafe) var mappedStations: [Station] = []
+    
     func map(_ input: [StationNetworkModel], using inputParameters: ()) throws -> [Station] {
-        []
+        mappedStations
     }
 }
