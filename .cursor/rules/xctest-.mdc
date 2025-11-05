@@ -1,0 +1,46 @@
+---
+alwaysApply: true
+name: XCTests Unit Tests
+description: Rules for generating and maintaining consistent XCTest unit tests.
+trigger: /unittests
+---
+
+When writing Swift unit tests using **XCTest**, follow these conventions:
+
+### File structure
+- Name test files as `<ClassName>Tests.swift`.
+- Each test class must inherit from `BaseTestCase`.
+- Use `final class <ClassName>Tests: BaseTestCase`.
+
+### Imports
+- Always include `@testable import AirQuality` at the top of the file.
+
+### Test methods
+- Prefix all test functions with `test`.
+- Use **“When”** to describe conditions and **“And”** to separate multiple conditions or rules.
+  - Example: `func testFetchDataWhenNetworkFailsAndCacheIsEmpty()`
+- Prefer meaningful method names over generic ones (e.g., `testLoginSucceeds()` instead of `test1()`).
+
+
+### Grouping
+- Use `// MARK:` comments to group related tests:
+  - By tested method → `// MARK: - fetchData)`
+  - By conditions (more then 3 such tests) → `// MARK: - fetchData when network fails`
+
+### Test data & mocks
+- Never use random values — keep test inputs **constant and deterministic**.
+- Use **mocks or stubs** for networking, persistence, or external dependencies.
+- If you need helper types or mock objects, place them in a separate file:
+  - File name: `<ClassName>Mocks.swift`
+  - Use an `extension` on `<ClassName>Tests` inside that file.
+
+### Coverage
+- Always test both **success** and **failure** paths.
+- Focus on behavior, not implementation details.
+
+### General philosophy
+- Keep tests small, independent, and easy to read.
+- Use the Arrange–Act–Assert (AAA) pattern with clear section comments.
+- **Tests must always be executed inside a test method** — do not run assertions or test logic in setup or helper methods.
+- You may create **private helper methods** for generating input data or configuring mocks, but **not for executing tests** themselves.
+- Do not create own `XCTAsserts` variants.
