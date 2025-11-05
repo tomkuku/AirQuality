@@ -20,10 +20,6 @@ struct SensorArchivalMeasurementsListOptions: Equatable {
         }
         
         let date: Self.Date
-        
-        init(date: Self.Date) {
-            self.date = date
-        }
     }
     
     let filters: Filters

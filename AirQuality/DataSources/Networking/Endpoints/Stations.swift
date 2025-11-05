@@ -23,7 +23,7 @@ extension Endpoint.Stations: HTTPRequest {
         }
     }
     
-    var params: [String: String]? {
+    func createParams() throws -> [String: String]? {
         switch self {
         case .get(let page, let size):
             [

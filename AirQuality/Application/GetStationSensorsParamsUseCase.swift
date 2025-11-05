@@ -22,8 +22,7 @@ final class GetStationSensorsParamsUseCase: GetStationSensorsParamsUseCaseProtoc
     func get(_ stationId: Int) async throws -> [Param] {
         try await giosApiV1Repository.fetch(
             mapper: stationSensorsParamsNetworkMapper,
-            endpoint: Endpoint.Sensors.get(stationId),
-            contentContainerName: .sensors
+            endpoint: Endpoint.Sensors.get(stationId)
         )
     }
 }

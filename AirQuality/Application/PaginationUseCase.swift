@@ -7,18 +7,15 @@
 
 import Foundation
 
-protocol PaginationFetchingUseCaseParameters: Equatable {
-    
-}
-
 protocol PaginationFetchingUseCaseProtocol: Actor, Sendable {
     associatedtype DomainModel: Sendable
-    associatedtype Parameters: PaginationFetchingUseCaseParameters
+    associatedtype Parameters
     
-    var parameters: Parameters { get set }
+    typealias PageStream = (pageContent: [DomainModel], areMorePages: Bool)
     
     func fetchNextPage() async throws
     func refresh() async throws
     
-    func getStream() async -> AsyncStream<[DomainModel]>
+    func getStream() async -> AsyncStream<PageStream>
+    func setParameters(_ parameters: Parameters) async
 }

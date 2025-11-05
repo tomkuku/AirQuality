@@ -24,11 +24,13 @@ final class SensorArchivalMeasurementsFiltersViewModel: ObservableObject {
     private let calendar = Calendar.current
     private var options: SensorArchivalMeasurementsListOptions
     private var cancellables = Set<AnyCancellable>()
+    private var callback: (SensorArchivalMeasurementsListOptions) -> ()
     
     // MARK: Lifecycle
     
-    init(options: SensorArchivalMeasurementsListOptions) {
+    init(options: SensorArchivalMeasurementsListOptions, callback: @escaping (SensorArchivalMeasurementsListOptions) -> ()) {
         self.options = options
+        self.callback = callback
         
         self.dateTo = options.filters.dateTo
         self.dateFrom = options.filters.dateFrom
@@ -44,6 +46,15 @@ final class SensorArchivalMeasurementsFiltersViewModel: ObservableObject {
             self?.validate()
         }
         .store(in: &cancellables)
+    }
+    
+    deinit {
+        let options = SensorArchivalMeasurementsListOptions(
+            filters: .init(dateFrom: dateFrom, dateTo: dateTo),
+            sorting: .init(date: dateSorting)
+        )
+        
+        callback(options)
     }
     
     // MARK: Methods

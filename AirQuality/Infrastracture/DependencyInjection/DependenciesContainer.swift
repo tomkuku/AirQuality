@@ -45,7 +45,6 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     let getStationSensorsParamsUseCase: GetStationSensorsParamsUseCaseProtocol
     let getUserLocationUseCase: GetUserLocationUseCaseProtocol
     let networkConnectionMonitorUseCase: NetworkConnectionMonitorUseCaseProtocol
-    let fetchArchivalMeasurementsUseCase: any FetchArchivalMeasurementsUseCaseProtocol
     
     // MARK: Mappers
     
@@ -112,7 +111,6 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
             self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCasePreviewDummy()
             self.getObservedStationsUseCase = GetObservedStationsUseCasePreviewDummy()
             self.networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCasePreviewDummy()
-            self.fetchArchivalMeasurementsUseCase = FetchArchivalMeasurementsUseCasePreviewDummy()
         } else {
             self.fetchAllStationsUseCase = FetchAllStationsUseCase()
             self.findTheNearestStationUseCase = FindTheNearestStationUseCase()
@@ -121,7 +119,6 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
             self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCase()
             self.getObservedStationsUseCase = GetObservedStationsUseCase()
             self.networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCase()
-            self.fetchArchivalMeasurementsUseCase = FetchArchivalMeasurementsUseCase()
         }
 #else
         self.fetchAllStationsUseCase = FetchAllStationsUseCase()
@@ -131,7 +128,6 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
         self.getStationSensorsParamsUseCase = GetStationSensorsParamsUseCase()
         self.getObservedStationsUseCase = GetObservedStationsUseCase()
         self.networkConnectionMonitorUseCase = NetworkConnectionMonitorUseCase()
-        self.fetchArchivalMeasurementsUseCase = FetchArchivalMeasurementsUseCase()
 #endif
     }
     // swiftlint:enable function_body_length

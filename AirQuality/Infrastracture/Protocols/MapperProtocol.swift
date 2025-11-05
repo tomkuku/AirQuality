@@ -11,13 +11,20 @@ import protocol SwiftData.PersistentModel
 protocol MapperProtocol: Sendable {
     associatedtype DTOModel
     associatedtype DomainModel: Sendable
+    associatedtype InputParameters: Sendable
     
     init()
     
-    func map(_ input: DTOModel) throws -> DomainModel
+    func map(_ input: DTOModel, using inputParameters: InputParameters) throws -> DomainModel
 }
 
-protocol NetworkMapperProtocol: MapperProtocol where DTOModel: Decodable { }
+extension MapperProtocol where InputParameters == Void {
+    func map(_ input: DTOModel) throws -> DomainModel {
+        try map(input, using: ())
+    }
+}
+
+protocol NetworkMapperProtocol: MapperProtocol where DTOModel: Decodable {}
 
 protocol LocalDatabaseMapperProtocol: MapperProtocol
 where DTOModel: LocalDatabaseModel,

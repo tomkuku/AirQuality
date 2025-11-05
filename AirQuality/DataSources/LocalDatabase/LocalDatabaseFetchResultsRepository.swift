@@ -10,23 +10,33 @@ import Foundation
 protocol LocalDatabaseFetchResultsRepositoryProtocol<Mapper>: Sendable {
     associatedtype Mapper: LocalDatabaseMapperProtocol
     
-    func getFetchedObjects() async throws -> [Mapper.DomainModel]
-    func ceateNewStrem() -> AsyncThrowingStream<[Mapper.DomainModel], Error>
+    func getFetchedObjects(mapperInputParameters: Mapper.InputParameters) async throws -> [Mapper.DomainModel]
+    func createNewStream(with mapperInputParameters: Mapper.InputParameters) -> AsyncThrowingStream<[Mapper.DomainModel], Error>
 }
 
-final class LocalDatabaseFetchResultsRepository<M>: LocalDatabaseFetchResultsRepositoryProtocol where M: LocalDatabaseMapperProtocol {
-    typealias Mapper = M
+extension LocalDatabaseFetchResultsRepositoryProtocol {
+    func getFetchedObjects() async throws -> [Mapper.DomainModel] where Mapper.InputParameters == Void {
+        try await getFetchedObjects(mapperInputParameters: ())
+    }
+    
+    func createNewStream() -> AsyncThrowingStream<[Mapper.DomainModel], Error> where Mapper.InputParameters == Void {
+        createNewStream(with: ())
+    }
+}
+
+final class LocalDatabaseFetchResultsRepository<Mapper>: LocalDatabaseFetchResultsRepositoryProtocol where Mapper: LocalDatabaseMapperProtocol {
+    typealias Mapper = Mapper
     
     // MARK: Private properties
     
-    private let localDatabaseFetchResultsDataSource: any LocalDatabaseFetchResultsDataSourceProtocol<M.DTOModel>
-    private let mapper: M
+    private let localDatabaseFetchResultsDataSource: any LocalDatabaseFetchResultsDataSourceProtocol<Mapper.DTOModel>
+    private let mapper: Mapper
     
     // MARK: Lifecycle
     
     init(
-        localDatabaseFetchResultsDataSource: any LocalDatabaseFetchResultsDataSourceProtocol<M.DTOModel>,
-        mapper: M
+        localDatabaseFetchResultsDataSource: any LocalDatabaseFetchResultsDataSourceProtocol<Mapper.DTOModel>,
+        mapper: Mapper
     ) {
         self.localDatabaseFetchResultsDataSource = localDatabaseFetchResultsDataSource
         self.mapper = mapper
@@ -34,15 +44,15 @@ final class LocalDatabaseFetchResultsRepository<M>: LocalDatabaseFetchResultsRep
     
     // MARK: Methods
     
-    func getFetchedObjects() async throws -> [M.DomainModel] {
+    func getFetchedObjects(mapperInputParameters: Mapper.InputParameters) async throws -> [Mapper.DomainModel] {
         try await localDatabaseFetchResultsDataSource
             .fetchedModels
             .map {
-                try mapper.map($0)
+                try mapper.map($0, using: mapperInputParameters)
             }
     }
     
-    func ceateNewStrem() -> AsyncThrowingStream<[M.DomainModel], Error> {
+    func createNewStream(with mapperInputParameters: Mapper.InputParameters) -> AsyncThrowingStream<[Mapper.DomainModel], Error> {
         AsyncThrowingStream { continuation in
             Task { [weak self] in
                 guard let self else { return }
@@ -50,7 +60,7 @@ final class LocalDatabaseFetchResultsRepository<M>: LocalDatabaseFetchResultsRep
                 do {
                     for try await models in try await localDatabaseFetchResultsDataSource.createNewStrem() {
                         let mappedModels = try models.map {
-                            try self.mapper.map($0)
+                            try self.mapper.map($0, using: mapperInputParameters)
                         }
                         
                         continuation.yield(mappedModels)

@@ -12,7 +12,8 @@ protocol HTTPRequest: URLRequestConvertible, Sendable {
     var baseURL: String { get }
     var path: String { get }
     var method: Alamofire.HTTPMethod { get }
-    var params: [String: String]? { get }
+    
+    func createParams() throws -> [String: String]?
 }
 
 extension HTTPRequest {
@@ -20,7 +21,7 @@ extension HTTPRequest {
         EnvironmentConstant[\.baseUrl]
     }
     
-    var params: [String: String]? {
+    func createParams() throws -> [String: String]? {
         nil
     }
     
@@ -28,7 +29,9 @@ extension HTTPRequest {
         let url = try (baseURL + path).asURL()
         var urlRequest = URLRequest(url: url)
         urlRequest.method = method
-
+        
+        let params = try createParams()
+        
         return try URLEncoding.default.encode(urlRequest, with: params)
     }
 }

@@ -12,7 +12,7 @@ enum ParamType: Int, Equatable {
     case pm10 = 3
     case pm25 = 69
     case o3 = 5
-    case no2 = 6
+    case no2 = 16
     case so2 = 1
     case co = 8
 }
@@ -24,6 +24,7 @@ struct Param: Sendable, Equatable, Hashable {
     let formulaNumbersInBottomBaseline: Bool
     let quota: Double
     let unit: String
+    let factor: Double
     let indexLevelTresholds: IndexLevels.Tresholds
     
     func hash(into hasher: inout Hasher) {
@@ -99,6 +100,7 @@ struct Param: Sendable, Equatable, Hashable {
         formulaNumbersInBottomBaseline: Bool,
         quota: Double,
         unit: String,
+        factor: Double,
         indexLevelTresholds: IndexLevels.Tresholds
     ) {
         self.type = type
@@ -107,6 +109,7 @@ struct Param: Sendable, Equatable, Hashable {
         self.formulaNumbersInBottomBaseline = formulaNumbersInBottomBaseline
         self.quota = quota
         self.unit = unit
+        self.factor = factor
         self.indexLevelTresholds = indexLevelTresholds
     }
 }

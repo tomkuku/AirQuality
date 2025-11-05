@@ -50,7 +50,7 @@ struct SensorArchivalMeasurementsFiltersView: View {
         }
         .safeAreaInset(edge: .bottom) {
             Button {
-                
+                dismiss()
             } label: {
                 HStack {
                     Spacer()
@@ -83,6 +83,7 @@ struct SensorArchivalMeasurementsFiltersView: View {
     // MARK: Private properties
     
     @StateObject private var viewModel: SensorArchivalMeasurementsFiltersViewModel
+    @Environment(\.dismiss) private var dismiss
     
     // MARK: Lifecycle
     
@@ -98,7 +99,7 @@ struct SensorArchivalMeasurementsFiltersView: View {
         filters: .init(dateFrom: Date(), dateTo: Date()),
         sorting: .init(date: .descending)
     )
-    let viewModel = SensorArchivalMeasurementsFiltersViewModel(options: options)
+    let viewModel = SensorArchivalMeasurementsFiltersViewModel(options: options, callback: { _ in })
     
     NavigationStack {
         SensorArchivalMeasurementsFiltersView(viewModel: viewModel)

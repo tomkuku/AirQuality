@@ -12,10 +12,10 @@ protocol HasSensorMeasurementNetworkMapper {
 }
 
 protocol SensorMeasurementNetworkMapperProtocol: NetworkMapperProtocol
-where DTOModel == [MeasurementNetworkModel], DomainModel == [SensorMeasurement] { }
+where DTOModel == [MeasurementNetworkModel], DomainModel == [SensorMeasurement], InputParameters == (Param) { }
 
 final class SensorMeasurementNetworkMapper: SensorMeasurementNetworkMapperProtocol {
-    func map(_ input: [MeasurementNetworkModel]) throws -> [SensorMeasurement] {
+    func map(_ input: [MeasurementNetworkModel], using inputParameters: (Param)) throws -> [SensorMeasurement] {
         let sensorMeasurementDataFormatter = Injected[\.sensorMeasurementDataFormatter]
         
         return try input.compactMap {
@@ -25,13 +25,20 @@ final class SensorMeasurementNetworkMapper: SensorMeasurementNetworkMapperProtoc
                 ])
             }
             
-            var measuremnt: Foundation.Measurement<UnitConcentrationMass>?
+            var measurement: Foundation.Measurement<UnitConcentrationMass>?
             
             if let value = $0.value {
-                measuremnt = .init(value: value, unit: .microgramsPerCubicMeter)
+                let calculatedValue = value / inputParameters.factor
+                var unit = UnitConcentrationMass.microgramsPerCubicMeter
+                
+                if inputParameters.unit == UnitConcentrationMass.milligramsPerCubicMeter.symbol {
+                    unit = .milligramsPerCubicMeter
+                }
+                
+                measurement = .init(value: calculatedValue, unit: unit)
             }
             
-            return SensorMeasurement(date: date, measurement: measuremnt)
+            return SensorMeasurement(date: date, measurement: measurement)
         }
     }
 }

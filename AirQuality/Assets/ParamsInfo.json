@@ -6,6 +6,7 @@
        "formulaNumbersInBottomBaseline": false,
        "quota":50,
        "unit":"µg/m³",
+       "factor": 1,
        "indexLevels":{
           "good":20,
           "moderate":60,
@@ -21,6 +22,7 @@
        "formulaNumbersInBottomBaseline": false,
        "quota":25,
        "unit":"µg/m³",
+       "factor": 1,
        "indexLevels":{
           "good":12,
           "moderate":36,
@@ -36,6 +38,7 @@
        "formulaNumbersInBottomBaseline": true,
        "quota":200,
        "unit":"µg/m³",
+       "factor": 1,
        "indexLevels":{
           "good":40,
           "moderate":100,
@@ -49,14 +52,15 @@
        "code":"co",
        "formula":"CO",
        "formulaNumbersInBottomBaseline": true,
-       "quota":10000,
-       "unit":"µg/m³",
+       "quota":100,
+       "unit":"mg/m³",
+       "factor": 100,
        "indexLevels":{
-          "good":2000,
-          "moderate":6000,
-          "unhealthyForSensitiveGroup":10000,
-          "unhealthy":14000,
-          "veryUnhealthy":20000
+          "good":20,
+          "moderate":60,
+          "unhealthyForSensitiveGroup":100,
+          "unhealthy":140,
+          "veryUnhealthy":200
        }
     },
     {
@@ -66,6 +70,7 @@
        "formulaNumbersInBottomBaseline": true,
        "quota":5,
        "unit":"µg/m³",
+       "factor": 1,
        "indexLevels":{
           "good":5,
           "moderate":10,
@@ -81,6 +86,7 @@
        "formulaNumbersInBottomBaseline": true,
        "quota":120,
        "unit":"µg/m³",
+       "factor": 1,
        "indexLevels":{
           "good":70,
           "moderate":120,
@@ -96,6 +102,7 @@
        "formulaNumbersInBottomBaseline": true,
        "quota":125,
        "unit":"µg/m³",
+       "factor": 1,
        "indexLevels":{
           "good":50,
           "moderate":100,

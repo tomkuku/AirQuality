@@ -9,16 +9,17 @@ import Foundation
 
 actor FetchArchivalMeasurementsUseCasePreviewDummy: FetchArchivalMeasurementsUseCaseProtocol {
     
-    // MARK: Properties
+    // MARK: Type aliases
     
-    var parameters = FetchArchivalMeasurementsUseCase.Parameters(dateFrom: "", dateTo: "", sort: "", sensorId: 0)
+    typealias DomainModel = SensorMeasurement
     
     // MARK: Private properties
     
     private var page = 0
     private let size = 30
     private var startDate = Date()
-    private nonisolated(unsafe) var continuation: AsyncStream<[SensorMeasurement]>.Continuation?
+    private nonisolated(unsafe) var continuation: AsyncStream<PageStream>.Continuation?
+    private var parameters = SensorArchivalMeasurementsListOptions(filters: .init(dateFrom: Date(), dateTo: Date()), sorting: .init(date: .ascending))
     
     // MARK: Protocols methods
     
@@ -34,11 +35,11 @@ actor FetchArchivalMeasurementsUseCasePreviewDummy: FetchArchivalMeasurementsUse
         generateMeasurements()
     }
     
-    func getStream() async -> AsyncStream<[SensorMeasurement]> {
+    func getStream() async -> AsyncStream<PageStream> {
         page = 0
         startDate = Date()
         
-        return AsyncStream<[SensorMeasurement]> { continuation in
+        return AsyncStream<PageStream> { continuation in
             Task { [weak self] in
                 self?.continuation = continuation
             }
@@ -46,6 +47,8 @@ actor FetchArchivalMeasurementsUseCasePreviewDummy: FetchArchivalMeasurementsUse
     }
     
     func setParameters(_ parameters: FetchArchivalMeasurementsUseCase.Parameters) async { }
+    
+    func getParameters() async -> SensorArchivalMeasurementsListOptions { parameters }
     
     // MARK: Private methods
     
@@ -62,8 +65,10 @@ actor FetchArchivalMeasurementsUseCasePreviewDummy: FetchArchivalMeasurementsUse
                 $0.date > $1.date
             }
         
-        page += 1
+        let areMorePages = page < 4
         
-        continuation?.yield(measurements)
+        print("Fetch page", page, "areMorePages", areMorePages)
+        
+        continuation?.yield((measurements, areMorePages))
     }
 }

@@ -9,9 +9,10 @@ import SwiftUI
 import Lottie
 
 enum PaginationFetchingState: Equatable {
-    case fetchingNextPage
-    case none
+    case readyToFetchNextPage
+    case noMorePages
     case fetchingTheFirstPage
+    case fetchingNextPage
     case refreshing
 }
 
@@ -24,6 +25,14 @@ struct PaginationFetchingView<ViewModel, ItemView>: View where ViewModel: Pagina
             }
             
             switch viewModel.state {
+            case .readyToFetchNextPage:
+                Rectangle()
+                    .foregroundStyle(.clear)
+                    .onAppear {
+                        Task {
+                            await viewModel.fetchNextPage()
+                        }
+                    }
             case .fetchingNextPage:
                 HStack {
                     Spacer()
@@ -36,15 +45,8 @@ struct PaginationFetchingView<ViewModel, ItemView>: View where ViewModel: Pagina
                     Spacer()
                 }
                 .frame(height: 60)
-            case .none:
-                Rectangle()
-                    .foregroundStyle(.clear)
-                    .onAppear {
-                        Task {
-                            await viewModel.fetchNextPage()
-                        }
-                    }
-            case .fetchingTheFirstPage, .refreshing:
+            
+            case .fetchingTheFirstPage, .refreshing, .noMorePages:
                 EmptyView()
             }
         }
@@ -71,14 +73,13 @@ protocol PaginationViewModelProtocol: BaseViewModel {
     var state: PaginationFetchingState { get set }
     var items: [Item] { get set }
     
-    func pageDidFetch(page: [UseCase.DomainModel]) async
-    func fetchingTheFirstPage()
+    func fetchTheFirstPage()
+    func pageDidFetch(_ page: [UseCase.DomainModel], areMorePages: Bool) async
 }
 
 extension PaginationViewModelProtocol {
     func refresh() {
         Task { [weak self] in
-            print("refreshing")
             do {
                 self?.state = .refreshing
                 try await self?.useCase.refresh()
@@ -90,7 +91,6 @@ extension PaginationViewModelProtocol {
     }
     
     func fetchNextPage() async {
-        print("fetchNextPage")
         do {
             state = .fetchingNextPage
             try await useCase.fetchNextPage()
@@ -100,27 +100,14 @@ extension PaginationViewModelProtocol {
         }
     }
     
-    func fetchingTheFirstPage() {
-        Task {
-            print("fetchingTheFirstPage")
-            do {
-                state = .fetchingTheFirstPage
-                try await useCase.fetchNextPage()
-            } catch {
-                Logger.error("Fetching the first page of archival measurements failed with error: \(error)")
-                errorSubject.send(error)
-            }
-        }
-    }
-    
     func setupStream() {
-        print("setupStream")
         Task { [weak self] in
             guard let self else { return }
             
             for await value in await self.useCase.getStream() {
-                await self.pageDidFetch(page: value)
-                self.state = .none
+                await self.pageDidFetch(value.pageContent, areMorePages: value.areMorePages)
+                
+                self.state = value.areMorePages ? .readyToFetchNextPage : .noMorePages
             }
         }
     }

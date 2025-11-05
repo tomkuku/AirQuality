@@ -91,7 +91,7 @@ final class EventMonitorLogger: EventMonitor {
             body = "Body is empty"
         }
         
-        let requestUrl = "\(request.request?.httpMethod?.uppercased() ?? "") \(request.request?.url?.path() ?? "none")"
+        let requestUrl = "\(request.request?.httpMethod?.uppercased() ?? "") \(request.request?.url?.absoluteString ?? "none")"
         
         let message =
         """

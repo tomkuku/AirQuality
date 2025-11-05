@@ -7,17 +7,24 @@
 
 import Foundation
 
-final class SensorArchivalMeasurementsListViewModel<UseCase>: BaseViewModel, PaginationViewModelProtocol
+@MainActor
+final class SensorArchivalMeasurementsListViewModel<UseCase>: BaseViewModel, PaginationViewModelProtocol, Sendable
 where UseCase: FetchArchivalMeasurementsUseCaseProtocol {
     
     typealias Item = Model.Section
     typealias Model = SensorArchivalMeasurementsListModel
-
+    
+    // MARK: Properties
+    
     @Published var items: [Model.Section] = []
     @Published var state: PaginationFetchingState = .fetchingTheFirstPage
     
     let sensor: Sensor
     let useCase: UseCase
+    
+    private(set) var options: SensorArchivalMeasurementsListOptions
+    
+    // MARK: Private properties
     
     private let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -34,30 +41,44 @@ where UseCase: FetchArchivalMeasurementsUseCaseProtocol {
     
     private let calendar = Calendar.current
     
-    init(sensor: Sensor, useCase: UseCase = FetchArchivalMeasurementsUseCase()) {
+    // MARK: Lifecycle
+    
+    init(sensor: Sensor, useCase: UseCase) {
         self.sensor = sensor
         self.useCase = useCase
         
+        self.options = SensorArchivalMeasurementsListOptions(
+            filters: .init(dateFrom: Date(), dateTo: Date()),
+            sorting: .init(date: .ascending)
+        )
+        
         super.init()
         
+        setInitialOptions()
         setupStream()
     }
     
-    func fetchingTheFirstPage() {
-        Task { [weak self] in
+    // MARK: Methods
+    
+    func fetchTheFirstPage() {
+        tasks.append(Task { [weak self] in
+            guard let self else { return }
+            
+            await self.useCase.setParameters(self.options)
+            
             do {
-                self?.isLoading = true
-                self?.state = .fetchingTheFirstPage
-                try await self?.useCase.fetchNextPage()
+                self.isLoading = true
+                self.state = .fetchingTheFirstPage
+                try await self.useCase.fetchNextPage()
             } catch {
                 Logger.error("Fetching the first page of archival measurements failed with error: \(error)")
-                self?.errorSubject.send(error)
-                self?.isLoading = false
+                self.errorSubject.send(error)
+                self.isLoading = false
             }
-        }
+        })
     }
     
-    func pageDidFetch(page: [SensorMeasurement]) {
+    func pageDidFetch(_ page: [UseCase.DomainModel], areMorePages: Bool) async {
         var items = self.items
         
         if state == .refreshing {
@@ -108,8 +129,39 @@ where UseCase: FetchArchivalMeasurementsUseCaseProtocol {
             }
         }
         
-        self.state = .none
         self.items = items
-        self.isLoading = false
+        
+        if state == .fetchingTheFirstPage {
+            self.isLoading = false
+        }
+    }
+    
+    func setOptions(_ options: SensorArchivalMeasurementsListOptions) {
+        tasks.append(Task { [weak self] in
+            guard let self else { return }
+            
+            self.options = options
+            self.items.removeAll()
+            self.isLoading = true
+            self.state = .fetchingTheFirstPage
+            
+            await self.useCase.setParameters(self.options)
+            
+            do {
+                try await self.useCase.refresh()
+            } catch {
+                Logger.error("Refreshing fetching archival measurements after options update failed with error: \(error)")
+                self.isLoading = false
+                self.errorSubject.send(error)
+            }
+        })
+    }
+    
+    private func setInitialOptions() {
+        tasks.append(Task { [weak self] in
+            guard let self else { return }
+            
+            self.options = await self.useCase.getParameters()
+        })
     }
 }

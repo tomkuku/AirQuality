@@ -42,7 +42,7 @@ final class GetSensorsUseCase: GetSensorsUseCaseProtocol {
     
     func getSensors(for stationId: Int) async throws -> [Sensor] {
         try await withThrowingTaskGroup(
-            of: (sensorId: Int, measurements: [SensorMeasurement], param: Param?)?.self
+            of: (sensorId: Int, measurements: [SensorMeasurement], param: Param)?.self
         ) { group in
             let dtoSensors = try await fetchSensors(for: stationId)
             
@@ -50,8 +50,12 @@ final class GetSensorsUseCase: GetSensorsUseCaseProtocol {
                 group.addTask { [weak self] in
                     guard let self else { return nil }
                     
-                    let measurements = try await self.fetchMeasurements(for: dtoSensor.id)
-                    let param = self.getParam(for: dtoSensor.paramId)
+                    guard let param = self.getParam(for: dtoSensor.paramId) else {
+                        Logger.info("Param with id: \(dtoSensor.paramId) not found!")
+                        return nil
+                    }
+                    
+                    let measurements = try await self.fetchMeasurements(for: dtoSensor.id, param: param)
                     
                     return (dtoSensor.id, measurements, param)
                 }
@@ -60,12 +64,7 @@ final class GetSensorsUseCase: GetSensorsUseCaseProtocol {
             var sensors: [Sensor] = []
             
             for try await result in group.compactMap({ $0 }) {
-                guard let param = result.param else {
-                    Logger.info("Param for sensor: \(result.sensorId) not found!")
-                    continue
-                }
-                
-                let sensor = Sensor(id: result.sensorId, param: param, measurements: result.measurements)
+                let sensor = Sensor(id: result.sensorId, param: result.param, measurements: result.measurements)
                 sensors.append(sensor)
             }
             
@@ -78,16 +77,15 @@ final class GetSensorsUseCase: GetSensorsUseCaseProtocol {
     private func fetchSensors(for stationId: Int) async throws -> [DTO.Sensor] {
         try await giosApiV1Repository.fetch(
             mapper: dtoSensorsNetworkMapper,
-            endpoint: Endpoint.Sensors.get(stationId),
-            contentContainerName: .sensors
+            endpoint: Endpoint.Sensors.get(stationId)
         )
     }
     
-    private func fetchMeasurements(for sensorId: Int) async throws -> [SensorMeasurement] {
+    private func fetchMeasurements(for sensorId: Int, param: Param) async throws -> [SensorMeasurement] {
         try await giosApiV1Repository.fetch(
             mapper: measurementsNetworkMapper,
             endpoint: Endpoint.Measurements.get(sensorId),
-            contentContainerName: .measurements
+            mappingInputParameters: param
         )
     }
     

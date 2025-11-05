@@ -18,7 +18,6 @@ HasGetSensorsUseCase &
 HasGetStationSensorsParamsUseCase &
 HasGetUserLocationUseCase &
 HasNetworkConnectionMonitorUseCase &
-HasFetchArchivalMeasurementsUseCase &
 // DataSources
 HasCacheDataSource &
 HasNotificationCenter &

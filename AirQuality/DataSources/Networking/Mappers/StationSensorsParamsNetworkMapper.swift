@@ -12,10 +12,10 @@ protocol HasStationSensorsParamsNetworkMapper {
 }
 
 protocol StationSensorsParamsNetworkMapperProtocol: NetworkMapperProtocol
-where DTOModel == [SensorNetworkModel], DomainModel == [Param] { }
+where DTOModel == [SensorNetworkModel], DomainModel == [Param], InputParameters == Void { }
 
 final class StationSensorsParamsNetworkMapper: StationSensorsParamsNetworkMapperProtocol {
-    func map(_ input: [SensorNetworkModel]) throws -> [Param] {
+    func map(_ input: [SensorNetworkModel], using inputParameters: ()) throws -> [Param] {
         input.compactMap {
             Param(id: $0.idParam)
         }

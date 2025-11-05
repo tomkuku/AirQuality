@@ -29,38 +29,24 @@ final class FetchAllStationsUseCase: FetchAllStationsUseCaseProtocol {
     init() { }
     
     func fetch() async throws -> [Station] {
-        let numberOfStations = try await fetchNumberOfStations()
+        var areMorePages = true
+        var allStations: [Station] = []
+        var page = 0
         
-        return try await withThrowingTaskGroup(of: [Station].self) { group in
-            for page in 0..<numberOfStations {
-                group.addTask { [weak self] in
-                    guard let self else { return [] }
-                    
-                    return try await self.handleFetchPage(page)
-                }
-            }
+        repeat {
+            let endpoint = Endpoint.Stations.get(page: page, size: 300)
             
-            var stations: [Station] = []
+            let response: (output: [Station], totalPages: Int) = try await giosApiV1Repository.fetch(
+                mapper: stationsNetworkMapper,
+                endpoint: endpoint
+            )
             
-            for try await result in group {
-                stations.append(contentsOf: result)
-            }
+            allStations.append(contentsOf: response.output)
             
-            return stations
-        }
-    }
-    
-    private func handleFetchPage(_ page: Int) async throws -> [Station] {
-        try await giosApiV1Repository.fetch(
-            mapper: stationsNetworkMapper,
-            endpoint: Endpoint.Stations.get(page: page, size: 100),
-            contentContainerName: .stations
-        )
-    }
-    
-    private func fetchNumberOfStations() async throws -> Int {
-        try await giosApiV1Repository.fetchNumberOfPages(
-            endpoint: Endpoint.Stations.get(page: 1, size: 100)
-        )
+            areMorePages = page < max((response.totalPages - 1), 0)
+            page += 1
+        } while areMorePages
+        
+        return allStations
     }
 }

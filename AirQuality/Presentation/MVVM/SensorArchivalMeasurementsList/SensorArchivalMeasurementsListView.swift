@@ -57,8 +57,24 @@ struct SensorArchivalMeasurementsListView<UseCase>: View where UseCase: FetchArc
             }
         }
         .navigationTitle(viewModel.sensor.param.formula)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    coordinator.goTo(.archivalMeasurementsOptions(
+                        viewModel.options,
+                        callback: { options in
+                            viewModel.setOptions(options)
+                        }))
+                } label: {
+                    Image.line3HorizontalDecreaseCircle
+                        .renderingMode(.template)
+                        .foregroundStyle(.blue)
+                        .frame(width: 40, height: 40)
+                }
+            }
+        }
         .taskOnFirstAppear {
-            viewModel.fetchingTheFirstPage()
+            viewModel.fetchTheFirstPage()
         }
     }
     

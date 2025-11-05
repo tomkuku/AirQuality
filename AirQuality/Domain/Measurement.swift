@@ -14,4 +14,5 @@ struct SensorMeasurement: Equatable, Hashable {
 
 extension UnitConcentrationMass {
     static let microgramsPerCubicMeter = UnitConcentrationMass(symbol: "µg/m³", converter: UnitConverterLinear(coefficient: 1e-6))
+    static let milligramsPerCubicMeter = UnitConcentrationMass(symbol: "mg/m³", converter: UnitConverterLinear(coefficient: 1e-3))
 }

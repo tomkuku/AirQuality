@@ -16,18 +16,31 @@ protocol GIOSApiV1RepositoryProtocol: Sendable {
     func fetch<T>(
         mapper: T,
         endpoint: any HTTPRequest,
-        contentContainerName: GIOSApiV1.ContainerName
-    ) async throws -> T.DomainModel where T: NetworkMapperProtocol
-    
-    func fetchNumberOfPages(endpoint: any HTTPRequest) async throws -> Int
+        mappingInputParameters: T.InputParameters
+    ) async throws -> (output: T.DomainModel, totalPages: Int) where T: NetworkMapperProtocol
 }
 
-enum GIOSApiV1 {
-    enum ContainerName: String {
-        case stations = "Lista stacji pomiarowych"
-        case sensors = "Lista stanowisk pomiarowych dla podanej stacji"
-        case measurements = "Lista danych pomiarowych"
-        case archivalMeasurements = "Lista archiwalnych wyników pomiarów"
+extension GIOSApiV1RepositoryProtocol {
+    func fetch<T>(
+        mapper: T,
+        endpoint: any HTTPRequest
+    ) async throws -> T.DomainModel where T: NetworkMapperProtocol, T.InputParameters == Void {
+        try await fetch(mapper: mapper, endpoint: endpoint, mappingInputParameters: ()).output
+    }
+    
+    func fetch<T>(
+        mapper: T,
+        endpoint: any HTTPRequest,
+        mappingInputParameters: T.InputParameters
+    ) async throws -> T.DomainModel where T: NetworkMapperProtocol {
+        try await fetch(mapper: mapper, endpoint: endpoint, mappingInputParameters: mappingInputParameters).output
+    }
+    
+    func fetch<T>(
+        mapper: T,
+        endpoint: any HTTPRequest
+    ) async throws -> (output: T.DomainModel, totalPages: Int) where T: NetworkMapperProtocol, T.InputParameters == Void {
+        try await fetch(mapper: mapper, endpoint: endpoint, mappingInputParameters: ())
     }
 }
 
@@ -37,7 +50,6 @@ actor GIOSApiV1Repository: GIOSApiV1RepositoryProtocol {
     
     private let jsonDecoder: JSONDecoder
     private let httpDataSource: HTTPDataSourceProtocol
-    private var cancellables = Set<AnyCancellable>()
     
     // MARK: Lifecycle
     
@@ -54,17 +66,11 @@ actor GIOSApiV1Repository: GIOSApiV1RepositoryProtocol {
     func fetch<T>(
         mapper: T,
         endpoint: any HTTPRequest,
-        contentContainerName: GIOSApiV1.ContainerName
-    ) async throws -> T.DomainModel where T: NetworkMapperProtocol {
+        mappingInputParameters: T.InputParameters
+    ) async throws -> (output: T.DomainModel, totalPages: Int) where T: NetworkMapperProtocol {
         let data = try await httpDataSource.requestData(endpoint)
-        let decodedResponse = try jsonDecoder.decode(GIOSApiV1Response.self, from: data)
-        let networkModelObjects: T.DTOModel = try decodedResponse.getValue(for: contentContainerName.rawValue)
-        return try mapper.map(networkModelObjects)
-    }
-    
-    func fetchNumberOfPages(endpoint: any HTTPRequest) async throws -> Int {
-        let data = try await httpDataSource.requestData(endpoint)
-        let decodedModel = try jsonDecoder.decode(TotalPagesNetworkModel.self, from: data)
-        return decodedModel.totalPages
+        let decodedResponse = try jsonDecoder.decode(GIOSApiV1.Response<T.DTOModel>.self, from: data)
+        let domainModel = try mapper.map(decodedResponse.content, using: mappingInputParameters)
+        return (domainModel, decodedResponse.totalPages)
     }
 }

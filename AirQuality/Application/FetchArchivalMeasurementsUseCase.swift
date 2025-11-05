@@ -8,36 +8,29 @@
 import Foundation
 import Alamofire
 
-protocol HasFetchArchivalMeasurementsUseCase {
-    var fetchArchivalMeasurementsUseCase: any FetchArchivalMeasurementsUseCaseProtocol { get }
-}
-
 protocol FetchArchivalMeasurementsUseCaseProtocol: PaginationFetchingUseCaseProtocol, Sendable
-where DomainModel == SensorMeasurement, Parameters == FetchArchivalMeasurementsUseCase.Parameters {
+where DomainModel == SensorMeasurement, Parameters == SensorArchivalMeasurementsListOptions {
     func fetchNextPage() async throws
     func refresh() async throws
-    func getStream() async -> AsyncStream<[SensorMeasurement]>
+    func getStream() async -> AsyncStream<PageStream>
     func setParameters(_ parameters: Parameters) async
+    func getParameters() async -> Parameters
 }
 
 actor FetchArchivalMeasurementsUseCase: FetchArchivalMeasurementsUseCaseProtocol {
     
-    struct Parameters: PaginationFetchingUseCaseParameters {
-        let dateFrom: String
-        let dateTo: String
-        let sort: String
-        let sensorId: Int
-    }
+    // MARK: Type aliases
     
-    // MARK: Properties
-    
-    var parameters = Parameters(dateFrom: "", dateTo: "", sort: "", sensorId: 1)
+    typealias DomainModel = SensorMeasurement
     
     // MARK: Private properties
     
     private var page: Int = 0
-    private var size: Int = 100
-    private var continuation: AsyncStream<[SensorMeasurement]>.Continuation?
+    private var size: Int = 80
+    private var continuation: AsyncStream<PageStream>.Continuation?
+    private let sensor: Sensor
+    private let calendar = Calendar.current
+    private lazy var parameters: SensorArchivalMeasurementsListOptions = createDefaultsFetchOptions()
     
     private var giosApiV1Repository: GIOSApiV1RepositoryProtocol {
         Injected[\.giosApiV1Repository]
@@ -49,12 +42,14 @@ actor FetchArchivalMeasurementsUseCase: FetchArchivalMeasurementsUseCaseProtocol
     
     // MARK: Lifecycle
     
-    init() { }
+    init(sensor: Sensor) {
+        self.sensor = sensor
+    }
     
     // MARK: Methods
     
     func fetchNextPage() async throws {
-        try await fetchPage(page: 0, size: size)
+        try await fetchPage(page, size: size)
         page += 1
     }
     
@@ -63,40 +58,63 @@ actor FetchArchivalMeasurementsUseCase: FetchArchivalMeasurementsUseCaseProtocol
         try await fetchNextPage()
     }
     
-    func getStream() async -> AsyncStream<[SensorMeasurement]> {
-        AsyncStream<[SensorMeasurement]> { [weak self] continuation in
+    func getStream() async -> AsyncStream<PageStream> {
+        AsyncStream<PageStream> { continuation in
             Task { [weak self] in
                 await self?.setContinuation(continuation)
             }
         }
     }
     
-    func setParameters(_ parameters: Parameters) async {
+    func setParameters(_ parameters: SensorArchivalMeasurementsListOptions) async {
         self.parameters = parameters
+    }
+    
+    func getParameters() async -> SensorArchivalMeasurementsListOptions {
+        parameters
     }
     
     // MARK: Private methods
     
-    private func fetchPage(page: Int, size: Int) async throws {
+    private func fetchPage(_ page: Int, size: Int) async throws {
         let endpoint = Endpoint.ArchivalMeasurements.get(
-            sensorId: parameters.sensorId,
+            sensorId: sensor.id,
             page: page,
             size: size,
-            dateFrom: parameters.dateFrom,
-            dateTo: parameters.dateTo,
-            sort: parameters.sort
+            options: parameters
         )
         
-        let measurements = try await giosApiV1Repository.fetch(
+        let response = try await giosApiV1Repository.fetch(
             mapper: sensorMeasurementNetworkMapper,
             endpoint: endpoint,
-            contentContainerName: .archivalMeasurements
+            mappingInputParameters: sensor.param
         )
         
-        continuation?.yield(measurements)
+        let areMorePages = page < max((response.totalPages - 1), 0)
+        
+        continuation?.yield((response.output, areMorePages))
     }
     
-    private func setContinuation(_ continuation: AsyncStream<[SensorMeasurement]>.Continuation) {
+    private func setContinuation(_ continuation: AsyncStream<PageStream>.Continuation) {
         self.continuation = continuation
+    }
+    
+    private func createDefaultsFetchOptions() -> SensorArchivalMeasurementsListOptions {
+        let dateTo = Date()
+        let dateFrom: Date
+        
+        if let date = calendar.date(byAdding: .day, value: -14, to: dateTo) {
+            dateFrom = date
+        } else {
+            Logger.error("Creating default dateFrom failed!")
+            dateFrom = dateTo
+        }
+        
+        let dateSorting = SensorArchivalMeasurementsListOptions.Sorting.Date.descending
+        
+        return SensorArchivalMeasurementsListOptions(
+            filters: .init(dateFrom: dateFrom, dateTo: dateTo),
+            sorting: .init(date: dateSorting)
+        )
     }
 }
