@@ -41,7 +41,7 @@ final class SensorMeasurementNetworkMapperSpy: SensorMeasurementNetworkMapperPro
         return dateFormatter
     }()
     
-    func map(_ input: [MeasurementNetworkModel]) throws -> [SensorMeasurement] {
+    func map(_ input: [MeasurementNetworkModel], using inputParameters: Param) throws -> [SensorMeasurement] {
         events.append(.map(input))
         
         return try input.compactMap {

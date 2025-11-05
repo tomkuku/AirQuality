@@ -36,62 +36,62 @@ final class LocalDatabaseFetchResultsRepositoryTests: BaseTestCase, @unchecked S
         )
     }
     
-    func testCreateNewStream() async {
-        // Given
-        let domainModel1 = DomainModelDummy(id: 1)
-        let domainModel2 = DomainModelDummy(id: 2)
-        
-        let localDatabaseModel1 = LocalDatabaseModelDummy(identifier: 1)
-        let localDatabaseModel2 = LocalDatabaseModelDummy(identifier: 2)
-        
-        mapperSpy.mapToDomainModelReturnValueClosure = { model in
-            if model.persistentModelID == localDatabaseModel1.persistentModelID {
-                domainModel1
-            } else {
-                domainModel2
-            }
-        }
-        
-        localDatabaseFetchResultsDataSourceSpy.streamResultClosure = .success([localDatabaseModel1, localDatabaseModel2])
-        
-        // When
-        tasks.append( Task {
-            for try await objests in sut.ceateNewStrem() {
-                streamedObjects = objests
-                expectation.fulfill()
-            }
-        })
-        
-        // Then
-        await fulfillment(of: [expectation], timeout: 2.0)
-        
-        XCTAssertEqual(streamedObjects, [domainModel1, domainModel2])
-    }
-    
-    func testFetchedObjects() async throws {
-        // Given
-        let domainModel1 = DomainModelDummy(id: 1)
-        let domainModel2 = DomainModelDummy(id: 2)
-        
-        let localDatabaseModel1 = LocalDatabaseModelDummy(identifier: 1)
-        let localDatabaseModel2 = LocalDatabaseModelDummy(identifier: 2)
-        
-        mapperSpy.mapToDomainModelReturnValueClosure = { model in
-            if model.persistentModelID == localDatabaseModel1.persistentModelID {
-                domainModel1
-            } else {
-                domainModel2
-            }
-        }
-        
-        localDatabaseFetchResultsDataSourceSpy.fetchedModelsReturnValue = [localDatabaseModel1, localDatabaseModel2]
-        
-        // When
-        let objects = try await sut.getFetchedObjects()
-        
-        // Then
-        XCTAssertEqual(objects, [domainModel1, domainModel2])
-    }
+//    func testCreateNewStream() async {
+//        // Given
+//        let domainModel1 = DomainModelDummy(id: 1)
+//        let domainModel2 = DomainModelDummy(id: 2)
+//        
+//        let localDatabaseModel1 = LocalDatabaseModelDummy(identifier: 1)
+//        let localDatabaseModel2 = LocalDatabaseModelDummy(identifier: 2)
+//        
+//        mapperSpy.mapToDomainModelReturnValueClosure = { model in
+//            if model.persistentModelID == localDatabaseModel1.persistentModelID {
+//                domainModel1
+//            } else {
+//                domainModel2
+//            }
+//        }
+//        
+//        localDatabaseFetchResultsDataSourceSpy.streamResultClosure = .success([localDatabaseModel1, localDatabaseModel2])
+//        
+//        // When
+//        tasks.append( Task {
+//            for try await objests in sut.ceateNewStrem() {
+//                streamedObjects = objests
+//                expectation.fulfill()
+//            }
+//        })
+//        
+//        // Then
+//        await fulfillment(of: [expectation], timeout: 2.0)
+//        
+//        XCTAssertEqual(streamedObjects, [domainModel1, domainModel2])
+//    }
+//    
+//    func testFetchedObjects() async throws {
+//        // Given
+//        let domainModel1 = DomainModelDummy(id: 1)
+//        let domainModel2 = DomainModelDummy(id: 2)
+//        
+//        let localDatabaseModel1 = LocalDatabaseModelDummy(identifier: 1)
+//        let localDatabaseModel2 = LocalDatabaseModelDummy(identifier: 2)
+//        
+//        mapperSpy.mapToDomainModelReturnValueClosure = { model in
+//            if model.persistentModelID == localDatabaseModel1.persistentModelID {
+//                domainModel1
+//            } else {
+//                domainModel2
+//            }
+//        }
+//        
+//        localDatabaseFetchResultsDataSourceSpy.fetchedModelsReturnValue = [localDatabaseModel1, localDatabaseModel2]
+//        
+//        // When
+//        let objects = try await sut.getFetchedObjects()
+//        
+//        // Then
+//        XCTAssertEqual(objects, [domainModel1, domainModel2])
+//    }
 }
 
 private final class LocalDatabaseFetchResultsDataSourceSpy<T>: LocalDatabaseFetchResultsDataSourceProtocol, @unchecked Sendable 

@@ -41,4 +41,13 @@ final class LocalDatabaseRepositorySpy: LocalDatabaseRepositoryProtocol, @unchec
             throw deleteThrowError
         }
     }
+    
+    func fetch<Mapper, Domain>(
+        predicate: Predicate<Mapper.DTOModel>?,
+        sorts: [SortDescriptor<Mapper.DTOModel>],
+        mapper: Mapper,
+        mapperInputParameters: Mapper.InputParameters
+    ) async throws -> [Mapper.DomainModel] where Mapper: LocalDatabaseMapperProtocol, Domain == Mapper.DomainModel {
+        []
+    }
 }

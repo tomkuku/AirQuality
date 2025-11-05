@@ -13,19 +13,18 @@ final class StationsLocalDatabaseMapperDummy: StationsLocalDatabaseMapperProtoco
     typealias DomainModel = Station
     typealias DTOModel = StationLocalDatabaseModel
     
+    func map(_ input: StationLocalDatabaseModel, using inputParameters: ()) throws -> Station {
+        .dummy()
+    }
+    
     func map(_ input: Station) throws -> StationLocalDatabaseModel {
         StationLocalDatabaseModel(
             identifier: 1,
             latitude: 0,
             longitude: 0,
             cityName: "",
-            commune: "",
             province: "",
             street: ""
         )
-    }
-    
-    func map(_ input: StationLocalDatabaseModel) throws -> Station {
-        .dummy()
     }
 }

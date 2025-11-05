@@ -23,7 +23,9 @@ struct EndpointFake: HTTPRequest {
         .get
     }
     
-    var params: [String: String]? {
-        ["key1": "value1"]
+    func createParams() throws -> [String : String]? {
+        [
+            "key1": "value1"
+        ]
     }
 }

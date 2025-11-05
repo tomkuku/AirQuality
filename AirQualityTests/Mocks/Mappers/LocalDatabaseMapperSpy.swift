@@ -10,6 +10,8 @@ import Foundation
 @testable import AirQuality
 
 final class LocalDatabaseMapperSpy: LocalDatabaseMapperProtocol, @unchecked Sendable {
+    
+    typealias InputParameters = ()
     typealias DomainModel = DomainModelDummy
     typealias DTOModel = LocalDatabaseModelDummy
     
@@ -18,7 +20,7 @@ final class LocalDatabaseMapperSpy: LocalDatabaseMapperProtocol, @unchecked Send
     
     required init() { }
     
-    func map(_ input: LocalDatabaseModelDummy) throws -> DomainModelDummy {
+    func map(_ input: LocalDatabaseModelDummy, using inputParameters: ()) throws -> DomainModelDummy {
         mapToDomainModelReturnValueClosure(input)
     }
     

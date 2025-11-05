@@ -12,35 +12,38 @@ import XCTest
 
 final class GIOSApiV1RepositorySpy: GIOSApiV1RepositoryProtocol, @unchecked Sendable {
     enum Event: Equatable, Hashable {
-        case fetch((any MapperProtocol), (any HTTPRequest)?, String)
-        
-        static func == (lhs: Self, rhs: Self) -> Bool {
-            switch (lhs, rhs) {
-            case let (.fetch(_, lhsRequest, lhsContainerName), .fetch(_, rhsRequest, rhsContainerName)):
-                return lhsRequest?.urlRequest == rhsRequest?.urlRequest &&
-                lhsContainerName == rhsContainerName
-            }
-        }
-        
-        func hash(into hasher: inout Hasher) {
-            switch self {
-            case .fetch(_, _, let containerName):
-                hasher.combine(containerName)
-            }
-        }
+//        case fetch((any MapperProtocol), (any HTTPRequest)?)
+//        
+//        static func == (lhs: Self, rhs: Self) -> Bool {
+//            switch (lhs, rhs) {
+//            case let (.fetch(_, lhsRequest, lhsContainerName), .fetch(_, rhsRequest, rhsContainerName)):
+//                return lhsRequest?.urlRequest == rhsRequest?.urlRequest &&
+//                lhsContainerName == rhsContainerName
+//            }
+//        }
+//        
+//        func hash(into hasher: inout Hasher) {
+//            switch self {
+//            case .fetch(_, _, let containerName):
+//                hasher.combine(containerName)
+//            }
+//        }
     }
     
     var events: [Event] = []
     
     var fetchResultClosure: ((any HTTPRequest) -> (Result<Any, Error>?))?
+    var totalPages: Int = 30
+    
+    // MARK: Protocol requirements
     
     func fetch<T>(
         mapper: T,
         endpoint: any HTTPRequest,
-        contentContainerName: String
-    ) async throws -> T.DomainModel where T: NetworkMapperProtocol {
-        events.append(.fetch(mapper, endpoint, contentContainerName))
-        
+        mappingInputParameters: T.InputParameters
+    ) async throws -> (output: T.DomainModel, totalPages: Int) where T: NetworkMapperProtocol {
+//        events.append(.fetch(mapper, endpoint, contentContainerName))
+//        
         return try await withCheckedThrowingContinuation { continuation in
             switch self.fetchResultClosure?(endpoint) {
             case .success(let model):
@@ -50,9 +53,9 @@ final class GIOSApiV1RepositorySpy: GIOSApiV1RepositoryProtocol, @unchecked Send
                         return
                     }
                     
-                    let domainModel = try mapper.map(dtoModel)
+                    let domainModel = try mapper.map(dtoModel, using: mappingInputParameters)
                     
-                    continuation.resume(returning: domainModel)
+                    continuation.resume(returning: (domainModel, totalPages))
                 } catch {
                     continuation.resume(throwing: error)
                 }

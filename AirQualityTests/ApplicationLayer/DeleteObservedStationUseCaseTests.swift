@@ -21,7 +21,7 @@ final class DeleteObservedStationUseCaseTests: BaseTestCase {
         
         localDatabaseRepositorySpy = LocalDatabaseRepositorySpy()
         
-        dependenciesContainerDummy[\.stationsLocalDatabaseMapper] = StationsLocalDatabaseMapperDummy()
+//        dependenciesContainerDummy[\.stationsLocalDatabaseMapper] = StationsLocalDatabaseMapperDummy()
         dependenciesContainerDummy[\.localDatabaseRepository] = localDatabaseRepositorySpy
     }
     

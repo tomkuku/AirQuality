@@ -33,9 +33,12 @@ final class SensorsNetworkMapperSpy: SensorsNetworkMapperProtocol, @unchecked Se
     
     var events: [Event] = []
     
-    func map(_ input: (SensorNetworkModel, Param, [SensorMeasurement])) throws -> Sensor {
-        events.append(.map(input.0, input.1, input.2))
+    func map(
+        _ input: SensorNetworkModel,
+        using inputParameters: (param: Param, measurements: [SensorMeasurement])
+    ) throws -> Sensor {
+        events.append(.map(input, inputParameters.param, inputParameters.measurements))
         
-        return Sensor(id: input.0.id, param: input.1, measurements: input.2)
+        return Sensor(id: input.id, param: inputParameters.param, measurements: inputParameters.measurements)
     }
 }

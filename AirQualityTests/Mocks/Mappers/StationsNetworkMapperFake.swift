@@ -10,7 +10,7 @@ import Foundation
 @testable import AirQuality
 
 final class StationsNetworkMapperFake: StationsNetworkMapperProtocol {
-    func map(_ input: [StationNetworkModel]) throws -> [Station] {
+    func map(_ input: [StationNetworkModel], using inputParameters: ()) throws -> [Station] {
         []
     }
 }

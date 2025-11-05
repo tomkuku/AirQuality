@@ -9,7 +9,7 @@ import Foundation
 
 @testable import AirQuality
 
-extension Param.IndexLevels {
+extension Param.IndexLevels.Tresholds {
     static func dummy(
         good: Int = 10,
         moderate: Int = 20,
@@ -34,7 +34,8 @@ extension Param {
         formula: String = "C6H6",
         quota: Double = 10,
         unit: String = "",
-        indexLevels: IndexLevels = .dummy()
+        factor: Double = 1,
+        indexLevelTresholds: IndexLevels.Tresholds = .dummy()
     ) -> Self {
         Self(
             type: .c6h6,
@@ -43,7 +44,8 @@ extension Param {
             formulaNumbersInBottomBaseline: false,
             quota: quota,
             unit: unit,
-            indexLevels: indexLevels
+            factor: factor,
+            indexLevelTresholds: indexLevelTresholds
         )
     }
 }
