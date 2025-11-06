@@ -41,9 +41,6 @@ struct AlertView: View {
                 EmptyView()
             }
         }
-//        .onChange(of: viewModel.isAnyAlertPresented) { oldValue, newValue in
-//            if oldValue
-//        }
     }
     
     init(viewModel: @autoclosure @escaping () -> AlertViewModel) {

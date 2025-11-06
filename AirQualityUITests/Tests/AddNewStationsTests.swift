@@ -33,11 +33,11 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
         
         let noObservedStationsText = app.staticTexts[\.observedStationsListView.noObservedStations]
         
-        XCTAssertTrue(noObservedStationsText.exists)
+        XCTAssertTrue(noObservedStationsText.exists, "`noObservedStationsText` does not exist")
         
         let addObservedStationsButton = app.buttons[\.observedStationsListView.addObservedStationsButton]
         
-        XCTAssertTrue(addObservedStationsButton.exists)
+        XCTAssertTrue(addObservedStationsButton.exists, "`addObservedStationsButton` does not exist")
         
         addObservedStationsButton.tap()
         
@@ -53,7 +53,7 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
         
         let tabBarMapButton = app.buttons[\.addObservedStationContainerView.tabViewMap]
         
-        XCTAssertTrue(tabBarMapButton.exists)
+        XCTAssertTrue(tabBarMapButton.exists, "`tabBarMapButton` does not exist")
         
         tabBarMapButton.tap()
         
@@ -63,13 +63,13 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
         
         let doneButton = app.otherElements[\.doneToolbarButton]
         
-        XCTAssertTrue(doneButton.isHittable)
+        XCTAssertTrue(doneButton.isHittable, "`doneButton` is not hittable")
         
         doneButton.tap()
         
         let observedStationsList = app.collectionViews[\.observedStationsListView.stationsList]
         
-        XCTAssertTrue(observedStationsList.waitForExistence(timeout: 4))
+        XCTAssertTrue(observedStationsList.waitForExistence(timeout: 4), "`observedStationsList` does not exist")
         
         testSnapshot(imageName: "observedStationsAfterAddingStations")
         
@@ -80,7 +80,7 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
     private func addStationOnList() {
         let provincesScrollView = app.scrollViews[\.provincesListView.provindesList]
         
-        XCTAssertTrue(provincesScrollView.waitForExistence(timeout: 4))
+        XCTAssertTrue(provincesScrollView.waitForExistence(timeout: 4), "`provincesScrollView` does not exist")
         
         testSnapshot(imageName: "provincesList")
         
@@ -91,7 +91,7 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
         
         let stationsCollectionView = app.collectionViews[\.allStationsListView.stationsList]
         
-        XCTAssertTrue(stationsCollectionView.waitForExistence(timeout: 4))
+        XCTAssertTrue(stationsCollectionView.waitForExistence(timeout: 4), "`stationsCollectionView` does not exist")
         
         testSnapshot(imageName: "provinceStationsList")
         
@@ -110,8 +110,8 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
                 
         let searchBar = app.searchFields[Localizable.AddObservedStationListView.seach]
         
-        XCTAssertTrue(searchBar.waitForExistence(timeout: 4))
-        XCTAssertTrue(searchBar.isHittable)
+        XCTAssertTrue(searchBar.waitForExistence(timeout: 4), "`searchBar` does not exist")
+        XCTAssertTrue(searchBar.isHittable, "`searchBar` is not hittable")
         
         searchBar.tap()
         searchBar.typeText("Kraków")
@@ -124,7 +124,7 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
         
         let stationsCollectionView = app.collectionViews[\.allStationsListView.stationsList]
         
-        XCTAssertTrue(stationsCollectionView.waitForExistence(timeout: 4))
+        XCTAssertTrue(stationsCollectionView.waitForExistence(timeout: 4), "`stationsCollectionView` does not exist")
         
         testSnapshot(imageName: "provinceStationsListAfterSearching")
         
@@ -137,13 +137,13 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
     private func addStationOnMap() {
         let mapBottomMenuGrabber = app.buttons[\.bottomSheet.grabber]
         
-        XCTAssertTrue(mapBottomMenuGrabber.waitForExistence(timeout: 4))
+        XCTAssertTrue(mapBottomMenuGrabber.waitForExistence(timeout: 4), "`mapBottomMenuGrabber` does not exist")
         
         mapBottomMenuGrabber.tap()
         
         let findTheNearestStationButton = app.buttons[\.addObservedStationMapView.findTheNearestStationButton]
         
-        XCTAssertTrue(findTheNearestStationButton.waitForExistence(timeout: 4))
+        XCTAssertTrue(findTheNearestStationButton.waitForExistence(timeout: 4), "`findTheNearestStationButton` does not exist")
         
         let deviceLocation = CLLocation(latitude: 51.202106161872145, longitude: 16.14441180827517)
         
@@ -154,7 +154,7 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         let allowOnceButton = springboard.alerts.element(boundBy: 0).buttons.element(boundBy: 0)
         
-        XCTAssertTrue(allowOnceButton.waitForExistence(timeout: 4))
+        XCTAssertTrue(allowOnceButton.waitForExistence(timeout: 4), "`allowOnceButton` does not exist")
         
         allowOnceButton.tap()
         
@@ -162,14 +162,14 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
         
         let annotation = app.images[\.stationMapAnnotationView.annotation]
         
-        XCTAssertTrue(annotation.waitForExistence(timeout: 4))
+        XCTAssertTrue(annotation.waitForExistence(timeout: 4), "`annotation` does not exist")
         
         annotation.tap()
         
         let addObservedStationButton = app.buttons[\.stationMapAnnotationView.addObservedStationButton]
         let paramsView = app.staticTexts[\.paramsView.params]
         
-        XCTAssertTrue(paramsView.waitForExistence(timeout: 4))
+        XCTAssertTrue(paramsView.waitForExistence(timeout: 4), "`paramsView` does not exist")
         
         addObservedStationButton.tap()
         

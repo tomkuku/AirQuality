@@ -138,4 +138,14 @@ nesting:
 enum_case_associated_values_count:
   warning: 7
 
+custom_rules:
+  left_prints:
+    name: "No print() statements"
+    regex: "\\bprint\\s*\\("
+    message: "`print(\"...\")` can be used only to debug. Delete it after you finish."
+    severity: warning
+    excluded_match_kinds:
+      - comment
+      - string
+
 reporter: "xcode"
