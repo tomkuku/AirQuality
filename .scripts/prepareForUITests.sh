@@ -11,7 +11,7 @@ readonly deviceIdentifier=$TARGET_DEVICE_IDENTIFIER
 readonly dirRoot="$PROJECT_DIR"
 readonly deviceState=`xcrun simctl list devices | grep "$deviceIdentifier" | awk '{print $NF}' | sed 's/[()]//g'`
 
-# Launch WireMock and move its process to the backgrund, block the standard output.
+# Launch WireMock and move its process to the backgrund, to not block the standard output.
 java \
 -jar ${dirRoot}/WireMock/wire-mock.jar \
 --root-dir ${dirRoot}/WireMock \
