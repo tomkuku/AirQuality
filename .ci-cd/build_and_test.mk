@@ -42,7 +42,7 @@ ui_tests: shared
 shared: prepare_environemnt generate_xcodeproj
 
 prepare_environemnt:
-	@touch AirQuality/Localizable/Localizable.swift
+	@touch AirQuality/Presentation/Localizable/Localizable.swift
 	@touch AirQuality/Assets/Assets.swift
 	@touch AirQuality/Assets/Params.swift
 
