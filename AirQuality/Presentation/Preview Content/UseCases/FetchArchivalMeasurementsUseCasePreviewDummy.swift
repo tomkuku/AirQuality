@@ -70,8 +70,6 @@ actor FetchArchivalMeasurementsUseCasePreviewDummy: FetchArchivalMeasurementsUse
         
         let areMorePages = page < 4
         
-        print("Fetch page", page, "areMorePages", areMorePages)
-        
         continuation?.yield((measurements, areMorePages))
     }
 }
