@@ -10,7 +10,7 @@ UI_TEST_SCHEME = UITests
 UNIT_TEST_SCHEME = UnitTests
 PLATFORM = 'iOS Simulator'
 DEVICE = 'iPhone 17 Pro'
-OS_VERSION = 26.0
+OS_VERSION = 26.0.1
 XCRESULT_PATH = danger.xcresult
 
 # MARK: UnitTests
