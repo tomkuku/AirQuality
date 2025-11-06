@@ -12,7 +12,7 @@ protocol FetchArchivalMeasurementsUseCaseProtocol: PaginationFetchingUseCaseProt
 where DomainModel == SensorMeasurement, Parameters == SensorArchivalMeasurementsListOptions {
     func fetchNextPage() async throws
     func refresh() async throws
-    func getStream() async -> AsyncStream<PageStream>
+    func getStream(getStreamCompletion: @escaping @Sendable () -> ()) async -> AsyncStream<PageStream>
     func setParameters(_ parameters: Parameters) async
     func getParameters() async -> Parameters
 }
@@ -58,10 +58,13 @@ actor FetchArchivalMeasurementsUseCase: FetchArchivalMeasurementsUseCaseProtocol
         try await fetchNextPage()
     }
     
-    func getStream() async -> AsyncStream<PageStream> {
+    func getStream(
+        getStreamCompletion: @escaping @Sendable () -> ()
+    ) async -> AsyncStream<PageStream> {
         AsyncStream<PageStream> { continuation in
             Task { [weak self] in
                 await self?.setContinuation(continuation)
+                getStreamCompletion()
             }
         }
     }

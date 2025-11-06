@@ -54,12 +54,15 @@ final class FetchArchivalMeasurementsUseCaseTests: BaseTestCase, @unchecked Send
         
         // When
         Task {
-            let stream = await sut.getStream()
+            let stream = await sut.getStream(getStreamCompletion: {})
             
             for try await value in stream {
                 receivedValues.append(value)
             }
         }
+        
+        // Wait for stream to be set up
+        try await Task.sleep(nanoseconds: 100_000_000)
         
         try await sut.fetchNextPage()
         
@@ -106,12 +109,15 @@ final class FetchArchivalMeasurementsUseCaseTests: BaseTestCase, @unchecked Send
         
         // When
         Task {
-            let stream = await sut.getStream()
+            let stream = await sut.getStream(getStreamCompletion: {})
             
             for try await value in stream {
                 receivedValues.append(value)
             }
         }
+        
+        // Wait for stream to be set up
+        try await Task.sleep(nanoseconds: 100_000_000)
         
         try await sut.fetchNextPage()
         try await Task.sleep(nanoseconds: 100_000_000)

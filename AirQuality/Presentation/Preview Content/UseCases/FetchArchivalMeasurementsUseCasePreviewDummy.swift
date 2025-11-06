@@ -35,13 +35,16 @@ actor FetchArchivalMeasurementsUseCasePreviewDummy: FetchArchivalMeasurementsUse
         generateMeasurements()
     }
     
-    func getStream() async -> AsyncStream<PageStream> {
+    func getStream(
+        getStreamCompletion: @escaping @Sendable () -> ()
+    ) async -> AsyncStream<PageStream> {
         page = 0
         startDate = Date()
         
         return AsyncStream<PageStream> { continuation in
             Task { [weak self] in
                 self?.continuation = continuation
+                getStreamCompletion()
             }
         }
     }

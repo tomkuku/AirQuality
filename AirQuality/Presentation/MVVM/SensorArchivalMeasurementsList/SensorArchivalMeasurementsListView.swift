@@ -16,35 +16,42 @@ struct SensorArchivalMeasurementsListView<UseCase>: View where UseCase: FetchArc
     var body: some View {
         BaseView(viewModel: viewModel, coordinator: coordinator) {
             if !viewModel.isLoading {
-                ScrollView {
-                    PaginationFetchingView(viewModel: viewModel) { section in
-                        Section {
-                            ForEach(section.rows) { row in
+                RefreshableScrollView(
+                    onRefresh: {
+                        try? await Task.sleep(nanoseconds: 300_000_000)
+                        
+                        viewModel.refresh()
+                    }, contentView: {
+                        PaginationFetchingView(viewModel: viewModel) { section in
+                            Section {
+                                ForEach(section.rows) { row in
+                                    HStack {
+                                        Text("\(row.formattedDate)")
+                                            .font(.system(size: 18, weight: .medium))
+                                        
+                                        Spacer()
+                                        
+                                        VStack(alignment: .trailing, spacing: 8) {
+                                            Text("\(row.formattedValue) µg/m³")
+                                                .font(.system(size: 18, weight: .medium))
+                                        }
+                                    }
+                                    .padding(.vertical, 6)
+                                    .padding(.horizontal, 16)
+                                }
+                            } header: {
                                 HStack {
-                                    Text("\(row.formattedDate)")
-                                        .font(.system(size: 18, weight: .medium))
+                                    Text("\(section.name)")
+                                        .font(.system(size: 20, weight: .bold))
                                     
                                     Spacer()
-                                    
-                                    VStack(alignment: .trailing, spacing: 8) {
-                                        Text("\(row.formattedValue) µg/m³")
-                                            .font(.system(size: 18, weight: .medium))
-                                    }
                                 }
-                                .padding(.vertical, 6)
-                                .padding(.horizontal, 16)
+                                .padding(.leading, 16)
                             }
-                        } header: {
-                            HStack {
-                                Text("\(section.name)")
-                                    .font(.system(size: 20, weight: .bold))
-                                
-                                Spacer()
-                            }
-                            .padding(.leading, 16)
                         }
-                    }
-                }
+                    },
+                    accessibilityIdentifier: \.provincesListView.provindesList
+                )
             } else {
                 VStack(spacing: 12) {
                     ProgressView()
@@ -73,8 +80,10 @@ struct SensorArchivalMeasurementsListView<UseCase>: View where UseCase: FetchArc
                 }
             }
         }
-        .taskOnFirstAppear {
-            viewModel.fetchTheFirstPage()
+        .task {
+            await viewModel.setupStream()
+            await viewModel.setInitialOptions()
+            await viewModel.fetchTheFirstPage()
         }
     }
     

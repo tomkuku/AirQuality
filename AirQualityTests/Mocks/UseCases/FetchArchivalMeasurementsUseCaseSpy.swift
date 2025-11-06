@@ -11,6 +11,7 @@ import XCTest
 @testable import AirQuality
 
 final class FetchArchivalMeasurementsUseCaseSpy: FetchArchivalMeasurementsUseCaseProtocol, @unchecked Sendable {
+    
     enum Event: Equatable {
         case fetchNextPage
         case refresh
@@ -62,7 +63,9 @@ final class FetchArchivalMeasurementsUseCaseSpy: FetchArchivalMeasurementsUseCas
         expectation?.fulfill()
     }
     
-    func getStream() async -> AsyncStream<(pageContent: [SensorMeasurement], areMorePages: Bool)> {
+    func getStream(
+        getStreamCompletion: @escaping @Sendable () -> ()
+    ) async -> AsyncStream<(pageContent: [SensorMeasurement], areMorePages: Bool)> {
         defer {
             expectation?.fulfill()
         }
@@ -72,6 +75,7 @@ final class FetchArchivalMeasurementsUseCaseSpy: FetchArchivalMeasurementsUseCas
         return AsyncStream { continuation in
             Task {
                 await self.setStreamContinuation(continuation)
+                getStreamCompletion()
                 
                 let values = self.streamValues
                 for value in values {

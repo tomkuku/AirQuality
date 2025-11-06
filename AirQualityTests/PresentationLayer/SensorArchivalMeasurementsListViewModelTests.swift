@@ -43,9 +43,6 @@ final class SensorArchivalMeasurementsListViewModelTests: BaseTestCase, @uncheck
         ]
         
         useCaseSpy.fetchNextPageResult = .success(())
-        useCaseSpy.streamValues = [
-            (pageContent: measurements, areMorePages: false)
-        ]
         
         sut.$state
             .filter { $0 == .noMorePages }
@@ -56,16 +53,23 @@ final class SensorArchivalMeasurementsListViewModelTests: BaseTestCase, @uncheck
             .store(in: &cancellables)
         
         // When
-        sut.fetchTheFirstPage()
+        Task {
+            await sut.setupStream()
+        }
         
-        // Wait for stream to emit value
+        // Wait for stream to be set up
         try await Task.sleep(nanoseconds: 100_000_000)
+        
+        await sut.setInitialOptions()
+        await sut.fetchTheFirstPage()
+        
+        // Yield value through stream after fetchNextPage is called
         await useCaseSpy.yieldStreamValue((pageContent: measurements, areMorePages: false))
         
         // Then
         await fulfillment(of: [expectation], timeout: 2.0)
         
-        XCTAssertEqual(Set(useCaseSpy.events), Set([.getStream, .getParameters, .setParameters, .fetchNextPage]))
+        XCTAssertEqual(useCaseSpy.events, [.getStream, .getParameters, .setParameters, .fetchNextPage])
         XCTAssertEqual(items?.count, 1)
         XCTAssertEqual(items?.first?.rows.count, 2)
         XCTAssertFalse(sut.isLoading)
@@ -86,14 +90,20 @@ final class SensorArchivalMeasurementsListViewModelTests: BaseTestCase, @uncheck
             .store(in: &cancellables)
         
         // When
-        // Wait for getParameters and setParameters and getStream.
-        try await Task.sleep(nanoseconds: 500_000_000)
-        sut.fetchTheFirstPage()
+        Task {
+            await sut.setupStream()
+        }
+        
+        // Wait for stream to be set up
+        try await Task.sleep(nanoseconds: 100_000_000)
+        
+        await sut.setInitialOptions()
+        await sut.fetchTheFirstPage()
         
         // Then
         await fulfillment(of: [expectation], timeout: 2.0)
         
-        XCTAssertEqual(Set(useCaseSpy.events), ([.getStream, .getParameters, .setParameters, .fetchNextPage]))
+        XCTAssertEqual(useCaseSpy.events, [.getStream, .getParameters, .setParameters, .fetchNextPage])
         XCTAssertNotNil(error as? ErrorDummy)
         XCTAssertFalse(sut.isLoading)
     }
@@ -269,9 +279,6 @@ final class SensorArchivalMeasurementsListViewModelTests: BaseTestCase, @uncheck
         )
         
         useCaseSpy.refreshResult = .success(())
-        useCaseSpy.streamValues = [
-            (pageContent: [], areMorePages: false)
-        ]
         
         sut.$state
             .first(where: { $0 == .noMorePages })
@@ -281,8 +288,13 @@ final class SensorArchivalMeasurementsListViewModelTests: BaseTestCase, @uncheck
             .store(in: &cancellables)
         
         // When
-        // Wait for stream to emit value
+        Task {
+            await sut.setupStream()
+        }
+        
+        // Wait for stream to be set up
         try await Task.sleep(nanoseconds: 100_000_000)
+        
         sut.setOptions(options)
         
         await useCaseSpy.yieldStreamValue((pageContent: [], areMorePages: false))
@@ -346,7 +358,13 @@ final class SensorArchivalMeasurementsListViewModelTests: BaseTestCase, @uncheck
             .store(in: &cancellables)
         
         // When
+        Task {
+            await sut.setupStream()
+        }
+        
+        // Wait for stream to be set up
         try await Task.sleep(nanoseconds: 100_000_000)
+        
         await useCaseSpy.yieldStreamValue((pageContent: [measurement1], areMorePages: true))
         
         // Then
@@ -389,10 +407,11 @@ final class SensorArchivalMeasurementsListViewModelTests: BaseTestCase, @uncheck
         
         useCaseSpy.getParametersResult = expectedOptions
         
-        // When - Wait for initialization
-        try? await Task.sleep(nanoseconds: 100_000_000)
+        // When
+        await sut.setInitialOptions()
         
         // Then
-        XCTAssertEqual((useCaseSpy.events).filter { $0 == .getParameters }, [.getParameters])
+        XCTAssertEqual(useCaseSpy.events, [.getParameters])
+        XCTAssertEqual(sut.options, expectedOptions)
     }
 }

@@ -53,29 +53,22 @@ where UseCase: FetchArchivalMeasurementsUseCaseProtocol {
         )
         
         super.init()
-        
-        setInitialOptions()
-        setupStream()
     }
     
     // MARK: Methods
     
-    func fetchTheFirstPage() {
-        tasks.append(Task { [weak self] in
-            guard let self else { return }
-            
-            await self.useCase.setParameters(self.options)
-            
-            do {
-                self.isLoading = true
-                self.state = .fetchingTheFirstPage
-                try await self.useCase.fetchNextPage()
-            } catch {
-                Logger.error("Fetching the first page of archival measurements failed with error: \(error)")
-                self.errorSubject.send(error)
-                self.isLoading = false
-            }
-        })
+    func fetchTheFirstPage() async {
+        await useCase.setParameters(self.options)
+        
+        do {
+            self.isLoading = true
+            self.state = .fetchingTheFirstPage
+            try await useCase.fetchNextPage()
+        } catch {
+            Logger.error("Fetching the first page of archival measurements failed with error: \(error)")
+            errorSubject.send(error)
+            isLoading = false
+        }
     }
     
     func pageDidFetch(_ page: [UseCase.DomainModel], areMorePages: Bool) async {
@@ -157,11 +150,7 @@ where UseCase: FetchArchivalMeasurementsUseCaseProtocol {
         })
     }
     
-    private func setInitialOptions() {
-        tasks.append(Task { [weak self] in
-            guard let self else { return }
-            
-            self.options = await self.useCase.getParameters()
-        })
+    func setInitialOptions() async {
+        options = await useCase.getParameters()
     }
 }

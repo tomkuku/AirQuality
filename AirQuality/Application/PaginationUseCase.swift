@@ -16,6 +16,6 @@ protocol PaginationFetchingUseCaseProtocol: Sendable {
     func fetchNextPage() async throws
     func refresh() async throws
     
-    func getStream() async -> AsyncStream<PageStream>
+    func getStream(getStreamCompletion: @escaping @Sendable () -> ()) async -> AsyncStream<PageStream>
     func setParameters(_ parameters: Parameters) async
 }

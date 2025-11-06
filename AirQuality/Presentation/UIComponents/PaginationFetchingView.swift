@@ -73,7 +73,7 @@ protocol PaginationViewModelProtocol: BaseViewModel {
     var state: PaginationFetchingState { get set }
     var items: [Item] { get set }
     
-    func fetchTheFirstPage()
+    func fetchTheFirstPage() async
     func pageDidFetch(_ page: [UseCase.DomainModel], areMorePages: Bool) async
 }
 
@@ -100,14 +100,20 @@ extension PaginationViewModelProtocol {
         }
     }
     
-    func setupStream() {
-        Task { [weak self] in
-            guard let self else { return }
-            
-            for await value in await self.useCase.getStream() {
-                await self.pageDidFetch(value.pageContent, areMorePages: value.areMorePages)
+    func setupStream() async {
+        await withCheckedContinuation { continuation in
+            Task { [weak self] in
+                guard let self else { return }
                 
-                self.state = value.areMorePages ? .readyToFetchNextPage : .noMorePages
+                let stream = await self.useCase.getStream {
+                    continuation.resume()
+                }
+                
+                for await value in stream {
+                    await self.pageDidFetch(value.pageContent, areMorePages: value.areMorePages)
+                    
+                    self.state = value.areMorePages ? .readyToFetchNextPage : .noMorePages
+                }
             }
         }
     }
