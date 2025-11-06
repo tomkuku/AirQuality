@@ -51,7 +51,7 @@ final class GIOSApiV1RepositorySpy: GIOSApiV1RepositoryProtocol, @unchecked Send
             switch self.fetchResultClosure?(endpoint) {
             case .success(let model):
                 guard let domainModel = model as? T.DomainModel else {
-                    XCTFail("Model \(String(describing: model)) can not be casted into DTO model: \(String(describing: T.DomainModel.self))")
+                    XCTFail("Model \(String(describing: model)) can not be casted into Domain model: \(String(describing: T.DomainModel.self))")
                     continuation.resume(throwing: NSError(domain: String(describing: Self.self), code: 0))
                     return
                 }

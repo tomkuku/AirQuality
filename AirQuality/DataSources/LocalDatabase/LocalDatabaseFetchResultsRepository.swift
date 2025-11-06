@@ -58,7 +58,7 @@ final class LocalDatabaseFetchResultsRepository<Mapper>: LocalDatabaseFetchResul
                 guard let self else { return }
                 
                 do {
-                    for try await models in try await localDatabaseFetchResultsDataSource.createNewStrem() {
+                    for try await models in try await localDatabaseFetchResultsDataSource.createNewStream() {
                         let mappedModels = try models.map {
                             try self.mapper.map($0, using: mapperInputParameters)
                         }

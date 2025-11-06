@@ -7,9 +7,9 @@
 
 import Foundation
 
-protocol PaginationFetchingUseCaseProtocol: Actor, Sendable {
+protocol PaginationFetchingUseCaseProtocol: Sendable {
     associatedtype DomainModel: Sendable
-    associatedtype Parameters
+    associatedtype Parameters: Sendable
     
     typealias PageStream = (pageContent: [DomainModel], areMorePages: Bool)
     

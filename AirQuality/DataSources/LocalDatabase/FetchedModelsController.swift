@@ -14,7 +14,7 @@ protocol LocalDatabaseFetchResultsDataSourceProtocol<FetchModel>: Sendable {
     
     var fetchedModels: [FetchModel] { get async }
     
-    func createNewStrem() async throws -> AsyncThrowingStream<[FetchModel], Error>
+    func createNewStream() async throws -> AsyncThrowingStream<[FetchModel], Error>
 }
 
 actor LocalDatabaseFetchResultsDataSource<T>: LocalDatabaseFetchResultsDataSourceProtocol where T: LocalDatabaseModel {
@@ -72,7 +72,7 @@ actor LocalDatabaseFetchResultsDataSource<T>: LocalDatabaseFetchResultsDataSourc
     
     // MARK: Methods
     
-    func createNewStrem() async throws -> AsyncThrowingStream<[T], Error> {
+    func createNewStream() async throws -> AsyncThrowingStream<[T], Error> {
         if !hasStarted {
             do {
                 hasStarted = true
