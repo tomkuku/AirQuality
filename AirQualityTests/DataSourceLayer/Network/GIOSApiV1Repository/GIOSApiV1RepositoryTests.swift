@@ -14,11 +14,19 @@ final class GIOSApiV1RepositoryTests: BaseTestCase {
     
     private var sut: GIOSApiV1Repository!
     private var httpDataSourceMock: HTTPDataSourceMock!
+    private var giosApiV1RepositorySpy: GIOSApiV1RepositorySpy!
+    private var stationsNetworkMapperMock: StationsNetworkMapperMock!
     
     override func setUp() {
         super.setUp()
         
         httpDataSourceMock = HTTPDataSourceMock()
+        giosApiV1RepositorySpy = GIOSApiV1RepositorySpy()
+        stationsNetworkMapperMock = StationsNetworkMapperMock()
+        
+        dependenciesContainerDummy[\.giosApiV1Repository] = giosApiV1RepositorySpy
+        dependenciesContainerDummy[\.stationsNetworkMapper] = stationsNetworkMapperMock
+        
         sut = GIOSApiV1Repository(httpDataSource: httpDataSourceMock)
     }
     
@@ -304,5 +312,154 @@ final class GIOSApiV1RepositoryTests: BaseTestCase {
         XCTAssertEqual(result.totalPages, expectedTotalPages)
         XCTAssertEqual(httpDataSourceMock.events.count, 1)
         XCTAssertEqual(mapper.mapCallCount, 1)
+    }
+    
+    // MARK: - fetchAllStations
+    
+    func testFetchAllStationsWhenSinglePage() async throws {
+        // Given
+        let stations: [Station] = [
+            Station.dummy(id: 1, latitude: 50.0, longitude: 20.0),
+            Station.dummy(id: 2, latitude: 51.0, longitude: 21.0)
+        ]
+        
+        giosApiV1RepositorySpy.totalPages = 1
+        giosApiV1RepositorySpy.fetchResultClosure = { _ in
+            .success(stations)
+        }
+        
+        // When
+        let result = try await sut.fetchAllStations()
+        
+        // Then
+        XCTAssertEqual(result, stations)
+        XCTAssertEqual(giosApiV1RepositorySpy.events.count, 1)
+    }
+    
+    func testFetchAllStationsWhenMultiplePages() async throws {
+        // Given
+        let stationsPage1: [Station] = [
+            Station.dummy(id: 1, latitude: 50.0, longitude: 20.0),
+            Station.dummy(id: 2, latitude: 51.0, longitude: 21.0)
+        ]
+        let stationsPage2: [Station] = [
+            Station.dummy(id: 3, latitude: 52.0, longitude: 22.0),
+            Station.dummy(id: 4, latitude: 53.0, longitude: 23.0)
+        ]
+        
+        var currentPage = 0
+        
+        giosApiV1RepositorySpy.fetchResultClosure = { [unowned self] _ in
+            defer {
+                currentPage += 1
+            }
+            
+            if currentPage == 0 {
+                self.giosApiV1RepositorySpy.totalPages = 2
+                return .success(stationsPage1)
+            } else {
+                self.giosApiV1RepositorySpy.totalPages = 2
+                return .success(stationsPage2)
+            }
+        }
+        
+        // When
+        let result = try await sut.fetchAllStations()
+        
+        // Then
+        XCTAssertEqual(result, stationsPage1 + stationsPage2)
+        XCTAssertEqual(giosApiV1RepositorySpy.events.count, 2)
+    }
+    
+    func testFetchAllStationsWhenNoStations() async throws {
+        // Given
+        giosApiV1RepositorySpy.totalPages = 1
+        giosApiV1RepositorySpy.fetchResultClosure = { _ in
+            .success([Station]())
+        }
+        
+        // When
+        let result = try await sut.fetchAllStations()
+        
+        // Then
+        XCTAssertTrue(result.isEmpty)
+        XCTAssertEqual(giosApiV1RepositorySpy.events.count, 1)
+    }
+    
+    func testFetchAllStationsWhenFetchFails() async {
+        // Given
+        let expectedError = ErrorDummy()
+        giosApiV1RepositorySpy.totalPages = 1
+        giosApiV1RepositorySpy.fetchResultClosure = { _ in
+            .failure(expectedError)
+        }
+        
+        // When
+        do {
+            _ = try await sut.fetchAllStations()
+            XCTFail("fetchAllStations should have thrown an error!")
+        } catch {
+            // Then
+            XCTAssertTrue(error is ErrorDummy)
+            XCTAssertEqual(giosApiV1RepositorySpy.events.count, 1)
+        }
+    }
+    
+    func testFetchAllStationsWhenThreePages() async throws {
+        // Given
+        let stationsPage1: [Station] = [
+            Station.dummy(id: 1, latitude: 50.0, longitude: 20.0)
+        ]
+        let stationsPage2: [Station] = [
+            Station.dummy(id: 2, latitude: 51.0, longitude: 21.0)
+        ]
+        let stationsPage3: [Station] = [
+            Station.dummy(id: 3, latitude: 52.0, longitude: 22.0)
+        ]
+        
+        var currentPage = 0
+        
+        giosApiV1RepositorySpy.fetchResultClosure = { [unowned self] _ in
+            defer {
+                currentPage += 1
+            }
+            
+            if currentPage == 0 {
+                self.giosApiV1RepositorySpy.totalPages = 3
+                return .success(stationsPage1)
+            } else if currentPage == 1 {
+                self.giosApiV1RepositorySpy.totalPages = 3
+                return .success(stationsPage2)
+            } else {
+                self.giosApiV1RepositorySpy.totalPages = 3
+                return .success(stationsPage3)
+            }
+        }
+        
+        // When
+        let result = try await sut.fetchAllStations()
+        
+        // Then
+        XCTAssertEqual(result, stationsPage1 + stationsPage2 + stationsPage3)
+        XCTAssertEqual(giosApiV1RepositorySpy.events.count, 3)
+    }
+    
+    func testFetchAllStationsWhenTotalPagesIsZero() async throws {
+        // Given
+        let stations: [Station] = [
+            Station.dummy(id: 1, latitude: 50.0, longitude: 20.0)
+        ]
+        
+        giosApiV1RepositorySpy.totalPages = 0
+        giosApiV1RepositorySpy.fetchResultClosure = { _ in
+            .success(stations)
+        }
+        
+        // When
+        let result = try await sut.fetchAllStations()
+        
+        // Then
+        XCTAssertEqual(result, stations)
+        XCTAssertEqual(giosApiV1RepositorySpy.events.count, 1)
     }
 }

@@ -86,6 +86,8 @@ final class SensorArchivalMeasurementsListViewModelTests: BaseTestCase, @uncheck
             .store(in: &cancellables)
         
         // When
+        // Wait for getParameters and setParameters.
+        try await Task.sleep(nanoseconds: 100_000_000)
         sut.fetchTheFirstPage()
         
         // Then

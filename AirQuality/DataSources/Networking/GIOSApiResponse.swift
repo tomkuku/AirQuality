@@ -8,7 +8,7 @@
 import Foundation
 
 enum GIOSApiV1 {
-    private enum ContainerName: String, CaseIterable {
+    enum ContainerName: String, CaseIterable {
         case stations = "Lista stacji pomiarowych"
         case sensors = "Lista stanowisk pomiarowych dla podanej stacji"
         case measurements = "Lista danych pomiarowych"

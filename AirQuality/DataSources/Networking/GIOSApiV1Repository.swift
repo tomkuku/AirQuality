@@ -18,6 +18,8 @@ protocol GIOSApiV1RepositoryProtocol: Sendable {
         endpoint: any HTTPRequest,
         mappingInputParameters: T.InputParameters
     ) async throws -> (output: T.DomainModel, totalPages: Int) where T: NetworkMapperProtocol
+    
+    func fetchAllStations() async throws -> [Station]
 }
 
 extension GIOSApiV1RepositoryProtocol {
@@ -51,6 +53,9 @@ actor GIOSApiV1Repository: GIOSApiV1RepositoryProtocol {
     private let jsonDecoder: JSONDecoder
     private let httpDataSource: HTTPDataSourceProtocol
     
+    @Injected(\.giosApiV1Repository) private var giosApiV1Repository
+    @Injected(\.stationsNetworkMapper) private var stationsNetworkMapper
+    
     // MARK: Lifecycle
     
     init(
@@ -72,5 +77,27 @@ actor GIOSApiV1Repository: GIOSApiV1RepositoryProtocol {
         let decodedResponse = try jsonDecoder.decode(GIOSApiV1.Response<T.DTOModel>.self, from: data)
         let domainModel = try mapper.map(decodedResponse.content, using: mappingInputParameters)
         return (domainModel, decodedResponse.totalPages)
+    }
+    
+    func fetchAllStations() async throws -> [Station] {
+        var areMorePages = true
+        var allStations: [Station] = []
+        var page = 0
+        
+        repeat {
+            let endpoint = Endpoint.Stations.get(page: page, size: 300)
+            
+            let response: (output: [Station], totalPages: Int) = try await giosApiV1Repository.fetch(
+                mapper: stationsNetworkMapper,
+                endpoint: endpoint
+            )
+            
+            allStations.append(contentsOf: response.output)
+            
+            areMorePages = page < max((response.totalPages - 1), 0)
+            page += 1
+        } while areMorePages
+        
+        return allStations
     }
 }

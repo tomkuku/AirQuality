@@ -29,6 +29,8 @@ class BaseTestCase: XCTestCase {
         
         DependenciesContainerManager.container = dependenciesContainerDummy
         
+        dependenciesContainerDummy[\.environmentConstants] = EnvironmentConstant()
+        
         cancellables = .init()
         
         expectation = XCTestExpectation(description: String(describing: Self.self))

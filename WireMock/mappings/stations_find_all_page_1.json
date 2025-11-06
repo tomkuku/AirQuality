@@ -1,18 +1,18 @@
 {
     "request": {
         "method": "GET",
-        "urlPath": "/pjp-api/v1/rest/station/sensors/944",
+        "urlPath": "/pjp-api/v1/rest/station/findAll",
         "queryParameters": {
             "page": {
                 "equalTo": "0"
             },
             "size": {
-                "equalTo": "100"
+                "equalTo": "300"
             }
         }
     },
     "response": {
         "status": 200,
-        "bodyFileName": "station_944_sensors.json"
+        "bodyFileName": "stations_find_all_page_1.json"
     }
 }

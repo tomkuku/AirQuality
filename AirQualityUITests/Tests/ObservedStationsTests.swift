@@ -32,7 +32,6 @@ final class ObservedStationsTests: XCTestCase, @unchecked Sendable {
             latitude: 49.971047,
             longitude: 19.926189,
             cityName: "Skawina",
-            commune: "Skawina",
             province: "MAŁOPOLSKIE",
             street: "os. Ogrody"
         )
@@ -42,7 +41,6 @@ final class ObservedStationsTests: XCTestCase, @unchecked Sendable {
             latitude: 50.057678,
             longitude: 19.926189,
             cityName: "Kraków",
-            commune: "Kraków",
             province: "MAŁOPOLSKIE",
             street: "al. Krasińskiego"
         )
@@ -52,7 +50,6 @@ final class ObservedStationsTests: XCTestCase, @unchecked Sendable {
             latitude: 49.293564,
             longitude: 19.960083,
             cityName: "Zakopane",
-            commune: "Zakopane",
             province: "MAŁOPOLSKIE",
             street: "ul. Sienkiewicza"
         )
@@ -92,6 +89,10 @@ final class ObservedStationsTests: XCTestCase, @unchecked Sendable {
         let sensorsList = app.scrollViews[\.selectedStationView.sensorsList]
         
         XCTAssertTrue(sensorsList.waitForExistence(timeout: 4))
+        
+        sleep(2) /// Wait for animation completes.
+        
+        testSnapshot(imageName: "selectedStation")
         
         app.terminate()
     }

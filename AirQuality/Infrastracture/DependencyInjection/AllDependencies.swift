@@ -36,4 +36,5 @@ HasStationSensorsParamsNetworkMapper &
 HasDTOSensorsNetworkMapper &
 // Others
 HasSensorMeasurementDataFormatter &
-HasUIApplication
+HasUIApplication &
+HasEnvironmentConstantsProtocol

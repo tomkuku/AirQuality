@@ -1,0 +1,11 @@
+//
+//  Tests.xcconfig
+//  AirQuality
+//
+//  Created by Tomasz Kukułka on 06/11/2025.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
+
+ALLOWS_LOCAL_NETWORK = YES

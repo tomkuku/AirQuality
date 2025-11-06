@@ -43,6 +43,23 @@ schemes:
       configName: Production
       appTargetName: AirQuality
 
+
+  UnitTests:
+    build:
+      config: Tests
+      targets:
+        AirQuality: [test]
+    test:
+      config: Tests
+      gatherCoverageData: false
+      language: en
+      region: en_US
+      targets:
+        - name: AirQualityTests
+      commandLineArguments:
+        "-unit-tests": true
+
+
   UITests:
     build:
       config: Tests
@@ -65,18 +82,3 @@ schemes:
             $PROJECT_DIR/.scripts/cleanUpAfterUITests.sh
             $PROJECT_DIR/.scripts/copyFailedUITestsSnapshots.sh
       runPostActionsOnFailure: true
-
-  UnitTests:
-    build:
-      config: Tests
-      targets:
-        AirQuality: [test]
-    test:
-      config: Tests
-      gatherCoverageData: false
-      language: en
-      region: en_US
-      targets:
-        - name: AirQualityTests
-      commandLineArguments:
-        "-unit-tests": true

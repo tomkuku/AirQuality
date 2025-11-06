@@ -15,7 +15,6 @@ protocol DependenciesContainerProtocol: AnyObject {
 }
 
 final class DependenciesContainer: AllDependencies, DependenciesContainerProtocol {
-    
     subscript<T>(_ keyPath: KeyPath<AllDependencies, T>) -> T {
         self[keyPath: keyPath]
     }
@@ -26,6 +25,16 @@ final class DependenciesContainer: AllDependencies, DependenciesContainerProtoco
     let notificationCenter: NotificationCenterProtocol
     let sensorMeasurementDataFormatter: SensorMeasurementDataFormatterProtocol
     let uiApplication: UIApplicationProtocol
+    
+    let environmentConstants: any EnvironmentConstantsProtocol = {
+#if PROD
+        EnvironmentConstants()
+#elseif TESTS
+        TestsEnvironmentConstant()
+#else
+        DevelopmentEnvironmentConstants()
+#endif
+    }()
     
     // MARK: Repositories
     

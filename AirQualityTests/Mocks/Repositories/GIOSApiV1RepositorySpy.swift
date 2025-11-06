@@ -31,12 +31,19 @@ final class GIOSApiV1RepositorySpy: GIOSApiV1RepositoryProtocol, @unchecked Send
         ) -> Self where Mapper: NetworkMapperProtocol {
             Self(mapperType: mapperType, request: request)
         }
+        
+        static func fetchAllStations() -> Self {
+            let request = Endpoint.Stations.get(page: 0, size: 0).urlRequest!
+            return Self(mapperType: StationsNetworkMapper.self, request: request)
+        }
     }
     
     var events: [Event] = []
     
     var totalPages: Int = 30
     var fetchResultClosure: ((any HTTPRequest) -> (Result<Any, Error>?))?
+    
+    var fetchAllStationsResult: Result<[Station], Error>?
     
     // MARK: Protocol requirements
     
@@ -61,6 +68,23 @@ final class GIOSApiV1RepositorySpy: GIOSApiV1RepositoryProtocol, @unchecked Send
                 continuation.resume(throwing: error)
             case .none:
                 XCTFail("Unhandled fetchResult")
+                continuation.resume(throwing: NSError(domain: String(describing: Self.self), code: 0))
+            }
+        }
+    }
+    
+    func fetchAllStations() async throws -> [Station] {
+        events.append(.fetchAllStations())
+        
+        return try await withCheckedThrowingContinuation { continuation in
+            switch self.fetchAllStationsResult {
+            case .success(let stations):
+                continuation.resume(returning: stations)
+            case .failure(let error):
+                continuation.resume(throwing: error)
+            case .none:
+                XCTFail("Unhandled fetchAllStationsResult")
+                continuation.resume(throwing: NSError(domain: String(describing: Self.self), code: 0))
             }
         }
     }

@@ -1,4 +1,5 @@
 {
+	"totalPages": 1,
 	"Lista danych pomiarowych": [
 		{
 			"Kod stanowiska": "MpKrakAlKras-CO-1g",
@@ -95,5 +96,5 @@
 			"Data": "2024-11-21 14:00:00",
 			"Wartość": 410.0
 		}
-	]
+	]	
 }

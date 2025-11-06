@@ -31,10 +31,7 @@ final class FetchAllStationsUseCaseTests: BaseTestCase {
     
     func testFetchWhenNoStations() async throws {
         // Given
-        giosApiRepositorySpy.totalPages = 1
-        giosApiRepositorySpy.fetchResultClosure = { _ in
-            .success([StationNetworkModel]() as [Any])
-        }
+        giosApiRepositorySpy.fetchAllStationsResult = .success([])
         
         // When
         let result = try await sut.fetch()
@@ -42,11 +39,12 @@ final class FetchAllStationsUseCaseTests: BaseTestCase {
         // Then
         XCTAssertTrue(result.isEmpty)
         XCTAssertEqual(giosApiRepositorySpy.events.count, 1)
+        XCTAssertEqual(giosApiRepositorySpy.events.first, .fetchAllStations())
     }
     
     func testFetchWhenSinglePageWithStations() async throws {
         // Given
-        let stationsPage: [Station] = [
+        let stations: [Station] = [
             Station(
                 id: 1,
                 latitude: 50.0,
@@ -57,22 +55,20 @@ final class FetchAllStationsUseCaseTests: BaseTestCase {
             )
         ]
         
-        giosApiRepositorySpy.totalPages = 1
-        giosApiRepositorySpy.fetchResultClosure = { _ in
-            .success(stationsPage)
-        }
+        giosApiRepositorySpy.fetchAllStationsResult = .success(stations)
         
         // When
         let result = try await sut.fetch()
         
         // Then
-        XCTAssertEqual(result, stationsPage)
+        XCTAssertEqual(result, stations)
         XCTAssertEqual(giosApiRepositorySpy.events.count, 1)
+        XCTAssertEqual(giosApiRepositorySpy.events.first, .fetchAllStations())
     }
     
-    func testFetchWhenMultiplePages() async throws {
+    func testFetchWhenMultipleStations() async throws {
         // Given
-        let stationsPage1: [Station] = [
+        let stations: [Station] = [
             Station(
                 id: 1,
                 latitude: 1.0,
@@ -80,9 +76,7 @@ final class FetchAllStationsUseCaseTests: BaseTestCase {
                 cityName: "C1",
                 province: "Prov1",
                 street: "Street 1"
-            )
-        ]
-        let stationsPage2: [Station] = [
+            ),
             Station(
                 id: 2,
                 latitude: 3.0,
@@ -93,38 +87,21 @@ final class FetchAllStationsUseCaseTests: BaseTestCase {
             )
         ]
         
-        var currentPage = 0
-        
-        giosApiRepositorySpy.fetchResultClosure = { [unowned self] _ in
-            defer {
-                currentPage += 1
-            }
-            
-            if currentPage == 0 {
-                self.giosApiRepositorySpy.totalPages = 2
-                return .success(stationsPage1)
-            } else {
-                self.giosApiRepositorySpy.totalPages = 2
-                return .success(stationsPage2)
-            }
-        }
+        giosApiRepositorySpy.fetchAllStationsResult = .success(stations)
         
         // When
         let result = try await sut.fetch()
         
         // Then
-        XCTAssertEqual(result, stationsPage1 + stationsPage2)
-        XCTAssertEqual(giosApiRepositorySpy.events.count, 2)
+        XCTAssertEqual(result, stations)
+        XCTAssertEqual(giosApiRepositorySpy.events.count, 1)
+        XCTAssertEqual(giosApiRepositorySpy.events.first, .fetchAllStations())
     }
     
     func testFetchWhenRepositoryFails() async throws {
         // Given
         let expectedError = NSError(domain: "stub", code: 42)
-        
-        giosApiRepositorySpy.fetchResultClosure = { _ in
-            .failure(expectedError)
-        }
-        giosApiRepositorySpy.totalPages = 1
+        giosApiRepositorySpy.fetchAllStationsResult = .failure(expectedError)
         
         // When & Then
         do {
@@ -134,5 +111,6 @@ final class FetchAllStationsUseCaseTests: BaseTestCase {
             XCTAssertEqual((error as NSError).code, expectedError.code)
         }
         XCTAssertEqual(giosApiRepositorySpy.events.count, 1)
+        XCTAssertEqual(giosApiRepositorySpy.events.first, .fetchAllStations())
     }
 }

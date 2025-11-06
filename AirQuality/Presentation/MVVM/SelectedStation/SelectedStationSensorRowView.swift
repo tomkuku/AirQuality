@@ -39,7 +39,7 @@ struct SelectedStationSensorRow: View {
             coordinator.goTo(.archivalMeasurements(sensor.sensor))
         })
         .onAppear {
-            withAnimation(.easeInOut(duration: 0.4).delay(TimeInterval(index) * 0.2)) {
+            withAnimation(.easeInOut(duration: 0.3).delay(TimeInterval(index) * 0.2)) {
                 animated = true
             }
         }

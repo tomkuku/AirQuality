@@ -18,7 +18,7 @@ protocol HTTPRequest: URLRequestConvertible, Sendable {
 
 extension HTTPRequest {
     var baseURL: String {
-        EnvironmentConstant[\.baseUrl]
+        Injected[\.environmentConstants].baseUrl
     }
     
     func createParams() throws -> [String: String]? {

@@ -71,25 +71,30 @@ final class SensorArchivalMeasurementsFiltersViewModel: ObservableObject {
         
         isValid = true
         dateSorting = .descending
+        errors = SensorArchivalMeasurementsFiltersModel.ValidationError()
     }
     
     func validate() {
         errors = SensorArchivalMeasurementsFiltersModel.ValidationError()
         
         guard dateFrom <= dateTo else {
+            Logger.info("dateFrom is greater than dateTo")
             errors.datesError = .dateFromCanNotBeGreaterThanDateTo
             isValid = false
             return
         }
         
         guard let days = calendar.dateComponents([.day], from: dateFrom, to: dateTo).day else {
+            Logger.error("Could not calculate days number between dateFrom and dateTo!")
             isValid = false
             return
         }
         
-        if days > 365 {
+        guard days <= 365 else {
+            Logger.info("Number of days exceeds 365!")
             errors.datesError = .datesDifferenceCanNotBeGreaterThan365Days
             isValid = false
+            return
         }
         
         isValid = true

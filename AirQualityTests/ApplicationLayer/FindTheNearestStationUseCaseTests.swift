@@ -40,9 +40,7 @@ final class FindTheNearestStationUseCaseTests: BaseTestCase {
         
         let userLocation = CLLocation(latitude: 4, longitude: 4)
         
-        giosApiV1RepositorySpy.fetchResultClosure = { _ in
-            .success(fetchResultStations)
-        }
+        giosApiV1RepositorySpy.fetchAllStationsResult = .success(fetchResultStations)
         
         await userLocationRepositorySpy.setRequestLocationOnceResult(.success(userLocation))
         
@@ -55,21 +53,14 @@ final class FindTheNearestStationUseCaseTests: BaseTestCase {
         XCTAssertEqual(result?.station.id, 3)
         XCTAssertEqual(userLocationRepositorySpyEvents, [.requestLocationOnce])
         XCTAssertEqual(result?.distance ?? 0, 156_760.13068588925, accuracy: 0.0000000002)
-        XCTAssertEqual(giosApiV1RepositorySpy.events, [
-            .fetch(
-                mapperType: StationsNetworkMapper.self,
-                request: Endpoint.Stations.get(page: 0, size: 1).urlRequest!
-            )
-        ])
+        XCTAssertEqual(giosApiV1RepositorySpy.events, [.fetchAllStations()])
     }
     
     func testFindWhenFetchingStationsFailed() async throws {
         // Given
         let userLocation = CLLocation(latitude: 4, longitude: 4)
         
-        giosApiV1RepositorySpy.fetchResultClosure = { _ in
-            .failure(ErrorDummy())
-        }
+        giosApiV1RepositorySpy.fetchAllStationsResult = .failure(ErrorDummy())
         
         await userLocationRepositorySpy.setRequestLocationOnceResult(.success(userLocation))
         
@@ -80,12 +71,7 @@ final class FindTheNearestStationUseCaseTests: BaseTestCase {
         } catch {
             // Then
             XCTAssertTrue(error is ErrorDummy)
-            XCTAssertEqual(giosApiV1RepositorySpy.events, [
-                .fetch(
-                    mapperType: StationsNetworkMapper.self,
-                    request: Endpoint.Stations.get(page: 0, size: 1).urlRequest!
-                )
-            ])
+            XCTAssertEqual(giosApiV1RepositorySpy.events, [.fetchAllStations()])
         }
     }
     
@@ -97,9 +83,7 @@ final class FindTheNearestStationUseCaseTests: BaseTestCase {
             Station.dummy(id: 3, latitude: 3, longitude: 3)
         ]
         
-        giosApiV1RepositorySpy.fetchResultClosure = { _ in
-            .success(fetchResultStations)
-        }
+        giosApiV1RepositorySpy.fetchAllStationsResult = .success(fetchResultStations)
         
         await userLocationRepositorySpy.setRequestLocationOnceResult(.failure(ErrorDummy()))
         
@@ -113,12 +97,7 @@ final class FindTheNearestStationUseCaseTests: BaseTestCase {
             
             XCTAssertTrue(error is ErrorDummy)
             XCTAssertEqual(userLocationRepositorySpyEvents, [.requestLocationOnce])
-            XCTAssertEqual(giosApiV1RepositorySpy.events, [
-                .fetch(
-                    mapperType: StationsNetworkMapper.self,
-                    request: Endpoint.Stations.get(page: 0, size: 1).urlRequest!
-                )
-            ])
+            XCTAssertEqual(giosApiV1RepositorySpy.events, [.fetchAllStations()])
         }
     }
 }
