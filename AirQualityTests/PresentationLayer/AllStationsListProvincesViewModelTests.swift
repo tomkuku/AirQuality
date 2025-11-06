@@ -227,7 +227,7 @@ final class ProvincesListViewModelTests: BaseTestCase, @unchecked Sendable {
     }
 }
 
-extension ProvincesListModel.Province: Equatable {
+extension ProvincesListModel.Province: @retroactive Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.name == rhs.name && lhs.stations == rhs.stations
     }
