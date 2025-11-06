@@ -10,6 +10,8 @@ import XCTest
 import class UIKit.UIImage
 import SnapshotTesting
 
+@testable import AirQuality
+
 @MainActor
 func testSnapshot(imageName: String) {
     let screenshot = XCUIScreen.main.screenshot()
@@ -18,8 +20,9 @@ func testSnapshot(imageName: String) {
     assertSnapshot(
         of: snapshot,
         as: .image(precision: 0.90),
+        named: "test",
         record: false,
-        testName: imageName
+        testName: imageName,
     )
 }
 
@@ -31,8 +34,6 @@ func tapCell(in collectionView: XCUIElement, index cellIndex: Int) {
     
     firstCell.tap()
 }
-
-@testable import AirQuality
 
 extension StationNetworkModel: Encodable {
     func encode(to encoder: any Encoder) throws {

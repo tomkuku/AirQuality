@@ -120,7 +120,7 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
     private func createDragGesture() -> some Gesture {
         DragGesture()
             .onChanged { value in
-                guard value.translation.height >= 0 && contentOffsetY >= 0 else { return }
+                guard value.translation.height >= 0, contentOffsetY >= 0 else { return }
                 
                 let scroll = value.translation.height
                 

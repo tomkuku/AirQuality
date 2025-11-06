@@ -16,7 +16,7 @@ where DTOModel == SensorNetworkModel,
       DomainModel == Sensor,
       InputParameters == (param: Param, measurements: [SensorMeasurement]) {}
 
-struct SensorsNetworkMapper: SensorsNetworkMapperProtocol{
+struct SensorsNetworkMapper: SensorsNetworkMapperProtocol {
     func map(_ input: SensorNetworkModel, using inputParameters: (param: Param, measurements: [SensorMeasurement])) throws -> Sensor {
         Sensor(
             id: input.id,

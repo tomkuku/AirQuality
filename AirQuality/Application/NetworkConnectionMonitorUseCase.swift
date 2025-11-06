@@ -63,10 +63,10 @@ actor NetworkConnectionMonitorUseCase: NetworkConnectionMonitorUseCaseProtocol {
             currentStatus = newPathStatus
         }
         
-        if let currentStatus, currentStatus == .satisfied && newPathStatus != .satisfied {
+        if let currentStatus, currentStatus == .satisfied, newPathStatus != .satisfied {
             /// Ignore situation when unsatisfied status changes to other `unsatisfied` (e.g. `requiresConnection`).
             return true
-        } else if currentStatus == nil && newPathStatus != .satisfied {
+        } else if currentStatus == nil, newPathStatus != .satisfied {
             return true
         }
         

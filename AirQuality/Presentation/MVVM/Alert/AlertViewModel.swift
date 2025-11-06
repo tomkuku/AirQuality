@@ -39,9 +39,9 @@ final class AlertViewModel: ObservableObject {
     
     private(set) var alerts: [AlertModel] = [] {
         didSet {
-            if oldValue.isEmpty && !alerts.isEmpty { /// Array is not empty now.
+            if oldValue.isEmpty, !alerts.isEmpty { /// Array is not empty now.
                 delegate?.alertsViewModelReceivedAlert()
-            } else if !oldValue.isEmpty && alerts.isEmpty { /// Array is empty now.
+            } else if !oldValue.isEmpty, alerts.isEmpty { /// Array is empty now.
                 delegate?.alertsViewModelHaveNoAlertsInQueue()
             }
             

@@ -38,45 +38,47 @@ struct SensorDetailsContainerView: View {
         createNavigationMenuView()
             .frame(height: 40)
         
-        GeometryReader(content: { geometry in
-            ScrollViewReader(content: { scrollViewProxy in
-                ScrollView(.horizontal) {
-                    LazyHStack(alignment: .center, spacing: 0) {
-                        ForEach(0..<3, id: \.self) { index in
-                            ZStack {
-//                                if index == 1 {
-//                                    let viewModel = SensorArchivalMeasurementsListViewModel(sensor: sensor)
-//                                    SensorArchivalMeasurementsListView(viewModel: viewModel)
-//                                } else if index == 0 {
-//                                    let viewModel = SensorParamDetailsViewModel(sensor: sensor)
-//                                    SensorParamDetailsView(viewModel: viewModel)
-//                                } else {
-//                                    let viewModel = SensorArchivalMeasurementsListViewModel(sensor: sensor)
-//                                    SensorArchivalMeasurementsChartView(viewModel: viewModel)
-//                                }
-                                
-                                EmptyView()
-                            }
-                            .frame(width: geometry.size.width, height: geometry.size.height)
-                        }
-                    }
-                }
-                .scrollDisabled(true)
-                .onChange(of: selectedElementId) {
-                    withAnimation(.easeOut) {
-                        scrollViewProxy.scrollTo(selectedElementId)
-                    }
-                }
-            })
-        })
-        .navigationTitle(sensor.param.name)
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            Button(L10n.close) {
-                coordinator.dismiss()
-            }
-        }
-        .ignoresSafeArea(.container, edges: .bottom)
+        Text("Test")
+        
+//        GeometryReader(content: { geometry in
+//            ScrollViewReader(content: { scrollViewProxy in
+//                ScrollView(.horizontal) {
+//                    LazyHStack(alignment: .center, spacing: 0) {
+////                        ForEach(0..<3, id: \.self) { index in
+////                            ZStack {
+////                                if index == 1 {
+////                                    let viewModel = SensorArchivalMeasurementsListViewModel(sensor: sensor)
+////                                    SensorArchivalMeasurementsListView(viewModel: viewModel)
+////                                } else if index == 0 {
+////                                    let viewModel = SensorParamDetailsViewModel(sensor: sensor)
+////                                    SensorParamDetailsView(viewModel: viewModel)
+////                                } else {
+////                                    let viewModel = SensorArchivalMeasurementsListViewModel(sensor: sensor)
+////                                    SensorArchivalMeasurementsChartView(viewModel: viewModel)
+////                                }
+//                                
+//                                EmptyView()
+////                            }
+////                            .frame(width: geometry.size.width, height: geometry.size.height)
+////                        }
+//                    }
+//                }
+//                .scrollDisabled(true)
+//                .onChange(of: selectedElementId) {
+//                    withAnimation(.easeOut) {
+//                        scrollViewProxy.scrollTo(selectedElementId)
+//                    }
+//                }
+//            })
+//        })
+//        .navigationTitle(sensor.param.name)
+//        .navigationBarTitleDisplayMode(.inline)
+//        .toolbar {
+//            Button(L10n.close) {
+//                coordinator.dismiss()
+//            }
+//        }
+//        .ignoresSafeArea(.container, edges: .bottom)
     }
     
     init(sensor: Sensor) {

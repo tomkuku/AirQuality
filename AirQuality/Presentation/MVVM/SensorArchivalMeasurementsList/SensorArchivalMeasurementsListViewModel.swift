@@ -8,7 +8,7 @@
 import Foundation
 
 @MainActor
-final class SensorArchivalMeasurementsListViewModel<UseCase>: BaseViewModel, PaginationViewModelProtocol, Sendable
+final class SensorArchivalMeasurementsListViewModel<UseCase>: BaseViewModel, PaginationViewModelProtocol
 where UseCase: FetchArchivalMeasurementsUseCaseProtocol {
     
     typealias Item = Model.Section
@@ -98,7 +98,7 @@ where UseCase: FetchArchivalMeasurementsUseCaseProtocol {
                 let lastElementYear = lastElementDateComponents.year ?? 0
                 let lastElementMonth = lastElementDateComponents.month ?? 0
                 
-                if measurementDateYear == lastElementYear && measurementDateMonth == lastElementMonth {
+                if measurementDateYear == lastElementYear, measurementDateMonth == lastElementMonth {
                     items[items.count - 1].rows.append(row)
                 } else {
                     let sectionName = monthFormatter.string(from: $0.date).capitalized

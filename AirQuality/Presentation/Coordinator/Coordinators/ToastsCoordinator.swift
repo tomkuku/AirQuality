@@ -37,7 +37,7 @@ final class ToastsCoordinator: ObservableObject {
     private var window: ToastWindow?
     private let toastsViewModel: ToastsViewModel
     
-    private var sceneDidActivateNotificationCancelablle: AnyCancellable?
+    private var sceneDidActivateNotificationCancellable: AnyCancellable?
     
     init(toastsPublisher: AnyPublisher<ToastModel, Never>) {
         self.toastsViewModel = ToastsViewModel(toastsPublisher)
@@ -47,7 +47,7 @@ final class ToastsCoordinator: ObservableObject {
     
     private func observeAppSceneDidActive() {
         /// Waits until app scene become active to get `windowScene` required to create a new window.
-        sceneDidActivateNotificationCancelablle = NotificationCenter.default.publisher(for: UIScene.didActivateNotification)
+        sceneDidActivateNotificationCancellable = NotificationCenter.default.publisher(for: UIScene.didActivateNotification)
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
@@ -58,7 +58,7 @@ final class ToastsCoordinator: ObservableObject {
                     return
                 }
                 
-                let toastsView = ToastsView(toastsViewModel: toastsViewModel)
+                let toastsView = ToastsView(toastsViewModel: self.toastsViewModel)
                 
                 let hostingController = UIHostingController(rootView: toastsView)
                 hostingController.view.backgroundColor = .clear
@@ -66,8 +66,8 @@ final class ToastsCoordinator: ObservableObject {
                 self.window = ToastWindow(windowScene: windowScene)
                 self.window?.rootViewController = hostingController
                 
-                self.sceneDidActivateNotificationCancelablle?.cancel()
-                self.sceneDidActivateNotificationCancelablle = nil
+                self.sceneDidActivateNotificationCancellable?.cancel()
+                self.sceneDidActivateNotificationCancellable = nil
             }
     }
 }

@@ -28,7 +28,6 @@ struct ProvincesListRowView: View {
                     Image.chevronCompactRight
                         .frame(width: 12, height: 12)
                         .scaledToFill()
-                        .accessibilityIdentifier(\.provincesListView.provindesListRow)
                 }
                 .foregroundStyle(Color.Text.secondary)
             }
@@ -40,6 +39,8 @@ struct ProvincesListRowView: View {
         .padding(.horizontal, 16)
         .frame(height: 50)
         .contentShape(Rectangle())
+        .accessibilityAddTraits(.isButton)
+        .accessibilityIdentifier(\.provincesListView.provindesListRow)
         .gesture(
             TapGesture()
                 .onEnded { _ in

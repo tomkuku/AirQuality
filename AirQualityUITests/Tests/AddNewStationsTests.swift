@@ -29,7 +29,7 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
     
     @MainActor
     func testLaunch() {
-        testSnapshot(imageName: "noObserbedStations")
+        testSnapshot(imageName: "noObservedStations")
         
         let noObservedStationsText = app.staticTexts[\.observedStationsListView.noObservedStations]
         
@@ -43,6 +43,65 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
         
         // Add stations on list
         
+        addStationOnList()
+        
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        
+        addStationOnListWithSearching()
+        
+        // Add stations on map
+        
+        let tabBarMapButton = app.buttons[\.addObservedStationContainerView.tabViewMap]
+        
+        XCTAssertTrue(tabBarMapButton.exists)
+        
+        tabBarMapButton.tap()
+        
+        addStationOnMap()
+        
+        // Back to observed stations list
+        
+        let doneButton = app.otherElements[\.doneToolbarButton]
+        
+        XCTAssertTrue(doneButton.isHittable)
+        
+        doneButton.tap()
+        
+        let observedStationsList = app.collectionViews[\.observedStationsListView.stationsList]
+        
+        XCTAssertTrue(observedStationsList.waitForExistence(timeout: 4))
+        
+        testSnapshot(imageName: "observedStationsAfterAddingStations")
+        
+        app.terminate()
+    }
+    
+    @MainActor
+    private func addStationOnList() {
+        let provincesScrollView = app.scrollViews[\.provincesListView.provindesList]
+        
+        XCTAssertTrue(provincesScrollView.waitForExistence(timeout: 4))
+        
+        testSnapshot(imageName: "provincesList")
+        
+        let secondProvinceButton = provincesScrollView.buttons.matching(keyPath: \.provincesListView.provindesListRow)
+        
+        /// Whole row is tappable!
+        secondProvinceButton["Małopolskie"].tap()
+        
+        let stationsCollectionView = app.collectionViews[\.allStationsListView.stationsList]
+        
+        XCTAssertTrue(stationsCollectionView.waitForExistence(timeout: 4))
+        
+        testSnapshot(imageName: "provinceStationsList")
+        
+        tapCell(in: stationsCollectionView, index: 4)
+        
+        testSnapshot(imageName: "provinceStationsWithSelection")
+    }
+    
+    @MainActor
+    private func addStationOnListWithSearching() {
         let provincesScrollView = app.scrollViews[\.provincesListView.provindesList]
         
         XCTAssertTrue(provincesScrollView.waitForExistence(timeout: 4))
@@ -60,27 +119,22 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
         testSnapshot(imageName: "provincesListAfterSearching")
         
         /// Whole row is tappable!
-        let images = provincesScrollView.images.matching(keyPath: \.provincesListView.provindesListRow)
-        images.element(boundBy: 0).tap()
+        let searchedProvinceButton = provincesScrollView.buttons.matching(keyPath: \.provincesListView.provindesListRow)
+        searchedProvinceButton.element(boundBy: 0).tap()
         
         let stationsCollectionView = app.collectionViews[\.allStationsListView.stationsList]
         
         XCTAssertTrue(stationsCollectionView.waitForExistence(timeout: 4))
         
-        testSnapshot(imageName: "provinceStationsList")
+        testSnapshot(imageName: "provinceStationsListAfterSearching")
         
         tapCell(in: stationsCollectionView, index: 0)
         
-        testSnapshot(imageName: "provinceStationsWithSelection")
-        
-        // Add stations on map
-        
-        let mapButton = app.buttons[\.addObservedStationContainerView.tabViewMap]
-        
-        XCTAssertTrue(mapButton.exists)
-        
-        mapButton.tap()
-        
+        testSnapshot(imageName: "provinceStationsAfterSearchingWithSelection")
+    }
+    
+    @MainActor
+    private func addStationOnMap() {
         let mapBottomMenuGrabber = app.buttons[\.bottomSheet.grabber]
         
         XCTAssertTrue(mapBottomMenuGrabber.waitForExistence(timeout: 4))
@@ -120,20 +174,6 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
         addObservedStationButton.tap()
         
         tapAtSpecificPoint(CGPoint(x: 100, y: 100), onApp: app)
-        
-        let doneButton = app.otherElements[\.doneToolbarButton]
-        
-        XCTAssertTrue(doneButton.isHittable)
-        
-        doneButton.tap()
-        
-        let observedStationsList = app.collectionViews[\.observedStationsListView.stationsList]
-        
-        XCTAssertTrue(observedStationsList.waitForExistence(timeout: 4))
-        
-        testSnapshot(imageName: "observedStationsAfterAddingStations")
-        
-        app.terminate()
     }
     
     @MainActor

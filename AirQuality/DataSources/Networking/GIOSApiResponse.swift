@@ -57,5 +57,4 @@ enum GIOSApiV1 {
             self.totalPages = try staticContainer.decode(Int.self, forKey: .totalPages)
         }
     }
-    
 }

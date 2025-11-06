@@ -15,7 +15,7 @@ protocol DTOSensorsNetworkMapperProtocol: NetworkMapperProtocol
 where DTOModel == [SensorNetworkModel], DomainModel == [DTO.Sensor], InputParameters == Void { }
 
 struct DTOSensorsNetworkMapper: DTOSensorsNetworkMapperProtocol {
-    func map(_ input: [SensorNetworkModel], using inputParameters: ()) throws -> Array<DTO.Sensor> {
+    func map(_ input: [SensorNetworkModel], using inputParameters: ()) throws -> [DTO.Sensor] {
         input.map {
             DTO.Sensor(id: $0.id, paramId: $0.idParam)
         }
