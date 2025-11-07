@@ -149,14 +149,19 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
         
         findTheNearestStationButton.tap()
         
-        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        let allowOnceButton = springboard.alerts.element(boundBy: 0).buttons.element(boundBy: 0)
-        
-        XCTAssertTrue(allowOnceButton.waitForExistence(timeout: 4), "`allowOnceButton` does not exist")
-        
-        allowOnceButton.tap()
-        
-        _ = consume springboard
+        do {
+            let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+            let systemPermissionAlert = springboard.alerts.firstMatch
+            
+            XCTAssertTrue(systemPermissionAlert.waitForExistence(timeout: 4), "systemPermissionAlert does not exist")
+            
+            let allowOnceButton = systemPermissionAlert.buttons.allElementsBoundByIndex.first
+            
+            XCTAssertTrue(allowOnceButton?.waitForExistence(timeout: 4) == true, "allowOnceButton does not exist")
+            XCTAssertTrue(allowOnceButton?.isHittable == true, "allowOnceButton is not hittable")
+            
+            allowOnceButton?.tap()
+        }
         
         let annotation = app.images[\.stationMapAnnotationView.annotation]
         
