@@ -13,6 +13,6 @@ readonly applicationDataPath=`xcrun simctl get_app_container $deviceIdentifier $
 readonly sourceDir=`echo "${applicationDataPath}/tmp"`
 
 if find "$sourceDir" -type d -mindepth 1 | grep -q .; then
-    mkdir -p ${PROJECT_DIR}/UITestsSnapshots
-    cp -r ${sourceDir}/*Tests/*.png ${PROJECT_DIR}/UITestsSnapshots
+    mkdir -p ${PROJECT_DIR}/${UI_TESTS_OUTPUT_DIR}
+    cp -r ${sourceDir}/*Tests/*.png ${PROJECT_DIR}/${UI_TESTS_OUTPUT_DIR}
 fi

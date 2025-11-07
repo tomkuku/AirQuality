@@ -19,7 +19,7 @@ func testSnapshot(imageName: String) {
     
     assertSnapshot(
         of: snapshot,
-        as: .image(precision: 0.90),
+        as: .image(precision: 0.95),
         named: "test",
         record: false,
         testName: imageName,

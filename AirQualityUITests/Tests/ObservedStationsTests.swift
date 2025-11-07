@@ -93,8 +93,6 @@ final class ObservedStationsTests: XCTestCase, @unchecked Sendable {
         sleep(2) /// Wait for animation completes.
         
         testSnapshot(imageName: "selectedStation")
-        
-        app.terminate()
     }
     
     // MARK: Private methods

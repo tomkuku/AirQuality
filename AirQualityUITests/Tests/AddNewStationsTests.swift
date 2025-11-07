@@ -72,8 +72,6 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
         XCTAssertTrue(observedStationsList.waitForExistence(timeout: 4), "`observedStationsList` does not exist")
         
         testSnapshot(imageName: "observedStationsAfterAddingStations")
-        
-        app.terminate()
     }
     
     @MainActor

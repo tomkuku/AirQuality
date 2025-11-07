@@ -6,7 +6,8 @@ on:
 
 env:
   XCRESULTS_DIR_PATH: Results
-  FAILUE_UI_TESTS_SNAPSHOTS_DIR: UITestsSnapshots
+  UI_TESTS_OUTPUT_DIR: UITestsOutput
+  UI_TESTS_SIM_RECORDING_PID_PATH: /tmp/ui_tests_simulator_recording.pid
 
 jobs:
   build-and-test:
@@ -36,8 +37,8 @@ jobs:
     - uses: actions/upload-artifact@v4
       if: failure()
       with:
-        name: UITestsSnapshots
-        path: ${{ env.FAILUE_UI_TESTS_SNAPSHOTS_DIR }}
+        name: UITestsOutput
+        path: ${{ env.UI_TESTS_OUTPUT_DIR }}
     - name: Run Danger
       if: always()
       run: |
