@@ -12,15 +12,24 @@ set -E
 
 trap 'exit 1' ERR 
 
+source "${PROJECT_DIR}/.scripts/xcode_scheme_actions_env.sh"
+
 readonly deviceIdentifier=$TARGET_DEVICE_IDENTIFIER
 readonly dirRoot="$PROJECT_DIR"
+
+# MARK: WireMock
 
 # Launch WireMock and move its process to the backgrund, to not block the standard output.
 java \
 -jar ${dirRoot}/WireMock/wire-mock.jar \
 --root-dir ${dirRoot}/WireMock \
 --port 8080 \
-> /dev/null 2>&1 &
+> /dev/null 2>&1 \
+&
+
+echo $! > $UI_TESTS_WIRE_MOCK_PID_PATH
+
+# MARK: StatusBar
 
 readonly deviceState=`xcrun simctl list devices | grep "$deviceIdentifier" | awk '{print $NF}' | sed 's/[()]//g'`
 
@@ -49,6 +58,8 @@ while ! lsof -i :8080 > /dev/null; do
   sleep 1
 done
 
+# MARK: Simulator Recording
+
 mkdir -p ${dirRoot}/${UI_TESTS_OUTPUT_DIR}
 
 # Wait for WireMock first to reduce size of the video.
@@ -58,6 +69,7 @@ recordVideo \
 --display=internal \
 --mask=black \
 --force \
-"${dirRoot}/${UI_TESTS_OUTPUT_DIR}/ui_tests_simulator.mp4" &
+"${dirRoot}/${UI_TESTS_OUTPUT_DIR}/ui_tests_simulator.mp4" \
+&
 
 echo $! > $UI_TESTS_SIM_RECORDING_PID_PATH

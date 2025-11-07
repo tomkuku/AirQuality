@@ -7,7 +7,6 @@ on:
 env:
   XCRESULTS_DIR_PATH: Results
   UI_TESTS_OUTPUT_DIR: UITestsOutput
-  UI_TESTS_SIM_RECORDING_PID_PATH: /tmp/ui_tests_simulator_recording.pid
 
 jobs:
   build-and-test:
@@ -19,6 +18,7 @@ jobs:
         xcode-version: '26.0.1'
     - name: Logs
       run: |
+        sw_vers
         /usr/bin/xcodebuild -version
         xcrun swift -version
     - name: Install Dependencies
@@ -39,6 +39,7 @@ jobs:
       with:
         name: UITestsOutput
         path: ${{ env.UI_TESTS_OUTPUT_DIR }}
+        retention-days: 2
     - name: Run Danger
       if: always()
       run: |
