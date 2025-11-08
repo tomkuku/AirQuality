@@ -6,7 +6,6 @@ on:
 
 env:
   XCRESULTS_DIR_PATH: Results
-  UI_TESTS_OUTPUT_DIR: UITestsOutput
 
 jobs:
   build-and-test:
@@ -37,8 +36,8 @@ jobs:
     - uses: actions/upload-artifact@v4
       if: failure()
       with:
-        name: UITestsOutput
-        path: ${{ env.UI_TESTS_OUTPUT_DIR }}
+        name: XCResult
+        path: ${{ env.XCRESULTS_DIR_PATH }}
         retention-days: 2
     - name: Run Danger
       if: always()

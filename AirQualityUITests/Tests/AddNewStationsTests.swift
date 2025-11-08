@@ -10,8 +10,8 @@ import Foundation
 import CoreLocation
 import SnapshotTesting
 
-// swiftlint:disable balanced_xctest_lifecycle
-final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
+// swiftl int:disable balanced_xctest_lifecycle
+final class AddNewStationsTests: BaseUITestCase, @unchecked Sendable {
     
     @MainActor
     private var app: XCUIApplication!
@@ -188,4 +188,4 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
         targetCoordinate.tap()
     }
 }
-// swiftlint:enable balanced_xctest_lifecycle
+// sw iftlint:enable balanced_xctest_lifecycle

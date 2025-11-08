@@ -57,19 +57,3 @@ override \
 while ! lsof -i :8080 > /dev/null; do
   sleep 1
 done
-
-# MARK: Simulator Recording
-
-mkdir -p ${dirRoot}/${UI_TESTS_OUTPUT_DIR}
-
-# Wait for WireMock first to reduce size of the video.
-exec xcrun simctl io $deviceIdentifier \
-recordVideo \
---codec=h264 \
---display=internal \
---mask=black \
---force \
-"${dirRoot}/${UI_TESTS_OUTPUT_DIR}/ui_tests_simulator.mp4" \
-&
-
-echo $! > $UI_TESTS_SIM_RECORDING_PID_PATH

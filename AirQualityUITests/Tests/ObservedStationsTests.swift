@@ -13,7 +13,7 @@ import SwiftData
 
 @testable import AirQuality
 
-final class ObservedStationsTests: XCTestCase, @unchecked Sendable {
+final class ObservedStationsTests: BaseUITestCase, @unchecked Sendable {
     
     @MainActor
     private var app: XCUIApplication!
@@ -64,10 +64,12 @@ final class ObservedStationsTests: XCTestCase, @unchecked Sendable {
         }
     }
     
-    override func tearDownWithError() throws {
-        try super.tearDownWithError()
+    override func tearDown() async throws {
+        try await super.tearDown()
         
-        try FileManager.default.removeItem(at: sqliteURL)
+        try await MainActor.run {
+            try FileManager.default.removeItem(at: sqliteURL)
+        }
     }
     
     @MainActor
