@@ -62,8 +62,6 @@ final class ObservedStationsTests: BaseUITestCase, @unchecked Sendable {
             app.setLaunchEnvironment([.uiTestsSqlitePath: sqliteURL.absoluteString])
             app.launch()
         }
-        
-        try await createArchivalMeasurementsList()
     }
     
     override func tearDown() async throws {
