@@ -8,5 +8,4 @@
 #
 
 export UI_TESTS_WIRE_MOCK_PID_PATH="/tmp/ui_tests_wire_mock.pid"
-export UI_TESTS_SIM_RECORDING_PID_PATH="/tmp/ui_tests_simulator_recording.pid"
 export UI_TESTS_OUTPUT_DIR="UITestsOutput"

@@ -16,5 +16,5 @@ readonly sourceDir=`echo "${applicationDataPath}/tmp"`
 
 if find "$sourceDir" -type d -mindepth 1 | grep -q .; then
     mkdir -p "${PROJECT_DIR}/${UI_TESTS_OUTPUT_DIR}"
-    cp -r ${sourceDir}/*Tests/*.png "${PROJECT_DIR}/${UI_TESTS_OUTPUT_DIR}"
+    cp -r ${sourceDir}/*.png "${PROJECT_DIR}/${UI_TESTS_OUTPUT_DIR}"
 fi

@@ -62,6 +62,8 @@ final class ObservedStationsTests: BaseUITestCase, @unchecked Sendable {
             app.setLaunchEnvironment([.uiTestsSqlitePath: sqliteURL.absoluteString])
             app.launch()
         }
+        
+        try await createArchivalMeasurementsList()
     }
     
     override func tearDown() async throws {
@@ -120,5 +122,46 @@ final class ObservedStationsTests: BaseUITestCase, @unchecked Sendable {
         try context.save()
         
         return sqliteURL
+    }
+    
+    private func createArchivalMeasurementsList() async throws {
+        let calendar = Calendar.current
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        
+        let startDate = dateFormatter.date(from: "2025-11.05 13:34:54")!
+        
+        var measurements: [MeasurementNetworkModel] = []
+        
+        for i in 0..<30 {
+            let date = calendar.date(byAdding: .hour, value: -i, to: startDate)!
+            let dateString = dateFormatter.string(from: date)
+            
+            let measurementValue = Double.random(in: 0...300)
+            
+            let measurement = MeasurementNetworkModel(date: dateString, value: measurementValue)
+            
+            measurements.append(measurement)
+        }
+        
+        try await WireMockClient().addResponse(
+            responseContent: measurements,
+            totalPages: 12,
+            for: Endpoint.ArchivalMeasurements.get(
+                sensorId: 1234,
+                page: 0,
+                size: 30,
+                options: .init(filters: .init(dateFrom: Date(), dateTo: Date()), sorting: .init(date: .ascending))
+            )
+        )
+    }
+}
+
+extension MeasurementNetworkModel: Encodable {
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(date, forKey: .date)
+        try container.encode(value, forKey: .value)
     }
 }

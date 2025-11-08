@@ -8,9 +8,7 @@
 import XCTest
 import Foundation
 import CoreLocation
-import SnapshotTesting
 
-// swiftl int:disable balanced_xctest_lifecycle
 final class AddNewStationsTests: BaseUITestCase, @unchecked Sendable {
     
     @MainActor
@@ -178,14 +176,4 @@ final class AddNewStationsTests: BaseUITestCase, @unchecked Sendable {
         
         tapAtSpecificPoint(CGPoint(x: 100, y: 100), onApp: app)
     }
-    
-    @MainActor
-    private func tapAtSpecificPoint(_ point: CGPoint, onApp app: XCUIApplication) {
-        let point = CGVector(dx: point.x, dy: point.y)
-        let coordinate = app.coordinate(withNormalizedOffset: .zero)
-        let targetCoordinate = coordinate.withOffset(point)
-        
-        targetCoordinate.tap()
-    }
 }
-// sw iftlint:enable balanced_xctest_lifecycle

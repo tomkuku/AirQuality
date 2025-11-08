@@ -12,29 +12,6 @@ import SnapshotTesting
 
 @testable import AirQuality
 
-@MainActor
-func testSnapshot(imageName: String) {
-    let screenshot = XCUIScreen.main.screenshot()
-    let snapshot = UIImage(data: screenshot.pngRepresentation)!
-    
-    assertSnapshot(
-        of: snapshot,
-        as: .image(precision: 0.95),
-        named: "test",
-        record: false,
-        testName: imageName,
-    )
-}
-
-@MainActor
-func tapCell(in collectionView: XCUIElement, index cellIndex: Int) {
-    let firstCell = collectionView.cells.element(boundBy: cellIndex)
-    
-    XCTAssertTrue(firstCell.exists)
-    
-    firstCell.tap()
-}
-
 extension StationNetworkModel: Encodable {
     func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
