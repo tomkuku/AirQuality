@@ -21,7 +21,7 @@ if [ -f "$wireMockPidFilePath" ]; then
     wireMockPid=$(cat "$wireMockPidFilePath")
     echo "Killing WireMock pid: $wireMockPid"
     
-    while kill -0 "$wireMockPid" 2>/dev/null; do
+    while kill -KILL "$wireMockPid" 2>/dev/null; do
         echo "Waiting for killing WireMock"
         sleep 1
     done
