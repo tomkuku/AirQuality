@@ -9,7 +9,18 @@ import Foundation
 import XCTest
 
 extension XCUIElement {
+    private var waitForExistenceTimeout: TimeInterval {
+        guard
+            let timeoutString = ProcessInfo.processInfo.environment["WAIT_FOR_EXISTENCE_TIMEOUT"],
+            let timeout = TimeInterval(timeoutString)
+        else {
+            return 4
+        }
+        
+        return timeout
+    }
+    
     func waitForExistence() -> Bool {
-        self.waitForExistence(timeout: 15)
+        self.waitForExistence(timeout: waitForExistenceTimeout)
     }
 }
