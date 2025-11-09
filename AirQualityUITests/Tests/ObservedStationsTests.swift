@@ -13,7 +13,7 @@ import SwiftData
 
 @testable import AirQuality
 
-final class ObservedStationsTests: XCTestCase, @unchecked Sendable {
+final class ObservedStationsTests: BaseUITestCase, @unchecked Sendable {
     
     @MainActor
     private var app: XCUIApplication!
@@ -32,7 +32,6 @@ final class ObservedStationsTests: XCTestCase, @unchecked Sendable {
             latitude: 49.971047,
             longitude: 19.926189,
             cityName: "Skawina",
-            commune: "Skawina",
             province: "MAŁOPOLSKIE",
             street: "os. Ogrody"
         )
@@ -42,7 +41,6 @@ final class ObservedStationsTests: XCTestCase, @unchecked Sendable {
             latitude: 50.057678,
             longitude: 19.926189,
             cityName: "Kraków",
-            commune: "Kraków",
             province: "MAŁOPOLSKIE",
             street: "al. Krasińskiego"
         )
@@ -52,7 +50,6 @@ final class ObservedStationsTests: XCTestCase, @unchecked Sendable {
             latitude: 49.293564,
             longitude: 19.960083,
             cityName: "Zakopane",
-            commune: "Zakopane",
             province: "MAŁOPOLSKIE",
             street: "ul. Sienkiewicza"
         )
@@ -67,17 +64,19 @@ final class ObservedStationsTests: XCTestCase, @unchecked Sendable {
         }
     }
     
-    override func tearDownWithError() throws {
-        try super.tearDownWithError()
+    override func tearDown() async throws {
+        try await super.tearDown()
         
-        try FileManager.default.removeItem(at: sqliteURL)
+        try await MainActor.run {
+            try FileManager.default.removeItem(at: sqliteURL)
+        }
     }
     
     @MainActor
     func testLaunch() throws {
         let observedStationsList = app.collectionViews[\.observedStationsListView.stationsList]
         
-        XCTAssertTrue(observedStationsList.waitForExistence(timeout: 4))
+        XCTAssertTrue(observedStationsList.waitForExistence())
         
         testSnapshot(imageName: "observedStations")
         
@@ -89,11 +88,22 @@ final class ObservedStationsTests: XCTestCase, @unchecked Sendable {
         
         cell.tap()
         
-        let sensorsList = app.scrollViews[\.selectedStationView.sensorsList]
+        let sensorsScrollView = app.scrollViews[\.selectedStationView.sensorsList]
         
-        XCTAssertTrue(sensorsList.waitForExistence(timeout: 4))
+        XCTAssertTrue(sensorsScrollView.waitForExistence())
         
-        app.terminate()
+        sleep(2) /// Wait for animation completes.
+        
+        testSnapshot(imageName: "selectedStation")
+        
+        let refreshControl = app.otherElements[\.refreshableScrollView.refreshControl]
+        
+        let start = sensorsScrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.2))
+        let finish = sensorsScrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.6))
+            
+        start.press(forDuration: 0.8, thenDragTo: finish)
+        
+        XCTAssertTrue(refreshControl.waitForExistence(timeout: 2), "`refreshControl` does not exist")
     }
     
     // MARK: Private methods
@@ -119,5 +129,49 @@ final class ObservedStationsTests: XCTestCase, @unchecked Sendable {
         try context.save()
         
         return sqliteURL
+    }
+    
+    private func createArchivalMeasurementsList() async throws {
+        let calendar = Calendar.current
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        
+        let startDate = dateFormatter.date(from: "2025-11.05 13:34:54")!
+        
+        var measurements: [MeasurementNetworkModel] = []
+        
+        for i in 0..<80 {
+            let date = calendar.date(byAdding: .hour, value: -i, to: startDate)!
+            let dateString = dateFormatter.string(from: date)
+            
+            let measurementValue = Double.random(in: 0...300)
+            
+            let measurement = MeasurementNetworkModel(date: dateString, value: measurementValue)
+            
+            measurements.append(measurement)
+        }
+        
+        let dateFrom = dateFormatter.date(from: "2025-10-26 00:00:00")!
+        let dateTo = dateFormatter.date(from: "2025-11-09 23:59:00")!
+        
+        try await WireMockClient().addResponse(
+            responseContent: measurements,
+            totalPages: 12,
+            for: Endpoint.ArchivalMeasurements.get(
+                sensorId: 2752,
+                page: 0,
+                size: 80,
+                options: .init(filters: .init(dateFrom: dateFrom, dateTo: dateTo), sorting: .init(date: .descending))
+            )
+        )
+    }
+}
+
+extension MeasurementNetworkModel: Encodable {
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(date, forKey: .date)
+        try container.encode(value, forKey: .value)
     }
 }

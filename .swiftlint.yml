@@ -1,15 +1,16 @@
 excluded:
   - AirQualityTests/*
   - AirQualityUITests/*
-  - AirQuality/Localizable/*
   - AirQuality/Assets/*
   - GenerateSwiftFromJson
+  - AirQuality/Presentation/Localizable/*
 
 opt_in_rules:
   - all
 
 disabled_rules:
   - anonymous_argument_in_multiline_closure
+  - async_without_await
   - class_delegate_protocol
   - conditional_returns_on_newline
   - contrasted_opening_brace
@@ -27,7 +28,6 @@ disabled_rules:
   - function_default_parameter_at_end
   - ibinspectable_in_extension
   - indentation_width
-  - inert_defer # It's deprecated and will be removed in a future release.
   - legacy_multiple
   - legacy_objc_type
   - let_var_whitespace
@@ -62,7 +62,6 @@ disabled_rules:
   - trailing_closure
   - type_contents_order
   - unavailable_function
-  - unused_capture_list # It's deprecated and will be removed in a future release.
   - unused_parameter
   - vertical_whitespace_between_cases
   - vertical_whitespace_opening_braces
@@ -135,5 +134,18 @@ superfluous_disable_command:
 
 nesting:
   type_level: 5
+
+enum_case_associated_values_count:
+  warning: 7
+
+custom_rules:
+  left_prints:
+    name: "No print() statements"
+    regex: "\\bprint\\s*\\("
+    message: "`print(\"...\")` can be used only to debug. Delete it after you finish."
+    severity: warning
+    excluded_match_kinds:
+      - comment
+      - string
 
 reporter: "xcode"

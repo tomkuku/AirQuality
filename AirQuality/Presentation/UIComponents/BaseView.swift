@@ -19,6 +19,7 @@ class BaseViewModel: ObservableObject {
     // swiftlint:enable private_subject
     
     var isLoading = true
+    var tasks: [Task<Void, Never>] = []
     
     @Injected(\.networkConnectionMonitorUseCase) private var networkConnectionMonitorUseCase
     

@@ -14,7 +14,6 @@ extension Station {
         latitude: Double = 11,
         longitude: Double = 12,
         cityName: String = "Kraków",
-        commune: String = "Kraków",
         province: String = "Małopolskie",
         street: String = "al Krasińskiego 1"
     ) -> Self {
@@ -23,7 +22,6 @@ extension Station {
             latitude: latitude,
             longitude: longitude,
             cityName: cityName,
-            commune: commune,
             province: province,
             street: street
         )

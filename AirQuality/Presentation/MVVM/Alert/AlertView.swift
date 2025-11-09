@@ -41,9 +41,6 @@ struct AlertView: View {
                 EmptyView()
             }
         }
-//        .onChange(of: viewModel.isAnyAlertPresented) { oldValue, newValue in
-//            if oldValue
-//        }
     }
     
     init(viewModel: @autoclosure @escaping () -> AlertViewModel) {
@@ -66,9 +63,9 @@ import Combine
             .init(title: "Button 1", role: .cancel),
             .init(title: "Button 2", role: .destructive),
             .init(title: "Button 3")
-        ], dismissAction: {
-            print("Dismiss")
-        })
+        ],
+        dismissAction: {}
+    )
     
     publisher.send(alert)
     

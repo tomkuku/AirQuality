@@ -8,10 +8,8 @@
 import XCTest
 import Foundation
 import CoreLocation
-import SnapshotTesting
 
-// swiftlint:disable balanced_xctest_lifecycle
-final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
+final class AddNewStationsTests: BaseUITestCase, @unchecked Sendable {
     
     @MainActor
     private var app: XCUIApplication!
@@ -29,30 +27,87 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
     
     @MainActor
     func testLaunch() {
-        testSnapshot(imageName: "noObserbedStations")
+        testSnapshot(imageName: "noObservedStations")
         
         let noObservedStationsText = app.staticTexts[\.observedStationsListView.noObservedStations]
         
-        XCTAssertTrue(noObservedStationsText.exists)
+        XCTAssertTrue(noObservedStationsText.exists, "`noObservedStationsText` does not exist")
         
         let addObservedStationsButton = app.buttons[\.observedStationsListView.addObservedStationsButton]
         
-        XCTAssertTrue(addObservedStationsButton.exists)
+        XCTAssertTrue(addObservedStationsButton.exists, "`addObservedStationsButton` does not exist")
         
         addObservedStationsButton.tap()
         
         // Add stations on list
         
-        let provincesScrollView = app.scrollViews[\.allStationsListProvindesView.provindesList]
+        addStationOnList()
         
-        XCTAssertTrue(provincesScrollView.waitForExistence(timeout: 4))
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        
+        addStationOnListWithSearching()
+        
+        // Add stations on map
+        
+        let tabBarMapButton = app.buttons[\.addObservedStationContainerView.tabViewMap]
+        
+        XCTAssertTrue(tabBarMapButton.exists, "`tabBarMapButton` does not exist")
+        
+        tabBarMapButton.tap()
+        
+        addStationOnMap()
+        
+        // Back to observed stations list
+        
+        let doneButton = app.otherElements[\.doneToolbarButton]
+        
+        XCTAssertTrue(doneButton.isHittable, "`doneButton` is not hittable")
+        
+        doneButton.tap()
+        
+        let observedStationsList = app.collectionViews[\.observedStationsListView.stationsList]
+        
+        XCTAssertTrue(observedStationsList.waitForExistence(), "`observedStationsList` does not exist")
+        
+        testSnapshot(imageName: "observedStationsAfterAddingStations")
+    }
+    
+    @MainActor
+    private func addStationOnList() {
+        let provincesScrollView = app.scrollViews[\.provincesListView.provindesList]
+        
+        XCTAssertTrue(provincesScrollView.waitForExistence(), "`provincesScrollView` does not exist")
+        
+        testSnapshot(imageName: "provincesList")
+        
+        let secondProvinceButton = provincesScrollView.buttons.matching(keyPath: \.provincesListView.provindesListRow)
+        
+        /// Whole row is tappable!
+        secondProvinceButton["Małopolskie"].tap()
+        
+        let stationsCollectionView = app.collectionViews[\.allStationsListView.stationsList]
+        
+        XCTAssertTrue(stationsCollectionView.waitForExistence(), "`stationsCollectionView` does not exist")
+        
+        testSnapshot(imageName: "provinceStationsList")
+        
+        tapCell(in: stationsCollectionView, index: 4)
+        
+        testSnapshot(imageName: "provinceStationsWithSelection")
+    }
+    
+    @MainActor
+    private func addStationOnListWithSearching() {
+        let provincesScrollView = app.scrollViews[\.provincesListView.provindesList]
+        
+        XCTAssertTrue(provincesScrollView.waitForExistence())
         
         testSnapshot(imageName: "provincesList")
                 
         let searchBar = app.searchFields[Localizable.AddObservedStationListView.seach]
         
-        XCTAssertTrue(searchBar.waitForExistence(timeout: 4))
-        XCTAssertTrue(searchBar.isHittable)
+        XCTAssertTrue(searchBar.waitForExistence(), "`searchBar` does not exist")
+        XCTAssertTrue(searchBar.isHittable, "`searchBar` is not hittable")
         
         searchBar.tap()
         searchBar.typeText("Kraków")
@@ -60,36 +115,31 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
         testSnapshot(imageName: "provincesListAfterSearching")
         
         /// Whole row is tappable!
-        let images = provincesScrollView.images.matching(keyPath: \.allStationsListProvindesView.provindesListRow)
-        images.element(boundBy: 0).tap()
+        let searchedProvinceButton = provincesScrollView.buttons.matching(keyPath: \.provincesListView.provindesListRow)
+        searchedProvinceButton.element(boundBy: 0).tap()
         
-        let stationsCollectionView = app.collectionViews[\.allStationsListProvinceStationsView.stationsList]
+        let stationsCollectionView = app.collectionViews[\.allStationsListView.stationsList]
         
-        XCTAssertTrue(stationsCollectionView.waitForExistence(timeout: 4))
+        XCTAssertTrue(stationsCollectionView.waitForExistence(), "`stationsCollectionView` does not exist")
         
-        testSnapshot(imageName: "provinceStationsList")
+        testSnapshot(imageName: "provinceStationsListAfterSearching")
         
         tapCell(in: stationsCollectionView, index: 0)
         
-        testSnapshot(imageName: "provinceStationsWithSelection")
-        
-        // Add stations on map
-        
-        let mapButton = app.buttons[\.addObservedStationContainerView.tabViewMap]
-        
-        XCTAssertTrue(mapButton.exists)
-        
-        mapButton.tap()
-        
+        testSnapshot(imageName: "provinceStationsAfterSearchingWithSelection")
+    }
+    
+    @MainActor
+    private func addStationOnMap() {
         let mapBottomMenuGrabber = app.buttons[\.bottomSheet.grabber]
         
-        XCTAssertTrue(mapBottomMenuGrabber.waitForExistence(timeout: 4))
+        XCTAssertTrue(mapBottomMenuGrabber.waitForExistence(), "`mapBottomMenuGrabber` does not exist")
         
         mapBottomMenuGrabber.tap()
         
         let findTheNearestStationButton = app.buttons[\.addObservedStationMapView.findTheNearestStationButton]
         
-        XCTAssertTrue(findTheNearestStationButton.waitForExistence(timeout: 4))
+        XCTAssertTrue(findTheNearestStationButton.waitForExistence(), "`findTheNearestStationButton` does not exist")
         
         let deviceLocation = CLLocation(latitude: 51.202106161872145, longitude: 16.14441180827517)
         
@@ -97,50 +147,33 @@ final class AddNewStationsTests: XCTestCase, @unchecked Sendable {
         
         findTheNearestStationButton.tap()
         
-        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        let allowOnceButton = springboard.alerts.element(boundBy: 0).buttons.element(boundBy: 0)
-        
-        XCTAssertTrue(allowOnceButton.waitForExistence(timeout: 4))
-        
-        allowOnceButton.tap()
-        
-        _ = consume springboard
+        do {
+            let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+            let systemPermissionAlert = springboard.alerts.firstMatch
+            
+            XCTAssertTrue(systemPermissionAlert.waitForExistence(), "systemPermissionAlert does not exist")
+            
+            let allowOnceButton = systemPermissionAlert.buttons.allElementsBoundByIndex.first
+            
+            XCTAssertTrue(allowOnceButton?.waitForExistence() == true, "allowOnceButton does not exist")
+            XCTAssertTrue(allowOnceButton?.isHittable == true, "allowOnceButton is not hittable")
+            
+            allowOnceButton?.tap()
+        }
         
         let annotation = app.images[\.stationMapAnnotationView.annotation]
         
-        XCTAssertTrue(annotation.waitForExistence(timeout: 4))
+        XCTAssertTrue(annotation.waitForExistence(), "`annotation` does not exist")
         
         annotation.tap()
         
         let addObservedStationButton = app.buttons[\.stationMapAnnotationView.addObservedStationButton]
         let paramsView = app.staticTexts[\.paramsView.params]
         
-        XCTAssertTrue(paramsView.waitForExistence(timeout: 4))
+        XCTAssertTrue(paramsView.waitForExistence(), "`paramsView` does not exist")
         
         addObservedStationButton.tap()
         
         tapAtSpecificPoint(CGPoint(x: 100, y: 100), onApp: app)
-        
-        let doneButton = app.otherElements[\.doneToolbarButton]
-        
-        XCTAssertTrue(doneButton.isHittable)
-        
-        doneButton.tap()
-        
-        let observedStationsList = app.collectionViews[\.observedStationsListView.stationsList]
-        
-        XCTAssertTrue(observedStationsList.waitForExistence(timeout: 4))
-        
-        testSnapshot(imageName: "observedStationsAfterAddingStations")
-    }
-    
-    @MainActor
-    private func tapAtSpecificPoint(_ point: CGPoint, onApp app: XCUIApplication) {
-        let point = CGVector(dx: point.x, dy: point.y)
-        let coordinate = app.coordinate(withNormalizedOffset: .zero)
-        let targetCoordinate = coordinate.withOffset(point)
-        
-        targetCoordinate.tap()
     }
 }
-// swiftlint:enable balanced_xctest_lifecycle

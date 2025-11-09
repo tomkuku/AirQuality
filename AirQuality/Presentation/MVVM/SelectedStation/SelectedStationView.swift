@@ -20,7 +20,7 @@ struct SelectedStationView: View {
             if !viewModel.isLoading {
                 RefreshableScrollView(
                     onRefresh: {
-                        /// Delay to avoid instacne switch between sensors list and loading indicator.
+                        /// Delay to avoid instance switch between sensors list and loading indicator.
                         try? await Task.sleep(for: .milliseconds(600))
                         
                         viewModel.refresh()

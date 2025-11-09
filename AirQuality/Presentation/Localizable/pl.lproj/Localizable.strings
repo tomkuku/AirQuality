@@ -1,0 +1,175 @@
+/* 
+  Localizable.strings
+  AirQuality
+
+  Created by Tomasz Kukułka on 15/05/2024.
+  
+*/
+
+// MARK: BaseView
+
+"BaseView.loading" = "Pobieranie danych";
+
+// MARK: Alerts
+
+"Alert.Failure.title" = "Niepowodzenie";
+"Alert.SomethingWentWrong.title" = "Ups, coś poszło nie tak";
+"Alert.SomethingWentWrong.message" = "Spróbuj ponownie później";
+
+"Alert.LocationServicesAuthorizationRestricted.title" = "Nie masz uprawnień do korzystania z usług lokalizacji";
+
+"Alert.LocationServicesAuthorizationDenied.title" = "Aplikacja nie ma dostępu do usług lokalizacji";
+"Alert.LocationServicesAuthorizationDenied.message" = "Przejdź do ustawień aplikacji aby to zmienić.";
+
+"Alert.LocationServicesDisabled.title" = "Usługi lokalizacji są wyłączone";
+"Alert.LocationServicesDisabled.message" = "Przejdź do ustawień urządzenia aby je włączyć.";
+
+"Alert.FindingTheNearestStationsFailed.title" = "Szukanie najbliższej stacji nie powiodło się";
+"Alert.FindingTheNearestStationsFailed.message" = "Spróbuj ponownie później.";
+
+"Alert.NoInternetConnection.title" = "Brak połączenia z Internetem";
+"Alert.NoInternetConnection.message" = "Przejdz do ustawień aby połączyć z Internetem.";
+
+"Alert.Button.ok" = "Ok";
+"Alert.Button.cancel" = "Anuluj";
+"Alert.Button.goToSettings" = "Przejdź do ustawień";
+
+// MARK: Toasts
+
+"ToastModel.observedStationWasAdded" = "Stacja została dodany do listy obserwowanych";
+"ToastModel.observedStationWasDeleted" = "Stacja została usunięta z listy obserwowanych";
+"ToastModel.noInternetConnection" = "Brak połączenia z Internetem";
+"ToastModel.changesHaveBeenSaved" = "Zmiany zostały zapisane";
+
+// MARK: AddObservedStationContainerView
+
+"AddObservedStationContainerView.MapItem.itemTitle" = "Mapa";
+"AddObservedStationContainerView.ListItem.itemTitle" = "Lista";
+"AddObservedStationContainerView.closeButton" = "Zamknij";
+
+// MARK: AddObservedStationMapView
+
+"AddObservedStationMapView.navigationTitle" = "Mapa stacji";
+"AddObservedStationMapView.findTheNearestStationButton" = "Znajdź najbliższą stację";
+
+"AddObservedStationMapView.BottomMenu.showUserLocation" = "Lokalizacja użytkownika";
+"AddObservedStationMapView.BottomMenu.MapStyle.buttonTitle" = "Styl mapy";
+"AddObservedStationMapView.BottomMenu.MapStyle.standard" = "Standardowa";
+"AddObservedStationMapView.BottomMenu.MapStyle.satellite" = "Satelitarna";
+
+"AddObservedStationMapView.AnnotationView.addObservedStation" = "Przestań obserwować";
+"AddObservedStationMapView.AnnotationView.deleteObservedStation" = "Dodaj do obserwowanych";
+"AddObservedStationMapView.AnnotationView.station" = "Stacja:";
+"AddObservedStationMapView.AnnotationView.measuredParametres" = "Mierzone parametry:";
+"AddObservedStationMapView.AnnotationView.noParams" = "No parameters";
+
+// MARK: AddObservedStationListView
+
+"AddObservedStationListView.navigationTitle" = "Lista stacji";
+"AddObservedStationListView.ShrinkButton.shrink" = "Zwiń";
+"AddObservedStationListView.ShrinkButton.expand" = "Rozwiń";
+"AddObservedStationListView.noStations" = "Brak stacji";
+"AddObservedStationListView.seach" = "Szukaj stacji";
+
+// MARK: DismissButton
+
+"NavigationToolbar.DoneButton.title" = "Gotowe";
+
+// MARK: ObservedStationsListView
+
+"ObservedStationsListView.title" = "Lista obserwowanych stacji";
+"ObservedStationsListView.addStation" = "Dodaj stacje";
+"ObservedStationsListView.noObservedStations" = "Brak obserwowanych stacji";
+"ObservedStationsListView.delete" = "Usuń stacje";
+
+// MARK: AllStationsListProvinces
+
+"AllStationsListProvinces.Errors.addingStationToObservedFailed" = "Dodanie stacji do obserwowanych nie powiodło się!";
+"AllStationsListProvinces.Errors.deletingObservedStationFailed" = "Usunięcie obserowowanej stacji nie powiodło się!";
+
+// MARK: SelectedStationView
+
+"SelectedStationView.dataProvider" = "Dostawcą danych jest Główny Inspektorat Ochrony Środowiska";
+"SelectedStationView.isLoading" = "Pobieranie danych";
+
+// MARK: SensorDetailsContainerSubview
+
+"SensorDetailsContainerSubview.paramDescriptionSegementTitle" = "Opis parametru";
+"SensorDetailsContainerSubview.measurementsListSegementTitle" = "Lista pomiarów";
+"SensorDetailsContainerSubview.measurementsChartSegementTitle" = "Wykres pomiarów";
+"SensorDetailsContainerSubview.close" = "Zamknij";
+
+// MARK: ParamDescriptionView
+
+"ParamDescriptionView.element.title.general" = "Opis";
+"ParamDescriptionView.element.title.environmentalImpact" = "Wpływ na zdrowie człowieka";
+"ParamDescriptionView.element.title.humanHealthImpact" = "Wpływ na środowisko";
+
+// MARK: C6H6
+
+"Param.c6h6.name" = "Benzen";
+"Param.c6h6.description.general" = "Benzen (C6H6) to organiczny związek chemiczny należący do węglowodorów aromatycznych. Najczęściej powstaje w wyniku procesów spalania paliw kopalnych, takich jak benzyna, olej napędowy czy węgiel. Jest emitowany do atmosfery przez transport drogowy, przemysł chemiczny, rafinerie, a także przez spalanie odpadów i drewna. Występuje również naturalnie w niewielkich ilościach, np. w erupcjach wulkanicznych czy w dymie z pożarów lasów. Ze względu na lotny charakter, benzen łatwo rozprzestrzenia się w powietrzu, co zwiększa ryzyko jego wdychania przez ludzi. Choć w wielu krajach istnieją ścisłe regulacje ograniczające emisję benzenu, wciąż pozostaje on istotnym zanieczyszczeniem powietrza. Często występuje w pobliżu dużych miast, zakładów przemysłowych i dróg o dużym natężeniu ruchu. Związek ten jest szczególnie groźny, ponieważ kumuluje się w atmosferze i przenosi na znaczne odległości. Jego obecność w powietrzu świadczy o niskiej jakości środowiska miejskiego i przemysłowego. Benzen uznawany jest za jedno z najgroźniejszych zanieczyszczeń lotnych.";
+"Param.c6h6.description.environmentalImpact" = "Benzen wpływa negatywnie na jakość powietrza i przyczynia się do ogólnego zanieczyszczenia środowiska miejskiego. Może osiadać na glebie i w wodach powierzchniowych, prowadząc do ich skażenia. W ekosystemach wodnych jest toksyczny dla wielu organizmów, zakłócając procesy życiowe ryb i planktonu. Jego obecność w atmosferze sprzyja tworzeniu się ozonu troposferycznego i wtórnych zanieczyszczeń powietrza.";
+"Param.c6h6.description.humanHealthImpact" = "Benzen jest uznawany za silnie rakotwórczy związek chemiczny. Długotrwałe narażenie na jego obecność może prowadzić do poważnych chorób krwi, w tym białaczki. Nawet krótkotrwałe wdychanie większych stężeń może powodować zawroty głowy, bóle głowy, senność i podrażnienia błon śluzowych. Szczególnie wrażliwe są dzieci oraz osoby pracujące w pobliżu źródeł emisji benzenu.";
+
+// MARK: PM10
+
+"Param.pm10.name" = "Pył zawieszony PM10";
+"Param.pm10.description.general" = "Pyły zawieszone PM10 to mieszanina cząstek stałych i kropelek cieczy unoszących się w powietrzu o średnicy aerodynamicznej mniejszej niż 10 mikrometrów. Pochodzą głównie ze spalania paliw kopalnych w transporcie, energetyce i ogrzewaniu indywidualnym, ale także z procesów przemysłowych i pylenia wtórnego z powierzchni dróg. Mogą być również wynikiem naturalnych zjawisk, takich jak erozja gleb, burze piaskowe czy pożary lasów. Ze względu na swoją wielkość cząstki PM10 mogą utrzymywać się w atmosferze przez wiele godzin lub dni i przenosić się na duże odległości. Często są nośnikiem innych substancji toksycznych, takich jak metale ciężkie czy wielopierścieniowe węglowodory aromatyczne. Stężenie pyłów PM10 jest szczególnie wysokie w miastach o intensywnym ruchu samochodowym oraz w sezonie grzewczym. Problem zanieczyszczeń pyłowych nasila się w warunkach bezwietrznych i przy niskiej temperaturze, gdy powietrze nie ulega wymianie. PM10 jest jednym z kluczowych wskaźników jakości powietrza i elementem smogu. Ich obecność stanowi poważne zagrożenie zarówno dla środowiska, jak i dla zdrowia ludzi.";
+"Param.pm10.description.environmentalImpact" = "Pyły PM10 ograniczają dopływ promieniowania słonecznego do powierzchni Ziemi, co wpływa na mikroklimat i procesy fotosyntezy w roślinach. Osadzają się na liściach, zmniejszając ich zdolność do wymiany gazowej i pobierania energii słonecznej. Zanieczyszczają glebę i wodę, przenosząc w sobie toksyczne substancje, które mogą akumulować się w ekosystemach. Wysokie stężenia pyłów przyczyniają się również do powstawania smogu i pogorszenia widoczności.";
+"Param.pm10.description.humanHealthImpact" = "Cząstki PM10 mogą wnikać do górnych dróg oddechowych i powodować ich podrażnienia. Długotrwała ekspozycja zwiększa ryzyko przewlekłych chorób układu oddechowego, takich jak astma czy przewlekła obturacyjna choroba płuc. Mogą nasilać objawy alergii i prowadzić do pogorszenia wydolności oddechowej, szczególnie u dzieci i osób starszych. Zanieczyszczenia te obciążają również układ krążenia, zwiększając ryzyko chorób sercowo-naczyniowych.";
+
+// MARK: PM2.5
+
+"Param.pm25.name" = "Pył zawieszony PM2.5";
+"Param.pm25.description.general" = "Pyły zawieszone PM2.5 to bardzo drobne cząstki stałe i ciekłe o średnicy aerodynamicznej mniejszej niż 2,5 mikrometra. Ze względu na swoje niewielkie rozmiary mogą pozostawać w atmosferze przez długi czas i przenosić się na znaczne odległości. Powstają głównie w wyniku spalania paliw kopalnych w transporcie, energetyce, a także w domowych piecach i kotłach. Istotnym źródłem są również procesy przemysłowe, spalanie biomasy i reakcje chemiczne zachodzące w atmosferze. Pyły PM2.5 często zawierają metale ciężkie, sadzę oraz toksyczne związki organiczne. Ich stężenie wzrasta szczególnie w okresie grzewczym i w miastach o dużym natężeniu ruchu. Są uważane za najgroźniejsze dla zdrowia frakcje pyłów, ponieważ z łatwością przenikają głęboko do płuc i mogą dostawać się do krwiobiegu. Wysokie stężenia PM2.5 są jednym z głównych czynników powstawania smogu typu londyńskiego. Problem ich obecności w powietrzu dotyczy głównie aglomeracji miejskich i regionów silnie uprzemysłowionych.";
+"Param.pm25.description.environmentalImpact" = "Pyły PM2.5 ograniczają przejrzystość powietrza i zmniejszają ilość światła docierającego do powierzchni ziemi. Osadzając się na roślinach, zakłócają proces fotosyntezy i utrudniają wymianę gazową. Mogą przenosić toksyczne związki, które akumulują się w glebie i wodzie, prowadząc do długofalowego skażenia środowiska. Przyczyniają się także do zmian klimatycznych, wpływając na bilans radiacyjny atmosfery.";
+"Param.pm25.description.humanHealthImpact" = "Cząstki PM2.5 są szczególnie niebezpieczne, ponieważ mogą docierać do pęcherzyków płucnych i przenikać do krwiobiegu. Zwiększają ryzyko chorób układu oddechowego, takich jak astma, przewlekła obturacyjna choroba płuc czy rak płuc. Oddziałują również na układ sercowo-naczyniowy, prowadząc do nadciśnienia, zawałów i udarów. Najbardziej narażone są dzieci, osoby starsze oraz osoby z chorobami przewlekłymi.";
+
+// MARK: O3
+
+"Param.o3.name" = "Ozon";
+"Param.o3.description.general" = "Ozon (O3) to gaz powstający w atmosferze w wyniku reakcji fotochemicznych pomiędzy tlenkami azotu (NOx) i lotnymi związkami organicznymi (LZO) pod wpływem promieniowania słonecznego. W warstwie stratosferycznej pełni korzystną rolę, chroniąc Ziemię przed szkodliwym promieniowaniem UV. Jednak w troposferze, blisko powierzchni ziemi, staje się groźnym zanieczyszczeniem. Jego wysokie stężenia obserwuje się szczególnie w okresach letnich, w dużych aglomeracjach i regionach o silnym nasłonecznieniu. Powstawanie ozonu przyspiesza w warunkach bezwietrznych i wysokiej temperatury. Jest składnikiem smogu fotochemicznego, charakterystycznego dla miast o intensywnym ruchu samochodowym. Ozon troposferyczny nie jest emitowany bezpośrednio, lecz powstaje w wyniku reakcji wtórnych w atmosferze. Jego stężenia mogą się dynamicznie zmieniać w zależności od warunków pogodowych. To zanieczyszczenie bywa szczególnie trudne do kontrolowania, ponieważ powstaje z wielu rozproszonych źródeł.";
+"Param.o3.description.environmentalImpact" = "Ozon troposferyczny negatywnie wpływa na roślinność, uszkadzając liście i ograniczając ich zdolność do fotosyntezy. Może prowadzić do obniżenia plonów rolnych i zahamowania wzrostu drzew. Długotrwałe podwyższone stężenia ozonu zakłócają funkcjonowanie całych ekosystemów, zmniejszając bioróżnorodność. Przyczynia się również do powstawania smogu fotochemicznego, który obniża jakość powietrza i widoczność.";
+"Param.o3.description.humanHealthImpact" = "Ozon w wysokich stężeniach podrażnia drogi oddechowe, wywołując kaszel, ból gardła i trudności w oddychaniu. Może powodować pogorszenie funkcji płuc i nasilać objawy astmy oraz innych chorób układu oddechowego. Długotrwała ekspozycja zwiększa ryzyko przewlekłych chorób płuc i nadwrażliwości oskrzeli. Najbardziej narażone są dzieci, osoby starsze i osoby aktywne fizycznie na zewnątrz podczas wysokiego stężenia ozonu.";
+
+// MARK: NO2
+
+"Param.no2.name" = "Dwutlenek azotu";
+"Param.no2.description.general" = "Dwutlenek azotu (NO2) to gaz należący do tlenków azotu, powstający głównie podczas procesów spalania w wysokich temperaturach. Najważniejszym źródłem emisji są spaliny samochodowe, szczególnie z silników Diesla, a także energetyka i przemysł. NO2 występuje w atmosferze również jako produkt wtórnych reakcji chemicznych zachodzących pomiędzy innymi zanieczyszczeniami. Jest jednym z kluczowych składników smogu fotochemicznego, powstającego w warunkach dużego nasłonecznienia. Gaz ten ma brunatną barwę i charakterystyczny ostry zapach, co sprawia, że w wysokich stężeniach bywa łatwo wyczuwalny. W miastach jego poziom jest najwyższy w pobliżu ruchliwych dróg i obszarów o gęstej zabudowie. Ze względu na swoją reaktywność, NO2 łatwo wchodzi w reakcje z innymi substancjami, przyczyniając się do powstawania ozonu troposferycznego i cząstek wtórnych. Stężenia dwutlenku azotu zależą silnie od warunków atmosferycznych, zwłaszcza cyrkulacji powietrza i intensywności ruchu drogowego. Jest to jedno z najczęściej monitorowanych zanieczyszczeń w miastach.";
+"Param.no2.description.environmentalImpact" = "Dwutlenek azotu przyczynia się do zakwaszania gleby i wód, co negatywnie wpływa na rośliny i organizmy wodne. Bierze udział w procesach tworzenia ozonu troposferycznego i pyłów wtórnych, które obniżają jakość powietrza. Działa szkodliwie na roślinność, ograniczając fotosyntezę i powodując uszkodzenia liści. Wpływa także na ogólny spadek bioróżnorodności w ekosystemach narażonych na wysokie stężenia NO2.";
+"Param.no2.description.humanHealthImpact" = "NO2 podrażnia drogi oddechowe i może powodować kaszel, duszności oraz pogorszenie funkcji płuc. Długotrwała ekspozycja zwiększa ryzyko przewlekłych chorób układu oddechowego, w tym astmy i przewlekłej obturacyjnej choroby płuc. Gaz ten szczególnie szkodzi dzieciom, osobom starszym oraz ludziom z chorobami układu oddechowego. Zwiększa także podatność na infekcje wirusowe i bakteryjne dróg oddechowych.";
+
+// MARK: SO2
+
+"Param.so2.name" = "Dwutlenetk siarki";
+"Param.so2.description.general" = "Dwutlenek siarki (SO2) to gaz o charakterystycznym, duszącym zapachu, powstający głównie podczas spalania paliw zawierających siarkę, takich jak węgiel czy olej opałowy. Jego emisja związana jest przede wszystkim z energetyką, przemysłem ciężkim oraz ogrzewaniem indywidualnym. W mniejszych ilościach SO2 pojawia się także naturalnie, np. podczas erupcji wulkanów. W atmosferze dwutlenek siarki łatwo reaguje z wodą, tworząc kwas siarkowy, co prowadzi do powstawania kwaśnych deszczy. Stężenia SO2 w miastach są najwyższe w sezonie grzewczym, szczególnie w rejonach, gdzie dominuje spalanie węgla. Gaz ten jest jednym z klasycznych zanieczyszczeń powietrza, monitorowanych od dekad. Wysokie emisje SO2 były szczególnie problematyczne w XX wieku w związku z intensywnym rozwojem przemysłu i energetyki węglowej.";
+"Param.so2.description.environmentalImpact" = "Dwutlenek siarki jest główną przyczyną powstawania kwaśnych deszczy, które prowadzą do degradacji lasów, zakwaszenia gleb i jezior oraz niszczenia budynków. Osadzając się na roślinach, powoduje uszkodzenia liści i spadek plonów. Zanieczyszczenie SO2 prowadzi do zaniku wielu gatunków wrażliwych na zakwaszenie w ekosystemach wodnych. Ma również wpływ na zmniejszenie przejrzystości powietrza i ogólną jakość środowiska naturalnego.";
+"Param.so2.description.humanHealthImpact" = "SO2 podrażnia drogi oddechowe, wywołując kaszel, duszności i skurcz oskrzeli. Szczególnie niebezpieczny jest dla osób cierpiących na astmę i inne przewlekłe choroby płuc. Nawet krótkotrwała ekspozycja na wysokie stężenia może powodować ostre objawy ze strony układu oddechowego. Długotrwałe narażenie zwiększa ryzyko rozwoju przewlekłych chorób układu oddechowego i pogorszenia ogólnej kondycji zdrowotnej.";
+
+// MARK: CO
+
+"Param.co.name" = "Tlenek węgla";
+"Param.co.description.general" = "Tlenek węgla (CO), potocznie nazywany czadem, to bezbarwny i bezwonny gaz powstający w wyniku niepełnego spalania paliw węglowych i organicznych. Jego głównymi źródłami są transport drogowy, piece i kotły grzewcze, a także procesy przemysłowe. CO może powstawać również w wyniku pożarów oraz spalania biomasy. Ze względu na brak zapachu i barwy jest szczególnie niebezpieczny, ponieważ łatwo go przeoczyć. W miastach jego najwyższe stężenia występują w pobliżu intensywnego ruchu samochodowego i w sezonie grzewczym. W atmosferze tlenek węgla odgrywa rolę w reakcjach chemicznych, prowadzących m.in. do powstawania ozonu troposferycznego. Pomimo postępu technologicznego i wprowadzenia katalizatorów w samochodach, CO wciąż pozostaje problemem w wielu regionach świata. Jego obecność w powietrzu jest ściśle związana z jakością systemów spalania i wentylacji.";
+"Param.co.description.environmentalImpact" = "Tlenek węgla wpływa pośrednio na jakość powietrza, uczestnicząc w procesach chemicznych prowadzących do powstawania ozonu troposferycznego. Zwiększa także trwałość metanu w atmosferze, co pośrednio nasila efekt cieplarniany. Może oddziaływać na zwierzęta poprzez ograniczanie dostępności tlenu w ich środowisku. Wysokie emisje CO świadczą o niskiej efektywności procesów spalania i pogarszają ogólny stan środowiska miejskiego.";
+"Param.co.description.humanHealthImpact" = "CO wiąże się z hemoglobiną w krwi, tworząc karboksyhemoglobinę, która uniemożliwia prawidłowy transport tlenu w organizmie. Już niewielkie stężenia mogą powodować bóle głowy, zawroty, osłabienie i nudności. Przy wyższych poziomach dochodzi do zaburzeń pracy serca, utraty przytomności, a nawet śmierci. Szczególnie narażone są osoby z chorobami serca, kobiety w ciąży, dzieci i osoby starsze.";
+
+// MARK: Param Index Level
+
+"Param.indexLevel.good.title" = "Bardzo dobra";
+"Param.indexLevel.good.description" = "Jakość powietrza jest bardzo dobra. Warunki sprzyjają aktywności na świeżym powietrzu i nie stanowią zagrożenia dla zdrowia.";
+
+"Param.indexLevel.moderate.title" = "Umiarkowana";
+"Param.indexLevel.moderate.description" = "Jakość powietrza jest umiarkowana. Ogół społeczeństwa może bezpiecznie przebywać na zewnątrz, choć osoby wyjątkowo wrażliwe mogą odczuwać lekki dyskomfort.";
+
+"Param.indexLevel.unhealthyForSensitiveGroup.title" = "Niebezpieczna dla grup wrażliwych";
+"Param.indexLevel.unhealthyForSensitiveGroup.description" = "Jakość powietrza może stanowić zagrożenie dla osób z chorobami układu oddechowego, serca oraz dzieci i seniorów. Zalecane jest ograniczenie intensywnego wysiłku na zewnątrz w tej grupie.";
+
+"Param.indexLevel.unhealthy.title" = "Zła";
+"Param.indexLevel.unhealthy.description" = "Jakość powietrza jest zła. Może negatywnie wpływać na zdrowie wszystkich osób, zwłaszcza przy dłuższym przebywaniu na zewnątrz. Zaleca się unikanie wysiłku fizycznego na otwartym powietrzu.";
+
+"Param.indexLevel.veryUnhealthy.title" = "Bardzo zła";
+"Param.indexLevel.veryUnhealthy.description" = "Jakość powietrza jest bardzo zła. Występuje wysokie ryzyko negatywnego wpływu na zdrowie całej populacji. Zalecane jest maksymalne ograniczenie aktywności na świeżym powietrzu.";
+
+"Param.indexLevel.hazardous.title" = "Niebezpieczna dla zdrowia";
+"Param.indexLevel.hazardous.description" = "Jakość powietrza jest ekstremalnie zła i stanowi poważne zagrożenie zdrowotne dla wszystkich. Należy unikać przebywania na zewnątrz i pozostawać w pomieszczeniach.";

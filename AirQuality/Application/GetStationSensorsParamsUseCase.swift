@@ -16,14 +16,13 @@ protocol GetStationSensorsParamsUseCaseProtocol: Sendable {
 }
 
 final class GetStationSensorsParamsUseCase: GetStationSensorsParamsUseCaseProtocol, @unchecked Sendable {
-    @Injected(\.giosApiRepository) private var giosApiRepository
+    @Injected(\.giosApiV1Repository) private var giosApiV1Repository
     @Injected(\.stationSensorsParamsNetworkMapper) private var stationSensorsParamsNetworkMapper
     
     func get(_ stationId: Int) async throws -> [Param] {
-        try await giosApiRepository.fetch(
+        try await giosApiV1Repository.fetch(
             mapper: stationSensorsParamsNetworkMapper,
-            endpoint: Endpoint.Sensors.get(stationId),
-            source: .cacheIfPossible
+            endpoint: Endpoint.Sensors.get(stationId)
         )
     }
 }

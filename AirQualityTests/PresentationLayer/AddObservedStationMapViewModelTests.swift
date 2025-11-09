@@ -19,7 +19,7 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
     private var getObservedStationsUseCaseSpy: GetObservedStationsUseCaseSpy!
     private var fetchAllStationsUseCaseSpy: FetchAllStationsUseCaseSpy!
     private var findTheNearestStationUseCaseSpy: FindTheNearestStationUseCaseSpy!
-    private var getUserLocationUseCaseSpy: GetUserLocationUseCaseSpy!
+    private var getUserLocationUseCaseMock: GetUserLocationUseCaseMock!
     
     private var station1: Station!
     private var station2: Station!
@@ -34,13 +34,13 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         getObservedStationsUseCaseSpy = GetObservedStationsUseCaseSpy()
         fetchAllStationsUseCaseSpy = FetchAllStationsUseCaseSpy()
         findTheNearestStationUseCaseSpy = FindTheNearestStationUseCaseSpy()
-        getUserLocationUseCaseSpy = GetUserLocationUseCaseSpy()
+        getUserLocationUseCaseMock = GetUserLocationUseCaseMock()
         networkConnectionMonitorUseCaseSpy = NetworkConnectionMonitorUseCaseSpy()
         
         dependenciesContainerDummy[\.getObservedStationsUseCase] = getObservedStationsUseCaseSpy
         dependenciesContainerDummy[\.fetchAllStationsUseCase] = fetchAllStationsUseCaseSpy
         dependenciesContainerDummy[\.findTheNearestStationUseCase] = findTheNearestStationUseCaseSpy
-        dependenciesContainerDummy[\.getUserLocationUseCase] = getUserLocationUseCaseSpy
+        dependenciesContainerDummy[\.getUserLocationUseCase] = getUserLocationUseCaseMock
         dependenciesContainerDummy[\.networkConnectionMonitorUseCase] = networkConnectionMonitorUseCaseSpy
         
         station1 = Station.dummy(id: 1, cityName: "Cracow", province: "Malopolska", street: "Bujaka")
@@ -316,7 +316,7 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
     @MainActor
     func testFindTheNearestStationWhenLocationServicesNotAvailable() {
         // Given
-        getUserLocationUseCaseSpy.checkLocationServicesAvailabilityThrowError = .authorizationRestricted
+        getUserLocationUseCaseMock.checkLocationServicesAvailabilityThrowError = .authorizationRestricted
         
         var error: Error?
         
@@ -392,9 +392,9 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
             }
             .store(in: &cancellables)
         
-        getUserLocationUseCaseSpy.streamLocationHandler = {
-            self.getUserLocationUseCaseSpy.locationStremSubject.send(location1)
-            self.getUserLocationUseCaseSpy.locationStremSubject.send(location2)
+        getUserLocationUseCaseMock.streamLocationHandler = {
+            self.getUserLocationUseCaseMock.locationStremSubject.send(location1)
+            self.getUserLocationUseCaseMock.locationStremSubject.send(location2)
         }
         
         // When
@@ -404,15 +404,15 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         wait(for: [expectation], timeout: 2)
         
         XCTAssertEqual(userLocations, [location1, location2])
-        XCTAssertEqual(getUserLocationUseCaseSpy.events, [
+        XCTAssertEqual(getUserLocationUseCaseMock.events, [
             .checkLocationServicesAvailability,
             .streamLocation
         ])
         
         // Given
         expectation = XCTestExpectation()
-        getUserLocationUseCaseSpy.expectation = expectation
-        getUserLocationUseCaseSpy.events.removeAll()
+        getUserLocationUseCaseMock.expectation = expectation
+        getUserLocationUseCaseMock.events.removeAll()
         
         // When
         sut.stopTrackingUserLocation()
@@ -420,7 +420,7 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         // Then
         wait(for: [expectation], timeout: 2.0)
         
-        XCTAssertEqual(getUserLocationUseCaseSpy.events, [
+        XCTAssertEqual(getUserLocationUseCaseMock.events, [
             .streamLocationFinish
         ])
     }
@@ -428,7 +428,7 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
     @MainActor
     func testStartTrackingUserLocationWhenLocationServicesNotAvailable() {
         // Given
-        getUserLocationUseCaseSpy.checkLocationServicesAvailabilityThrowError = .authorizationDenied
+        getUserLocationUseCaseMock.checkLocationServicesAvailabilityThrowError = .authorizationDenied
         
         var error: Error?
         
@@ -447,7 +447,7 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         
         XCTAssertEqual(error as? UserLocationServicesError, .authorizationDenied)
         XCTAssertNil(sut.userLocation)
-        XCTAssertEqual(getUserLocationUseCaseSpy.events, [.checkLocationServicesAvailability])
+        XCTAssertEqual(getUserLocationUseCaseMock.events, [.checkLocationServicesAvailability])
     }
     
     @MainActor
@@ -473,8 +473,8 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
             }
             .store(in: &cancellables)
         
-        getUserLocationUseCaseSpy.streamLocationHandler = {
-            self.getUserLocationUseCaseSpy.locationStremSubject.send(completion: .failure(ErrorDummy()))
+        getUserLocationUseCaseMock.streamLocationHandler = {
+            self.getUserLocationUseCaseMock.locationStremSubject.send(completion: .failure(ErrorDummy()))
         }
         
         // When
@@ -483,7 +483,7 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
         // Then
         wait(for: [expectation], timeout: 2)
         
-        XCTAssertEqual(getUserLocationUseCaseSpy.events, [
+        XCTAssertEqual(getUserLocationUseCaseMock.events, [
             .checkLocationServicesAvailability,
             .streamLocation
         ])
@@ -492,71 +492,12 @@ final class AddObservedStationMapViewModelTests: BaseTestCase, @unchecked Sendab
     }
 }
 
-extension AddObservedStationMapModel.StationAnnotation: Equatable, Hashable {
+extension AddObservedStationMapModel.StationAnnotation: @retroactive Equatable, @retroactive Hashable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.station == rhs.station && lhs.isStationObserved == rhs.isStationObserved
     }
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(station.id)
-    }
-}
-
-import Combine
-
-final class GetUserLocationUseCaseSpy: GetUserLocationUseCaseProtocol, @unchecked Sendable {
-    enum Event {
-        case checkLocationServicesAvailability
-        case streamLocation
-        case streamLocationFinish
-    }
-    
-    var events: [Event] = []
-    
-    let locationStremSubject = PassthroughSubject<Location, Error>()
-    
-    private var cancellables = Set<AnyCancellable>()
-    
-    var expectation: XCTestExpectation?
-    var checkLocationServicesAvailabilityThrowError: UserLocationServicesError?
-    
-    func checkLocationServicesAvailability() async throws {
-        events.append(.checkLocationServicesAvailability)
-        
-        if let checkLocationServicesAvailabilityThrowError {
-            throw checkLocationServicesAvailabilityThrowError
-        }
-    }
-    
-    var streamLocationHandler: (() -> ())?
-    
-    func streamLocation(
-        finishClosure: inout (@Sendable () -> ())?
-    ) async -> AsyncThrowingStream<Location, Error> {
-        defer {
-            streamLocationHandler?()
-        }
-        
-        events.append(.streamLocation)
-        
-        finishClosure = {
-            self.events.append(.streamLocationFinish)
-            self.expectation?.fulfill()
-        }
-        
-        return AsyncThrowingStream { continuation in
-            locationStremSubject
-                .sink {
-                    switch $0 {
-                    case .finished:
-                        continuation.finish()
-                    case .failure(let error):
-                        continuation.finish(throwing: error)
-                    }
-                } receiveValue: {
-                    continuation.yield($0)
-                }
-                .store(in: &self.cancellables)
-        }
     }
 }

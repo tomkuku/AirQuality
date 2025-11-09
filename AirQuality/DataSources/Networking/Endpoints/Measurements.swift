@@ -22,11 +22,4 @@ extension Endpoint.Measurements: HTTPRequest {
             .get
         }
     }
-    
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        switch (lhs, rhs) {
-        case let (.get(lhsId), .get(rhsId)):
-            lhsId == rhsId
-        }
-    }
 }

@@ -87,7 +87,7 @@ struct ObservedStationsListView: View {
         .accessibility(addTraits: [.isButton])
         .contentShape(Rectangle())
         .gesture(TapGesture().onEnded {
-            coordinator.goTo(.slectedStation(station))
+            coordinator.goTo(.selectedStation(station))
         })
         .swipeActions {
             Button(L10n.delete, role: .destructive) {

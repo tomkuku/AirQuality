@@ -1,7 +1,15 @@
 {
     "request": {
         "method": "GET",
-        "url": "/pjp-api/rest/station/sensors/400"
+        "urlPath": "/pjp-api/v1/rest/station/sensors/400",
+        "queryParameters": {
+            "page": {
+                "equalTo": "0"
+            },
+            "size": {
+                "equalTo": "100"
+            }
+        }
     },
     "response": {
         "status": 200,

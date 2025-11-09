@@ -10,7 +10,7 @@ import Alamofire
 
 enum Endpoint {
     enum Stations: Sendable {
-        case get
+        case get(page: Int, size: Int)
     }
     
     enum Sensors: Sendable {
@@ -22,6 +22,11 @@ enum Endpoint {
     }
     
     enum ArchivalMeasurements: Sendable {
-        case get(Int)
+        case get(
+            sensorId: Int,
+            page: Int,
+            size: Int,
+            options: SensorArchivalMeasurementsListOptions
+        )
     }
 }

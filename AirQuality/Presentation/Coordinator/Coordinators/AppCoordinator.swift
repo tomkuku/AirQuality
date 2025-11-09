@@ -12,17 +12,29 @@ import Network
 extension AppCoordinator {
     enum NavigationComponent: Hashable, Identifiable {
         case stationsList
-        case slectedStation(Station)
+        case selectedStation(Station)
         case sensorsDetails(Sensor)
         case addNewObservedStation
+        case archivalMeasurements(Sensor)
+        case archivalMeasurementsOptions(SensorArchivalMeasurementsListOptions, callback: (SensorArchivalMeasurementsListOptions) -> ())
         
         var id: Int {
             switch self {
-            case .stationsList:             1
-            case .slectedStation:           2
-            case .sensorsDetails:           3
-            case .addNewObservedStation:    4
+            case .stationsList:                 1
+            case .selectedStation:              2
+            case .sensorsDetails:               3
+            case .addNewObservedStation:        4
+            case .archivalMeasurements:         5
+            case .archivalMeasurementsOptions:  6
             }
+        }
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
+        
+        static func == (lhs: AppCoordinator.NavigationComponent, rhs: AppCoordinator.NavigationComponent) -> Bool {
+            lhs.id == rhs.id
         }
     }
 }
@@ -67,7 +79,7 @@ final class AppCoordinator: CoordinatorBase, CoordinatorProtocol {
         switch navigationComponent {
         case .stationsList:
             ObservedStationsListView()
-        case .slectedStation(let station):
+        case .selectedStation(let station):
             let viewModel = SelectedStationViewModel(station: station)
             SelectedStationView(viewModel: viewModel)
         case .sensorsDetails(let sensor):
@@ -76,12 +88,19 @@ final class AppCoordinator: CoordinatorBase, CoordinatorProtocol {
         case .addNewObservedStation:
             let coordinator = createAddStationToObservedCoordinator()
             CoordinatorInitialView(coordinator: coordinator)
+        case .archivalMeasurements(let sensor):
+            let useCase = FetchArchivalMeasurementsUseCase(sensor: sensor)
+            let viewModel = SensorArchivalMeasurementsListViewModel(sensor: sensor, useCase: useCase)
+            SensorArchivalMeasurementsListView(viewModel: viewModel)
+        case .archivalMeasurementsOptions(let options, let callback):
+            let viewModel = SensorArchivalMeasurementsFiltersViewModel(options: options, callback: callback)
+            SensorArchivalMeasurementsFiltersView(viewModel: viewModel)
         }
     }
     
     func goTo(_ navigationComponent: NavigationComponent) {
         switch navigationComponent {
-        case .stationsList, .slectedStation:
+        case .stationsList, .selectedStation, .archivalMeasurements, .archivalMeasurementsOptions:
             navigationPath.append(navigationComponent)
         case .addNewObservedStation, .sensorsDetails:
             fullScreenCover = navigationComponent

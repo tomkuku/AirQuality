@@ -7,12 +7,14 @@
 #  Created by Tomasz Kukułka on 17/05/2024.
 #
 
+source "${PROJECT_DIR}/.scripts/xcode_scheme_actions_env.sh"
+
 readonly deviceIdentifier=$TARGET_DEVICE_IDENTIFIER
 readonly xctrunnerBundleIdentifier="${PRODUCT_BUNDLE_IDENTIFIER}.xctrunner"
 readonly applicationDataPath=`xcrun simctl get_app_container $deviceIdentifier $xctrunnerBundleIdentifier data`
 readonly sourceDir=`echo "${applicationDataPath}/tmp"`
 
 if find "$sourceDir" -type d -mindepth 1 | grep -q .; then
-    mkdir -p ${PROJECT_DIR}/UITestsSnapshots
-    cp -r ${sourceDir}/*Tests/*.png ${PROJECT_DIR}/UITestsSnapshots
+    mkdir -p "${PROJECT_DIR}/${UI_TESTS_OUTPUT_DIR}"
+    cp -r ${sourceDir}/*.png "${PROJECT_DIR}/${UI_TESTS_OUTPUT_DIR}"
 fi

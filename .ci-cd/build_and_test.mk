@@ -9,9 +9,10 @@ PROJECT = AirQuality.xcodeproj
 UI_TEST_SCHEME = UITests
 UNIT_TEST_SCHEME = UnitTests
 PLATFORM = 'iOS Simulator'
-DEVICE = 'iPhone 16 Pro'
-OS_VERSION = 18.2
+DEVICE = 'iPhone 17 Pro'
+OS_VERSION = 26.0.1
 XCRESULT_PATH = danger.xcresult
+WAIT_FOR_EXISTENCE_TIMEOUT = 15
 
 # MARK: UnitTests
 
@@ -35,6 +36,7 @@ ui_tests: shared
 	-scheme $(UI_TEST_SCHEME) \
 	-destination platform=$(PLATFORM),name=$(DEVICE),OS=$(OS_VERSION) \
 	-resultBundlePath Results/uiTests.xcresult \
+	WAIT_FOR_EXISTENCE_TIMEOUT=$(WAIT_FOR_EXISTENCE_TIMEOUT) \
 	| xcbeautify
 
 # MARK: Shared
@@ -42,7 +44,7 @@ ui_tests: shared
 shared: prepare_environemnt generate_xcodeproj
 
 prepare_environemnt:
-	@touch AirQuality/Localizable/Localizable.swift
+	@touch AirQuality/Presentation/Localizable/Localizable.swift
 	@touch AirQuality/Assets/Assets.swift
 	@touch AirQuality/Assets/Params.swift
 

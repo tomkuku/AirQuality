@@ -1,0 +1,18 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPath": "/pjp-api/v1/rest/station/findAll",
+        "queryParameters": {
+            "page": {
+                "equalTo": "1"
+            },
+            "size": {
+                "equalTo": "300"
+            }
+        }
+    },
+    "response": {
+        "status": 200,
+        "bodyFileName": "stations_find_all_page_2.json"
+    }
+}

@@ -35,19 +35,16 @@ struct SelectedStationSensorRow: View {
         .offset(y: offset)
         .zIndex(Double(-index))
         .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 3)
-        .gesture(TapGesture().onEnded({ _ in
-//            guard let sensor = viewModel.getSensor(for: sensor.id) else {
-//                Logger.error("No station for id: \(sensor.id)")
-//                return
-//            }
-//
-//            appCoordinator.goTo(.sensorsDetails(sensor))
-        }))
+        .gesture(TapGesture().onEnded { _ in
+            coordinator.goTo(.archivalMeasurements(sensor.sensor))
+        })
         .onAppear {
-            withAnimation(.easeInOut(duration: 0.4).delay(TimeInterval(index) * 0.2)) {
+            withAnimation(.easeInOut(duration: 0.3).delay(TimeInterval(index) * 0.2)) {
                 animated = true
             }
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier(\.selectedStationView.sensorsListRow)
     }
     
     func createSensorView(for sensorRow: SelectedStationModel.SensorRow) -> some View {
@@ -67,6 +64,7 @@ struct SelectedStationSensorRow: View {
     // MARK: Private properties
     
     @State private var animated = false
+    @EnvironmentObject private var coordinator: AppCoordinator
     
     private var offset: CGFloat {
         if animated {
@@ -133,9 +131,17 @@ struct SelectedStationSensorRow: View {
         lastMeasurementPercentageValue: 0.8,
         lastMeasurementFormattedDate: "Jun 25, 2024 at 14:00",
         lastMeasurementFormattedValue: "4 µg/m³",
-        lastMeasurementFormattedPercentageValue: "80%"
+        lastMeasurementFormattedPercentageValue: "80%",
+        sensor: .previewDummy()
+    )
+    
+    let appCoordinator = AppCoordinator(
+        coordinatorNavigationType: .presentation(dismissHandler: {}),
+        alertSubject: .init(),
+        toastSubject: .init()
     )
     
     return SelectedStationSensorRow(sensor: rowModel, index: 0)
         .frame(width: .infinity, height: 100)
+        .environmentObject(appCoordinator)
 }

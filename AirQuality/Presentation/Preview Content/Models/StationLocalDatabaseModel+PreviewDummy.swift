@@ -22,7 +22,6 @@ extension StationLocalDatabaseModel {
             latitude: latitude,
             longitude: longitude,
             cityName: cityName,
-            commune: commune,
             province: province,
             street: street
         )

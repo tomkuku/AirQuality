@@ -1,32 +1,29 @@
-[
+{
+  "Lista stanowisk pomiarowych dla podanej stacji": [
     {
-        "id": 1354,
-        "stationId": 994,
-        "param": {
-            "paramName": "tlenek węgla",
-            "paramFormula": "CO",
-            "paramCode": "CO",
-            "idParam": 8
-        }
+      "Identyfikator stanowiska": 1354,
+      "Identyfikator stacji": 994,
+      "Wskaźnik": "tlenek węgla",
+      "Wskaźnik - wzór": "CO",
+      "Wskaźnik - kod": "CO",
+      "Id wskaźnika": 8
     },
     {
-        "id": 1355,
-        "stationId": 994,
-        "param": {
-            "paramName": "dwutlenek azotu",
-            "paramFormula": "NO2",
-            "paramCode": "NO2",
-            "idParam": 6
-        }
+      "Identyfikator stanowiska": 1355,
+      "Identyfikator stacji": 994,
+      "Wskaźnik": "dwutlenek azotu",
+      "Wskaźnik - wzór": "NO2",
+      "Wskaźnik - kod": "NO2",
+      "Id wskaźnika": 6
     },
     {
-        "id": 1356,
-        "stationId": 994,
-        "param": {
-            "paramName": "pył zawieszony PM10",
-            "paramFormula": "PM10",
-            "paramCode": "PM10",
-            "idParam": 3
-        }
+      "Identyfikator stanowiska": 1356,
+      "Identyfikator stacji": 994,
+      "Wskaźnik": "pył zawieszony PM10",
+      "Wskaźnik - wzór": "PM10",
+      "Wskaźnik - kod": "PM10",
+      "Id wskaźnika": 3
     }
-]
+  ],
+  "totalPages": 1
+}

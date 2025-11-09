@@ -8,13 +8,25 @@
 import Foundation
 
 enum SensorArchivalMeasurementsListModel {
-    struct Row {
-        let formattedPercentageValue: String
+    struct Section: Identifiable, Equatable {
+        let name: String
+        var rows: [Row]
+        let year: Int
+        let month: Int
+        
+        var id: String {
+            name
+        }
+    }
+    
+    struct Row: Identifiable, Equatable {
+        var id: String {
+            formattedDate
+        }
+        
         let formattedValue: String
         let formattedDate: String
         
-        let value: Double
-        let percentageValue: Double
         let date: Date
     }
 }

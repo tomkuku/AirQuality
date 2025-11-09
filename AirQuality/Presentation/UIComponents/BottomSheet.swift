@@ -77,7 +77,7 @@ struct BottomSheet<Content: View>: View {
                     newHeight = -value.translation.height
                 }
                 
-                if abs(newHeight) >= minHeight && newHeight <= maxHeight {
+                if abs(newHeight) >= minHeight, newHeight <= maxHeight {
                     sheetOffset = abs(newHeight)
                 }
             }

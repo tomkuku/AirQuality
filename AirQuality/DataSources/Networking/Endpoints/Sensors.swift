@@ -12,7 +12,7 @@ extension Endpoint.Sensors: HTTPRequest {
     var path: String {
         switch self {
         case .get(let id):
-            "/pjp-api/rest/station/sensors/" + "\(id)"
+            "/pjp-api/v1/rest/station/sensors/" + "\(id)"
         }
     }
     
@@ -23,10 +23,13 @@ extension Endpoint.Sensors: HTTPRequest {
         }
     }
     
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        switch (lhs, rhs) {
-        case let (.get(lhsId), .get(rhsId)):
-            lhsId == rhsId
+    func createParams() throws -> [String: String]? {
+        switch self {
+        case .get:
+            [
+                "page": "0",
+                "size": "100"
+            ]
         }
     }
 }

@@ -18,16 +18,11 @@ protocol FindTheNearestStationUseCaseProtocol: Sendable {
 
 actor FindTheNearestStationUseCase: FindTheNearestStationUseCaseProtocol {
     @Injected(\.locationRespository) private var locationRespository
-    @Injected(\.giosApiRepository) private var giosApiRepository
+    @Injected(\.giosApiV1Repository) private var giosApiV1Repository
     @Injected(\.stationsNetworkMapper) private var stationsNetworkMapper
     
     func find() async throws -> (station: Station, distance: Double)? {
-        async let fetchedStations = giosApiRepository.fetch(
-            mapper: stationsNetworkMapper,
-            endpoint: Endpoint.Stations.get,
-            source: .cacheIfPossible
-        )
-        
+        async let fetchedStations = giosApiV1Repository.fetchAllStations()
         async let userLocation = locationRespository.requestLocationOnce()
         
         var theNearestStation: Station?

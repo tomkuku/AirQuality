@@ -15,17 +15,17 @@ struct AccessibilityIdentifiers {
         let stationsList = ""
     }
     
-    struct AllStationsListProvindesView {
+    struct ProvincesListView {
         let provindesList = ""
         let provindesListRow = ""
     }
     
-    struct AllStationsListProvindesRowView {
+    struct ProvincesListRowView {
         let provinceName = ""
         let numberOfStations = ""
     }
     
-    struct AllStationsListProvinceStationsView {
+    struct AllStationsListView {
         let stationsList = ""
     }
     
@@ -63,6 +63,11 @@ struct AccessibilityIdentifiers {
     
     struct SelectedStationView {
         let sensorsList = ""
+        let sensorsListRow = ""
+    }
+    
+    struct RefreshableScrollView {
+        let refreshControl = ""
     }
     
     init() {}
@@ -72,9 +77,9 @@ struct AccessibilityIdentifiers {
     let doneToolbarButton = ""
     
     let observedStationsListView = ObservedStationsListView()
-    let allStationsListProvindesView = AllStationsListProvindesView()
-    let allStationsListProvindesRowView = AllStationsListProvindesRowView()
-    let allStationsListProvinceStationsView = AllStationsListProvinceStationsView()
+    let provincesListView = ProvincesListView()
+    let provincesListRowView = ProvincesListRowView()
+    let allStationsListView = AllStationsListView()
     let allStationsListProvinceStationsRowView = AllStationsListProvinceStationsRowView()
     let addObservedStationContainerView = AddObservedStationContainerView()
     let bottomSheet = BottomSheet()
@@ -82,6 +87,7 @@ struct AccessibilityIdentifiers {
     let stationMapAnnotationView = StationMapAnnotationView()
     let paramsView = ParamsView()
     let selectedStationView = SelectedStationView()
+    let refreshableScrollView = RefreshableScrollView()
 }
 
 typealias AccessibilityIdentifierType = KeyPath<AccessibilityIdentifiers, String>

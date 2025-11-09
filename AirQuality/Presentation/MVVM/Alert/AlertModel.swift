@@ -65,7 +65,7 @@ extension AlertModel.Button {
 extension AlertModel {
     private typealias L10n = Localizable.Alert
     
-    static func somethigWentWrong(dismiss: (@Sendable () -> ())? = nil) -> Self {
+    static func somethingWentWrong(dismiss: (@Sendable () -> ())? = nil) -> Self {
         Self(
             title: L10n.SomethingWentWrong.title,
             message: L10n.SomethingWentWrong.message,
@@ -73,6 +73,14 @@ extension AlertModel {
             dismissAction: dismiss
         )
     }
+    
+    static func failure(message: String) -> Self {
+            Self(
+                title: L10n.Failure.title,
+                message: message,
+                buttons: [.ok()]
+            )
+        }
     
     static func findingTheNearestStationsFailed() -> Self {
         Self(

@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Tomasz Kukułka on 30/04/2024.
 //
@@ -8,38 +8,30 @@
 import Foundation
 import Alamofire
 
-protocol HTTPRequest: URLRequestConvertible, Equatable, Sendable {
+protocol HTTPRequest: URLRequestConvertible, Sendable {
     var baseURL: String { get }
     var path: String { get }
     var method: Alamofire.HTTPMethod { get }
-    var params: [String: String]? { get }
+    
+    func createParams() throws -> [String: String]?
 }
 
 extension HTTPRequest {
     var baseURL: String {
-        AppConstant[.giosApiBaseUrl]
+        Injected[\.environmentConstants].baseUrl
     }
     
-    var params: [String: String]? {
+    func createParams() throws -> [String: String]? {
         nil
     }
     
     func asURLRequest() throws -> URLRequest {
-        guard var url = URLComponents(string: baseURL + path) else {
-            throw AFError.invalidURL(url: baseURL)
-        }
+        let url = try (baseURL + path).asURL()
+        var urlRequest = URLRequest(url: url)
+        urlRequest.method = method
         
-        url.queryItems = params?.map {
-            URLQueryItem(name: $0.0, value: $0.1)
-        }
+        let params = try createParams()
         
-        do {
-            return try URLRequest(
-                url: try url.asURL(),
-                method: method
-            )
-        } catch {
-            throw error
-        }
+        return try URLEncoding.default.encode(urlRequest, with: params)
     }
 }

@@ -13,57 +13,104 @@ final class FetchAllStationsUseCaseTests: BaseTestCase {
     
     private var sut: FetchAllStationsUseCase!
     
-    private var giosApiRepositorySpy: GIOSApiRepositorySpy!
+    private var giosApiRepositorySpy: GIOSApiV1RepositorySpy!
+    private var stationsNetworkMapperMock: StationsNetworkMapperMock!
     
     override func setUp() {
         super.setUp()
         
+        giosApiRepositorySpy = GIOSApiV1RepositorySpy()
+        
+        dependenciesContainerDummy[\.stationsNetworkMapper] = StationsNetworkMapper()
+        dependenciesContainerDummy[\.giosApiV1Repository] = giosApiRepositorySpy
+        
         sut = FetchAllStationsUseCase()
-        
-        giosApiRepositorySpy = GIOSApiRepositorySpy()
-        
-        dependenciesContainerDummy[\.stationsNetworkMapper] = StationsNetworkMapperFake()
-        dependenciesContainerDummy[\.giosApiRepository] = giosApiRepositorySpy
     }
     
-    func testFetch() async throws {
+    // MARK: - fetch
+    
+    func testFetchWhenNoStations() async throws {
         // Given
-        let stations: [Station] = [.dummy(id: 1), .dummy(id: 2)]
-        
-        giosApiRepositorySpy.fetchResult = .success(stations)
+        giosApiRepositorySpy.fetchAllStationsResult = .success([])
         
         // When
-        let fetchedStations = try await sut.fetch()
+        let result = try await sut.fetch()
         
         // Then
-        XCTAssertEqual(fetchedStations, stations)
-        XCTAssertEqual(giosApiRepositorySpy.events, [
-            .fetch(
-                String(describing: [Station].self),
-                Endpoint.Stations.get.urlRequest!,
-                .cacheIfPossible
-            )
-        ])
+        XCTAssertTrue(result.isEmpty)
+        XCTAssertEqual(giosApiRepositorySpy.events.count, 1)
+        XCTAssertEqual(giosApiRepositorySpy.events.first, .fetchAllStations())
     }
     
-    func testFetchWhenFailure() async {
+    func testFetchWhenSinglePageWithStations() async throws {
         // Given
-        giosApiRepositorySpy.fetchResult = .failure(ErrorDummy())
+        let stations: [Station] = [
+            Station(
+                id: 1,
+                latitude: 50.0,
+                longitude: 20.0,
+                cityName: "City 1",
+                province: "Province 1",
+                street: "Main St"
+            )
+        ]
         
+        giosApiRepositorySpy.fetchAllStationsResult = .success(stations)
+        
+        // When
+        let result = try await sut.fetch()
+        
+        // Then
+        XCTAssertEqual(result, stations)
+        XCTAssertEqual(giosApiRepositorySpy.events.count, 1)
+        XCTAssertEqual(giosApiRepositorySpy.events.first, .fetchAllStations())
+    }
+    
+    func testFetchWhenMultipleStations() async throws {
+        // Given
+        let stations: [Station] = [
+            Station(
+                id: 1,
+                latitude: 1.0,
+                longitude: 2.0,
+                cityName: "C1",
+                province: "Prov1",
+                street: "Street 1"
+            ),
+            Station(
+                id: 2,
+                latitude: 3.0,
+                longitude: 4.0,
+                cityName: "C2",
+                province: "Prov2",
+                street: "Street 2"
+            )
+        ]
+        
+        giosApiRepositorySpy.fetchAllStationsResult = .success(stations)
+        
+        // When
+        let result = try await sut.fetch()
+        
+        // Then
+        XCTAssertEqual(result, stations)
+        XCTAssertEqual(giosApiRepositorySpy.events.count, 1)
+        XCTAssertEqual(giosApiRepositorySpy.events.first, .fetchAllStations())
+    }
+    
+    func testFetchWhenRepositoryFails() async throws {
+        // Given
+        let expectedError = NSError(domain: "stub", code: 42)
+        giosApiRepositorySpy.fetchAllStationsResult = .failure(expectedError)
+        
+        // When & Then
         do {
-            // When
             _ = try await sut.fetch()
-            XCTFail("fetch should have thrown an error!")
+            XCTFail("Expected error to be thrown")
         } catch {
-            // Then
-            XCTAssertTrue(error is ErrorDummy)
-            XCTAssertEqual(giosApiRepositorySpy.events, [
-                .fetch(
-                    String(describing: [Station].self),
-                    Endpoint.Stations.get.urlRequest!,
-                    .cacheIfPossible
-                )
-            ])
+            XCTAssertEqual((error as NSError).code, expectedError.code)
         }
+        XCTAssertEqual(giosApiRepositorySpy.events.count, 1)
+        XCTAssertEqual(giosApiRepositorySpy.events.first, .fetchAllStations())
     }
 }

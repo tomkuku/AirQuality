@@ -13,9 +13,7 @@ import Alamofire
 final class HTTPRequestTests: BaseTestCase {
 
     func testCreateUrl() throws {
-        // Given
-        
-        // When
+        // Given & When
         let request = try EndpointFake().asURLRequest()
         
         // Then

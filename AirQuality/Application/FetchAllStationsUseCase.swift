@@ -18,21 +18,13 @@ protocol FetchAllStationsUseCaseProtocol: Sendable {
 }
 
 final class FetchAllStationsUseCase: FetchAllStationsUseCaseProtocol {
-    private var giosApiRepository: GIOSApiRepositoryProtocol {
-        Injected(\.giosApiRepository).wrappedValue
-    }
-    
-    private var stationsNetworkMapper: any StationsNetworkMapperProtocol {
-        Injected(\.stationsNetworkMapper).wrappedValue
+    private var giosApiV1Repository: GIOSApiV1RepositoryProtocol {
+        Injected(\.giosApiV1Repository).wrappedValue
     }
     
     init() { }
     
     func fetch() async throws -> [Station] {
-        try await giosApiRepository.fetch(
-            mapper: stationsNetworkMapper,
-            endpoint: Endpoint.Stations.get,
-            source: .cacheIfPossible
-        )
+        try await giosApiV1Repository.fetchAllStations()
     }
 }

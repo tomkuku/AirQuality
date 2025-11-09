@@ -23,6 +23,6 @@ final class GetObservedStationsUseCase: GetObservedStationsUseCaseProtocol {
     }
     
     func createNewStream() -> AsyncThrowingStream<[Station], Error> {
-        Injected[\.observedStationsFetchResultsRepository].ceateNewStrem()
+        Injected[\.observedStationsFetchResultsRepository].createNewStream()
     }
 }

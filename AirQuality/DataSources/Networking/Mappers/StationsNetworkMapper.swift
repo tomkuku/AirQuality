@@ -12,10 +12,10 @@ protocol HasStationsNetworkMapper {
 }
 
 protocol StationsNetworkMapperProtocol: NetworkMapperProtocol 
-where DTOModel == [StationNetworkModel], DomainModel == [Station] { }
+where DTOModel == [StationNetworkModel], DomainModel == [Station], InputParameters == Void { }
 
 struct StationsNetworkMapper: StationsNetworkMapperProtocol {
-    func map(_ input: [StationNetworkModel]) throws -> [Station] {
+    func map(_ input: [StationNetworkModel], using inputParameters: ()) throws -> [Station] {
         try input.map {
             guard let latitude = Double($0.latitude), let longitude = Double($0.longitude) else {
                 throw NSError(domain: "GetStationsResponseMapper", code: -1, userInfo: [
@@ -27,9 +27,8 @@ struct StationsNetworkMapper: StationsNetworkMapperProtocol {
                 id: $0.id,
                 latitude: latitude,
                 longitude: longitude,
-                cityName: $0.city.name,
-                commune: $0.city.commune.name,
-                province: $0.city.commune.provinceName,
+                cityName: $0.cityName,
+                province: $0.province,
                 street: $0.street
             )
         }

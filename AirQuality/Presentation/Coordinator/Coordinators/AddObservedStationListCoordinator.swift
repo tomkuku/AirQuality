@@ -21,7 +21,7 @@ final class AddObservedStationListCoordinator: CoordinatorBase, CoordinatorProto
     @ViewBuilder
     @MainActor
     func startView() -> some View {
-        AllStationsListProvindesView()
+        ProvincesListView()
             .environmentObject(self)
     }
     
@@ -30,7 +30,7 @@ final class AddObservedStationListCoordinator: CoordinatorBase, CoordinatorProto
     func createView(for navigationComponent: NavigationComponent) -> some View {
         switch navigationComponent {
         case .provinceStations(let provinceName, let stations):
-            AllStationsListProvinceStationsView(provinceName: provinceName, stations: stations)
+            AllStationsListView(provinceName: provinceName, stations: stations)
         }
     }
     

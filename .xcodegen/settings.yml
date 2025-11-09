@@ -26,18 +26,18 @@ settings:
     GENERATE_INFOPLIST_FILE: NO
     SWIFT_STRICT_CONCURRENCY: complete
     CODE_SIGN_STYLE: NO
-    SWIFT_VERSION: 5.10
+    SWIFT_VERSION: 6.2
     INFOPLIST_FILE: "AirQuality/Info.plist"
 
   configs:
     Development_Debug:
       APP_DISPLAY_NAME: "AirQuality Dev"
       PRODUCT_BUNDLE_IDENTIFIER: "com.air.quality.dev"
-      SWIFT_ACTIVE_COMPILATION_CONDITIONS: "DEBUG"
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: "DEBUG DEVELOPMENT"
     Development_Release:
       APP_DISPLAY_NAME: "AirQuality Dev"
       PRODUCT_BUNDLE_IDENTIFIER: "com.air.quality.dev"
-      SWIFT_ACTIVE_COMPILATION_CONDITIONS: "DEBUG"
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: "DEBUG DEVELOPMENT"
     Tests:
       APP_DISPLAY_NAME: "AirQuality Test"
       PRODUCT_BUNDLE_IDENTIFIER: "com.air.quality.test"
@@ -45,7 +45,7 @@ settings:
     Production_Debug:
       APP_DISPLAY_NAME: "AirQuality"
       PRODUCT_BUNDLE_IDENTIFIER: "com.air.quality"
-      SWIFT_ACTIVE_COMPILATION_CONDITIONS: "PROD"
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: "DEBUG PROD"
     Production_Release:
       APP_DISPLAY_NAME: "AirQuality"
       PRODUCT_BUNDLE_IDENTIFIER: "com.air.quality"

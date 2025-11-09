@@ -1,5 +1,5 @@
 //
-//  AllStationListProvinceStationsViewModel.swift
+//  AllStationsListViewModel.swift
 //  AirQuality
 //
 //  Created by Tomasz Kukułka on 25/09/2024.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-final class AllStationListProvinceStationsViewModel: BaseViewModel {
+final class AllStationsListViewModel: BaseViewModel {
     
-    typealias Model = AllStationsListProvindesModel
+    typealias Model = ProvincesListModel
     
     // MARK: Properties
     
@@ -48,7 +48,7 @@ final class AllStationListProvinceStationsViewModel: BaseViewModel {
                 }
             } catch {
                 Logger.error(error.localizedDescription)
-                self?.alertSubject.send(.somethigWentWrong())
+                self?.alertSubject.send(.somethingWentWrong())
             }
         }
     }
@@ -63,7 +63,7 @@ final class AllStationListProvinceStationsViewModel: BaseViewModel {
                 }
             } catch {
                 Logger.error(error.localizedDescription)
-                alertSubject.send(.somethigWentWrong())
+                alertSubject.send(.somethingWentWrong())
             }
         }
     }

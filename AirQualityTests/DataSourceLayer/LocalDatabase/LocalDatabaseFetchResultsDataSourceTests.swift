@@ -57,7 +57,7 @@ final class LocalDatabaseFetchResultsDataSourceTests: BaseTestCase, @unchecked S
         tasks.append(Task {
             // When
             do {
-                for try await objects in try await sut.createNewStrem() {
+                for try await objects in try await sut.createNewStream() {
                     streamedObjects = objects
                     expectation.fulfill()
                 }
@@ -137,7 +137,7 @@ final class LocalDatabaseFetchResultsDataSourceTests: BaseTestCase, @unchecked S
         // When
         tasks.append(Task {
             do {
-                for try await models in try await sut.createNewStrem() {
+                for try await models in try await sut.createNewStream() {
                     await streamsWrapper.setStreamedModels1(models)
                     expectation.fulfill()
                 }
@@ -148,7 +148,7 @@ final class LocalDatabaseFetchResultsDataSourceTests: BaseTestCase, @unchecked S
         
         tasks.append(Task {
             do {
-                for try await models in try await sut.createNewStrem() {
+                for try await models in try await sut.createNewStream() {
                     await streamsWrapper.setStreamedModels2(models)
                     expectation.fulfill()
                 }

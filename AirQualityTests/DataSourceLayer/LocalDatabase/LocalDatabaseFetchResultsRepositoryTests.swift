@@ -56,7 +56,7 @@ final class LocalDatabaseFetchResultsRepositoryTests: BaseTestCase, @unchecked S
         
         // When
         tasks.append( Task {
-            for try await objests in sut.ceateNewStrem() {
+            for try await objests in sut.createNewStream() {
                 streamedObjects = objests
                 expectation.fulfill()
             }
@@ -105,7 +105,7 @@ where T: LocalDatabaseModel {
         fetchedModelsReturnValue
     }
     
-    func createNewStrem() async throws -> AsyncThrowingStream<[T], any Error> {
+    func createNewStream() async throws -> AsyncThrowingStream<[T], any Error> {
         AsyncThrowingStream { continuation in
             switch streamResultClosure {
             case .success(let models):

@@ -18,5 +18,7 @@ enum SelectedStationModel {
         let lastMeasurementFormattedDate: String
         let lastMeasurementFormattedValue: String
         let lastMeasurementFormattedPercentageValue: String
+        
+        let sensor: Sensor
     }
 }

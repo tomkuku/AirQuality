@@ -36,7 +36,7 @@ final class DeleteObservedStationUseCaseTests: BaseTestCase {
         XCTAssertEqual(localDatabaseRepositorySpy.events, [.delete])
     }
     
-    func testDeleteWhenFialure() async {
+    func testDeleteWhenFailure() async {
         // Given
         let station = Station.dummy()
         localDatabaseRepositorySpy.deleteThrowError = ErrorDummy()

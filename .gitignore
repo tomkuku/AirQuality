@@ -8,3 +8,4 @@ GenerateSwiftFromJson/.build
 GenerateSwiftFromJson/Package.resolved
 AirQuality/Assets/Params.swift
 GenerateSwiftFromJson/.swiftpm
+buildServer.json

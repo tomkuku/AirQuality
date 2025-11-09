@@ -1,0 +1,70 @@
+{
+  "Lista stacji pomiarowych": [
+    {
+      "Identyfikator stacji": 426,
+      "Kod stacji": "426",
+      "Nazwa stacji": "Nowy Sącz, ul. Nadbrzeżna",
+      "WGS84 φ N": "49.619281",
+      "WGS84 λ E": "20.714403",
+      "Identyfikator miasta": 623,
+      "Nazwa miasta": "Nowy Sącz",
+      "Gmina": "Nowy Sącz",
+      "Powiat": "Nowy Sącz",
+      "Województwo": "MAŁOPOLSKIE",
+      "Ulica": "ul. Nadbrzeżna"
+    },
+    {
+      "Identyfikator stacji": 530,
+      "Kod stacji": "530",
+      "Nazwa stacji": "Warszawa, al. Niepodległości",
+      "WGS84 φ N": "52.219298",
+      "WGS84 λ E": "21.004724",
+      "Identyfikator miasta": 1006,
+      "Nazwa miasta": "Warszawa",
+      "Gmina": "Warszawa",
+      "Powiat": "Warszawa",
+      "Województwo": "MAZOWIECKIE",
+      "Ulica": "al. Niepodległości 227/233"
+    },
+    {
+      "Identyfikator stacji": 550,
+      "Kod stacji": "550",
+      "Nazwa stacji": "Warszawa, ul. Wokalna",
+      "WGS84 φ N": "52.160772",
+      "WGS84 λ E": "21.033819",
+      "Identyfikator miasta": 1006,
+      "Nazwa miasta": "Warszawa",
+      "Gmina": "Warszawa",
+      "Powiat": "Warszawa",
+      "Województwo": "MAZOWIECKIE",
+      "Ulica": "ul. Wokalna 1"
+    },
+    {
+      "Identyfikator stacji": 552,
+      "Kod stacji": "552",
+      "Nazwa stacji": "Warszawa, ul. Kondratowicza",
+      "WGS84 φ N": "52.290864",
+      "WGS84 λ E": "21.042458",
+      "Identyfikator miasta": 1006,
+      "Nazwa miasta": "Warszawa",
+      "Gmina": "Warszawa",
+      "Powiat": "Warszawa",
+      "Województwo": "MAZOWIECKIE",
+      "Ulica": "ul. Kondratowicza 8"
+    },
+    {
+      "Identyfikator stacji": 944,
+      "Kod stacji": "944",
+      "Nazwa stacji": "Poznań, ul. Dąbrowskiego",
+      "WGS84 φ N": "52.420319",
+      "WGS84 λ E": "16.877289",
+      "Identyfikator miasta": 729,
+      "Nazwa miasta": "Poznań",
+      "Gmina": "Poznań",
+      "Powiat": "Poznań",
+      "Województwo": "WIELKOPOLSKIE",
+      "Ulica": "ul. Dąbrowskiego 169"
+    }
+  ],
+  "totalPages": 2
+}

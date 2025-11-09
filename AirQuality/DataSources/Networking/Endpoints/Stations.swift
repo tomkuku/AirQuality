@@ -12,7 +12,7 @@ extension Endpoint.Stations: HTTPRequest {
     var path: String {
         switch self {
         case .get:
-            "/pjp-api/rest/station/findAll"
+            "/pjp-api/v1/rest/station/findAll"
         }
     }
     
@@ -20,6 +20,16 @@ extension Endpoint.Stations: HTTPRequest {
         switch self {
         case .get:
             .get
+        }
+    }
+    
+    func createParams() throws -> [String: String]? {
+        switch self {
+        case .get(let page, let size):
+            [
+                "page": "\(page)",
+                "size": "\(size)"
+            ]
         }
     }
 }

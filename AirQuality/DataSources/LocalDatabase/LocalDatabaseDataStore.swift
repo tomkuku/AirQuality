@@ -121,7 +121,7 @@ actor LocalDatabaseDataSource: ModelActor, LocalDatabaseDataSourceProtocol {
         return try modelContext.fetch(fetchDescriptor)
     }
     
-    // MARK: Privte methods
+    // MARK: Private methods
     
     func save() throws {
         guard modelContext.hasChanges else { return }

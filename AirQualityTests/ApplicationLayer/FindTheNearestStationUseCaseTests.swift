@@ -15,19 +15,19 @@ final class FindTheNearestStationUseCaseTests: BaseTestCase {
     private var sut: FindTheNearestStationUseCase!
     
     private var userLocationRepositorySpy: UserLocationRepositorySpy!
-    private var giosApiRepositorySpy: GIOSApiRepositorySpy!
+    private var giosApiV1RepositorySpy: GIOSApiV1RepositorySpy!
     
     override func setUp() {
         super.setUp()
         
         userLocationRepositorySpy = UserLocationRepositorySpy()
-        giosApiRepositorySpy = GIOSApiRepositorySpy()
+        giosApiV1RepositorySpy = GIOSApiV1RepositorySpy()
         
         sut = FindTheNearestStationUseCase()
         
         dependenciesContainerDummy[\.locationRespository] = userLocationRepositorySpy
-        dependenciesContainerDummy[\.giosApiRepository] = giosApiRepositorySpy
-        dependenciesContainerDummy[\.stationsNetworkMapper] = StationsNetworkMapperFake()
+        dependenciesContainerDummy[\.giosApiV1Repository] = giosApiV1RepositorySpy
+        dependenciesContainerDummy[\.stationsNetworkMapper] = StationsNetworkMapper()
     }
     
     func testFind() async throws {
@@ -40,7 +40,7 @@ final class FindTheNearestStationUseCaseTests: BaseTestCase {
         
         let userLocation = CLLocation(latitude: 4, longitude: 4)
         
-        giosApiRepositorySpy.fetchResult = .success(fetchResultStations)
+        giosApiV1RepositorySpy.fetchAllStationsResult = .success(fetchResultStations)
         
         await userLocationRepositorySpy.setRequestLocationOnceResult(.success(userLocation))
         
@@ -53,20 +53,14 @@ final class FindTheNearestStationUseCaseTests: BaseTestCase {
         XCTAssertEqual(result?.station.id, 3)
         XCTAssertEqual(userLocationRepositorySpyEvents, [.requestLocationOnce])
         XCTAssertEqual(result?.distance ?? 0, 156_760.13068588925, accuracy: 0.0000000002)
-        XCTAssertEqual(giosApiRepositorySpy.events, [
-            .fetch(
-                String(describing: [Station].self),
-                Endpoint.Stations.get.urlRequest!,
-                .cacheIfPossible
-            )
-        ])
+        XCTAssertEqual(giosApiV1RepositorySpy.events, [.fetchAllStations()])
     }
     
     func testFindWhenFetchingStationsFailed() async throws {
         // Given
         let userLocation = CLLocation(latitude: 4, longitude: 4)
         
-        giosApiRepositorySpy.fetchResult = .failure(ErrorDummy())
+        giosApiV1RepositorySpy.fetchAllStationsResult = .failure(ErrorDummy())
         
         await userLocationRepositorySpy.setRequestLocationOnceResult(.success(userLocation))
         
@@ -77,13 +71,7 @@ final class FindTheNearestStationUseCaseTests: BaseTestCase {
         } catch {
             // Then
             XCTAssertTrue(error is ErrorDummy)
-            XCTAssertEqual(giosApiRepositorySpy.events, [
-                .fetch(
-                    String(describing: [Station].self),
-                    Endpoint.Stations.get.urlRequest!,
-                    .cacheIfPossible
-                )
-            ])
+            XCTAssertEqual(giosApiV1RepositorySpy.events, [.fetchAllStations()])
         }
     }
     
@@ -95,7 +83,7 @@ final class FindTheNearestStationUseCaseTests: BaseTestCase {
             Station.dummy(id: 3, latitude: 3, longitude: 3)
         ]
         
-        giosApiRepositorySpy.fetchResult = .success(fetchResultStations)
+        giosApiV1RepositorySpy.fetchAllStationsResult = .success(fetchResultStations)
         
         await userLocationRepositorySpy.setRequestLocationOnceResult(.failure(ErrorDummy()))
         
@@ -109,13 +97,7 @@ final class FindTheNearestStationUseCaseTests: BaseTestCase {
             
             XCTAssertTrue(error is ErrorDummy)
             XCTAssertEqual(userLocationRepositorySpyEvents, [.requestLocationOnce])
-            XCTAssertEqual(giosApiRepositorySpy.events, [
-                .fetch(
-                    String(describing: [Station].self),
-                    Endpoint.Stations.get.urlRequest!,
-                    .cacheIfPossible
-                )
-            ])
+            XCTAssertEqual(giosApiV1RepositorySpy.events, [.fetchAllStations()])
         }
     }
 }
