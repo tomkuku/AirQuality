@@ -63,6 +63,11 @@ struct AccessibilityIdentifiers {
     
     struct SelectedStationView {
         let sensorsList = ""
+        let sensorsListRow = ""
+    }
+    
+    struct RefreshableScrollView {
+        let refreshControl = ""
     }
     
     init() {}
@@ -82,6 +87,7 @@ struct AccessibilityIdentifiers {
     let stationMapAnnotationView = StationMapAnnotationView()
     let paramsView = ParamsView()
     let selectedStationView = SelectedStationView()
+    let refreshableScrollView = RefreshableScrollView()
 }
 
 typealias AccessibilityIdentifierType = KeyPath<AccessibilityIdentifiers, String>

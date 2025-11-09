@@ -47,6 +47,7 @@ struct RefreshableScrollView<ContentView>: View where ContentView: View {
                     .frame(width: 46, height: 46)
                     .padding(.top, 4)
                     .opacity(refreshProgress.refreshOpacity)
+                    .accessibilityIdentifier(\.refreshableScrollView.refreshControl)
                 
                 Spacer()
             }

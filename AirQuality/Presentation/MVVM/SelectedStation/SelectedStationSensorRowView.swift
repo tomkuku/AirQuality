@@ -43,6 +43,8 @@ struct SelectedStationSensorRow: View {
                 animated = true
             }
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier(\.selectedStationView.sensorsListRow)
     }
     
     func createSensorView(for sensorRow: SelectedStationModel.SensorRow) -> some View {
