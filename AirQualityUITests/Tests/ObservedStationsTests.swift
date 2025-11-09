@@ -76,7 +76,7 @@ final class ObservedStationsTests: BaseUITestCase, @unchecked Sendable {
     func testLaunch() throws {
         let observedStationsList = app.collectionViews[\.observedStationsListView.stationsList]
         
-        XCTAssertTrue(observedStationsList.waitForExistence(timeout: 4))
+        XCTAssertTrue(observedStationsList.waitForExistence())
         
         testSnapshot(imageName: "observedStations")
         
@@ -88,13 +88,22 @@ final class ObservedStationsTests: BaseUITestCase, @unchecked Sendable {
         
         cell.tap()
         
-        let sensorsList = app.scrollViews[\.selectedStationView.sensorsList]
+        let sensorsScrollView = app.scrollViews[\.selectedStationView.sensorsList]
         
-        XCTAssertTrue(sensorsList.waitForExistence(timeout: 4))
+        XCTAssertTrue(sensorsScrollView.waitForExistence())
         
         sleep(2) /// Wait for animation completes.
         
         testSnapshot(imageName: "selectedStation")
+        
+        let refreshControl = app.otherElements[\.refreshableScrollView.refreshControl]
+        
+        let start = sensorsScrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.2))
+        let finish = sensorsScrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.6))
+            
+        start.press(forDuration: 0.8, thenDragTo: finish)
+        
+        XCTAssertTrue(refreshControl.waitForExistence(timeout: 2), "`refreshControl` does not exist")
     }
     
     // MARK: Private methods
@@ -132,7 +141,7 @@ final class ObservedStationsTests: BaseUITestCase, @unchecked Sendable {
         
         var measurements: [MeasurementNetworkModel] = []
         
-        for i in 0..<30 {
+        for i in 0..<80 {
             let date = calendar.date(byAdding: .hour, value: -i, to: startDate)!
             let dateString = dateFormatter.string(from: date)
             
@@ -143,14 +152,17 @@ final class ObservedStationsTests: BaseUITestCase, @unchecked Sendable {
             measurements.append(measurement)
         }
         
+        let dateFrom = dateFormatter.date(from: "2025-10-26 00:00:00")!
+        let dateTo = dateFormatter.date(from: "2025-11-09 23:59:00")!
+        
         try await WireMockClient().addResponse(
             responseContent: measurements,
             totalPages: 12,
             for: Endpoint.ArchivalMeasurements.get(
-                sensorId: 1234,
+                sensorId: 2752,
                 page: 0,
-                size: 30,
-                options: .init(filters: .init(dateFrom: Date(), dateTo: Date()), sorting: .init(date: .ascending))
+                size: 80,
+                options: .init(filters: .init(dateFrom: dateFrom, dateTo: dateTo), sorting: .init(date: .descending))
             )
         )
     }
